@@ -1,0 +1,10 @@
+{
+	"id": "daily-note-calendar",
+	"name": "Daily notes calendar",
+	"version": "0.1.0",
+	"minAppVersion": "0.15.0",
+	"description": "A plugin to easily navigate to your daily notes using a calendar view.",
+	"author": "Bart Kessels <development@bk-mail.com",
+	"authorUrl": "https://bartkessels.net",
+	"isDesktopOnly": false
+}

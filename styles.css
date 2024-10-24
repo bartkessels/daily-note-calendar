@@ -1,0 +1,43 @@
+/*
+
+This CSS file will be included with your plugin, and
+available in the app when your plugin is enabled.
+
+If your plugin does not need CSS, delete this file.
+
+*/
+table {
+  table-layout: fixed;
+  
+}
+
+th {
+  opacity: 50%;
+  font-weight: 500;
+}
+
+td {
+  opacity: 90%;
+}
+
+th, td {
+  text-align: center;
+  width: 0.45em;
+  height: 0.45em;
+  padding: 0.2em;
+}
+
+td:hover {
+  background-color:rgba(0, 0, 0, 0.05);
+  border-radius: 100%;
+}
+
+.weekNumber {
+  opacity: 30%;
+  text-align: start;
+  font-weight: 300;
+}
+
+.otherMonth {
+  opacity: 50%;
+}
