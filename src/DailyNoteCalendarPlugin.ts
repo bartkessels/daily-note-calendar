@@ -18,8 +18,8 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     override async onload(): Promise<void> {
         this.registerView(CalendarView.VIEW_TYPE, (leaf) => new CalendarView(
             leaf,
-            this.fileService,
-            this.dateRepository
+            this.dateRepository,
+            this.fileService
         ));
         this.addSettingTab(new CalendarSettingsTab(this, this.settingsRepository));
 

@@ -1,11 +1,3 @@
-/*
-
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
-
-If your plugin does not need CSS, delete this file.
-
-*/
 table {
   table-layout: fixed;
   
@@ -13,7 +5,8 @@ table {
 
 th {
   opacity: 50%;
-  font-weight: 500;
+  font-weight: var(--font-medium);
+  font-size: var(--font-ui-small)
 }
 
 td {
@@ -27,17 +20,40 @@ th, td {
   padding: 0.2em;
 }
 
-td:hover {
-  background-color:rgba(0, 0, 0, 0.05);
-  border-radius: 100%;
+td:hover:not(:empty), .weekNumber:hover {
+  background-color: var(--background-modifier-active-hover);
+  border-radius: 10%;
 }
 
 .weekNumber {
   opacity: 30%;
   text-align: start;
-  font-weight: 300;
+  font-weight: var(----font-light);
 }
 
-.otherMonth {
-  opacity: 50%;
+.today {
+  color: var(--text-accent);
+}
+
+.header {
+  opacity: 75%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header h1, .header .buttons {
+  display: inline-block;
+}
+
+.header h1 {
+  font-weight: var(--font-light);
+  font-size: var(--font-ui-medium);
+}
+
+.header .buttons {
+  align-content: center;
+}
+
+.header .buttons > *:hover {
+  color: var(--text-accent);
 }

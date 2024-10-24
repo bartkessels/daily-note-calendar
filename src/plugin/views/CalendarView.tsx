@@ -1,21 +1,21 @@
 import { StrictMode } from 'react';
 import { IconName, ItemView, WorkspaceLeaf } from "obsidian";
-import { Root, createRoot } from 'react-dom/client';
-import { CalendarUi } from './CalendarUi';
+import { createRoot } from 'react-dom/client';
+import { CalendarComponent } from './CalendarComponent';
 import { DateRepository } from 'src/domain/repositories/DateRepository';
 import { FileService } from 'src/domain/services/FileService';
+import { DateRepositoryContext } from '../Providers/DateRepositoryProvider';
+import { FileServiceContext } from '../Providers/FileServiceProvider';
 
 export class CalendarView extends ItemView {
     public static VIEW_TYPE = 'daily-note-calendar';
     private static DISPLAY_TEXT = 'Daily note calendar';
     private static ICON_NAME = 'calendar';
 
-    private root?: Root
-
     constructor(
-        readonly leaf: WorkspaceLeaf,
-        private readonly fileService: FileService,
-        private readonly dateRepository: DateRepository
+        leaf: WorkspaceLeaf,
+        private readonly dateRepository: DateRepository,
+        private readonly fileService: FileService
     ) {
         super(leaf);
     }
@@ -33,34 +33,14 @@ export class CalendarView extends ItemView {
     }
 
     protected override async onOpen(): Promise<void> {
-        const month = this.dateRepository.getCurrentMonth();
-        const year = this.dateRepository.getCurrentYear();
-                
-        this.root = createRoot(this.containerEl.children[1]);
-        this.root.render(
+        createRoot(this.containerEl.children[1]).render(
             <StrictMode>
-                <CalendarUi
-                    year={year}
-                    month={month}
-                    onDateClicked={(date) => this.openDailyNote(date)}
-                    onWeekClicked={(date) => this.openWeeklyNote(date)} />
+                <DateRepositoryContext.Provider value={this.dateRepository}>
+                    <FileServiceContext.Provider value={this.fileService}>
+                        <CalendarComponent />
+                    </FileServiceContext.Provider>
+                </DateRepositoryContext.Provider>
             </StrictMode>
         );
-    }
-
-    private async openDailyNote(date?: Date): Promise<void> {
-        if (!date) {
-            return;
-        }
-
-        await this.fileService.tryOpenDailyNote(date);
-    }
-
-    private async openWeeklyNote(date?: Date): Promise<void> {
-        if (!date) {
-            return;
-        }
-
-        await this.fileService.tryOpenWeeklyNote(date);
     }
 }

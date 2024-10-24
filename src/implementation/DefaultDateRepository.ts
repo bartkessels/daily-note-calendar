@@ -1,29 +1,19 @@
 import { Day, DayOfWeek } from "src/domain/models/Day";
 import { Month } from "src/domain/models/Month";
 import { Week } from "src/domain/models/Week";
-import { Year } from "src/domain/models/Year";
 import { DateRepository } from "src/domain/repositories/DateRepository";
 
 export class DefaultDateRepository implements DateRepository {
-    private readonly monthFormat = "short";
-    private readonly dayFormat = "2-digit";
+    private readonly monthFormat = "long";
+    private readonly dayFormat = "numeric";
 
-
-    public getCurrentYear(): Year {
-        const currentYear = new Date().getFullYear();
-        return this.getYear(currentYear);
+    public getToday(): Date {
+        return new Date();
     }
 
     public getCurrentMonth(): Month {
-        const date = new Date();
+        const date = this.getToday();
         return this.getMonth(date.getFullYear(), date.getMonth());
-    }
-
-    public getYear(year: number): Year {
-        return <Year> {
-            year: year,
-            months: this.getMonthsOfYear(year)
-        };
     }
 
     public getMonth(year: number, month: number): Month {
@@ -36,14 +26,15 @@ export class DefaultDateRepository implements DateRepository {
 
         return <Month> {
             monthIndex: month,
+            year: year,
             name: formatter.format(new Date(year, month)),
             weeks: weeks
         };
     }
 
-    private getMonthsOfYear(year: number): Month[] {
-        const monthList = [...Array(12).keys()];
-        return monthList.map(monthIndex => this.getMonth(year, monthIndex));
+    public isToday(day?: Day): boolean {
+        const today = this.getToday().toDateString();
+        return day?.completeDate.toDateString() === today;
     }
 
     private getDaysOfMonth(year: number, month: number): Day[] {
