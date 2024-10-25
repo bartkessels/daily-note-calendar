@@ -1,25 +1,28 @@
 import { Plugin } from "obsidian";
 import { CalendarView } from "./plugin/views/CalendarView";
 import { CalendarSettingsTab } from "./plugin/settings/CalendarSettingsTab";
-import { PluginSettingsRepository } from "./implementation/PluginSettingsRepository";
-import { DefaultDateRepository } from "./implementation/DefaultDateRepository";
+import { PluginSettingsRepository } from "./implementation/repositories/PluginSettingsRepository";
+import { DefaultDateRepository } from "./implementation/repositories/DefaultDateRepository";
 import { VaultFileService } from "./implementation/services/WorkspaceFileService";
-import { SettingsDailyNoteFileNameBuilder } from "./implementation/builders/SettingsDailyNoteFileNameBuilder";
-import { SettingsWeeklyNoteFileNameBuilder } from "./implementation/builders/SettingsWeeklyNoteFileNameBuilder";
-import 'src/extensions/string.extensions';
+import 'src/extensions/extensions';
+import 'src/extensions/extensions';
+import { RepositoryDateManager } from "./implementation/managers/RepositoryDateManager";
+import { RepositoryFileManager } from "./implementation/managers/RepositoryFileManager";
+import { DateFileNameBuilder } from "./implementation/builders/DateFileNameBuilder";
 
 export default class DailyNoteCalendarPlugin extends Plugin {
     private readonly settingsRepository = new PluginSettingsRepository(this);
-    private readonly dailyNoteFileNameBuilder = new SettingsDailyNoteFileNameBuilder(this.settingsRepository);
-    private readonly weeklyNoteFileNameBuilder = new SettingsWeeklyNoteFileNameBuilder(this.settingsRepository);
+    private readonly dateFileNameBuilder = new DateFileNameBuilder();
     private readonly dateRepository = new DefaultDateRepository();
-    private readonly fileService = new VaultFileService(this.app.vault, this.app.workspace, this.settingsRepository, this.dailyNoteFileNameBuilder, this.weeklyNoteFileNameBuilder);
+    private readonly dateManager = new RepositoryDateManager(this.dateRepository);
+    private readonly fileService = new VaultFileService(this.app.vault, this.app.workspace);
+    private readonly fileManager = new RepositoryFileManager(this.settingsRepository, this.dateFileNameBuilder, this.fileService);
 
     override async onload(): Promise<void> {
         this.registerView(CalendarView.VIEW_TYPE, (leaf) => new CalendarView(
             leaf,
-            this.dateRepository,
-            this.fileService
+            this.dateManager,
+            this.fileManager
         ));
         this.addSettingTab(new CalendarSettingsTab(this, this.settingsRepository));
 

@@ -1,8 +1,8 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
 import { DayOfWeek } from "src/domain/models/Day";
-import { UseDateRepository } from "../Providers/DateRepositoryProvider";
-import { UseFileService } from "../Providers/FileServiceProvider";
+import { useDateManager } from "../Providers/DateManagerProvider";
+import { useFileManager } from "../Providers/FileManagerProvider";
 
 const WEEK_DAYS_ORDER = [
     DayOfWeek.Monday,
@@ -15,31 +15,14 @@ const WEEK_DAYS_ORDER = [
 ];
 
 export const CalendarComponent = () => {
-    const dateRepository = UseDateRepository();
-    const fileService = UseFileService();
+    const dateManager = useDateManager();
+    const fileManager = useFileManager();
+    const [currentMonth, setCurrentMonth] = React.useState(dateManager?.getCurrentMonth());
 
-    const [currentMonth, setCurrentMonth] = React.useState(dateRepository?.getCurrentMonth());
-    const nextMonth = () => {
-        if (currentMonth) {
-            setCurrentMonth(dateRepository?.getMonth(currentMonth.year, currentMonth.monthIndex + 1));
-        }
-    }
-    const previousMonth = () => {
-        if (currentMonth) {
-            setCurrentMonth(dateRepository?.getMonth(currentMonth.year, currentMonth.monthIndex - 1));
-        }
-    }
-
-    const onWeekClicked = (date?: Date) => {
-        if (date) {
-            fileService?.tryOpenWeeklyNote(date);
-        }
-    }
-    const onDayClicked = (date?: Date) => {
-        if (date) {
-            fileService?.tryOpenDailyNote(date);
-        }
-    }
+    const nextMonth = () => setCurrentMonth(dateManager?.getNextMonth(currentMonth));
+    const previousMonth = () => setCurrentMonth(dateManager?.getPreviousMonth(currentMonth));
+    const onWeekClicked = (date?: Date) => fileManager?.tryOpenWeeklyNote(date);
+    const onDayClicked = (date?: Date) => fileManager?.tryOpenDailyNote(date);
 
     return (
         <>
@@ -83,7 +66,7 @@ export const CalendarComponent = () => {
                                     <td
                                         key={dayOfWeekIndex}
                                         onClick={() => onDayClicked(day?.completeDate)}
-                                        className={dateRepository?.isToday(day) ? 'today' : ''}>{day?.name}</td>
+                                        className={day?.completeDate.isToday() ? 'today' : ''}>{day?.name}</td>
                                 )
                             })}
                         </tr>

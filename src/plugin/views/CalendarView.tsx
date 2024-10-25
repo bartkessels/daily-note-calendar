@@ -2,10 +2,10 @@ import { StrictMode } from 'react';
 import { IconName, ItemView, WorkspaceLeaf } from "obsidian";
 import { createRoot } from 'react-dom/client';
 import { CalendarComponent } from './CalendarComponent';
-import { DateRepository } from 'src/domain/repositories/DateRepository';
-import { FileService } from 'src/domain/services/FileService';
-import { DateRepositoryContext } from '../Providers/DateRepositoryProvider';
-import { FileServiceContext } from '../Providers/FileServiceProvider';
+import { DateManager } from 'src/domain/managers/DateManager';
+import { DateManagerContext } from '../Providers/DateManagerProvider';
+import { FileManager } from 'src/domain/managers/FileManager';
+import { FileManagerContext } from '../Providers/FileManagerProvider';
 
 export class CalendarView extends ItemView {
     public static VIEW_TYPE = 'daily-note-calendar';
@@ -14,8 +14,8 @@ export class CalendarView extends ItemView {
 
     constructor(
         leaf: WorkspaceLeaf,
-        private readonly dateRepository: DateRepository,
-        private readonly fileService: FileService
+        private readonly dateManager: DateManager,
+        private readonly fileManager: FileManager
     ) {
         super(leaf);
     }
@@ -35,11 +35,11 @@ export class CalendarView extends ItemView {
     protected override async onOpen(): Promise<void> {
         createRoot(this.containerEl.children[1]).render(
             <StrictMode>
-                <DateRepositoryContext.Provider value={this.dateRepository}>
-                    <FileServiceContext.Provider value={this.fileService}>
+                <DateManagerContext.Provider value={this.dateManager}>
+                    <FileManagerContext.Provider value={this.fileManager}>
                         <CalendarComponent />
-                    </FileServiceContext.Provider>
-                </DateRepositoryContext.Provider>
+                    </FileManagerContext.Provider>
+                </DateManagerContext.Provider>
             </StrictMode>
         );
     }

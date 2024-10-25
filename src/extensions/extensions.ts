@@ -2,6 +2,9 @@ declare global {
     interface String {
         appendMarkdownExtension(): string;
     }
+    interface Date {
+        isToday(): boolean;
+    }
 }
 
 String.prototype.appendMarkdownExtension = function() {
@@ -13,5 +16,10 @@ String.prototype.appendMarkdownExtension = function() {
 
     return this + extension;
 };
+
+Date.prototype.isToday = function() {
+    const today = new Date();
+    return this.toDateString() === today.toDateString();
+}
 
 export {}

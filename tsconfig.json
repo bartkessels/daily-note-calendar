@@ -19,10 +19,14 @@
       "ES5",
       "ES6",
       "ES7"
-    ]
+    ],
+    "types": ["jest", "node"]
   },
   "include": [
     "**/*.ts",
     "**/*.tsx"
+  ],
+  "exclude": [
+    "**/*.spec.ts"
   ]
 }

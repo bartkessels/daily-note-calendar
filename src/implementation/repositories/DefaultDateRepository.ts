@@ -7,15 +7,6 @@ export class DefaultDateRepository implements DateRepository {
     private readonly monthFormat = "long";
     private readonly dayFormat = "numeric";
 
-    public getToday(): Date {
-        return new Date();
-    }
-
-    public getCurrentMonth(): Month {
-        const date = this.getToday();
-        return this.getMonth(date.getFullYear(), date.getMonth());
-    }
-
     public getMonth(year: number, month: number): Month {
         const formatter = new Intl.DateTimeFormat(undefined, {
             month: this.monthFormat
@@ -30,11 +21,6 @@ export class DefaultDateRepository implements DateRepository {
             name: formatter.format(new Date(year, month)),
             weeks: weeks
         };
-    }
-
-    public isToday(day?: Day): boolean {
-        const today = this.getToday().toDateString();
-        return day?.completeDate.toDateString() === today;
     }
 
     private getDaysOfMonth(year: number, month: number): Day[] {
