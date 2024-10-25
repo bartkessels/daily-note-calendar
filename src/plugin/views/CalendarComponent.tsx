@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarHeart, ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
 import { DayOfWeek } from "src/domain/models/Day";
 import { useDateManager } from "../Providers/DateManagerProvider";
@@ -19,8 +19,9 @@ export const CalendarComponent = () => {
     const fileManager = useFileManager();
     const [currentMonth, setCurrentMonth] = React.useState(dateManager?.getCurrentMonth());
 
-    const nextMonth = () => setCurrentMonth(dateManager?.getNextMonth(currentMonth));
-    const previousMonth = () => setCurrentMonth(dateManager?.getPreviousMonth(currentMonth));
+    const goToCurrentMonth = () => setCurrentMonth(dateManager?.getCurrentMonth());
+    const goToNextMonth = () => setCurrentMonth(dateManager?.getNextMonth(currentMonth));
+    const goToPreviousMonth = () => setCurrentMonth(dateManager?.getPreviousMonth(currentMonth));
     const onWeekClicked = (date?: Date) => fileManager?.tryOpenWeeklyNote(date);
     const onDayClicked = (date?: Date) => fileManager?.tryOpenDailyNote(date);
 
@@ -32,10 +33,13 @@ export const CalendarComponent = () => {
                 <div className="buttons">
                     <ChevronLeft
                         strokeWidth={1}
-                        onClick={previousMonth} />
+                        onClick={goToPreviousMonth} />
+                    <CalendarHeart
+                        strokeWidth={1}
+                        onClick={goToCurrentMonth} />
                     <ChevronRight
                         strokeWidth={1}
-                        onClick={nextMonth} />
+                        onClick={goToNextMonth} />
                 </div>
             </div>
 
