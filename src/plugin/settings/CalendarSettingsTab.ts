@@ -14,7 +14,7 @@ export class CalendarSettingsTab extends PluginSettingTab {
 
     override async display(): Promise<void> {
         this.containerEl.empty();
-        var settings = await this.settingsRepository.getSettings();
+        const settings = await this.settingsRepository.getSettings();
 
         this.addDailyNoteSettings(settings);
         this.addWeeklyNoteSettings(settings);

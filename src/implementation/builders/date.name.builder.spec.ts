@@ -1,7 +1,7 @@
 import { DateNameBuilder } from './date.name.builder';
 import { format } from 'date-fns';
 import {join} from "path";
-import '../../extensions/extensions';
+import 'src/extensions/extensions';
 
 describe('DateNameBuilder', () => {
     it('should build a name with the given template and date', () => {

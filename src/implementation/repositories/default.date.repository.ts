@@ -23,9 +23,9 @@ export class DefaultDateRepository implements DateRepository {
         };
     }
 
-    private getDaysOfMonth(year: number, month: number): Day[] {
+    public getDaysOfMonth(year: number, month: number): Day[] {
         const date = new Date(year, month, 1);
-        var daysList = [];
+        const daysList = [];
 
         while(date.getMonth() === month) {
             daysList.push(new Date(date));

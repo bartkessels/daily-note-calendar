@@ -8,7 +8,7 @@ export class PluginSettingsRepository implements SettingsRepository {
     }
 
     async getSettings(): Promise<Settings> {
-        var settings = await this.plugin.loadData();
+        const settings = await this.plugin.loadData();
         return { ...DEFAULT_SETTINGS, ...settings };
     }
 

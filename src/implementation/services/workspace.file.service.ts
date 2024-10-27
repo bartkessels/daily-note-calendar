@@ -11,22 +11,18 @@ export class VaultFileService implements FileService {
 
     public async tryOpenFile(filePath: string, templateFilePath: string): Promise<void> {
         const actualFilePath = await this.createFileIfNotExists(filePath, templateFilePath);
-        this.workspace.openLinkText(actualFilePath, '');
+        await this.workspace.openLinkText(actualFilePath, '');
     }
 
     private async createFileIfNotExists(filePath: string, templateFilePath: string): Promise<string> {
         const file = this.vault.getFileByPath(filePath);
         const templateFile = this.vault.getFileByPath(templateFilePath.appendMarkdownExtension());
 
-        console.log(file);
-        console.log(templateFile);
-
         if (file || !templateFile) {
             return filePath;
         }
 
         const newFile = await this.vault.copy(templateFile, filePath);
-        console.log(newFile);
         return newFile.path;
     }
 }

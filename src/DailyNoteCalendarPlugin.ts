@@ -4,10 +4,10 @@ import { CalendarSettingsTab } from "./plugin/settings/CalendarSettingsTab";
 import { PluginSettingsRepository } from "./implementation/repositories/plugin.settings.repository";
 import { DefaultDateRepository } from "./implementation/repositories/default.date.repository";
 import { VaultFileService } from "./implementation/services/workspace.file.service";
-import 'src/extensions/extensions';
 import { RepositoryDateManager } from "./implementation/managers/repository.date.manager";
 import { RepositoryFileManager } from "./implementation/managers/repository.file.manager";
 import { DateNameBuilder } from "./implementation/builders/date.name.builder";
+import 'src/extensions/extensions';
 
 export default class DailyNoteCalendarPlugin extends Plugin {
     private readonly settingsRepository = new PluginSettingsRepository(this);

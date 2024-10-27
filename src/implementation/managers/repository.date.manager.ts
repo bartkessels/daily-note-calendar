@@ -26,8 +26,8 @@ export class RepositoryDateManager implements DateManager {
             return this.getCurrentMonth();
         }
 
-        var currentYear = currentMonth.year;
-        var currentMonthIndex = currentMonth.monthIndex + 1;
+        let currentYear = currentMonth.year;
+        let currentMonthIndex = currentMonth.monthIndex + 1;
 
         if (currentMonthIndex > this.DECEMBER_INDEX) {
             currentYear++;
@@ -41,10 +41,9 @@ export class RepositoryDateManager implements DateManager {
         if (!currentMonth) {
             return this.getCurrentMonth();
         }
-        console.log(currentMonth);
 
-        var currentYear = currentMonth.year;
-        var currentMonthIndex = currentMonth.monthIndex - 1;
+        let currentYear = currentMonth.year;
+        let currentMonthIndex = currentMonth.monthIndex - 1;
 
         if (currentMonthIndex < this.JANUARY_INDEX) {
             currentYear--;
