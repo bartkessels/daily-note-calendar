@@ -1,7 +1,7 @@
 {
 	"name": "daily-note-calendar",
 	"version": "1.0.0",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+	"description": "A plugin to easily navigate to your daily notes using a calendar view.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
