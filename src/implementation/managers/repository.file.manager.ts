@@ -1,12 +1,12 @@
-import { FileNameBuilder } from "src/domain/builders/FileNameBuilder";
-import { FileManager } from "src/domain/managers/FileManager";
-import { SettingsRepository } from "src/domain/repositories/SettingsRepository";
-import { FileService } from "src/domain/services/FileService";
+import { NameBuilder } from "src/domain/builders/name.builder";
+import { FileManager } from "src/domain/managers/file.manager";
+import { SettingsRepository } from "src/domain/repositories/settings.repository";
+import { FileService } from "src/domain/services/file.service";
 
 export class RepositoryFileManager implements FileManager {
     constructor(
         private readonly settingsRepository: SettingsRepository,
-        private readonly fileNameBuilder: FileNameBuilder<Date>,
+        private readonly fileNameBuilder: NameBuilder<Date>,
         private readonly fileService: FileService
     ) {
 

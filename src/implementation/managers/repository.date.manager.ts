@@ -1,6 +1,6 @@
-import { DateManager } from "src/domain/managers/DateManager";
+import { DateManager } from "src/domain/managers/date.manager";
 import { Month } from "src/domain/models/Month";
-import { DateRepository } from "src/domain/repositories/DateRepository";
+import { DateRepository } from "src/domain/repositories/date.repository";
 
 export class RepositoryDateManager implements DateManager {
     private readonly DECEMBER_INDEX = 11;

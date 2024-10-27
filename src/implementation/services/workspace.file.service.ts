@@ -1,5 +1,5 @@
 import { normalizePath, Vault, Workspace } from "obsidian";
-import { FileService } from "src/domain/services/FileService";
+import { FileService } from "src/domain/services/file.service";
 
 export class VaultFileService implements FileService {
     constructor(

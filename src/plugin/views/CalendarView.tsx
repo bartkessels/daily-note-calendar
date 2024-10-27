@@ -2,10 +2,10 @@ import { StrictMode } from 'react';
 import { IconName, ItemView, WorkspaceLeaf } from "obsidian";
 import { createRoot } from 'react-dom/client';
 import { CalendarComponent } from './CalendarComponent';
-import { DateManager } from 'src/domain/managers/DateManager';
-import { DateManagerContext } from '../Providers/DateManagerProvider';
-import { FileManager } from 'src/domain/managers/FileManager';
-import { FileManagerContext } from '../Providers/FileManagerProvider';
+import { DateManager } from 'src/domain/managers/date.manager';
+import { DateManagerContext } from '../Providers/datemanager.provider';
+import { FileManager } from 'src/domain/managers/file.manager';
+import { FileManagerContext } from '../Providers/filemanager.provider';
 
 export class CalendarView extends ItemView {
     public static VIEW_TYPE = 'daily-note-calendar';

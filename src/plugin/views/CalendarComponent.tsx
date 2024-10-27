@@ -1,8 +1,8 @@
 import { CalendarHeart, ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
 import { DayOfWeek } from "src/domain/models/Day";
-import { useDateManager } from "../Providers/DateManagerProvider";
-import { useFileManager } from "../Providers/FileManagerProvider";
+import { useDateManager } from "../Providers/datemanager.provider";
+import { useFileManager } from "../Providers/filemanager.provider";
 
 const WEEK_DAYS_ORDER = [
     DayOfWeek.Monday,

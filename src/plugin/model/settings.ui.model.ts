@@ -1,4 +1,4 @@
-export interface SettingUiModel {
+export interface SettingsUiModel {
     name: string,
     description: string,
     placeholder: string,

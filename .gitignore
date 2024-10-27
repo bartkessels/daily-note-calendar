@@ -1,4 +1,6 @@
 node_modules/
+.idea/
+.DS_Store
 
 data.json
 versions.json

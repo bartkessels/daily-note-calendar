@@ -1,7 +1,7 @@
 import { Plugin, PluginSettingTab, Setting } from "obsidian";
-import { SettingUiModel } from "../model/SettingUiModel";
+import { SettingsUiModel } from "../model/settings.ui.model";
 import { dailyNoteFolderSetting, dailyNoteNameSetting, dailyNoteTemplateFile, weeklyNoteFolderSetting, weeklyNoteNameTemplateSetting, weeklyNoteTemplateFile } from "./settings";
-import { SettingsRepository } from "src/domain/repositories/SettingsRepository";
+import { SettingsRepository } from "src/domain/repositories/settings.repository";
 import { Settings } from "src/domain/models/Settings";
 
 export class CalendarSettingsTab extends PluginSettingTab {
@@ -54,7 +54,7 @@ export class CalendarSettingsTab extends PluginSettingTab {
         });
     }
 
-    private addSetting(setting: SettingUiModel, onChange: (value: string) => void) {
+    private addSetting(setting: SettingsUiModel, onChange: (value: string) => void) {
         this.createSetting(setting)
             .addText(component => component
                 .setPlaceholder(setting.placeholder)
@@ -70,7 +70,7 @@ export class CalendarSettingsTab extends PluginSettingTab {
             .setDesc(description);
     }
 
-    private createSetting(setting: SettingUiModel): Setting {
+    private createSetting(setting: SettingsUiModel): Setting {
         return new Setting(this.containerEl)
             .setName(setting.name)
             .setDesc(setting.description);
