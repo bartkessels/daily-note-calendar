@@ -27,7 +27,7 @@ export class RepositoryFileManager implements FileManager {
         return this.fileService.tryOpenFile(filePath, settings.dailyNoteTemplateFile);
     }
     
-    public async tryOpenWeeklyNote(date: Date): Promise<void> {
+    public async tryOpenWeeklyNote(date?: Date): Promise<void> {
         if (!date) {
             return;
         }

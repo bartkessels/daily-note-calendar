@@ -3,7 +3,9 @@ import { DEFAULT_SETTINGS, type Settings } from "src/domain/models/Settings";
 import type { SettingsRepository } from "src/domain/repositories/settings.repository";
 
 export class PluginSettingsRepository implements SettingsRepository {
-    constructor(private readonly plugin: Plugin) {
+    constructor(
+        private readonly plugin: Plugin
+    ) {
 
     }
 
