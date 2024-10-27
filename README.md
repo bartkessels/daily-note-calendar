@@ -89,8 +89,10 @@ The _Daily notes calendar_ project does not use a development branch but instead
 
 # 5. Create a new release
 
-To create a new release of the plugin, edit the `package.json` file and update the `version` property. For versioning _Daily note calendar_ uses
-semantic versioning. Which, given the documentation on [semver.org](https://semver.org), means that the version number consists of MAJOR.MINOR.PATCH.
+To create a new release of the plugin, edit the `package.json` and `manifest.json` files and update the `version` property in both.
+
+For versioning _Daily note calendar_ uses semantic versioning.
+Which, given the documentation on [semver.org](https://semver.org), means that the version number consists of MAJOR.MINOR.PATCH.
 
 When creating a release of _Daily note plugin_, check what kind of changes have been applied since the previous version and categorize these in one of the following segments:
 
