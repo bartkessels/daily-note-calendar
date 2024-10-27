@@ -105,13 +105,14 @@ These can be mapped on the semantic versioning scheme in the following ways:
 * Update the __PATCH__ version when a __bug is resolved__
 
 When you've updated the version in `package.json` create a new tag in Git using the
-following structure: `MAJOR.MINOR.PATCH`. For version 5 with a bugfix this would be `v5.0.1`.
+following structure: `MAJOR.MINOR.PATCH`.
+For version 5 with a bugfix this would be `5.0.1`.
 
 This can be created using the following Git-command:
 
 ```bash
-$ git tag -a v5.0.1
-$ git push -u origin v5.0.1
+$ git tag -a 5.0.1
+$ git push -u origin 5.0.1
 ```
 
 This will create the tag locally and then push it to Github which in turn will kick off the required
