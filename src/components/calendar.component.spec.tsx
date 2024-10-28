@@ -4,9 +4,9 @@ import '@testing-library/jest-dom';
 import { CalendarComponent } from './calendar.component';
 import { DateManager } from 'src/domain/managers/date.manager';
 import { FileManager } from 'src/domain/managers/file.manager';
-import { DateManagerContext } from 'src/plugin/Providers/datemanager.provider';
-import { FileManagerContext } from 'src/plugin/Providers/filemanager.provider';
 import 'src/extensions/extensions';
+import { DateManagerContext } from './providers/datemanager.provider';
+import { FileManagerContext } from './providers/filemanager.provider';
 
 const mockDateManager = {
     getCurrentMonth: jest.fn(),
@@ -29,7 +29,6 @@ describe('CalendarComponent', () => {
                     weekNumber: 40,
                     days: [
                         { dayOfWeek: 1, completeDate: new Date(2023, 9, 2), name: '2' },
-                        // Add other days as needed
                     ]
                 }
             ]
