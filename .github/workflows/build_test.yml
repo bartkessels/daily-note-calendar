@@ -2,8 +2,7 @@ name: Build and test the daily-note-calendar plugin
 
 on:
   push:
-    branches:
-        - main
+    branches: ['*']
 
 jobs:
   build:
