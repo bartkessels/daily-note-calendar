@@ -12,11 +12,12 @@ export class AdapterFileService implements FileService {
         const fileExists = await this.fileAdapter.doesFileExist(filePath);
         const templateFileExists = await this.fileAdapter.doesFileExist(templateFilePath);
 
-        if (fileExists || !templateFileExists) {
-            return;
+        if (!templateFileExists) {
+            throw Error(`Template file does not exist: ${templateFilePath}`);
+        } else if (!fileExists) {
+            await this.fileAdapter.createFileFromTemplate(filePath, templateFilePath);
         }
 
-        const actualFilePath = await this.fileAdapter.createFileFromTemplate(filePath, templateFilePath);
-        await this.fileAdapter.openFile(actualFilePath);
+        await this.fileAdapter.openFile(filePath);
     }
 }
