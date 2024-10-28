@@ -3,7 +3,7 @@ module.exports = {
   moduleNameMapper: {
     '^src/(.*)$': '<rootDir>/src/$1',
   },
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
   transform: {
     '^.+.tsx?$': ['ts-jest',{
       tsconfig: 'tsconfig.json'
