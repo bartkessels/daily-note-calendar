@@ -1,5 +1,6 @@
 import { AdapterFileService } from './adapter.file.service';
 import { FileAdapter } from 'src/domain/adapters/file.adapter';
+import 'src/extensions/extensions';
 
 describe('AdapterFileService', () => {
     let fileAdapter: jest.Mocked<FileAdapter>;
@@ -19,9 +20,9 @@ describe('AdapterFileService', () => {
 
         await service.tryOpenFile('path/to/file', 'path/to/template');
 
-        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/file');
+        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/file.md');
         expect(fileAdapter.createFileFromTemplate).not.toHaveBeenCalled();
-        expect(fileAdapter.openFile).toHaveBeenCalledWith('path/to/file');
+        expect(fileAdapter.openFile).toHaveBeenCalledWith('path/to/file.md');
     });
 
     it('should throw an error if the template does not exist', async () => {
@@ -30,8 +31,8 @@ describe('AdapterFileService', () => {
 
         await expect(service.tryOpenFile('path/to/file', 'path/to/template')).rejects.toThrow('Template file does not exist: path/to/template');
 
-        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/file');
-        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/template');
+        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/file.md');
+        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/template.md');
         expect(fileAdapter.createFileFromTemplate).not.toHaveBeenCalled();
         expect(fileAdapter.openFile).not.toHaveBeenCalled();
     });
@@ -43,9 +44,27 @@ describe('AdapterFileService', () => {
 
         await service.tryOpenFile('path/to/file', 'path/to/template');
 
-        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/file');
-        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/template');
-        expect(fileAdapter.createFileFromTemplate).toHaveBeenCalledWith('path/to/file', 'path/to/template');
-        expect(fileAdapter.openFile).toHaveBeenCalledWith('path/to/file');
+        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/file.md');
+        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/template.md');
+        expect(fileAdapter.createFileFromTemplate).toHaveBeenCalledWith('path/to/file.md', 'path/to/template.md');
+        expect(fileAdapter.openFile).toHaveBeenCalledWith('path/to/file.md');
+    });
+
+    it('should append markdown extension to file paths if it doesnt already contain the extension', async () => {
+        fileAdapter.doesFileExist.mockResolvedValue(true);
+
+        await service.tryOpenFile('path/to/file', 'path/to/template');
+
+        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/file.md');
+        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/template.md');
+    });
+
+    it('should not append markdown extension to file paths if it already contain the extension', async () => {
+        fileAdapter.doesFileExist.mockResolvedValue(true);
+
+        await service.tryOpenFile('path/to/file.md', 'path/to/template.md');
+
+        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/file.md');
+        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/template.md');
     });
 });
