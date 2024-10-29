@@ -16,10 +16,6 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         this.app.workspace.onLayoutReady(this.setViewStates.bind(this));
     }
 
-    override onunload(): void {
-        this.app.workspace.detachLeavesOfType(CalendarView.VIEW_TYPE);
-    }
-
     private setViewStates(): void {
         this.setRightLeafWorkspaceViewState(CalendarView.VIEW_TYPE);
     }
