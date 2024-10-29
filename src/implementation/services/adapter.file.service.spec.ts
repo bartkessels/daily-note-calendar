@@ -1,5 +1,6 @@
 import { AdapterFileService } from './adapter.file.service';
 import { FileAdapter } from 'src/domain/adapters/file.adapter';
+import 'src/extensions/extensions';
 
 describe('AdapterFileService', () => {
     let fileAdapter: jest.Mocked<FileAdapter>;
@@ -47,5 +48,23 @@ describe('AdapterFileService', () => {
         expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/template');
         expect(fileAdapter.createFileFromTemplate).toHaveBeenCalledWith('path/to/file', 'path/to/template');
         expect(fileAdapter.openFile).toHaveBeenCalledWith('path/to/file');
+    });
+
+    it('should append markdown extension to file paths if it doesnt already contain the extension', async () => {
+        fileAdapter.doesFileExist.mockResolvedValue(true);
+
+        await service.tryOpenFile('path/to/file', 'path/to/template');
+
+        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/file.md');
+        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/template.md');
+    });
+
+    it('should not append markdown extension to file paths if it already contain the extension', async () => {
+        fileAdapter.doesFileExist.mockResolvedValue(true);
+
+        await service.tryOpenFile('path/to/file.md', 'path/to/template.md');
+
+        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/file.md');
+        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/template.md');
     });
 });

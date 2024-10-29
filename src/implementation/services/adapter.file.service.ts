@@ -9,15 +9,18 @@ export class AdapterFileService implements FileService {
     }
 
     public async tryOpenFile(filePath: string, templateFilePath: string): Promise<void> {
-        const fileExists = await this.fileAdapter.doesFileExist(filePath);
-        const templateFileExists = await this.fileAdapter.doesFileExist(templateFilePath);
+        const completeFilePath = filePath.appendMarkdownExtension()
+        const completeTemplateFilePath = templateFilePath.appendMarkdownExtension()
+
+        const fileExists = await this.fileAdapter.doesFileExist(completeFilePath);
+        const templateFileExists = await this.fileAdapter.doesFileExist(completeTemplateFilePath);
 
         if (!templateFileExists) {
-            throw Error(`Template file does not exist: ${templateFilePath}`);
+            throw Error(`Template file does not exist: ${completeTemplateFilePath}`);
         } else if (!fileExists) {
-            await this.fileAdapter.createFileFromTemplate(filePath, templateFilePath);
+            await this.fileAdapter.createFileFromTemplate(completeFilePath, completeTemplateFilePath);
         }
 
-        await this.fileAdapter.openFile(filePath);
+        await this.fileAdapter.openFile(completeFilePath);
     }
 }
