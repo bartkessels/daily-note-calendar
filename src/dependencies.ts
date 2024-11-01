@@ -7,6 +7,8 @@ import {DateRepository} from "src/domain/repositories/date.repository";
 import {DateNameBuilder} from "src/implementation/builders/date.name.builder";
 import {PluginSettingsRepository} from "src/implementation/repositories/plugin.settings.repository";
 import {DefaultDateRepository} from "src/implementation/repositories/default.date.repository";
+import {NoteManager} from "src/domain/managers/note.manager";
+import {AdapterNoteManager} from "src/implementation/managers/adapter.note.manager";
 
 export interface Dependencies {
     readonly settingsRepository: PluginSettingsRepository;
@@ -16,6 +18,7 @@ export interface Dependencies {
     readonly fileAdapter: ObsidianFileAdapter;
     readonly fileService: AdapterFileService;
     readonly fileManager: RepositoryFileManager;
+    readonly noteManager: NoteManager;
 }
 
 export function createDependencies(plugin: Plugin) {
@@ -26,6 +29,7 @@ export function createDependencies(plugin: Plugin) {
     const fileAdapter = new ObsidianFileAdapter(plugin.app.vault, plugin.app.workspace);
     const fileService = new AdapterFileService(fileAdapter);
     const fileManager = new RepositoryFileManager(settingsRepository, dateFileNameBuilder, fileService);
+    const noteManager = new AdapterNoteManager(fileAdapter);
 
     return {
         settingsRepository,
@@ -34,6 +38,7 @@ export function createDependencies(plugin: Plugin) {
         dateManager,
         fileAdapter,
         fileService,
-        fileManager
+        fileManager,
+        noteManager
     };
 }
