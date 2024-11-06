@@ -62,7 +62,7 @@ export const CalendarComponent = () => {
                         <td
                             className="weekNumber"
                             key={week.weekNumber}
-                            onClick={(() => onWeekClicked(week.days.first()?.completeDate))}>{week.weekNumber}</td>
+                            onClick={(() => onWeekClicked(week.days.at(0)?.completeDate))}>{week.weekNumber}</td>
                         {WEEK_DAYS_ORDER.map((dayOfWeek, dayOfWeekIndex) => {
                             const day = week.days.find(d => d.dayOfWeek === dayOfWeek);
 
