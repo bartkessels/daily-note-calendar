@@ -29,6 +29,11 @@ describe('CalendarComponent', () => {
                     weekNumber: 40,
                     days: [
                         { dayOfWeek: 1, completeDate: new Date(2023, 9, 2), name: '2' },
+                        { dayOfWeek: 2, completeDate: new Date(2023, 9, 3), name: '3' },
+                        { dayOfWeek: 3, completeDate: new Date(2023, 9, 4), name: '4' },
+                        { dayOfWeek: 4, completeDate: new Date(2023, 9, 5), name: '5' },
+                        { dayOfWeek: 5, completeDate: new Date(2023, 9, 6), name: '6' },
+                        { dayOfWeek: 6, completeDate: new Date(2023, 9, 7), name: '7' },
                     ]
                 }
             ]
@@ -97,5 +102,18 @@ describe('CalendarComponent', () => {
 
         fireEvent.click(screen.getByText('2'));
         expect(mockFileManager.tryOpenDailyNote).toHaveBeenCalledWith(new Date(2023, 9, 2));
+    });
+
+    it('calls onWeekClicked when a week is clicked', () => {
+        render(
+            <DateManagerContext.Provider value={mockDateManager}>
+                <FileManagerContext.Provider value={mockFileManager}>
+                    <CalendarComponent />
+                </FileManagerContext.Provider>
+            </DateManagerContext.Provider>
+        );
+
+        fireEvent.click(screen.getByText('40'));
+        expect(mockFileManager.tryOpenWeeklyNote).toHaveBeenCalledWith(new Date(2023, 9, 2));
     });
 });
