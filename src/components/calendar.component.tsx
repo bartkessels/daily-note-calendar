@@ -2,7 +2,9 @@ import { CalendarHeart, ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
 import { DayOfWeek } from "src/domain/models/Day";
 import { useDateManager } from "./providers/datemanager.provider";
-import {useFileManager} from "src/components/providers/filemanager.provider";
+import {getDailyNoteEvent} from "src/components/providers/daily-note.event.provider";
+import {getWeeklyNoteEvent} from "src/components/providers/weekly-note.event.provider";
+import {getMonthlyNoteEvent} from "src/components/providers/monthly-note.event.provider";
 
 const WEEK_DAYS_ORDER = [
     DayOfWeek.Monday,
@@ -16,19 +18,22 @@ const WEEK_DAYS_ORDER = [
 
 export const CalendarComponent = () => {
     const dateManager = useDateManager();
-    const fileManager = useFileManager();
     const [currentMonth, setCurrentMonth] = React.useState(dateManager?.getCurrentMonth());
+
+    const dailyNoteEvent = getDailyNoteEvent();
+    const weeklyNoteEvent = getWeeklyNoteEvent();
+    const monthlyNoteEvent = getMonthlyNoteEvent();
 
     const goToCurrentMonth = () => setCurrentMonth(dateManager?.getCurrentMonth());
     const goToNextMonth = () => setCurrentMonth(dateManager?.getNextMonth(currentMonth));
     const goToPreviousMonth = () => setCurrentMonth(dateManager?.getPreviousMonth(currentMonth));
-    const onWeekClicked = (date?: Date) => fileManager?.tryOpenWeeklyNote(date);
-    const onDayClicked = (date?: Date) => fileManager?.tryOpenDailyNote(date);
 
     return (
         <>
             <div className="header">
-                <h1>{currentMonth?.name} {currentMonth?.year}</h1>
+                <h1 onClick={() => monthlyNoteEvent?.emitEvent(currentMonth)}>
+                    {currentMonth?.name} {currentMonth?.year}
+                </h1>
 
                 <div className="buttons">
                     <ChevronLeft
@@ -62,14 +67,13 @@ export const CalendarComponent = () => {
                         <td
                             className="weekNumber"
                             key={week.weekNumber}
-                            onClick={(() => onWeekClicked(week.days.at(0)?.completeDate))}>{week.weekNumber}</td>
+                            onClick={() => weeklyNoteEvent?.emitEvent(week)}>{week.weekNumber}</td>
                         {WEEK_DAYS_ORDER.map((dayOfWeek, dayOfWeekIndex) => {
                             const day = week.days.find(d => d.dayOfWeek === dayOfWeek);
 
                             return (
-                                <td
-                                    key={dayOfWeekIndex}
-                                    onClick={() => onDayClicked(day?.completeDate)}
+                                <td key={dayOfWeekIndex}
+                                    onClick={() => dailyNoteEvent?.emitEvent(day)}
                                     className={day?.completeDate.isToday() ? 'today' : ''}>{day?.name}</td>
                             )
                         })}
