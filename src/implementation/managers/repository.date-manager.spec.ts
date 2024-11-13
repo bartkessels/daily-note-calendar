@@ -1,6 +1,6 @@
 import { RepositoryDateManager } from 'src/implementation/managers/repository.date-manager';
 import { DateRepository } from 'src/domain/repositories/date.repository';
-import { Month } from '../../domain/models/month';
+import { Month } from 'src/domain/models/month';
 
 describe('RepositoryDateManager', () => {
     let dateManager: RepositoryDateManager;
@@ -55,6 +55,24 @@ describe('RepositoryDateManager', () => {
         expect(dateRepository.getMonth).toHaveBeenCalledWith(2023, 10);
     });
 
+    it('should recalculate the current month and return it if no current month is provided when retrieving the next month', () => {
+        const currentMonth: Month = {
+            year: 2023,
+            monthIndex: 9, // October (0-based index)
+            number: 10,
+            name: 'October',
+            weeks: []
+        };
+
+        (dateRepository.getMonth as jest.Mock).mockReturnValueOnce(currentMonth);
+
+        const getCurrentMonthSpy = jest.spyOn(dateManager, 'getCurrentMonth');
+        const result = dateManager.getNextMonth(undefined);
+
+        expect(getCurrentMonthSpy).toHaveBeenCalled();
+        expect(result).toBe(currentMonth);
+    });
+
     it('should return the previous month', () => {
         const currentMonth: Month = {
             year: 2023,
@@ -77,6 +95,24 @@ describe('RepositoryDateManager', () => {
 
         expect(result).toBe(previousMonth);
         expect(dateRepository.getMonth).toHaveBeenCalledWith(2023, 8);
+    });
+
+    it('should recalculate the current month and return it if no current month is provided when retrieving the previous month', () => {
+        const currentMonth: Month = {
+            year: 2023,
+            monthIndex: 9, // October (0-based index)
+            number: 10,
+            name: 'October',
+            weeks: []
+        };
+
+        (dateRepository.getMonth as jest.Mock).mockReturnValueOnce(currentMonth);
+
+        const getCurrentMonthSpy = jest.spyOn(dateManager, 'getCurrentMonth');
+        const result = dateManager.getPreviousMonth(undefined);
+
+        expect(getCurrentMonthSpy).toHaveBeenCalled();
+        expect(result).toBe(currentMonth);
     });
 
     it('should return the next month when current month is December', () => {
