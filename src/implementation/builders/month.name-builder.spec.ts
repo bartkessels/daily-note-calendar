@@ -3,29 +3,29 @@ import { Month } from 'src/domain/models/Month';
 import { Week } from 'src/domain/models/Week';
 import {Day, DayOfWeek} from 'src/domain/models/Day';
 import { join } from 'path';
+import 'src/extensions/extensions';
 
 describe('MonthNameBuilder', () => {
     let builder: MonthNameBuilder;
-    const day: Day = {
-        dayOfWeek: DayOfWeek.Tuesday,
-        date: 12,
-        name: '12',
-        completeDate: new Date('2024-11-12')
-    };
-    const week: Week = {
-        weekNumber: 46,
-        days: [day]
-    };
-    const month: Month = {
-        monthIndex: 11,
-        year: 2024,
-        name: 'November',
-        number: 12,
-        weeks: [week]
-    };
+    let month: Month;
 
     beforeEach(() => {
         builder = new MonthNameBuilder();
+        month = {
+            monthIndex: 11,
+            year: 2024,
+            name: 'November',
+            number: 12,
+            weeks: [<Week> {
+                weekNumber: 46,
+                days: [<Day> {
+                    dayOfWeek: DayOfWeek.Tuesday,
+                    date: 12,
+                    name: '12',
+                    completeDate: new Date('2024-11-12')
+                }]
+            }]
+        };
     });
 
     it('should throw an error if template is not provided', () => {
@@ -47,36 +47,25 @@ describe('MonthNameBuilder', () => {
     });
 
     it('should throw an error if month has no weeks', () => {
+        const monthWithoutWeeks = month;
+        monthWithoutWeeks.weeks = [];
 
-        builder.withNameTemplate('yyyy-MM').withValue(month).withPath('/path/to/monthly/notes');
+        builder.withNameTemplate('yyyy-MM').withValue(monthWithoutWeeks).withPath('/path/to/monthly/notes');
 
         expect(() => builder.build()).toThrow('The month must have weeks defined');
     });
 
     it('should throw an error if month has weeks with no days', () => {
-        const month: Month = { weeks: [{ days: [] }] };
-        builder.withNameTemplate('yyyy-MM').withValue(month).withPath('/path/to/monthly/notes');
+        const monthWithoutDays = month;
+        monthWithoutDays.weeks[0].days = [];
+
+        builder.withNameTemplate('yyyy-MM').withValue(monthWithoutDays).withPath('/path/to/monthly/notes');
 
         expect(() => builder.build()).toThrow('The month must have days defined');
     });
 
-    it('should build the correct file path with default template', () => {
-        const day: Day = { completeDate: new Date('2023-10-01') };
-        const week: Week = { days: [day] };
-        const month: Month = { weeks: [week] };
-        const expectedPath = join('/path/to/monthly/notes', '2023-10.md');
-
-        builder.withNameTemplate('yyyy-MM').withValue(month).withPath('/path/to/monthly/notes');
-        const result = builder.build();
-
-        expect(result).toBe(expectedPath);
-    });
-
-    it('should build the correct file path with custom template', () => {
-        const day: Day = { completeDate: new Date('2023-10-01') };
-        const week: Week = { days: [day] };
-        const month: Month = { weeks: [week] };
-        const expectedPath = join('/path/to/monthly/notes', '10-2023.md');
+    it('should build the correct file path with the template', () => {
+        const expectedPath = join('/path/to/monthly/notes', '11-2024.md');
 
         builder.withNameTemplate('MM-yyyy').withValue(month).withPath('/path/to/monthly/notes');
         const result = builder.build();

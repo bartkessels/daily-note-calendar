@@ -6,7 +6,7 @@ import {join} from "path";
 export class DayNameBuilder implements NameBuilder<Day> {
     private template?: string;
     private path?: string;
-    private value?: Day;
+    private day?: Day;
 
     public withNameTemplate(template: string): NameBuilder<Day> {
         this.template = template;
@@ -14,7 +14,7 @@ export class DayNameBuilder implements NameBuilder<Day> {
     }
 
     public withValue(value: Day): NameBuilder<Day> {
-        this.value = value;
+        this.day = value;
         return this;
     }
 
@@ -26,13 +26,13 @@ export class DayNameBuilder implements NameBuilder<Day> {
     public build(): string {
         if (!this.template) {
             throw new Error('The template is not allowed to be null');
-        } else if (!this.value) {
+        } else if (!this.day) {
             throw new Error('The day is not allowed to be null');
         } else if (!this.path) {
             throw new Error('The paths is not allowed to be null');
         }
 
-        const name = format(this.value.completeDate, this.template);
+        const name = format(this.day.completeDate, this.template);
         const fileName = name.appendMarkdownExtension();
 
         return join(this.path, fileName);
