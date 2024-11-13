@@ -1,28 +1,28 @@
 import {NoteManager} from "src/domain/managers/note.manager";
 import {Event} from "src/domain/events/Event";
-import {Day} from "src/domain/models/Day";
+import {Month} from "src/domain/models/Month";
 import {SettingsRepository} from "src/domain/repositories/settings.repository";
 import {NameBuilder} from "src/domain/builders/name.builder";
 import {FileService} from "src/domain/services/file.service";
 
-export class DailyNoteManager implements NoteManager<Day> {
+export class MonthlyNoteManager implements NoteManager<Month> {
     constructor(
-        readonly event: Event<Day>,
+        readonly event: Event<Month>,
         private readonly settingsRepository: SettingsRepository,
-        private readonly fileNameBuilder: NameBuilder<Day>,
+        private readonly fileNameBuilder: NameBuilder<Month>,
         private readonly fileService: FileService
     ) {
-        event.onEvent((day) => this.tryOpenNote(day));
+        event.onEvent((month) => this.tryOpenNote(month));
     }
 
-    public async tryOpenNote(day: Day) : Promise<void> {
+    public async tryOpenNote(month: Month): Promise<void> {
         const settings = await this.settingsRepository.getSettings();
         const filePath = this.fileNameBuilder
-            .withNameTemplate(settings.dailyNoteNameTemplate)
-            .withValue(day)
-            .withPath(settings.dailyNotesFolder)
+            .withNameTemplate("")
+            .withValue(month)
+            .withPath("")
             .build();
 
-        return this.fileService.tryOpenFile(filePath, settings.dailyNoteTemplateFile);
+        return this.fileService.tryOpenFile(filePath, "");
     }
 }

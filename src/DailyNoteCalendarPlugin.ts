@@ -9,7 +9,12 @@ export default class DailyNoteCalendarPlugin extends Plugin {
 
     override async onload(): Promise<void> {
         this.registerView(CalendarView.VIEW_TYPE, (leaf) =>
-            new CalendarView(leaf, this.dependencies.dateManager, this.dependencies.fileManager)
+            new CalendarView(
+                leaf,
+                this.dependencies.dateManager,
+                this.dependencies.dailyNoteEvent,
+                this.dependencies.weeklyNoteEvent
+            )
         );
         this.addSettingTab(new CalendarSettingsTab(this, this.dependencies.settingsRepository));
 

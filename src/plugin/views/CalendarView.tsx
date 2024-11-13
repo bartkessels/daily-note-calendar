@@ -2,10 +2,13 @@ import { StrictMode } from 'react';
 import { IconName, ItemView, WorkspaceLeaf } from "obsidian";
 import { createRoot } from 'react-dom/client';
 import { DateManager } from 'src/domain/managers/date.manager';
-import { FileManager } from 'src/domain/managers/file.manager';
 import {CalendarComponent} from "src/components/calendar.component";
 import { DateManagerContext } from 'src/components/providers/datemanager.provider';
-import { FileManagerContext } from 'src/components/providers/filemanager.provider';
+import {Day} from "src/domain/models/Day";
+import {Event} from "src/domain/events/Event";
+import {DailyNoteEventContext} from "src/components/providers/daily-note-event.context";
+import {WeeklyNoteEventContext} from "src/components/providers/weekly-note-event.context";
+import {Week} from "src/domain/models/Week";
 
 export class CalendarView extends ItemView {
     public static VIEW_TYPE = 'daily-note-calendar';
@@ -15,7 +18,8 @@ export class CalendarView extends ItemView {
     constructor(
         leaf: WorkspaceLeaf,
         private readonly dateManager: DateManager,
-        private readonly fileManager: FileManager
+        private readonly dailyNoteEvent: Event<Day>,
+        private readonly weeklyNoteEvent: Event<Week>
     ) {
         super(leaf);
     }
@@ -35,11 +39,13 @@ export class CalendarView extends ItemView {
     protected override async onOpen(): Promise<void> {
         createRoot(this.containerEl.children[1]).render(
             <StrictMode>
-                <DateManagerContext.Provider value={this.dateManager}>
-                    <FileManagerContext.Provider value={this.fileManager}>
-                        <CalendarComponent />
-                    </FileManagerContext.Provider>
-                </DateManagerContext.Provider>
+                <DailyNoteEventContext.Provider value={this.dailyNoteEvent}>
+                    <WeeklyNoteEventContext.Provider value={this.weeklyNoteEvent}>
+                        <DateManagerContext.Provider value={this.dateManager}>
+                            <CalendarComponent />
+                        </DateManagerContext.Provider>
+                    </WeeklyNoteEventContext.Provider>
+                </DailyNoteEventContext.Provider>
             </StrictMode>
         );
     }
