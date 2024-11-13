@@ -1,6 +1,5 @@
 import {FileAdapter} from "src/domain/adapters/file.adapter";
 import {normalizePath, Vault, Workspace} from "obsidian";
-import {Note} from "src/domain/models/Note";
 
 export class ObsidianFileAdapter implements FileAdapter {
     constructor(
@@ -40,21 +39,7 @@ export class ObsidianFileAdapter implements FileAdapter {
         await this.workspace.getLeaf().openFile(file, { active: true });
     }
 
-    public async getNotesCreatedOnDate(date: Date): Promise<Note[]> {
-        const requestedDate = date.setHours(0, 0, 0, 0);
-        return this.vault.getFiles().filter(file => {
-            const createdDate = new Date(file.stat.ctime).setHours(0, 0, 0, 0);
-            return createdDate === requestedDate;
-        }).map(file => {
-            return <Note>{
-                name: file.name,
-                createdOn: new Date(file.stat.ctime),
-                filePath: file.path
-            };
-        });
-    }
-
     private normalizePath(filePath: string): string {
-        return normalizePath(filePath).appendMarkdownExtension();
+        return normalizePath(filePath).appendMarkdownExtension().toString();
     }
 }

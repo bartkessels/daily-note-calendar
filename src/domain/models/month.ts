@@ -1,4 +1,4 @@
-import { Week } from "./Week";
+import { Week } from "./week";
 
 export interface Month {
     monthIndex: number,

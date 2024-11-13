@@ -4,7 +4,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "jsx": "react-jsx",
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
       "src/*": [
         "src/*"
@@ -33,9 +33,7 @@
   },
   "include": [
     "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "**/*.spec.ts"
+    "**/*.tsx",
+    "**/*.spec.ts",
   ]
 }

@@ -1,14 +1,15 @@
 import {NoteManager} from "src/domain/managers/note.manager";
-import {Event} from "src/domain/events/Event";
-import {Week} from "src/domain/models/Week";
+import {Event} from "src/domain/events/event";
+import {Week} from "src/domain/models/week";
 import {SettingsRepository} from "src/domain/repositories/settings.repository";
 import {NameBuilder} from "src/domain/builders/name.builder";
 import {FileService} from "src/domain/services/file.service";
+import {WeeklyNoteSettings} from 'src/domain/models/settings';
 
 export class WeeklyNoteManager implements NoteManager<Week> {
     constructor(
-        readonly event: Event<Week>,
-        private readonly settingsRepository: SettingsRepository,
+        event: Event<Week>,
+        private readonly settingsRepository: SettingsRepository<WeeklyNoteSettings>,
         private readonly fileNameBuilder: NameBuilder<Week>,
         private readonly fileService: FileService
     ) {
@@ -18,11 +19,11 @@ export class WeeklyNoteManager implements NoteManager<Week> {
     public async tryOpenNote(week: Week): Promise<void> {
         const settings = await this.settingsRepository.getSettings();
         const filePath = this.fileNameBuilder
-            .withNameTemplate(settings.weeklyNoteNameTemplate)
+            .withNameTemplate(settings.nameTemplate)
             .withValue(week)
-            .withPath(settings.weeklyNoteFolder)
+            .withPath(settings.folder)
             .build();
 
-        return this.fileService.tryOpenFile(filePath, settings.weeklyNoteTemplateFile);
+        return this.fileService.tryOpenFile(filePath, settings.templateFile);
     }
 }

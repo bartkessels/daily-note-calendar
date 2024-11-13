@@ -3,13 +3,12 @@ import { renderHook } from '@testing-library/react';
 import { FileManagerContext, useFileManager } from './filemanager.provider';
 import { FileManager } from 'src/domain/managers/file.manager';
 
-// Mock FileManager
-const mockFileManager = {
-    tryOpenWeeklyNote: jest.fn(),
-    tryOpenDailyNote: jest.fn()
-} as unknown as FileManager;
-
 describe('FileManagerContext', () => {
+    const mockFileManager = {
+        tryOpenWeeklyNote: jest.fn(),
+        tryOpenDailyNote: jest.fn()
+    } as unknown as FileManager;
+
     it('provides the FileManager instance', () => {
         const wrapper = ({ children }: { children: React.ReactNode }) => (
             <FileManagerContext.Provider value={mockFileManager}>

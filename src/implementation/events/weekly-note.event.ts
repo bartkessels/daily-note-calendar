@@ -1,5 +1,5 @@
-import {Event} from "src/domain/events/Event";
-import {Week} from "src/domain/models/Week";
+import {Event} from "src/domain/events/event";
+import {Week} from "src/domain/models/week";
 
 export class WeeklyNoteEvent extends Event<Week>  {
     private static eventName = "week";

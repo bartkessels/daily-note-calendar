@@ -4,11 +4,11 @@ import { createRoot } from 'react-dom/client';
 import { DateManager } from 'src/domain/managers/date.manager';
 import {CalendarComponent} from "src/components/calendar.component";
 import { DateManagerContext } from 'src/components/providers/datemanager.provider';
-import {Day} from "src/domain/models/Day";
-import {Event} from "src/domain/events/Event";
+import {Day} from "src/domain/models/day";
+import {Event} from "src/domain/events/event";
 import {DailyNoteEventContext} from "src/components/providers/daily-note-event.context";
 import {WeeklyNoteEventContext} from "src/components/providers/weekly-note-event.context";
-import {Week} from "src/domain/models/Week";
+import {Week} from "src/domain/models/week";
 
 export class CalendarView extends ItemView {
     public static VIEW_TYPE = 'daily-note-calendar';

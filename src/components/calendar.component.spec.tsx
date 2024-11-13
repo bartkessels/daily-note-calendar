@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { CalendarComponent } from './calendar.component';
+import { CalendarComponent } from 'src/components/calendar.component';
 import { DateManager } from 'src/domain/managers/date.manager';
 import { FileManager } from 'src/domain/managers/file.manager';
 import 'src/extensions/extensions';

@@ -1,6 +1,6 @@
-import { RepositoryDateManager } from './repository.date.manager';
+import { RepositoryDateManager } from 'src/implementation/managers/repository.date-manager';
 import { DateRepository } from 'src/domain/repositories/date.repository';
-import { Month } from 'src/domain/models/Month';
+import { Month } from '../../domain/models/month';
 
 describe('RepositoryDateManager', () => {
     let dateManager: RepositoryDateManager;

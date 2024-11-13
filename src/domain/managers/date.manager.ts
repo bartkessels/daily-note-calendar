@@ -1,4 +1,4 @@
-import { Month } from "../models/Month";
+import { Month } from "../models/month";
 
 export interface DateManager {
     getCurrentMonth(): Month;

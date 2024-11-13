@@ -1,7 +1,7 @@
 import {NameBuilder} from "src/domain/builders/name.builder";
 import {format} from "date-fns";
 import {join} from "path";
-import {Week} from "src/domain/models/Week";
+import {Week} from "src/domain/models/week";
 
 export class WeekNameBuilder implements NameBuilder<Week> {
     private template?: string;

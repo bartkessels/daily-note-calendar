@@ -1,6 +1,6 @@
 import { Plugin } from "obsidian";
-import { CalendarView } from "./plugin/views/CalendarView";
-import { CalendarSettingsTab } from "./plugin/settings/CalendarSettingsTab";
+import { CalendarView } from "src/plugin/views/calendar.view";
+import { CalendarSettingsTab } from "src/plugin/settings/calendar.settings-tab";
 import {createDependencies} from "src/dependencies";
 import 'src/extensions/extensions';
 
@@ -16,7 +16,13 @@ export default class DailyNoteCalendarPlugin extends Plugin {
                 this.dependencies.weeklyNoteEvent
             )
         );
-        this.addSettingTab(new CalendarSettingsTab(this, this.dependencies.settingsRepository));
+
+        this.addSettingTab(new CalendarSettingsTab(
+            this,
+            this.dependencies.dailyNoteSettingsRepository,
+            this.dependencies.weeklyNoteSettingsRepository,
+            this.dependencies.monthlyNoteSettingsRepository
+        ));
 
         this.app.workspace.onLayoutReady(this.setViewStates.bind(this));
     }

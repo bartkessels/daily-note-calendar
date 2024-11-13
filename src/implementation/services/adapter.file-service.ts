@@ -1,6 +1,5 @@
 import { FileService } from "src/domain/services/file.service";
 import {FileAdapter} from "src/domain/adapters/file.adapter";
-import {Note} from "src/domain/models/Note";
 
 export class AdapterFileService implements FileService {
     constructor(
@@ -23,9 +22,5 @@ export class AdapterFileService implements FileService {
         }
 
         await this.fileAdapter.openFile(completeFilePath);
-    }
-
-    public async getNotesCreatedOnDate(date: Date): Promise<Note[]> {
-        return await this.fileAdapter.getNotesCreatedOnDate(date);
     }
 }

@@ -1,5 +1,5 @@
 import {DefaultDateRepository} from './default.date.repository';
-import {DayOfWeek} from 'src/domain/models/Day';
+import {DayOfWeek} from '../../domain/models/day';
 import 'src/extensions/extensions';
 
 describe('DefaultDateRepository', () => {

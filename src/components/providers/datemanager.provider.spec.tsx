@@ -3,14 +3,13 @@ import { renderHook } from '@testing-library/react';
 import { DateManagerContext, useDateManager } from './datemanager.provider';
 import { DateManager } from 'src/domain/managers/date.manager';
 
-// Mock DateManager
-const mockDateManager = {
-    getCurrentMonth: jest.fn(),
-    getNextMonth: jest.fn(),
-    getPreviousMonth: jest.fn()
-} as DateManager;
-
 describe('DateManagerContext', () => {
+    const mockDateManager = {
+        getCurrentMonth: jest.fn(),
+        getNextMonth: jest.fn(),
+        getPreviousMonth: jest.fn()
+    } as DateManager;
+
     it('provides the DateManager instance', () => {
         const wrapper = ({ children }: { children: React.ReactNode }) => (
             <DateManagerContext.Provider value={mockDateManager}>

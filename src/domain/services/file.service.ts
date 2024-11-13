@@ -1,3 +1,3 @@
 export interface FileService {
-    tryOpenFile(filePath: String, templateFilePath: String): Promise<void>;
+    tryOpenFile(filePath: string, templateFilePath: string): Promise<void>;
 }
