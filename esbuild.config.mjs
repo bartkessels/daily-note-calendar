@@ -15,7 +15,7 @@ const context = await esbuild.context({
 	banner: {
 		js: banner,
 	},
-	entryPoints: ["src/DailyNoteCalendarPlugin.ts"],
+	entryPoints: ["src/daily-note-calendar.plugin.ts"],
 	bundle: true,
 	external: [
 		"obsidian",

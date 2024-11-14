@@ -1,11 +1,25 @@
-import { Day, DayOfWeek } from "src/domain/models/Day";
-import { Month } from "src/domain/models/Month";
-import { Week } from "src/domain/models/Week";
+import { Day, DayOfWeek } from "src/domain/models/day";
+import { Month } from "src/domain/models/month";
+import { Week } from "src/domain/models/week";
 import { DateRepository } from "src/domain/repositories/date.repository";
+import {Year} from 'src/domain/models/year';
 
 export class DefaultDateRepository implements DateRepository {
     private readonly monthFormat = "long";
     private readonly dayFormat = "numeric";
+
+    public getYear(year: number): Year {
+        const months: Month[] = [];
+
+        for (let i = 0; i < 12; i++) {
+            months.push(this.getMonth(year, i));
+        }
+
+        return <Year> {
+            year: year,
+            months: months
+        };
+    }
 
     public getMonth(year: number, month: number): Month {
         const formatter = new Intl.DateTimeFormat(undefined, {
@@ -23,7 +37,7 @@ export class DefaultDateRepository implements DateRepository {
         };
     }
 
-    public getDaysOfMonth(year: number, month: number): Day[] {
+    private getDaysOfMonth(year: number, month: number): Day[] {
         const date = new Date(year, month, 1);
         const daysList = [];
 

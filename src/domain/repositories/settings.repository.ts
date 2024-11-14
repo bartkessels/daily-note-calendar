@@ -1,6 +1,4 @@
-import type { Settings } from "../models/Settings"
-
-export interface SettingsRepository {
-    getSettings(): Promise<Settings>
-    storeSettings(settings: Settings): Promise<void>
+export interface SettingsRepository<T> {
+    getSettings(): Promise<T>
+    storeSettings(settings: T): Promise<void>
 }

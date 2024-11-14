@@ -1,4 +1,4 @@
-import './extensions';
+import 'src/extensions/extensions';
 
 describe('String.prototype.appendMarkdownExtension', () => {
     it('should append .md if not present', () => {

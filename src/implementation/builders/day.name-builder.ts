@@ -1,0 +1,47 @@
+import {NameBuilder} from 'src/domain/builders/name.builder';
+import {Day} from 'src/domain/models/day';
+import {format} from 'date-fns';
+import {join} from 'path';
+import {Logger} from 'src/domain/loggers/logger';
+
+export class DayNameBuilder implements NameBuilder<Day> {
+    private template?: string;
+    private path?: string;
+    private day?: Day;
+
+    constructor(
+        private readonly logger: Logger
+    ) {
+
+    }
+
+    public withNameTemplate(template: string): NameBuilder<Day> {
+        this.template = template;
+        return this;
+    }
+
+    public withValue(value: Day): NameBuilder<Day> {
+        this.day = value;
+        return this;
+    }
+
+    public withPath(path: string): NameBuilder<Day> {
+        this.path = path;
+        return this;
+    }
+
+    public build(): string {
+        if (!this.template) {
+            this.logger.logAndThrow('Could not find the template to create a daily note');
+        } else if (!this.day) {
+            this.logger.logAndThrow('Could not create a daily note because the day is unknown');
+        } else if (!this.path) {
+            this.logger.logAndThrow('Could not find the folder to create the daily note');
+        }
+
+        const name = format(this.day.completeDate, this.template);
+        const fileName = name.appendMarkdownExtension();
+
+        return join(this.path, fileName);
+    }
+}
