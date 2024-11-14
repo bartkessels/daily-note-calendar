@@ -24,8 +24,6 @@ export const CalendarComponent = () => {
     const weeklyNoteEvent = getWeeklyNoteEvent();
     const monthlyNoteEvent = getMonthlyNoteEvent();
 
-    console.log(monthlyNoteEvent);
-
     const goToCurrentMonth = () => setCurrentMonth(dateManager?.getCurrentMonth());
     const goToNextMonth = () => setCurrentMonth(dateManager?.getNextMonth(currentMonth));
     const goToPreviousMonth = () => setCurrentMonth(dateManager?.getPreviousMonth(currentMonth));

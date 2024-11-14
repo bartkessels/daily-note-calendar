@@ -1,7 +1,7 @@
 import {Week} from '../../domain/models/week';
 import {WeeklyNoteEvent} from 'src/implementation/events/weekly-note.event';
 
-describe('WeeklyNoteEvent', () => {
+describe('MonthlyNoteEvent', () => {
     let event: WeeklyNoteEvent;
     let week: Week;
 

@@ -1,8 +1,10 @@
-import {createContext, useContext} from "react";
-import {Day} from "src/domain/models/day";
 import {Event} from "src/domain/events/event";
+import {Year} from 'src/domain/models/year';
 
-export const DailyNoteEventContext = createContext<Event<Day> | null>(null);
-export const getDailyNoteEvent = (): Event<Day> | null => {
-    return useContext(DailyNoteEventContext)
+export class YearlyNoteEvent extends Event<Year>  {
+    private static eventName = "year";
+
+    constructor() {
+        super(YearlyNoteEvent.eventName);
+    }
 }

@@ -1,15 +1,16 @@
-import {Week} from '../../domain/models/week';
-import {WeeklyNoteEvent} from 'src/implementation/events/weekly-note.event';
+import {YearlyNoteEvent} from 'src/components/providers/daily-note-event.context';
+import {Year} from 'src/domain/models/year';
 
-describe('WeeklyNoteEvent', () => {
-    let event: WeeklyNoteEvent;
-    let week: Week;
+describe('YearlyNoteEvent', () => {
+    let event: YearlyNoteEvent;
+    let year: Year;
 
     beforeEach(() => {
-        event = new WeeklyNoteEvent();
-        week = {
-            weekNumber: 46,
-            days: []
+        event = new YearlyNoteEvent();
+        year = {
+            year: 2024,
+            name: '2024',
+            months: []
         }
     });
 
@@ -17,9 +18,9 @@ describe('WeeklyNoteEvent', () => {
         const listener = jest.fn();
         event.onEvent(listener);
 
-        event.emitEvent(week);
+        event.emitEvent(year);
 
-        expect(listener).toHaveBeenCalledWith(week);
+        expect(listener).toHaveBeenCalledWith(year);
     });
 
     it('should not trigger event listeners when an undefined event is emitted', () => {

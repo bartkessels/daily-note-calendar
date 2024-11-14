@@ -7,11 +7,13 @@ export interface PeriodicNoteSettings {
 export interface DailyNoteSettings extends PeriodicNoteSettings {}
 export interface WeeklyNoteSettings extends PeriodicNoteSettings {}
 export interface MonthlyNoteSettings extends PeriodicNoteSettings {}
+export interface YearlyNoteSettings extends PeriodicNoteSettings {}
 
 export interface Settings {
     dailyNotes: DailyNoteSettings,
     weeklyNotes: WeeklyNoteSettings,
     monthlyNotes: MonthlyNoteSettings,
+    yearlyNotes: YearlyNoteSettings
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -29,5 +31,10 @@ export const DEFAULT_SETTINGS: Settings = {
         nameTemplate: 'yyyy-MM',
         folder: 'Monthly notes',
         templateFile: 'Templates/Monthly note'
+    },
+    yearlyNotes: {
+        nameTemplate: 'yyyy',
+        folder: 'Yearly notes',
+        templateFile: 'Templates/Yearly note'
     }
 }
