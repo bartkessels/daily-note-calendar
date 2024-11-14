@@ -2,11 +2,18 @@ import {NameBuilder} from 'src/domain/builders/name.builder';
 import {Year} from 'src/domain/models/year';
 import {format} from 'date-fns';
 import {join} from 'path';
+import {Logger} from 'src/domain/loggers/logger';
 
 export class YearNameBuilder implements NameBuilder<Year> {
     private template?: string;
     private path?: string;
     private year?: Year;
+
+    constructor(
+        private readonly logger: Logger
+    ) {
+
+    }
 
     public withNameTemplate(template: string): NameBuilder<Year> {
         this.template = template;
@@ -25,17 +32,17 @@ export class YearNameBuilder implements NameBuilder<Year> {
 
     public build(): string {
         if (!this.template) {
-            throw new Error('The template is not allowed to be null');
+            this.logger.logAndThrow('Could not find the template to create a yearly note');
         } else if (!this.year) {
-            throw new Error('The year is not allowed to be null');
+            this.logger.logAndThrow('Could not create a yearly note because the year is unknown');
         } else if (this.year.months.length <= 0) {
-            throw new Error('The year must have months defined');
+            this.logger.logAndThrow('Could not create a yearly note because the year does not have months');
         } else if (this.year.months[0].weeks.length <= 0) {
-            throw new Error('The year must have weeks defined');
+            this.logger.logAndThrow('Could not create a yearly note because the year does not have weeks');
         } else if (this.year.months[0].weeks[0].days.length <= 0) {
-            throw new Error('The year must have days defined');
+            this.logger.logAndThrow('Could not create a yearly note because the year does not have days');
         } else if (!this.path) {
-            throw new Error('The paths is not allowed to be null');
+            this.logger.logAndThrow('Could not find the folder to create the yearly note');
         }
 
         const date = this.year.months[0].weeks[0].days[0].completeDate;

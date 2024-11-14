@@ -33,6 +33,8 @@ import {YearlyNoteSettingsRepository} from 'src/implementation/repositories/year
 import {YearlyNoteEvent} from 'src/implementation/events/yearly-note.event';
 import {YearNameBuilder} from 'src/implementation/builders/year.name-builder';
 import {YearlyNoteManager} from 'src/implementation/managers/yearly.note-manager';
+import {ObsidianNoticeAdapter} from 'src/plugin/adapters/obsidian.notice-adapter';
+import {NotifyLogger} from 'src/implementation/loggers/notify.logger';
 
 export interface Dependencies {
     readonly dateManager: RepositoryDateManager;
@@ -59,26 +61,28 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const dateManager = new RepositoryDateManager(dateRepository);
     const fileAdapter = new ObsidianFileAdapter(plugin.app.vault, plugin.app.workspace);
     const settingsAdapter = new PluginSettingsAdapter(plugin);
-    const fileService = new AdapterFileService(fileAdapter);
+    const noticeAdapter = new ObsidianNoticeAdapter();
+    const logger = new NotifyLogger(noticeAdapter);
+    const fileService = new AdapterFileService(fileAdapter, logger);
 
     const dailyNoteSettingsRepository = new DailyNoteSettingsRepository(settingsAdapter);
     const dailyNoteEvent = new DailyNoteEvent();
-    const dayNameBuilder = new DayNameBuilder();
+    const dayNameBuilder = new DayNameBuilder(logger);
     const dailyNoteManager = new DailyNoteManager(dailyNoteEvent, dailyNoteSettingsRepository, dayNameBuilder, fileService);
 
     const weeklyNoteSettingsRepository = new WeeklyNoteSettingsRepository(settingsAdapter);
     const weeklyNoteEvent = new WeeklyNoteEvent();
-    const weekNameBuilder = new WeekNameBuilder();
+    const weekNameBuilder = new WeekNameBuilder(logger);
     const weeklyNoteManager = new WeeklyNoteManager(weeklyNoteEvent, weeklyNoteSettingsRepository, weekNameBuilder, fileService);
 
     const monthlyNoteSettingsRepository = new MonthlyNoteSettingsRepository(settingsAdapter);
     const monthlyNoteEvent = new MonthlyNoteEvent();
-    const monthNameBuilder = new MonthNameBuilder();
+    const monthNameBuilder = new MonthNameBuilder(logger);
     const monthlyNoteManager = new MonthlyNoteManager(monthlyNoteEvent, monthlyNoteSettingsRepository, monthNameBuilder, fileService);
 
     const yearlyNoteSettingsRepository = new YearlyNoteSettingsRepository(settingsAdapter);
     const yearlyNoteEvent = new YearlyNoteEvent();
-    const yearNameBuilder = new YearNameBuilder();
+    const yearNameBuilder = new YearNameBuilder(logger);
     const yearlyNoteManager = new YearlyNoteManager(yearlyNoteEvent, yearlyNoteSettingsRepository, yearNameBuilder, fileService);
 
     return {

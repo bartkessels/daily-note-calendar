@@ -2,11 +2,18 @@ import {NameBuilder} from 'src/domain/builders/name.builder';
 import {Day} from 'src/domain/models/day';
 import {format} from 'date-fns';
 import {join} from 'path';
+import {Logger} from 'src/domain/loggers/logger';
 
 export class DayNameBuilder implements NameBuilder<Day> {
     private template?: string;
     private path?: string;
     private day?: Day;
+
+    constructor(
+        private readonly logger: Logger
+    ) {
+
+    }
 
     public withNameTemplate(template: string): NameBuilder<Day> {
         this.template = template;
@@ -25,11 +32,11 @@ export class DayNameBuilder implements NameBuilder<Day> {
 
     public build(): string {
         if (!this.template) {
-            throw new Error('The template is not allowed to be null');
+            this.logger.logAndThrow('Could not find the template to create a daily note');
         } else if (!this.day) {
-            throw new Error('The day is not allowed to be null');
+            this.logger.logAndThrow('Could not create a daily note because the day is unknown');
         } else if (!this.path) {
-            throw new Error('The paths is not allowed to be null');
+            this.logger.logAndThrow('Could not find the folder to create the daily note');
         }
 
         const name = format(this.day.completeDate, this.template);

@@ -2,11 +2,18 @@ import {NameBuilder} from 'src/domain/builders/name.builder';
 import {format} from 'date-fns';
 import {join} from 'path';
 import {Week} from 'src/domain/models/week';
+import {Logger} from 'src/domain/loggers/logger';
 
 export class WeekNameBuilder implements NameBuilder<Week> {
     private template?: string;
     private path?: string;
     private week?: Week;
+
+    constructor(
+        private readonly logger: Logger
+    ) {
+
+    }
 
     public withNameTemplate(template: string): NameBuilder<Week> {
         this.template = template;
@@ -25,13 +32,13 @@ export class WeekNameBuilder implements NameBuilder<Week> {
 
     public build(): string {
         if (!this.template) {
-            throw new Error('The template is not allowed to be null');
+            this.logger.logAndThrow('Could not find the template to create a weekly note');
         } else if (!this.week) {
-            throw new Error('The week is not allowed to be null');
+            this.logger.logAndThrow('Could not create a weekly note because the week is unknown');
         } else if (this.week.days.length <= 0) {
-            throw new Error('The week must have days defined');
+            this.logger.logAndThrow('Could not create a weekly note because the week does not have days');
         } else if (!this.path) {
-            throw new Error('The paths is not allowed to be null');
+            this.logger.logAndThrow('Could not find the folder to create the weekly note');
         }
 
         const date = this.week.days[0].completeDate;

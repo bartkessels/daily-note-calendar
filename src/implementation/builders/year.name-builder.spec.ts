@@ -5,13 +5,20 @@ import {join} from 'path';
 import 'src/extensions/extensions';
 import {Year} from 'src/domain/models/year';
 import {YearNameBuilder} from 'src/implementation/builders/year.name-builder';
+import {Logger} from 'src/domain/loggers/logger';
 
 describe('YearNameBuilder', () => {
+    let logger: Logger;
     let builder: YearNameBuilder;
     let year: Year;
 
     beforeEach(() => {
-        builder = new YearNameBuilder();
+        logger = {
+            logAndThrow: jest.fn((message: string) => {
+                throw new Error(message)
+            })
+        };
+        builder = new YearNameBuilder(logger);
         year = {
             year: 2024,
             name: '2024',
@@ -36,19 +43,13 @@ describe('YearNameBuilder', () => {
     it('should throw an error if template is not provided', () => {
         builder.withValue(year).withPath('/path/to/monthly/notes');
 
-        expect(() => builder.build()).toThrow('The template is not allowed to be null');
+        expect(() => builder.build()).toThrow('Could not find the template to create a yearly note');
     });
 
     it('should throw an error if value is not provided', () => {
         builder.withNameTemplate('yyyy-MM').withPath('/path/to/monthly/notes');
 
-        expect(() => builder.build()).toThrow('The year is not allowed to be null');
-    });
-
-    it('should throw an error if path is not provided', () => {
-        builder.withNameTemplate('yyyy-MM').withValue(year);
-
-        expect(() => builder.build()).toThrow('The paths is not allowed to be null');
+        expect(() => builder.build()).toThrow('Could not create a yearly note because the year is unknown');
     });
 
     it('should throw an error if year has no months', () => {
@@ -57,7 +58,7 @@ describe('YearNameBuilder', () => {
 
         builder.withNameTemplate('yyyy-MM').withValue(yearWithoutMonths).withPath('/path/to/monthly/notes');
 
-        expect(() => builder.build()).toThrow('The year must have months defined');
+        expect(() => builder.build()).toThrow('Could not create a yearly note because the year does not have months');
     });
 
     it('should throw an error if year has no weeks', () => {
@@ -66,7 +67,7 @@ describe('YearNameBuilder', () => {
 
         builder.withNameTemplate('yyyy-MM').withValue(yearWithoutWeeks).withPath('/path/to/monthly/notes');
 
-        expect(() => builder.build()).toThrow('The year must have weeks defined');
+        expect(() => builder.build()).toThrow('Could not create a yearly note because the year does not have weeks');
     });
 
     it('should throw an error if year has weeks with no days', () => {
@@ -75,7 +76,13 @@ describe('YearNameBuilder', () => {
 
         builder.withNameTemplate('yyyy-MM').withValue(yearWithoutDays).withPath('/path/to/monthly/notes');
 
-        expect(() => builder.build()).toThrow('The year must have days defined');
+        expect(() => builder.build()).toThrow('Could not create a yearly note because the year does not have days');
+    });
+
+    it('should throw an error if path is not provided', () => {
+        builder.withNameTemplate('yyyy-MM').withValue(year);
+
+        expect(() => builder.build()).toThrow('Could not find the folder to create the yearly note');
     });
 
     it('should build the correct file path with the template', () => {

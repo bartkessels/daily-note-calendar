@@ -1,9 +1,11 @@
 import {AdapterFileService} from 'src/implementation/services/adapter.file-service';
 import {FileAdapter} from 'src/domain/adapters/file.adapter';
 import 'src/extensions/extensions';
+import {Logger} from 'src/domain/loggers/logger';
 
 describe('AdapterFileService', () => {
     let fileAdapter: jest.Mocked<FileAdapter>;
+    let logger: jest.Mocked<Logger>;
     let service: AdapterFileService;
 
     beforeEach(() => {
@@ -12,7 +14,13 @@ describe('AdapterFileService', () => {
             createFileFromTemplate: jest.fn(),
             openFile: jest.fn(),
         };
-        service = new AdapterFileService(fileAdapter);
+        logger = {
+            logAndThrow: jest.fn((message: string) => {
+                throw new Error(message);
+            })
+        };
+
+        service = new AdapterFileService(fileAdapter, logger);
     });
 
     it('should not create a file if it already exists', async () => {

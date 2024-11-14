@@ -12,6 +12,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             new CalendarView(
                 leaf,
                 this.dependencies.dateManager,
+                this.dependencies.yearlyNoteEvent,
                 this.dependencies.monthlyNoteEvent,
                 this.dependencies.weeklyNoteEvent,
                 this.dependencies.dailyNoteEvent
@@ -22,23 +23,20 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             this,
             this.dependencies.dailyNoteSettingsRepository,
             this.dependencies.weeklyNoteSettingsRepository,
-            this.dependencies.monthlyNoteSettingsRepository
+            this.dependencies.monthlyNoteSettingsRepository,
+            this.dependencies.yearlyNoteSettingsRepository
         ));
 
         this.app.workspace.onLayoutReady(this.setViewStates.bind(this));
     }
 
     private setViewStates(): void {
-        this.setRightLeafWorkspaceViewState(CalendarView.VIEW_TYPE);
-    }
-
-    private setRightLeafWorkspaceViewState(type: string): void {
-        if (this.app.workspace.getLeavesOfType(type).length > 0) {
+        if (this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE).length > 0) {
             return;
         }
 
         this.app.workspace.getRightLeaf(false)?.setViewState({
-            type: type
+            type: CalendarView.VIEW_TYPE
         });
     }
 }

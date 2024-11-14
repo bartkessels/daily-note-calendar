@@ -1,9 +1,11 @@
 import {FileService} from 'src/domain/services/file.service';
 import {FileAdapter} from 'src/domain/adapters/file.adapter';
+import {Logger} from 'src/domain/loggers/logger';
 
 export class AdapterFileService implements FileService {
     constructor(
-        private readonly fileAdapter: FileAdapter
+        private readonly fileAdapter: FileAdapter,
+        private readonly logger: Logger
     ) {
 
     }
@@ -16,7 +18,7 @@ export class AdapterFileService implements FileService {
         const templateFileExists = await this.fileAdapter.doesFileExist(completeTemplateFilePath);
 
         if (!templateFileExists) {
-            throw Error(`Template file does not exist: ${completeTemplateFilePath}`);
+            this.logger.logAndThrow(`Template file does not exist: ${completeTemplateFilePath}`);
         } else if (!fileExists) {
             await this.fileAdapter.createFileFromTemplate(completeFilePath, completeTemplateFilePath);
         }
