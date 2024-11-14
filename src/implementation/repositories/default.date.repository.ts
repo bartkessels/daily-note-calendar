@@ -7,9 +7,13 @@ import {Year} from 'src/domain/models/year';
 export class DefaultDateRepository implements DateRepository {
     private readonly monthFormat = "long";
     private readonly dayFormat = "numeric";
+    private readonly yearFormat = "numeric";
 
     public getYear(year: number): Year {
         const months: Month[] = [];
+        const formatter = new Intl.DateTimeFormat(undefined, {
+            year: this.yearFormat
+        });
 
         for (let i = 0; i < 12; i++) {
             months.push(this.getMonth(year, i));
@@ -17,6 +21,7 @@ export class DefaultDateRepository implements DateRepository {
 
         return <Year> {
             year: year,
+            name: formatter.format(new Date(year, months[0].monthIndex)),
             months: months
         };
     }
@@ -28,9 +33,11 @@ export class DefaultDateRepository implements DateRepository {
 
         const days = this.getDaysOfMonth(year, month);
         const weeks = this.groupDaysIntoWeeks(days);
+        const quarter = Math.floor(month / 3) + 1;
 
         return <Month> {
             monthIndex: month,
+            quarter: quarter,
             year: year,
             name: formatter.format(new Date(year, month)),
             weeks: weeks

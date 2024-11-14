@@ -35,6 +35,9 @@ import {YearNameBuilder} from 'src/implementation/builders/year.name-builder';
 import {YearlyNoteManager} from 'src/implementation/managers/yearly.note-manager';
 import {ObsidianNoticeAdapter} from 'src/plugin/adapters/obsidian.notice-adapter';
 import {NotifyLogger} from 'src/implementation/loggers/notify.logger';
+import {QuarterlyNoteEvent} from 'src/implementation/events/quarterly-note.event';
+import {QuarterlyNoteSettingsRepository} from 'src/implementation/repositories/quarterly-note.settings-repository';
+import {QuarterlyNoteManager} from 'src/implementation/managers/quarterly.note-manager';
 
 export interface Dependencies {
     readonly dateManager: RepositoryDateManager;
@@ -50,6 +53,10 @@ export interface Dependencies {
     readonly monthlyNoteEvent: Event<Month>;
     readonly monthlyNoteSettingsRepository: SettingsRepository<MonthlyNoteSettings>;
     readonly monthlyNoteManager: NoteManager<Month>;
+
+    readonly quarterlyNoteEvent: Event<Month>;
+    readonly quarterlyNoteSettingsRepository: SettingsRepository<MonthlyNoteSettings>;
+    readonly quarterlyNoteManager: NoteManager<Month>;
 
     readonly yearlyNoteEvent: Event<Year>;
     readonly yearlyNoteSettingsRepository: SettingsRepository<YearlyNoteSettings>;
@@ -80,6 +87,10 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const monthNameBuilder = new MonthNameBuilder(logger);
     const monthlyNoteManager = new MonthlyNoteManager(monthlyNoteEvent, monthlyNoteSettingsRepository, monthNameBuilder, fileService);
 
+    const quarterlyNoteSettingsRepository = new QuarterlyNoteSettingsRepository(settingsAdapter);
+    const quarterlyNoteEvent = new QuarterlyNoteEvent();
+    const quarterlyNoteManager = new QuarterlyNoteManager(quarterlyNoteEvent, quarterlyNoteSettingsRepository, monthNameBuilder, fileService);
+
     const yearlyNoteSettingsRepository = new YearlyNoteSettingsRepository(settingsAdapter);
     const yearlyNoteEvent = new YearlyNoteEvent();
     const yearNameBuilder = new YearNameBuilder(logger);
@@ -99,6 +110,10 @@ export function createDependencies(plugin: Plugin): Dependencies {
         monthlyNoteEvent,
         monthlyNoteSettingsRepository,
         monthlyNoteManager,
+
+        quarterlyNoteEvent,
+        quarterlyNoteSettingsRepository,
+        quarterlyNoteManager,
 
         yearlyNoteEvent,
         yearlyNoteSettingsRepository,

@@ -20,6 +20,7 @@ describe('MonthNameBuilder', () => {
         builder = new MonthNameBuilder(logger);
         month = {
             monthIndex: 11,
+            quarter: 4,
             year: 2024,
             name: 'November',
             number: 12,

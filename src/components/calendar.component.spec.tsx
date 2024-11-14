@@ -14,6 +14,7 @@ import {WeeklyNoteEventContext} from 'src/components/providers/weekly-note-event
 import {MonthlyNoteEventContext} from 'src/components/providers/monthly-note-event.context';
 import {YearlyNoteEventContext} from 'src/components/providers/yearly-note-event.provider';
 import {Year} from 'src/domain/models/year';
+import {QuarterlyNoteEventContext} from 'src/components/providers/quarterly-note-event.context';
 
 
 describe('CalendarComponent', () => {
@@ -38,6 +39,10 @@ describe('CalendarComponent', () => {
         onEvent: jest.fn(),
         emitEvent: jest.fn()
     } as unknown as Event<Month>;
+    const mockQuarterlyNoteEvent = {
+        onEvent: jest.fn(),
+        emitEvent: jest.fn()
+    } as unknown as Event<Month>;
     const mockYearlyNoteEvent = {
         onEvent: jest.fn(),
         emitEvent: jest.fn()
@@ -46,6 +51,7 @@ describe('CalendarComponent', () => {
     beforeEach(() => {
         month = {
             name: 'October',
+            quarter: 4,
             monthIndex: 9,
             number: 10,
             year: 2023,
@@ -78,6 +84,7 @@ describe('CalendarComponent', () => {
         render(setupContent(
             mockDateManager,
             mockYearlyNoteEvent,
+            mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
             mockWeeklyNoteEvent,
             mockDailyNoteEvent
@@ -91,6 +98,7 @@ describe('CalendarComponent', () => {
         render(setupContent(
             mockDateManager,
             mockYearlyNoteEvent,
+            mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
             mockWeeklyNoteEvent,
             mockDailyNoteEvent
@@ -104,6 +112,7 @@ describe('CalendarComponent', () => {
         render(setupContent(
             mockDateManager,
             mockYearlyNoteEvent,
+            mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
             mockWeeklyNoteEvent,
             mockDailyNoteEvent
@@ -117,6 +126,7 @@ describe('CalendarComponent', () => {
         render(setupContent(
             mockDateManager,
             mockYearlyNoteEvent,
+            mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
             mockWeeklyNoteEvent,
             mockDailyNoteEvent
@@ -130,6 +140,7 @@ describe('CalendarComponent', () => {
         render(setupContent(
             mockDateManager,
             mockYearlyNoteEvent,
+            mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
             mockWeeklyNoteEvent,
             mockDailyNoteEvent
@@ -143,6 +154,7 @@ describe('CalendarComponent', () => {
         render(setupContent(
             mockDateManager,
             mockYearlyNoteEvent,
+            mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
             mockWeeklyNoteEvent,
             mockDailyNoteEvent
@@ -156,6 +168,7 @@ describe('CalendarComponent', () => {
         render(setupContent(
             mockDateManager,
             mockYearlyNoteEvent,
+            mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
             mockWeeklyNoteEvent,
             mockDailyNoteEvent
@@ -165,10 +178,25 @@ describe('CalendarComponent', () => {
         expect(mockMonthlyNoteEvent.emitEvent).toHaveBeenCalledWith(month);
     });
 
+    it('emits the quarterly note event when a quarter is clicked', () => {
+        render(setupContent(
+            mockDateManager,
+            mockYearlyNoteEvent,
+            mockQuarterlyNoteEvent,
+            mockMonthlyNoteEvent,
+            mockWeeklyNoteEvent,
+            mockDailyNoteEvent
+        ));
+
+        fireEvent.click(screen.getByText('Q4'));
+        expect(mockQuarterlyNoteEvent.emitEvent).toHaveBeenCalledWith(month);
+    });
+
     it('emits the yearly note event when a year is clicked', () => {
         render(setupContent(
             mockDateManager,
             mockYearlyNoteEvent,
+            mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
             mockWeeklyNoteEvent,
             mockDailyNoteEvent
@@ -182,6 +210,7 @@ describe('CalendarComponent', () => {
 function setupContent(
     mockDateManager: DateManager,
     mockYearlyNoteEvent: Event<Year>,
+    mockQuarterlyNoteEvent: Event<Month>,
     mockMonthlyNoteEvent: Event<Month>,
     mockWeeklyNoteEvent: Event<Week>,
     mockDailyNoteEvent: Event<Day>
@@ -189,13 +218,15 @@ function setupContent(
     return (
         <DateManagerContext.Provider value={mockDateManager}>
             <YearlyNoteEventContext.Provider value={mockYearlyNoteEvent}>
-                <MonthlyNoteEventContext.Provider value={mockMonthlyNoteEvent}>
-                    <WeeklyNoteEventContext.Provider value={mockWeeklyNoteEvent}>
-                        <DailyNoteEventContext.Provider value={mockDailyNoteEvent}>
-                            <CalendarComponent />
-                        </DailyNoteEventContext.Provider>
-                    </WeeklyNoteEventContext.Provider>
-                </MonthlyNoteEventContext.Provider>
+                <QuarterlyNoteEventContext.Provider value={mockQuarterlyNoteEvent}>
+                    <MonthlyNoteEventContext.Provider value={mockMonthlyNoteEvent}>
+                        <WeeklyNoteEventContext.Provider value={mockWeeklyNoteEvent}>
+                            <DailyNoteEventContext.Provider value={mockDailyNoteEvent}>
+                                <CalendarComponent />
+                            </DailyNoteEventContext.Provider>
+                        </WeeklyNoteEventContext.Provider>
+                    </MonthlyNoteEventContext.Provider>
+                </QuarterlyNoteEventContext.Provider>
             </YearlyNoteEventContext.Provider>
         </DateManagerContext.Provider>
     )

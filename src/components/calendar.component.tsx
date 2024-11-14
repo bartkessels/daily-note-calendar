@@ -7,6 +7,7 @@ import {getWeeklyNoteEvent} from 'src/components/providers/weekly-note-event.con
 import {getMonthlyNoteEvent} from 'src/components/providers/monthly-note-event.context';
 import {getYearlyNoteEvent} from 'src/components/providers/yearly-note-event.provider';
 import {Month} from 'src/domain/models/month';
+import {getQuarterlyNoteEvent} from 'src/components/providers/quarterly-note-event.context';
 
 const WEEK_DAYS_ORDER = [
     DayOfWeek.Monday,
@@ -26,6 +27,7 @@ export const CalendarComponent = () => {
     const dailyNoteEvent = getDailyNoteEvent();
     const weeklyNoteEvent = getWeeklyNoteEvent();
     const monthlyNoteEvent = getMonthlyNoteEvent();
+    const quarterlyNoteEvent = getQuarterlyNoteEvent();
     const yearlyNoteEvent = getYearlyNoteEvent();
 
     const updateMonth = (getMonth: () => Month | undefined): void => {
@@ -42,7 +44,7 @@ export const CalendarComponent = () => {
             <div className="header">
                 <span className="title">
                     <h1 onClick={() => monthlyNoteEvent?.emitEvent(currentMonth)}>{currentMonth?.name}</h1>&nbsp;
-                    <h1 onClick={() => yearlyNoteEvent?.emitEvent(currentYear)}>{currentMonth?.year}</h1>
+                    <h1 onClick={() => yearlyNoteEvent?.emitEvent(currentYear)}>{currentYear?.name}</h1>&nbsp;
                 </span>
 
                 <div className="buttons">
@@ -61,7 +63,7 @@ export const CalendarComponent = () => {
             <table>
                 <thead>
                 <tr>
-                    <th></th>
+                    <th className="quarter" onClick={() => quarterlyNoteEvent?.emitEvent(currentMonth)}>Q{currentMonth?.quarter}</th>
                     <th>Mon</th>
                     <th>Tue</th>
                     <th>Wed</th>

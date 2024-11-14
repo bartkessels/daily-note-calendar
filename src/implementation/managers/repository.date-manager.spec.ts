@@ -32,6 +32,7 @@ describe('RepositoryDateManager', () => {
     it('should return the year of the provided month', () => {
         const month: Month = {
             year: 2023,
+            quarter: 4,
             monthIndex: 9,
             number: 10,
             name: 'October',
@@ -69,6 +70,7 @@ describe('RepositoryDateManager', () => {
         const today = new Date();
         const currentMonth: Month = {
             year: today.getFullYear(),
+            quarter: Math.floor(today.getMonth() / 3) + 1,
             monthIndex: today.getMonth(),
             number: 10,
             name: 'October',
@@ -86,6 +88,7 @@ describe('RepositoryDateManager', () => {
     it('should return the next month', () => {
         const currentMonth: Month = {
             year: 2023,
+            quarter: 4,
             monthIndex: 9, // October (0-based index)
             number: 10,
             name: 'October',
@@ -93,6 +96,7 @@ describe('RepositoryDateManager', () => {
         };
         const nextMonth: Month = {
             year: 2023,
+            quarter: 4,
             monthIndex: 10, // November (0-based index)
             number: 11,
             name: 'November',
@@ -110,6 +114,7 @@ describe('RepositoryDateManager', () => {
     it('should recalculate the current month and return it if no current month is provided when retrieving the next month', () => {
         const currentMonth: Month = {
             year: 2023,
+            quarter: 4,
             monthIndex: 9, // October (0-based index)
             number: 10,
             name: 'October',
@@ -128,6 +133,7 @@ describe('RepositoryDateManager', () => {
     it('should return the previous month', () => {
         const currentMonth: Month = {
             year: 2023,
+            quarter: 4,
             monthIndex: 9, // October (0-based index)
             number: 10,
             name: 'October',
@@ -135,6 +141,7 @@ describe('RepositoryDateManager', () => {
         };
         const previousMonth: Month = {
             year: 2023,
+            quarter: 4,
             monthIndex: 8, // September (0-based index)
             number: 9,
             name: 'September',
@@ -152,6 +159,7 @@ describe('RepositoryDateManager', () => {
     it('should recalculate the current month and return it if no current month is provided when retrieving the previous month', () => {
         const currentMonth: Month = {
             year: 2023,
+            quarter: 4,
             monthIndex: 9, // October (0-based index)
             number: 10,
             name: 'October',
@@ -170,6 +178,7 @@ describe('RepositoryDateManager', () => {
     it('should return the next month when current month is December', () => {
         const currentMonth: Month = {
             year: 2023,
+            quarter: 4,
             monthIndex: 11, // December (0-based index)
             number: 12,
             name: 'December',
@@ -177,6 +186,7 @@ describe('RepositoryDateManager', () => {
         };
         const nextMonth: Month = {
             year: 2024,
+            quarter: 1,
             monthIndex: 0, // January (0-based index)
             number: 1,
             name: 'January',
@@ -194,6 +204,7 @@ describe('RepositoryDateManager', () => {
     it('should return the previous month when current month is January', () => {
         const currentMonth: Month = {
             year: 2023,
+            quarter: 1,
             monthIndex: 0, // January (0-based index)
             number: 1,
             name: 'January',
@@ -201,6 +212,7 @@ describe('RepositoryDateManager', () => {
         };
         const previousMonth: Month = {
             year: 2022,
+            quarter: 4,
             monthIndex: 11, // December (0-based index)
             number: 12,
             name: 'December',
