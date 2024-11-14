@@ -27,9 +27,20 @@ The main focus of the Daily note calendar plugin is to provide a calendar view t
 ![Daily note calendar plugin in light mode](./docs/images/daily-note-calendar-light-mode.png)
 ![Daily note calendar plugin in dark mode](./docs/images/daily-note-calendar-dark-mode.png)
 
+The plugin allows you to browse your periodic notes using a calendar view. Right now the following types of periodic notes are supported
+
+- Daily notes
+  - By clicking on a specific date
+- Weekly notes
+  - By clicking on the week number
+- Monthly notes
+  - By clicking on the month name
+- Yearly notes
+  - By clicking on the year number
+
 The plugin also allows you to customize the format of your daily and weekly notes using the date formatting rules of [`date-fns`](https://date-fns.org/v4.1.0/docs/format).
 
-You can also specify the location of your weekly and daily notes separately.
+To make it even more customizable, you can specify the template for your notes name, the template file on which your notes are based, and the location of your notes.
 
 ![Daily note calendar plugin settings](./docs/images/daily-note-calendar-settings.png).
 
