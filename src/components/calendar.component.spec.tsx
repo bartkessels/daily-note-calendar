@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {ReactElement} from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import {CalendarComponent} from 'src/components/calendar.component';
@@ -12,15 +12,20 @@ import {Month} from 'src/domain/models/month';
 import {DailyNoteEventContext} from 'src/components/providers/daily-note-event.context';
 import {WeeklyNoteEventContext} from 'src/components/providers/weekly-note-event.context';
 import {MonthlyNoteEventContext} from 'src/components/providers/monthly-note-event.context';
+import {YearlyNoteEventContext} from 'src/components/providers/yearly-note-event.provider';
+import {Year} from 'src/domain/models/year';
 
-const mockDateManager = {
-    getCurrentMonth: jest.fn(),
-    getNextMonth: jest.fn(),
-    getPreviousMonth: jest.fn()
-} as DateManager;
 
 describe('CalendarComponent', () => {
     let month: Month;
+    let year: Year;
+    const mockDateManager = {
+        getCurrentYear: jest.fn(),
+        getYear: jest.fn(),
+        getCurrentMonth: jest.fn(),
+        getNextMonth: jest.fn(),
+        getPreviousMonth: jest.fn()
+    } as DateManager;
     const mockDailyNoteEvent = {
         onEvent: jest.fn(),
         emitEvent: jest.fn(),
@@ -33,6 +38,10 @@ describe('CalendarComponent', () => {
         onEvent: jest.fn(),
         emitEvent: jest.fn()
     } as unknown as Event<Month>;
+    const mockYearlyNoteEvent = {
+        onEvent: jest.fn(),
+        emitEvent: jest.fn()
+    } as unknown as Event<Year>;
 
     beforeEach(() => {
         month = {
@@ -55,114 +64,131 @@ describe('CalendarComponent', () => {
             ]
         };
 
+        year = {
+            year: 2023,
+            name: '2023',
+            months: [month]
+        };
+
+        (mockDateManager.getCurrentYear as jest.Mock).mockReturnValue(year);
         (mockDateManager.getCurrentMonth as jest.Mock).mockReturnValue(month);
     });
 
     it('renders the current month and year', () => {
-        render(
-            <DateManagerContext.Provider value={mockDateManager}>
-                <MonthlyNoteEventContext.Provider value={mockMonthlyNoteEvent}>
-                    <WeeklyNoteEventContext.Provider value={mockWeeklyNoteEvent}>
-                        <DailyNoteEventContext.Provider value={mockDailyNoteEvent}>
-                            <CalendarComponent />
-                        </DailyNoteEventContext.Provider>
-                    </WeeklyNoteEventContext.Provider>
-                </MonthlyNoteEventContext.Provider>
-            </DateManagerContext.Provider>
-        );
+        render(setupContent(
+            mockDateManager,
+            mockYearlyNoteEvent,
+            mockMonthlyNoteEvent,
+            mockWeeklyNoteEvent,
+            mockDailyNoteEvent
+        ));
 
         expect(screen.getByText('October')).toBeDefined();
         expect(screen.getByText('2023')).toBeDefined();
     });
 
     it('calls goToNextMonth when ChevronRight is clicked', () => {
-        render(
-            <DateManagerContext.Provider value={mockDateManager}>
-                <MonthlyNoteEventContext.Provider value={mockMonthlyNoteEvent}>
-                    <WeeklyNoteEventContext.Provider value={mockWeeklyNoteEvent}>
-                        <DailyNoteEventContext.Provider value={mockDailyNoteEvent}>
-                            <CalendarComponent />
-                        </DailyNoteEventContext.Provider>
-                    </WeeklyNoteEventContext.Provider>
-                </MonthlyNoteEventContext.Provider>
-            </DateManagerContext.Provider>
-        );
+        render(setupContent(
+            mockDateManager,
+            mockYearlyNoteEvent,
+            mockMonthlyNoteEvent,
+            mockWeeklyNoteEvent,
+            mockDailyNoteEvent
+        ));
 
         fireEvent.click(document.querySelector('.lucide-chevron-right')!);
         expect(mockDateManager.getNextMonth).toHaveBeenCalled();
     });
 
     it('calls goToPreviousMonth when ChevronLeft is clicked', () => {
-        render(
-            <DateManagerContext.Provider value={mockDateManager}>
-                <MonthlyNoteEventContext.Provider value={mockMonthlyNoteEvent}>
-                    <WeeklyNoteEventContext.Provider value={mockWeeklyNoteEvent}>
-                        <DailyNoteEventContext.Provider value={mockDailyNoteEvent}>
-                            <CalendarComponent />
-                        </DailyNoteEventContext.Provider>
-                    </WeeklyNoteEventContext.Provider>
-                </MonthlyNoteEventContext.Provider>
-            </DateManagerContext.Provider>
-        );
+        render(setupContent(
+            mockDateManager,
+            mockYearlyNoteEvent,
+            mockMonthlyNoteEvent,
+            mockWeeklyNoteEvent,
+            mockDailyNoteEvent
+        ));
 
         fireEvent.click(document.querySelector('.lucide-chevron-left')!);
         expect(mockDateManager.getPreviousMonth).toHaveBeenCalled();
     });
 
     it('calls goToCurrentMonth when CalendarHeart is clicked', () => {
-        render(
-            <DateManagerContext.Provider value={mockDateManager}>
-                <MonthlyNoteEventContext.Provider value={mockMonthlyNoteEvent}>
-                    <WeeklyNoteEventContext.Provider value={mockWeeklyNoteEvent}>
-                        <DailyNoteEventContext.Provider value={mockDailyNoteEvent}>
-                            <CalendarComponent />
-                        </DailyNoteEventContext.Provider>
-                    </WeeklyNoteEventContext.Provider>
-                </MonthlyNoteEventContext.Provider>
-            </DateManagerContext.Provider>
-        );
+        render(setupContent(
+            mockDateManager,
+            mockYearlyNoteEvent,
+            mockMonthlyNoteEvent,
+            mockWeeklyNoteEvent,
+            mockDailyNoteEvent
+        ));
 
         fireEvent.click(document.querySelector('.lucide-calendar-heart')!);
         expect(mockDateManager.getCurrentMonth).toHaveBeenCalled();
     });
 
     it('emits the daily note event when a day is clicked', () => {
-        render(
-            <DateManagerContext.Provider value={mockDateManager}>
-                <MonthlyNoteEventContext.Provider value={mockMonthlyNoteEvent}>
-                    <WeeklyNoteEventContext.Provider value={mockWeeklyNoteEvent}>
-                        <DailyNoteEventContext.Provider value={mockDailyNoteEvent}>
-                            <CalendarComponent />
-                        </DailyNoteEventContext.Provider>
-                    </WeeklyNoteEventContext.Provider>
-                </MonthlyNoteEventContext.Provider>
-            </DateManagerContext.Provider>
-        );
+        render(setupContent(
+            mockDateManager,
+            mockYearlyNoteEvent,
+            mockMonthlyNoteEvent,
+            mockWeeklyNoteEvent,
+            mockDailyNoteEvent
+        ));
 
         fireEvent.click(screen.getByText('2'));
         expect(mockDailyNoteEvent.emitEvent).toHaveBeenCalledWith(month.weeks[0].days[0]);
     });
 
     it('emits the weekly note event when a week is clicked', () => {
-        render(
-            <DateManagerContext.Provider value={mockDateManager}>
-                <MonthlyNoteEventContext.Provider value={mockMonthlyNoteEvent}>
-                    <WeeklyNoteEventContext.Provider value={mockWeeklyNoteEvent}>
-                        <DailyNoteEventContext.Provider value={mockDailyNoteEvent}>
-                            <CalendarComponent />
-                        </DailyNoteEventContext.Provider>
-                    </WeeklyNoteEventContext.Provider>
-                </MonthlyNoteEventContext.Provider>
-            </DateManagerContext.Provider>
-        );
+        render(setupContent(
+            mockDateManager,
+            mockYearlyNoteEvent,
+            mockMonthlyNoteEvent,
+            mockWeeklyNoteEvent,
+            mockDailyNoteEvent
+        ));
 
         fireEvent.click(screen.getByText('40'));
         expect(mockWeeklyNoteEvent.emitEvent).toHaveBeenCalledWith(month.weeks[0]);
     });
 
     it('emits the monthly note event when a month is clicked', () => {
-        render(
-            <DateManagerContext.Provider value={mockDateManager}>
+        render(setupContent(
+            mockDateManager,
+            mockYearlyNoteEvent,
+            mockMonthlyNoteEvent,
+            mockWeeklyNoteEvent,
+            mockDailyNoteEvent
+        ));
+
+        fireEvent.click(screen.getByText('October'));
+        expect(mockMonthlyNoteEvent.emitEvent).toHaveBeenCalledWith(month);
+    });
+
+    it('emits the yearly note event when a year is clicked', () => {
+        render(setupContent(
+            mockDateManager,
+            mockYearlyNoteEvent,
+            mockMonthlyNoteEvent,
+            mockWeeklyNoteEvent,
+            mockDailyNoteEvent
+        ));
+
+        fireEvent.click(screen.getByText('2023'));
+        expect(mockYearlyNoteEvent.emitEvent).toHaveBeenCalledWith(year);
+    });
+});
+
+function setupContent(
+    mockDateManager: DateManager,
+    mockYearlyNoteEvent: Event<Year>,
+    mockMonthlyNoteEvent: Event<Month>,
+    mockWeeklyNoteEvent: Event<Week>,
+    mockDailyNoteEvent: Event<Day>
+): ReactElement {
+    return (
+        <DateManagerContext.Provider value={mockDateManager}>
+            <YearlyNoteEventContext.Provider value={mockYearlyNoteEvent}>
                 <MonthlyNoteEventContext.Provider value={mockMonthlyNoteEvent}>
                     <WeeklyNoteEventContext.Provider value={mockWeeklyNoteEvent}>
                         <DailyNoteEventContext.Provider value={mockDailyNoteEvent}>
@@ -170,10 +196,7 @@ describe('CalendarComponent', () => {
                         </DailyNoteEventContext.Provider>
                     </WeeklyNoteEventContext.Provider>
                 </MonthlyNoteEventContext.Provider>
-            </DateManagerContext.Provider>
-        );
-
-        fireEvent.click(screen.getByText('October'));
-        expect(mockMonthlyNoteEvent.emitEvent).toHaveBeenCalledWith(month);
-    });
-});
+            </YearlyNoteEventContext.Provider>
+        </DateManagerContext.Provider>
+    )
+}

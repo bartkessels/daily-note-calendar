@@ -5,6 +5,8 @@ import {useDateManager} from 'src/components/providers/datemanager.provider';
 import {getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
 import {getWeeklyNoteEvent} from 'src/components/providers/weekly-note-event.context';
 import {getMonthlyNoteEvent} from 'src/components/providers/monthly-note-event.context';
+import {getYearlyNoteEvent} from 'src/components/providers/yearly-note-event.provider';
+import {Month} from 'src/domain/models/month';
 
 const WEEK_DAYS_ORDER = [
     DayOfWeek.Monday,
@@ -18,22 +20,29 @@ const WEEK_DAYS_ORDER = [
 
 export const CalendarComponent = () => {
     const dateManager = useDateManager();
+    const [currentYear, setCurrentYear] = React.useState(dateManager?.getCurrentYear());
     const [currentMonth, setCurrentMonth] = React.useState(dateManager?.getCurrentMonth());
 
     const dailyNoteEvent = getDailyNoteEvent();
     const weeklyNoteEvent = getWeeklyNoteEvent();
     const monthlyNoteEvent = getMonthlyNoteEvent();
+    const yearlyNoteEvent = getYearlyNoteEvent();
 
-    const goToCurrentMonth = () => setCurrentMonth(dateManager?.getCurrentMonth());
-    const goToNextMonth = () => setCurrentMonth(dateManager?.getNextMonth(currentMonth));
-    const goToPreviousMonth = () => setCurrentMonth(dateManager?.getPreviousMonth(currentMonth));
+    const updateMonth = (getMonth: () => Month | undefined): void => {
+        setCurrentMonth(getMonth());
+        setCurrentYear(dateManager?.getYear(currentMonth));
+    };
+
+    const goToCurrentMonth = () => updateMonth(() => dateManager?.getCurrentMonth());
+    const goToPreviousMonth = () => updateMonth(() => dateManager?.getPreviousMonth(currentMonth));
+    const goToNextMonth = () => updateMonth(() => dateManager?.getNextMonth(currentMonth));
 
     return (
         <>
             <div className="header">
                 <span className="title">
                     <h1 onClick={() => monthlyNoteEvent?.emitEvent(currentMonth)}>{currentMonth?.name}</h1>&nbsp;
-                    <h1 onClick={() => monthlyNoteEvent?.emitEvent(currentMonth)}>{currentMonth?.year}</h1>
+                    <h1 onClick={() => yearlyNoteEvent?.emitEvent(currentYear)}>{currentMonth?.year}</h1>
                 </span>
 
                 <div className="buttons">

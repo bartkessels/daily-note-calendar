@@ -8,9 +8,61 @@ describe('RepositoryDateManager', () => {
 
     beforeEach(() => {
         dateRepository = {
+            getYear: jest.fn(),
             getMonth: jest.fn()
         } as DateRepository;
         dateManager = new RepositoryDateManager(dateRepository);
+    });
+
+    it('should return the current year', () => {
+        const today = new Date();
+        const currentYear = {
+            year: today.getFullYear(),
+            months: []
+        };
+
+        (dateRepository.getYear as jest.Mock).mockReturnValue(currentYear);
+
+        const result = dateManager.getCurrentYear();
+
+        expect(result).toBe(currentYear);
+        expect(dateRepository.getYear).toHaveBeenCalledWith(today.getFullYear());
+    });
+
+    it('should return the year of the provided month', () => {
+        const month: Month = {
+            year: 2023,
+            monthIndex: 9,
+            number: 10,
+            name: 'October',
+            weeks: []
+        };
+        const year = {
+            year: 2023,
+            months: []
+        };
+
+        (dateRepository.getYear as jest.Mock).mockReturnValue(year);
+
+        const result = dateManager.getYear(month);
+
+        expect(result).toBe(year);
+        expect(dateRepository.getYear).toHaveBeenCalledWith(2023);
+    });
+
+    it('should return the current year if the month is not provided', () => {
+        const today = new Date();
+        const currentYear = {
+            year: today.getFullYear(),
+            months: []
+        };
+
+        (dateRepository.getYear as jest.Mock).mockReturnValue(currentYear);
+
+        const result = dateManager.getYear(undefined);
+
+        expect(result).toBe(currentYear);
+        expect(dateRepository.getYear).toHaveBeenCalledWith(today.getFullYear());
     });
 
     it('should return the current month', () => {

@@ -22,7 +22,17 @@ import {WeeklyNoteSettingsRepository} from 'src/implementation/repositories/week
 import {MonthlyNoteSettingsRepository} from 'src/implementation/repositories/monthly-note.settings-repository';
 import {Event} from 'src/domain/events/event';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
-import {DailyNoteSettings, MonthlyNoteSettings, WeeklyNoteSettings} from 'src/domain/models/settings';
+import {
+    DailyNoteSettings,
+    MonthlyNoteSettings,
+    WeeklyNoteSettings,
+    YearlyNoteSettings
+} from 'src/domain/models/settings';
+import {Year} from 'src/domain/models/year';
+import {YearlyNoteSettingsRepository} from 'src/implementation/repositories/yearly-note.settings-repository';
+import {YearlyNoteEvent} from 'src/implementation/events/yearly-note.event';
+import {YearNameBuilder} from 'src/implementation/builders/year.name-builder';
+import {YearlyNoteManager} from 'src/implementation/managers/yearly.note-manager';
 
 export interface Dependencies {
     readonly dateManager: RepositoryDateManager;
@@ -38,6 +48,10 @@ export interface Dependencies {
     readonly monthlyNoteEvent: Event<Month>;
     readonly monthlyNoteSettingsRepository: SettingsRepository<MonthlyNoteSettings>;
     readonly monthlyNoteManager: NoteManager<Month>;
+
+    readonly yearlyNoteEvent: Event<Year>;
+    readonly yearlyNoteSettingsRepository: SettingsRepository<YearlyNoteSettings>;
+    readonly yearlyNoteManager: NoteManager<Year>;
 }
 
 export function createDependencies(plugin: Plugin): Dependencies {
@@ -62,6 +76,11 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const monthNameBuilder = new MonthNameBuilder();
     const monthlyNoteManager = new MonthlyNoteManager(monthlyNoteEvent, monthlyNoteSettingsRepository, monthNameBuilder, fileService);
 
+    const yearlyNoteSettingsRepository = new YearlyNoteSettingsRepository(settingsAdapter);
+    const yearlyNoteEvent = new YearlyNoteEvent();
+    const yearNameBuilder = new YearNameBuilder();
+    const yearlyNoteManager = new YearlyNoteManager(yearlyNoteEvent, yearlyNoteSettingsRepository, yearNameBuilder, fileService);
+
     return {
         dateManager,
 
@@ -75,6 +94,10 @@ export function createDependencies(plugin: Plugin): Dependencies {
 
         monthlyNoteEvent,
         monthlyNoteSettingsRepository,
-        monthlyNoteManager
+        monthlyNoteManager,
+
+        yearlyNoteEvent,
+        yearlyNoteSettingsRepository,
+        yearlyNoteManager
     };
 }
