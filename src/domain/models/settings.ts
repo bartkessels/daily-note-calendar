@@ -13,7 +13,15 @@ export interface Settings {
     dailyNotes: DailyNoteSettings,
     weeklyNotes: WeeklyNoteSettings,
     monthlyNotes: MonthlyNoteSettings,
-    yearlyNotes: YearlyNoteSettings
+    yearlyNotes: YearlyNoteSettings,
+
+    // Required for legacy reasons; todo: Remove these in the upcoming release
+    dailyNoteNameTemplate: string,
+    dailyNoteTemplateFile: string,
+    dailyNotesFolder: string,
+    weeklyNoteNameTemplate: string,
+    weeklyNoteTemplateFile: string,
+    weeklyNoteFolder: string
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -36,5 +44,13 @@ export const DEFAULT_SETTINGS: Settings = {
         nameTemplate: 'yyyy',
         folder: 'Yearly notes',
         templateFile: 'Templates/Yearly note'
-    }
+    },
+
+    // Required for legacy reasons; todo: Remove these in the upcoming release
+    dailyNoteNameTemplate: 'yyyy-MM-dd - eeee',
+    dailyNoteTemplateFile: 'Templates/Daily note',
+    dailyNotesFolder: 'Daily notes',
+    weeklyNoteNameTemplate: 'yyyy - ww',
+    weeklyNoteTemplateFile: 'Templates/Weekly note',
+    weeklyNoteFolder: 'Weekly notes'
 }
