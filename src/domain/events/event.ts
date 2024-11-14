@@ -1,7 +1,7 @@
 import {EventEmitter} from "events";
 
 export abstract class Event<T> extends EventEmitter {
-    constructor(private eventName: string) {
+    protected constructor(private eventName: string) {
         super();
     }
 

@@ -24,6 +24,8 @@ export const CalendarComponent = () => {
     const weeklyNoteEvent = getWeeklyNoteEvent();
     const monthlyNoteEvent = getMonthlyNoteEvent();
 
+    console.log(monthlyNoteEvent);
+
     const goToCurrentMonth = () => setCurrentMonth(dateManager?.getCurrentMonth());
     const goToNextMonth = () => setCurrentMonth(dateManager?.getNextMonth(currentMonth));
     const goToPreviousMonth = () => setCurrentMonth(dateManager?.getPreviousMonth(currentMonth));
@@ -31,9 +33,10 @@ export const CalendarComponent = () => {
     return (
         <>
             <div className="header">
-                <h1 onClick={() => monthlyNoteEvent?.emitEvent(currentMonth)}>
-                    {currentMonth?.name} {currentMonth?.year}
-                </h1>
+                <span className="title">
+                    <h1 onClick={() => monthlyNoteEvent?.emitEvent(currentMonth)}>{currentMonth?.name}</h1>&nbsp;
+                    <h1 onClick={() => monthlyNoteEvent?.emitEvent(currentMonth)}>{currentMonth?.year}</h1>
+                </span>
 
                 <div className="buttons">
                     <ChevronLeft

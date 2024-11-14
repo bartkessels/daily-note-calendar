@@ -1,14 +1,16 @@
-import { StrictMode } from 'react';
-import { IconName, ItemView, WorkspaceLeaf } from "obsidian";
-import { createRoot } from 'react-dom/client';
-import { DateManager } from 'src/domain/managers/date.manager';
-import {CalendarComponent} from "src/components/calendar.component";
-import { DateManagerContext } from 'src/components/providers/datemanager.provider';
-import {Day} from "src/domain/models/day";
-import {Event} from "src/domain/events/event";
-import {DailyNoteEventContext} from "src/components/providers/daily-note-event.context";
-import {WeeklyNoteEventContext} from "src/components/providers/weekly-note-event.context";
-import {Week} from "src/domain/models/week";
+import {StrictMode} from 'react';
+import {IconName, ItemView, WorkspaceLeaf} from 'obsidian';
+import {createRoot} from 'react-dom/client';
+import {DateManager} from 'src/domain/managers/date.manager';
+import {CalendarComponent} from 'src/components/calendar.component';
+import {DateManagerContext} from 'src/components/providers/datemanager.provider';
+import {Day} from 'src/domain/models/day';
+import {Event} from 'src/domain/events/event';
+import {DailyNoteEventContext} from 'src/components/providers/daily-note-event.context';
+import {WeeklyNoteEventContext} from 'src/components/providers/weekly-note-event.context';
+import {Week} from 'src/domain/models/week';
+import {MonthlyNoteEventContext} from 'src/components/providers/monthly-note-event.context';
+import {Month} from 'src/domain/models/month';
 
 export class CalendarView extends ItemView {
     public static VIEW_TYPE = 'daily-note-calendar';
@@ -18,8 +20,9 @@ export class CalendarView extends ItemView {
     constructor(
         leaf: WorkspaceLeaf,
         private readonly dateManager: DateManager,
-        private readonly dailyNoteEvent: Event<Day>,
-        private readonly weeklyNoteEvent: Event<Week>
+        private readonly monthlyNoteEvent: Event<Month>,
+        private readonly weeklyNoteEvent: Event<Week>,
+        private readonly dailyNoteEvent: Event<Day>
     ) {
         super(leaf);
     }
@@ -39,13 +42,15 @@ export class CalendarView extends ItemView {
     protected override async onOpen(): Promise<void> {
         createRoot(this.containerEl.children[1]).render(
             <StrictMode>
-                <DailyNoteEventContext.Provider value={this.dailyNoteEvent}>
-                    <WeeklyNoteEventContext.Provider value={this.weeklyNoteEvent}>
-                        <DateManagerContext.Provider value={this.dateManager}>
-                            <CalendarComponent />
-                        </DateManagerContext.Provider>
-                    </WeeklyNoteEventContext.Provider>
-                </DailyNoteEventContext.Provider>
+                <MonthlyNoteEventContext.Provider value={this.monthlyNoteEvent}>
+                    <DailyNoteEventContext.Provider value={this.dailyNoteEvent}>
+                        <WeeklyNoteEventContext.Provider value={this.weeklyNoteEvent}>
+                            <DateManagerContext.Provider value={this.dateManager}>
+                                <CalendarComponent/>
+                            </DateManagerContext.Provider>
+                        </WeeklyNoteEventContext.Provider>
+                    </DailyNoteEventContext.Provider>
+                </MonthlyNoteEventContext.Provider>
             </StrictMode>
         );
     }

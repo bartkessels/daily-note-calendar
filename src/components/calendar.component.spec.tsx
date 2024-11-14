@@ -172,7 +172,7 @@ describe('CalendarComponent', () => {
             </DateManagerContext.Provider>
         );
 
-        fireEvent.click(screen.getByText('October 2023'));
+        fireEvent.click(screen.getByText('October'));
         expect(mockMonthlyNoteEvent.emitEvent).toHaveBeenCalledWith(month);
     });
 });

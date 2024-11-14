@@ -1,26 +1,29 @@
 import React from 'react';
 import {renderHook} from '@testing-library/react';
-import { DailyNoteEventContext } from './daily-note-event.context';
-import {DailyNoteEvent} from 'src/implementation/events/daily-note.event';
-import {useFileManager} from 'src/components/providers/filemanager.provider';
+import {DailyNoteEventContext, getDailyNoteEvent} from './daily-note-event.context';
+import {Event} from 'src/domain/events/event';
+import {Day} from 'src/domain/models/day';
 
 describe('DailyNoteEventContext', () => {
-    const event = new DailyNoteEvent();
+    const mockEvent = {
+        emitEvent: jest.fn(),
+        onEvent: jest.fn()
+    } as unknown as Event<Day>;
 
-    it('provides the FileManager instance', () => {
+    it('provides the DailyNoteEvent instance', () => {
         const wrapper = ({ children }: { children: React.ReactNode }) => (
-            <DailyNoteEventContext.Provider value={event}>
+            <DailyNoteEventContext.Provider value={mockEvent}>
                 {children}
             </DailyNoteEventContext.Provider>
         );
 
-        const { result } = renderHook(() => useFileManager(), { wrapper });
+        const { result } = renderHook(() => getDailyNoteEvent(), { wrapper });
 
-        expect(result.current).toBe(event);
+        expect(result.current).toBe(mockEvent);
     });
 
-    it('returns null when no FileManager is provided', () => {
-        const { result } = renderHook(() => useFileManager());
+    it('returns null when no DailyNoteEvent is provided', () => {
+        const { result } = renderHook(() => getDailyNoteEvent());
 
         expect(result.current).toBeNull();
     });

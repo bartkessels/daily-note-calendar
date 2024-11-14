@@ -12,8 +12,9 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             new CalendarView(
                 leaf,
                 this.dependencies.dateManager,
-                this.dependencies.dailyNoteEvent,
-                this.dependencies.weeklyNoteEvent
+                this.dependencies.monthlyNoteEvent,
+                this.dependencies.weeklyNoteEvent,
+                this.dependencies.dailyNoteEvent
             )
         );
 
