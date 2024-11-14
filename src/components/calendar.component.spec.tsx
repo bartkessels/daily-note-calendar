@@ -71,7 +71,8 @@ describe('CalendarComponent', () => {
             </DateManagerContext.Provider>
         );
 
-        expect(screen.getByText('October 2023')).toBeDefined();
+        expect(screen.getByText('October')).toBeDefined();
+        expect(screen.getByText('2023')).toBeDefined();
     });
 
     it('calls goToNextMonth when ChevronRight is clicked', () => {

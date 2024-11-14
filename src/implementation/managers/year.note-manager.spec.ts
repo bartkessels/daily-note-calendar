@@ -8,9 +8,9 @@ import { jest } from '@jest/globals';
 import {Day, DayOfWeek} from 'src/domain/models/day';
 import {Year} from 'src/domain/models/year';
 import {YearlyNoteManager} from 'src/implementation/managers/yearly.note-manager';
-import {YearlyNoteEvent} from 'src/components/providers/daily-note-event.context';
 import {Month} from 'src/domain/models/month';
 import {YearlyNoteSettings} from 'src/domain/models/settings';
+import {YearlyNoteEvent} from 'src/implementation/events/yearly-note.event';
 
 describe('YearlyNoteManager', () => {
     let event: Event<Year>;

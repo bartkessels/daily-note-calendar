@@ -1,5 +1,5 @@
-import {YearlyNoteEvent} from 'src/components/providers/daily-note-event.context';
 import {Year} from 'src/domain/models/year';
+import {YearlyNoteEvent} from 'src/implementation/events/yearly-note.event';
 
 describe('YearlyNoteEvent', () => {
     let event: YearlyNoteEvent;
