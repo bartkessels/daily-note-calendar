@@ -1,12 +1,12 @@
-import { WeeklyNoteManager } from './weekly.note-manager';
-import { Event } from 'src/domain/events/event';
-import { Week } from 'src/domain/models/week';
-import { SettingsRepository } from 'src/domain/repositories/settings.repository';
-import { NameBuilder } from 'src/domain/builders/name.builder';
-import { FileService } from 'src/domain/services/file.service';
-import { WeeklyNoteSettings } from 'src/domain/models/settings';
-import { jest } from '@jest/globals';
-import { WeeklyNoteEvent } from 'src/implementation/events/weekly-note.event';
+import {WeeklyNoteManager} from './weekly.note-manager';
+import {Event} from 'src/domain/events/event';
+import {Week} from 'src/domain/models/week';
+import {SettingsRepository} from 'src/domain/repositories/settings.repository';
+import {NameBuilder} from 'src/domain/builders/name.builder';
+import {FileService} from 'src/domain/services/file.service';
+import {WeeklyNoteSettings} from 'src/domain/models/settings';
+import {jest} from '@jest/globals';
+import {WeeklyNoteEvent} from 'src/implementation/events/weekly-note.event';
 import {Day, DayOfWeek} from 'src/domain/models/day';
 
 describe('WeeklyNoteManager', () => {

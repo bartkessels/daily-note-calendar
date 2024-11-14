@@ -1,5 +1,5 @@
-import { FileService } from "src/domain/services/file.service";
-import {FileAdapter} from "src/domain/adapters/file.adapter";
+import {FileService} from 'src/domain/services/file.service';
+import {FileAdapter} from 'src/domain/adapters/file.adapter';
 
 export class AdapterFileService implements FileService {
     constructor(

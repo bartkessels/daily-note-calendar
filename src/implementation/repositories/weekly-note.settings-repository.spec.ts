@@ -1,6 +1,6 @@
-import { WeeklyNoteSettingsRepository } from './weekly-note.settings-repository';
-import { SettingsAdapter } from 'src/domain/adapters/settings.adapter';
-import { WeeklyNoteSettings, DEFAULT_SETTINGS } from 'src/domain/models/settings';
+import {WeeklyNoteSettingsRepository} from 'src/implementation/repositories/weekly-note.settings-repository';
+import {SettingsAdapter} from 'src/domain/adapters/settings.adapter';
+import {DEFAULT_SETTINGS, WeeklyNoteSettings} from 'src/domain/models/settings';
 
 describe('WeeklyNoteSettingsRepository', () => {
     let settingsAdapter: jest.Mocked<SettingsAdapter>;

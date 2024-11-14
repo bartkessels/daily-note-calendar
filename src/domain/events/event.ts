@@ -1,4 +1,4 @@
-import {EventEmitter} from "events";
+import {EventEmitter} from 'events';
 
 export abstract class Event<T> extends EventEmitter {
     protected constructor(private eventName: string) {

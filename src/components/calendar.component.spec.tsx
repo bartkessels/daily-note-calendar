@@ -1,10 +1,10 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { CalendarComponent } from 'src/components/calendar.component';
-import { DateManager } from 'src/domain/managers/date.manager';
+import {CalendarComponent} from 'src/components/calendar.component';
+import {DateManager} from 'src/domain/managers/date.manager';
 import 'src/extensions/extensions';
-import { DateManagerContext } from './providers/datemanager.provider';
+import {DateManagerContext} from 'src/components/providers/datemanager.provider';
 import {Day} from 'src/domain/models/day';
 import {Event} from 'src/domain/events/event';
 import {Week} from 'src/domain/models/week';

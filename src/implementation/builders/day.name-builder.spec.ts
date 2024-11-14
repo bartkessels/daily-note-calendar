@@ -1,5 +1,5 @@
 import {DayNameBuilder} from 'src/implementation/builders/day.name-builder';
-import {Day, DayOfWeek} from '../../domain/models/day';
+import {Day, DayOfWeek} from 'src/domain/models/day';
 import {join} from 'path';
 import 'src/extensions/extensions';
 

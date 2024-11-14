@@ -1,5 +1,5 @@
 import {MonthlyNoteEvent} from 'src/implementation/events/monthly-note.event';
-import {Month} from '../../domain/models/month';
+import {Month} from 'src/domain/models/month';
 
 describe('MonthlyNoteEvent', () => {
     let event: MonthlyNoteEvent;

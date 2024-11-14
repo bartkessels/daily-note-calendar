@@ -1,7 +1,7 @@
 import React from 'react';
-import { renderHook } from '@testing-library/react';
-import { DateManagerContext, useDateManager } from './datemanager.provider';
-import { DateManager } from 'src/domain/managers/date.manager';
+import {renderHook} from '@testing-library/react';
+import {DateManagerContext, useDateManager} from 'src/components/providers/datemanager.provider';
+import {DateManager} from 'src/domain/managers/date.manager';
 
 describe('DateManagerContext', () => {
     const mockDateManager = {

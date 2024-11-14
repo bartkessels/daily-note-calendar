@@ -1,4 +1,4 @@
-import { SettingsAdapter } from 'src/domain/adapters/settings.adapter';
+import {SettingsAdapter} from 'src/domain/adapters/settings.adapter';
 import {YearlyNoteSettingsRepository} from 'src/implementation/repositories/yearly-note.settings-repository';
 import {DEFAULT_SETTINGS, YearlyNoteSettings} from 'src/domain/models/settings';
 

@@ -1,5 +1,5 @@
-import { AdapterFileService } from './adapter.file-service';
-import { FileAdapter } from 'src/domain/adapters/file.adapter';
+import {AdapterFileService} from 'src/implementation/services/adapter.file-service';
+import {FileAdapter} from 'src/domain/adapters/file.adapter';
 import 'src/extensions/extensions';
 
 describe('AdapterFileService', () => {

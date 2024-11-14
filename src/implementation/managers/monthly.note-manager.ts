@@ -1,9 +1,9 @@
-import {NoteManager} from "src/domain/managers/note.manager";
-import {Event} from "src/domain/events/event";
-import {Month} from "src/domain/models/month";
-import {SettingsRepository} from "src/domain/repositories/settings.repository";
-import {NameBuilder} from "src/domain/builders/name.builder";
-import {FileService} from "src/domain/services/file.service";
+import {NoteManager} from 'src/domain/managers/note.manager';
+import {Event} from 'src/domain/events/event';
+import {Month} from 'src/domain/models/month';
+import {SettingsRepository} from 'src/domain/repositories/settings.repository';
+import {NameBuilder} from 'src/domain/builders/name.builder';
+import {FileService} from 'src/domain/services/file.service';
 import {MonthlyNoteSettings} from 'src/domain/models/settings';
 
 export class MonthlyNoteManager implements NoteManager<Month> {

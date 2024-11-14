@@ -1,5 +1,5 @@
-import { Plugin, PluginSettingTab } from "obsidian";
-import { SettingsRepository } from "src/domain/repositories/settings.repository";
+import {Plugin, PluginSettingTab} from 'obsidian';
+import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {DailyNoteSettings, MonthlyNoteSettings, WeeklyNoteSettings} from 'src/domain/models/settings';
 import {DailyNoteSettingItems} from 'src/plugin/settings/daily-note.setting-items';
 import {WeeklyNoteSettingItems} from 'src/plugin/settings/weekly-note.setting-items';

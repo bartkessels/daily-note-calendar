@@ -1,5 +1,5 @@
-import {FileAdapter} from "src/domain/adapters/file.adapter";
-import {normalizePath, Vault, Workspace} from "obsidian";
+import {FileAdapter} from 'src/domain/adapters/file.adapter';
+import {normalizePath, Vault, Workspace} from 'obsidian';
 
 export class ObsidianFileAdapter implements FileAdapter {
     constructor(

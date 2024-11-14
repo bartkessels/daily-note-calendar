@@ -1,5 +1,5 @@
-import {createContext, useContext} from "react";
-import {Event} from "src/domain/events/event";
+import {createContext, useContext} from 'react';
+import {Event} from 'src/domain/events/event';
 import {Day} from 'src/domain/models/day';
 
 export const DailyNoteEventContext = createContext<Event<Day> | null>(null);

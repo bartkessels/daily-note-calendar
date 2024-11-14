@@ -1,6 +1,6 @@
-import { MonthlyNoteSettingsRepository } from './monthly-note.settings-repository';
-import { SettingsAdapter } from 'src/domain/adapters/settings.adapter';
-import { MonthlyNoteSettings, DEFAULT_SETTINGS } from 'src/domain/models/settings';
+import {MonthlyNoteSettingsRepository} from 'src/implementation/repositories/monthly-note.settings-repository';
+import {SettingsAdapter} from 'src/domain/adapters/settings.adapter';
+import {DEFAULT_SETTINGS, MonthlyNoteSettings} from 'src/domain/models/settings';
 
 describe('MonthlyNoteSettingsRepository', () => {
     let settingsAdapter: jest.Mocked<SettingsAdapter>;
