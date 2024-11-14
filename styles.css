@@ -9,6 +9,10 @@ th {
   font-size: var(--font-ui-small)
 }
 
+th.quarter {
+  font-weight: var(--font-semibold);
+}
+
 td {
   opacity: 90%;
 }

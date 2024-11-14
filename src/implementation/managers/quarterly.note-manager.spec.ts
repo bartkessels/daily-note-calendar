@@ -1,22 +1,22 @@
-import {MonthlyNoteManager} from './monthly.note-manager';
 import {Event} from 'src/domain/events/event';
 import {Month} from 'src/domain/models/month';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {NameBuilder} from 'src/domain/builders/name.builder';
 import {FileService} from 'src/domain/services/file.service';
-import {MonthlyNoteSettings} from 'src/domain/models/settings';
+import {MonthlyNoteSettings, QuarterlyNoteSettings} from 'src/domain/models/settings';
 import {jest} from '@jest/globals';
 import {MonthlyNoteEvent} from 'src/implementation/events/monthly-note.event';
 import {Week} from 'src/domain/models/week';
 import {Day, DayOfWeek} from 'src/domain/models/day';
+import {QuarterlyNoteManager} from 'src/implementation/managers/quarterly.note-manager';
 
-describe('MonthlyNoteManager', () => {
+describe('QuarterlyNoteManager', () => {
     let event: Event<Month>;
-    let settingsRepository: jest.Mocked<SettingsRepository<MonthlyNoteSettings>>;
+    let settingsRepository: jest.Mocked<SettingsRepository<QuarterlyNoteSettings>>;
     let fileNameBuilder: jest.Mocked<NameBuilder<Month>>;
     let fileService: jest.Mocked<FileService>;
     let month: Month;
-    let manager: MonthlyNoteManager;
+    let manager: QuarterlyNoteManager;
 
     beforeEach(() => {
         event = new MonthlyNoteEvent();
@@ -50,13 +50,13 @@ describe('MonthlyNoteManager', () => {
             }]
         };
 
-        manager = new MonthlyNoteManager(event, settingsRepository, fileNameBuilder, fileService);
+        manager = new QuarterlyNoteManager(event, settingsRepository, fileNameBuilder, fileService);
     });
 
     it('should open a note based on the month and settings', async () => {
-        const filePath = 'folder/November-2024.md';
-        const settings: MonthlyNoteSettings = {
-            nameTemplate: 'MMMM-yyyy',
+        const filePath = 'folder/2024 - Q4.md';
+        const settings: QuarterlyNoteSettings = {
+            nameTemplate: 'yyyy - qqq',
             folder: 'folder',
             templateFile: 'templateFile',
         };
@@ -71,9 +71,9 @@ describe('MonthlyNoteManager', () => {
     });
 
     it('should call tryOpenNote when an event is emitted', async () => {
-        const filePath = 'folder/November-2024.md';
-        const settings: MonthlyNoteSettings = {
-            nameTemplate: 'MMMM-yyyy',
+        const filePath = 'folder/2024 - Q4.md';
+        const settings: QuarterlyNoteSettings = {
+            nameTemplate: 'yyyy - qqq',
             folder: 'folder',
             templateFile: 'templateFile',
         };

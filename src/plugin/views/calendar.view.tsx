@@ -13,6 +13,7 @@ import {MonthlyNoteEventContext} from 'src/components/providers/monthly-note-eve
 import {Month} from 'src/domain/models/month';
 import {YearlyNoteEventContext} from 'src/components/providers/yearly-note-event.provider';
 import {Year} from 'src/domain/models/year';
+import {QuarterlyNoteEventContext} from 'src/components/providers/quarterly-note-event.context';
 
 export class CalendarView extends ItemView {
     public static VIEW_TYPE = 'daily-note-calendar';
@@ -23,6 +24,7 @@ export class CalendarView extends ItemView {
         leaf: WorkspaceLeaf,
         private readonly dateManager: DateManager,
         private readonly yearlyNoteEvent: Event<Year>,
+        private readonly quarterlyNoteEvent: Event<Month>,
         private readonly monthlyNoteEvent: Event<Month>,
         private readonly weeklyNoteEvent: Event<Week>,
         private readonly dailyNoteEvent: Event<Day>
@@ -46,15 +48,17 @@ export class CalendarView extends ItemView {
         createRoot(this.containerEl.children[1]).render(
             <StrictMode>
                 <YearlyNoteEventContext.Provider value={this.yearlyNoteEvent}>
-                    <MonthlyNoteEventContext.Provider value={this.monthlyNoteEvent}>
-                        <DailyNoteEventContext.Provider value={this.dailyNoteEvent}>
-                            <WeeklyNoteEventContext.Provider value={this.weeklyNoteEvent}>
-                                <DateManagerContext.Provider value={this.dateManager}>
-                                    <CalendarComponent/>
-                                </DateManagerContext.Provider>
-                            </WeeklyNoteEventContext.Provider>
-                        </DailyNoteEventContext.Provider>
-                    </MonthlyNoteEventContext.Provider>
+                    <QuarterlyNoteEventContext.Provider value={this.quarterlyNoteEvent}>
+                        <MonthlyNoteEventContext.Provider value={this.monthlyNoteEvent}>
+                            <DailyNoteEventContext.Provider value={this.dailyNoteEvent}>
+                                <WeeklyNoteEventContext.Provider value={this.weeklyNoteEvent}>
+                                    <DateManagerContext.Provider value={this.dateManager}>
+                                        <CalendarComponent/>
+                                    </DateManagerContext.Provider>
+                                </WeeklyNoteEventContext.Provider>
+                            </DailyNoteEventContext.Provider>
+                        </MonthlyNoteEventContext.Provider>
+                    </QuarterlyNoteEventContext.Provider>
                 </YearlyNoteEventContext.Provider>
             </StrictMode>
         );

@@ -35,6 +35,8 @@ The plugin allows you to browse your periodic notes using a calendar view. Right
   - By clicking on the week number
 - Monthly notes
   - By clicking on the month name
+- Quarterly notes
+    - By clicking on the quarter name in the upper-left corner
 - Yearly notes
   - By clicking on the year number
 

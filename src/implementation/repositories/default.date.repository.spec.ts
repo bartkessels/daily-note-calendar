@@ -120,4 +120,42 @@ describe('DefaultDateRepository', () => {
 
         expect(dayOfWeek).toBe(DayOfWeek.Sunday);
     });
+
+    it('should return the correct year information', () => {
+        const year = 2023;
+        const result = repository.getYear(year);
+
+        expect(result.year).toBe(year);
+        expect(result.name).toBe('2023');
+        expect(result.months.length).toBe(12);
+    });
+
+    it('should return the correct quarter for the each month', () => {
+        const year = 2023;
+        const months = [];
+
+        for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
+            months.push(repository.getMonth(year, monthIndex));
+        }
+
+        // First quarter
+        for (let index = 0; index <= 2; index++) {
+            expect(months[index].quarter).toBe(1);
+        }
+
+        // Second quarter
+        for (let index = 3; index <= 5; index++) {
+            expect(months[index].quarter).toBe(2);
+        }
+
+        // Third quarter
+        for (let index = 6; index <= 8; index++) {
+            expect(months[index].quarter).toBe(3);
+        }
+
+        // Fourth quarter
+        for (let index = 9; index <= 11; index++) {
+            expect(months[index].quarter).toBe(4);
+        }
+    });
 });

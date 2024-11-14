@@ -1,12 +1,12 @@
-import {MonthlyNoteEvent} from 'src/implementation/events/monthly-note.event';
 import {Month} from 'src/domain/models/month';
+import {QuarterlyNoteEvent} from 'src/implementation/events/quarterly-note.event';
 
-describe('MonthlyNoteEvent', () => {
-    let event: MonthlyNoteEvent;
+describe('QuarterlyNoteEvent', () => {
+    let event: QuarterlyNoteEvent;
     let month: Month;
 
     beforeEach(() => {
-        event = new MonthlyNoteEvent();
+        event = new QuarterlyNoteEvent();
         month = {
             monthIndex: 11,
             quarter: 4,
