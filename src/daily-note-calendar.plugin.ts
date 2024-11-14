@@ -1,7 +1,7 @@
-import { Plugin } from "obsidian";
-import { CalendarView } from "src/plugin/views/calendar.view";
-import { CalendarSettingsTab } from "src/plugin/settings/calendar.settings-tab";
-import {createDependencies} from "src/dependencies";
+import {Plugin} from 'obsidian';
+import {CalendarView} from 'src/plugin/views/calendar.view';
+import {CalendarSettingsTab} from 'src/plugin/settings/calendar.settings-tab';
+import {createDependencies} from 'src/dependencies';
 import 'src/extensions/extensions';
 
 export default class DailyNoteCalendarPlugin extends Plugin {

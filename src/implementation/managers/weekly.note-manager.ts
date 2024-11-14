@@ -1,9 +1,9 @@
-import {NoteManager} from "src/domain/managers/note.manager";
-import {Event} from "src/domain/events/event";
-import {Week} from "src/domain/models/week";
-import {SettingsRepository} from "src/domain/repositories/settings.repository";
-import {NameBuilder} from "src/domain/builders/name.builder";
-import {FileService} from "src/domain/services/file.service";
+import {NoteManager} from 'src/domain/managers/note.manager';
+import {Event} from 'src/domain/events/event';
+import {Week} from 'src/domain/models/week';
+import {SettingsRepository} from 'src/domain/repositories/settings.repository';
+import {NameBuilder} from 'src/domain/builders/name.builder';
+import {FileService} from 'src/domain/services/file.service';
 import {WeeklyNoteSettings} from 'src/domain/models/settings';
 
 export class WeeklyNoteManager implements NoteManager<Week> {

@@ -1,6 +1,6 @@
-import { DailyNoteSettingsRepository } from 'src/implementation/repositories/daily-note.settings-repository';
-import { SettingsAdapter } from 'src/domain/adapters/settings.adapter';
-import { DailyNoteSettings, DEFAULT_SETTINGS } from 'src/domain/models/settings';
+import {DailyNoteSettingsRepository} from 'src/implementation/repositories/daily-note.settings-repository';
+import {SettingsAdapter} from 'src/domain/adapters/settings.adapter';
+import {DailyNoteSettings, DEFAULT_SETTINGS} from 'src/domain/models/settings';
 
 describe('DailyNoteSettingsRepository', () => {
     let settingsAdapter: jest.Mocked<SettingsAdapter>;

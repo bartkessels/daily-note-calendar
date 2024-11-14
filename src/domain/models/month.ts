@@ -1,4 +1,4 @@
-import { Week } from "./week";
+import {Week} from 'src/domain/models/week';
 
 export interface Month {
     monthIndex: number,

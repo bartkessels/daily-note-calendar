@@ -1,5 +1,5 @@
 import {Year} from 'src/domain/models/year';
-import {Event} from "src/domain/events/event";
+import {Event} from 'src/domain/events/event';
 import {NoteManager} from 'src/domain/managers/note.manager';
 import {YearlyNoteSettings} from 'src/domain/models/settings';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';

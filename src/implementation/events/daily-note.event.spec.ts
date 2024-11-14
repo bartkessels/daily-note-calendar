@@ -1,5 +1,5 @@
 import {DailyNoteEvent} from 'src/implementation/events/daily-note.event';
-import {Day, DayOfWeek} from '../../domain/models/day';
+import {Day, DayOfWeek} from 'src/domain/models/day';
 
 describe('DailyNoteEvent', () => {
     let event: DailyNoteEvent;

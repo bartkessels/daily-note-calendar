@@ -1,4 +1,4 @@
-import { Plugin } from "obsidian";
+import {Plugin} from 'obsidian';
 import {Settings} from 'src/domain/models/settings';
 import {SettingsAdapter} from 'src/domain/adapters/settings.adapter';
 

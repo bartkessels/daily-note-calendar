@@ -1,7 +1,7 @@
-import {NameBuilder} from "src/domain/builders/name.builder";
-import {Day} from "src/domain/models/day";
-import {format} from "date-fns";
-import {join} from "path";
+import {NameBuilder} from 'src/domain/builders/name.builder';
+import {Day} from 'src/domain/models/day';
+import {format} from 'date-fns';
+import {join} from 'path';
 
 export class DayNameBuilder implements NameBuilder<Day> {
     private template?: string;

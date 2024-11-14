@@ -1,7 +1,7 @@
-import { WeekNameBuilder } from 'src/implementation/builders/week.name-builder';
-import { Week } from '../../domain/models/week';
-import { Day, DayOfWeek } from '../../domain/models/day';
-import { join } from 'path';
+import {WeekNameBuilder} from 'src/implementation/builders/week.name-builder';
+import {Week} from 'src/domain/models/week';
+import {Day, DayOfWeek} from 'src/domain/models/day';
+import {join} from 'path';
 import 'src/extensions/extensions';
 
 describe('WeekNameBuilder', () => {

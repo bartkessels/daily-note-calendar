@@ -1,10 +1,10 @@
-import { CalendarHeart, ChevronLeft, ChevronRight } from "lucide-react";
-import * as React from "react";
-import { DayOfWeek } from "src/domain/models/day";
-import { useDateManager } from "src/components/providers/datemanager.provider";
-import {getDailyNoteEvent} from "src/components/providers/daily-note-event.context";
-import {getWeeklyNoteEvent} from "src/components/providers/weekly-note-event.context";
-import {getMonthlyNoteEvent} from "src/components/providers/monthly-note-event.context";
+import {CalendarHeart, ChevronLeft, ChevronRight} from 'lucide-react';
+import * as React from 'react';
+import {DayOfWeek} from 'src/domain/models/day';
+import {useDateManager} from 'src/components/providers/datemanager.provider';
+import {getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
+import {getWeeklyNoteEvent} from 'src/components/providers/weekly-note-event.context';
+import {getMonthlyNoteEvent} from 'src/components/providers/monthly-note-event.context';
 
 const WEEK_DAYS_ORDER = [
     DayOfWeek.Monday,

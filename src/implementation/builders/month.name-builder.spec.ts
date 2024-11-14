@@ -1,8 +1,8 @@
-import { MonthNameBuilder } from 'src/implementation/builders/month.name-builder';
-import { Month } from 'src/domain/models/month';
-import { Week } from 'src/domain/models/week';
+import {MonthNameBuilder} from 'src/implementation/builders/month.name-builder';
+import {Month} from 'src/domain/models/month';
+import {Week} from 'src/domain/models/week';
 import {Day, DayOfWeek} from 'src/domain/models/day';
-import { join } from 'path';
+import {join} from 'path';
 import 'src/extensions/extensions';
 
 describe('MonthNameBuilder', () => {

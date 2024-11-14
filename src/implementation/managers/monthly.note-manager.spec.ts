@@ -1,12 +1,12 @@
-import { MonthlyNoteManager } from './monthly.note-manager';
-import { Event } from 'src/domain/events/event';
-import { Month } from 'src/domain/models/month';
-import { SettingsRepository } from 'src/domain/repositories/settings.repository';
-import { NameBuilder } from 'src/domain/builders/name.builder';
-import { FileService } from 'src/domain/services/file.service';
-import { MonthlyNoteSettings } from 'src/domain/models/settings';
-import { jest } from '@jest/globals';
-import { MonthlyNoteEvent } from 'src/implementation/events/monthly-note.event';
+import {MonthlyNoteManager} from './monthly.note-manager';
+import {Event} from 'src/domain/events/event';
+import {Month} from 'src/domain/models/month';
+import {SettingsRepository} from 'src/domain/repositories/settings.repository';
+import {NameBuilder} from 'src/domain/builders/name.builder';
+import {FileService} from 'src/domain/services/file.service';
+import {MonthlyNoteSettings} from 'src/domain/models/settings';
+import {jest} from '@jest/globals';
+import {MonthlyNoteEvent} from 'src/implementation/events/monthly-note.event';
 import {Week} from 'src/domain/models/week';
 import {Day, DayOfWeek} from 'src/domain/models/day';
 

@@ -1,7 +1,7 @@
-import { Day, DayOfWeek } from "src/domain/models/day";
-import { Month } from "src/domain/models/month";
-import { Week } from "src/domain/models/week";
-import { DateRepository } from "src/domain/repositories/date.repository";
+import {Day, DayOfWeek} from 'src/domain/models/day';
+import {Month} from 'src/domain/models/month';
+import {Week} from 'src/domain/models/week';
+import {DateRepository} from 'src/domain/repositories/date.repository';
 
 export class DefaultDateRepository implements DateRepository {
     private readonly monthFormat = "long";

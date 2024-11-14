@@ -1,4 +1,4 @@
-import {Week} from '../../domain/models/week';
+import {Week} from 'src/domain/models/week';
 import {WeeklyNoteEvent} from 'src/implementation/events/weekly-note.event';
 
 describe('WeeklyNoteEvent', () => {
