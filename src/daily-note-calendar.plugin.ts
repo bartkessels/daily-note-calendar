@@ -31,6 +31,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         ));
 
         this.app.workspace.onLayoutReady(this.setViewStates.bind(this));
+        // TODO: Get current day and emit the event
     }
 
     private setViewStates(): void {
