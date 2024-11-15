@@ -38,9 +38,13 @@ import {NotifyLogger} from 'src/implementation/loggers/notify.logger';
 import {QuarterlyNoteEvent} from 'src/implementation/events/quarterly-note.event';
 import {QuarterlyNoteSettingsRepository} from 'src/implementation/repositories/quarterly-note.settings-repository';
 import {QuarterlyNoteManager} from 'src/implementation/managers/quarterly.note-manager';
+import {NoteRepository} from 'src/domain/repositories/note.repository';
+import {ObsidianNoteAdapter} from 'src/plugin/adapters/obsidian.note-adapter';
+import {DayNoteRepository} from 'src/implementation/repositories/day.note-repository';
 
 export interface Dependencies {
     readonly dateManager: RepositoryDateManager;
+    readonly dayNoteRepository: NoteRepository<Day>;
 
     readonly dailyNoteEvent: Event<Day>;
     readonly dailyNoteSettingsRepository: SettingsRepository<DailyNoteSettings>;
@@ -64,10 +68,13 @@ export interface Dependencies {
 }
 
 export function createDependencies(plugin: Plugin): Dependencies {
-    const dateRepository = new DefaultDateRepository();
-    const dateManager = new RepositoryDateManager(dateRepository);
     const fileAdapter = new ObsidianFileAdapter(plugin.app.vault, plugin.app.workspace);
     const settingsAdapter = new PluginSettingsAdapter(plugin);
+    const noteAdapter = new ObsidianNoteAdapter(plugin.app);
+
+    const dateRepository = new DefaultDateRepository();
+    const dateManager = new RepositoryDateManager(dateRepository);
+    const dayNoteRepository = new DayNoteRepository(noteAdapter);
     const noticeAdapter = new ObsidianNoticeAdapter();
     const logger = new NotifyLogger(noticeAdapter);
     const fileService = new AdapterFileService(fileAdapter, logger);
@@ -98,6 +105,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
 
     return {
         dateManager,
+        dayNoteRepository,
 
         dailyNoteEvent,
         dailyNoteSettingsRepository,
