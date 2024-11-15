@@ -36,6 +36,8 @@ export class ObsidianFileAdapter implements FileAdapter {
             throw new Error(`File does not exist: ${normalizedPath}.`);
         }
 
+
+
         await this.workspace.getLeaf().openFile(file, { active: true });
     }
 

@@ -1,6 +1,5 @@
 import {NameBuilder} from 'src/domain/builders/name.builder';
 import {format} from 'date-fns';
-import {join} from 'path';
 import {Month} from 'src/domain/models/month';
 import {Logger} from 'src/domain/loggers/logger';
 
@@ -47,6 +46,6 @@ export class MonthNameBuilder implements NameBuilder<Month> {
         const name = format(date, this.template);
         const fileName = name.appendMarkdownExtension();
 
-        return join(this.path, fileName);
+        return [this.path, fileName].join('/');
     }
 }

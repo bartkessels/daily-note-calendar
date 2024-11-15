@@ -1,7 +1,6 @@
 import {NameBuilder} from 'src/domain/builders/name.builder';
 import {Day} from 'src/domain/models/day';
 import {format} from 'date-fns';
-import {join} from 'path';
 import {Logger} from 'src/domain/loggers/logger';
 
 export class DayNameBuilder implements NameBuilder<Day> {
@@ -42,6 +41,6 @@ export class DayNameBuilder implements NameBuilder<Day> {
         const name = format(this.day.completeDate, this.template);
         const fileName = name.appendMarkdownExtension();
 
-        return join(this.path, fileName);
+        return [this.path, fileName].join('/');
     }
 }
