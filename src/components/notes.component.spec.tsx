@@ -20,7 +20,7 @@ describe('NotesComponent', () => {
         };
     });
 
-    it('should get all the notes from the repository when an event is emitted', () => {
+    it('should get all the notes from the repository when an event is emitted', async () => {
         const day: Day = { dayOfWeek: 1, date: 2, completeDate: new Date(2023, 9, 2), name: '2' };
 
         render(
@@ -33,7 +33,7 @@ describe('NotesComponent', () => {
 
         React.act(() => dailyNoteEvent.emitEvent(day));
 
-        expect(mockDayNoteRepository.getNotesCreatedOn).toHaveBeenCalledWith(day);
+        await waitFor(() => expect(mockDayNoteRepository.getNotesCreatedOn).toHaveBeenCalledWith(day));
     });
 
     it('should render notes when an event is emitted', async () => {
