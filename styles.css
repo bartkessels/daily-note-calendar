@@ -35,8 +35,16 @@ td:hover:not(:empty), .weekNumber:hover {
   font-weight: var(----font-light);
 }
 
-.today {
+#today {
   color: var(--text-accent);
+}
+
+.selected-day:after {
+  content: "";
+  display: block;
+  width: 30%;
+  margin: 0 auto;
+  border-bottom: 0.15em solid var(--text-accent);
 }
 
 .header {
@@ -60,4 +68,37 @@ td:hover:not(:empty), .weekNumber:hover {
 
 .header .buttons > *:hover {
   color: var(--text-accent);
+}
+
+ul {
+  list-style-type: none;
+  padding: 0 0 0 0.2em;
+}
+
+ul li {
+  padding-bottom: 0.4em;
+}
+
+ul li:after {
+  content: "";
+  display: block;
+  border-bottom: 1px solid var(--background-modifier-border);
+  padding-top: 0.4em;
+}
+
+ul li .note-title {
+  font-weight: var(--font-semibold);
+  font-size: var(--font-ui-small);
+}
+
+ul li .note-date {
+  font-weight: var(--font-light);
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+}
+
+ul li .note-path {
+  font-weight: var(--font-light);
+  font-size: var(--font-ui-small);
+  color: var(--text-faint);
 }

@@ -16,7 +16,6 @@ import {YearlyNoteEventContext} from 'src/components/providers/yearly-note-event
 import {Year} from 'src/domain/models/year';
 import {QuarterlyNoteEventContext} from 'src/components/providers/quarterly-note-event.context';
 
-
 describe('CalendarComponent', () => {
     let month: Month;
     let year: Year;
@@ -204,6 +203,39 @@ describe('CalendarComponent', () => {
 
         fireEvent.click(screen.getByText('2023'));
         expect(mockYearlyNoteEvent.emitEvent).toHaveBeenCalledWith(year);
+    });
+
+    it('should set selectedDay class on the day when the user presses on a day', () => {
+        render(setupContent(
+            mockDateManager,
+            mockYearlyNoteEvent,
+            mockQuarterlyNoteEvent,
+            mockMonthlyNoteEvent,
+            mockWeeklyNoteEvent,
+            mockDailyNoteEvent
+        ));
+
+        fireEvent.click(screen.getByText('2'));
+
+
+        expect(screen.getByText('2').classList).toContain('selected-day');
+    });
+
+    it('should set today id on today when the component is being rendered', () => {
+        jest.spyOn(Date.prototype, 'isToday').mockImplementation(function() {
+            return this.getDate() === 2 && this.getMonth() === 9 && this.getFullYear() === 2023;
+        });
+
+        render(setupContent(
+            mockDateManager,
+            mockYearlyNoteEvent,
+            mockQuarterlyNoteEvent,
+            mockMonthlyNoteEvent,
+            mockWeeklyNoteEvent,
+            mockDailyNoteEvent
+        ));
+
+        expect(screen.getByText('2').id).toContain('today');
     });
 });
 

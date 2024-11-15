@@ -1,6 +1,6 @@
-import {CalendarHeart, ChevronLeft, ChevronRight} from 'lucide-react';
+import {CalendarHeart, ChevronLeft, ChevronRight, Dot} from 'lucide-react';
 import * as React from 'react';
-import {DayOfWeek} from 'src/domain/models/day';
+import {Day, DayOfWeek} from 'src/domain/models/day';
 import {useDateManager} from 'src/components/providers/datemanager.provider';
 import {getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
 import {getWeeklyNoteEvent} from 'src/components/providers/weekly-note-event.context';
@@ -21,6 +21,7 @@ const WEEK_DAYS_ORDER = [
 
 export const CalendarComponent = () => {
     const dateManager = useDateManager();
+    const [selectedDay, setSelectedDay] = React.useState<Day>();
     const [currentYear, setCurrentYear] = React.useState(dateManager?.getCurrentYear());
     const [currentMonth, setCurrentMonth] = React.useState(dateManager?.getCurrentMonth());
 
@@ -33,6 +34,11 @@ export const CalendarComponent = () => {
     const updateMonth = (getMonth: () => Month | undefined): void => {
         setCurrentMonth(getMonth());
         setCurrentYear(dateManager?.getYear(currentMonth));
+    };
+
+    const selectDay = (day?: Day) => {
+        setSelectedDay(day);
+        dailyNoteEvent?.emitEvent(day);
     };
 
     const goToCurrentMonth = () => updateMonth(() => dateManager?.getCurrentMonth());
@@ -82,11 +88,14 @@ export const CalendarComponent = () => {
                             onClick={() => weeklyNoteEvent?.emitEvent(week)}>{week.weekNumber}</td>
                         {WEEK_DAYS_ORDER.map((dayOfWeek, dayOfWeekIndex) => {
                             const day = week.days.find(d => d.dayOfWeek === dayOfWeek);
+                            const isSelected = day != null && selectedDay?.completeDate === day.completeDate;
+                            const isToday = day?.completeDate.isToday();
 
                             return (
                                 <td key={dayOfWeekIndex}
-                                    onClick={() => dailyNoteEvent?.emitEvent(day)}
-                                    className={day?.completeDate.isToday() ? 'today' : ''}>{day?.name}</td>
+                                    id={isToday ? 'today': ''}
+                                    onClick={() => selectDay(day)}
+                                    className={isSelected ? 'selected-day' : '' }>{day?.name}</td>
                             )
                         })}
                     </tr>

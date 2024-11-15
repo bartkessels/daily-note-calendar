@@ -9,18 +9,18 @@ export const NotesComponent = () => {
     const dailyNoteEvent = getDailyNoteEvent();
     const dayNoteRepository = getDayNoteRepository();
 
-    dailyNoteEvent?.onEvent((day: Day) => {
-        dayNoteRepository?.getNotesCreatedOn(day).then((notes: Note[]) => {
-            setNotes(notes);
-        });
+    dailyNoteEvent?.onEvent(async (day: Day) => {
+        const notes = await dayNoteRepository?.getNotesCreatedOn(day);
+        setNotes(notes ?? []);
     });
 
     return (
         <ul>
             {notes.map((note: Note) => (
-                <li key={note.path}>
-                    <span className='note-title'>{note.name}</span><br />
-                    <span className='note-date'>{note.createdOn.toLocaleDateString()}</span>
+                <li key={note.path} title={note.path}>
+                    <span className="note-title">{note.name}</span><br/>
+                    <span className="note-date">Created at {note.createdOn.toLocaleTimeString()}</span><br/>
+                    <span className="note-path">{note.path}</span>
                 </li>
             ))}
         </ul>
