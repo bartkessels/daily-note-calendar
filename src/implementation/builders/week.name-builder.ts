@@ -1,6 +1,5 @@
 import {NameBuilder} from 'src/domain/builders/name.builder';
 import {format} from 'date-fns';
-import {join} from 'path';
 import {Week} from 'src/domain/models/week';
 import {Logger} from 'src/domain/loggers/logger';
 
@@ -45,6 +44,6 @@ export class WeekNameBuilder implements NameBuilder<Week> {
         const name = format(date, this.template);
         const fileName = name.appendMarkdownExtension();
 
-        return join(this.path, fileName);
+        return [this.path, fileName].join('/');
     }
 }
