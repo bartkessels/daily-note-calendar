@@ -102,3 +102,7 @@ ul li .note-path {
   font-size: var(--font-ui-small);
   color: var(--text-faint);
 }
+
+.setting-example {
+  color: var(--text-accent);
+}
