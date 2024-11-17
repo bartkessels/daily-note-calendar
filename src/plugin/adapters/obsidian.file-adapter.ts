@@ -1,5 +1,5 @@
 import {FileAdapter} from 'src/domain/adapters/file.adapter';
-import {normalizePath, Vault, Workspace} from 'obsidian';
+import {normalizePath, TFolder, Vault, Workspace} from 'obsidian';
 
 export class ObsidianFileAdapter implements FileAdapter {
     constructor(
@@ -24,6 +24,7 @@ export class ObsidianFileAdapter implements FileAdapter {
             throw new Error(`Template file does not exist: ${normalizedTemplateFilePath}.`);
         }
 
+        await this.createFolder(normalizedFilePath);
         const newFile = await this.vault.copy(templateFile, normalizedFilePath);
         return newFile.path;
     }
@@ -36,9 +37,18 @@ export class ObsidianFileAdapter implements FileAdapter {
             throw new Error(`File does not exist: ${normalizedPath}.`);
         }
 
-
-
         await this.workspace.getLeaf().openFile(file, { active: true });
+    }
+
+    private async createFolder(filePath: string): Promise<void> {
+        const folder = filePath.split('/').slice(0, -1).join('/');
+            const file = this.vault.getAbstractFileByPath(folder);
+
+        if (file && file instanceof TFolder) {
+            return;
+        }
+
+        await this.vault.createFolder(folder);
     }
 
     private normalizePath(filePath: string): string {
