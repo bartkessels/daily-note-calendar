@@ -1,6 +1,6 @@
 {
 	"name": "daily-note-calendar",
-	"version": "1.3.0",
+	"version": "1.4.0",
 	"description": "A plugin to easily navigate to your daily notes using a calendar view.",
 	"main": "main.js",
 	"scripts": {
