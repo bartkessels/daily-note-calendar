@@ -22,6 +22,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
 
         this.addSettingTab(new CalendarSettingsTab(
             this,
+            this.dependencies.dateParser,
             this.dependencies.dailyNoteSettingsRepository,
             this.dependencies.weeklyNoteSettingsRepository,
             this.dependencies.monthlyNoteSettingsRepository,

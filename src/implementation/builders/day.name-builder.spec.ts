@@ -1,8 +1,8 @@
-import {DayNameBuilder} from 'src/implementation/builders/day.name-builder';
-import {Day, DayOfWeek} from 'src/domain/models/day';
-import {join} from 'path';
+import { DayNameBuilder } from 'src/implementation/builders/day.name-builder';
+import { Day, DayOfWeek } from 'src/domain/models/day';
+import { Logger } from 'src/domain/loggers/logger';
+import { DateParser } from 'src/domain/parsers/date.parser';
 import 'src/extensions/extensions';
-import {Logger} from 'src/domain/loggers/logger';
 
 describe('DayNameBuilder', () => {
     const day: Day = {
@@ -13,15 +13,19 @@ describe('DayNameBuilder', () => {
     };
 
     let logger: Logger;
+    let dateParser: DateParser;
     let builder: DayNameBuilder;
 
     beforeEach(() => {
         logger = {
             logAndThrow: jest.fn((message: string) => {
-                throw new Error(message)
+                throw new Error(message);
             })
         };
-        builder = new DayNameBuilder(logger);
+        dateParser = {
+            parse: jest.fn()
+        };
+        builder = new DayNameBuilder(dateParser, logger);
     });
 
     it('should throw an error if template is not provided', () => {
@@ -42,12 +46,18 @@ describe('DayNameBuilder', () => {
         expect(() => builder.build()).toThrow('Could not find the folder to create the daily note');
     });
 
-    it('should build the correct file path with template', () => {
-        const expectedPath = join('/path/to/daily/notes', '12-11-2024.md');
+    it('should build the correct file path with the template', () => {
+        const expectedPath = '/parsed/path/parsed-name.md';
+
+        (dateParser.parse as jest.Mock)
+            .mockReturnValueOnce('/parsed/path')
+            .mockReturnValueOnce('parsed-name');
 
         builder.withNameTemplate('dd-MM-yyyy').withValue(day).withPath('/path/to/daily/notes');
         const result = builder.build();
 
         expect(result).toBe(expectedPath);
+        expect(dateParser.parse).toHaveBeenCalledWith(day.completeDate, '/path/to/daily/notes');
+        expect(dateParser.parse).toHaveBeenCalledWith(day.completeDate, 'dd-MM-yyyy');
     });
 });

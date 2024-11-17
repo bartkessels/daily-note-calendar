@@ -1,7 +1,7 @@
 import {NameBuilder} from 'src/domain/builders/name.builder';
 import {Day} from 'src/domain/models/day';
-import {format} from 'date-fns';
 import {Logger} from 'src/domain/loggers/logger';
+import {DateParser} from 'src/domain/parsers/date.parser';
 
 export class DayNameBuilder implements NameBuilder<Day> {
     private template?: string;
@@ -9,6 +9,7 @@ export class DayNameBuilder implements NameBuilder<Day> {
     private day?: Day;
 
     constructor(
+        private readonly dateParser: DateParser,
         private readonly logger: Logger
     ) {
 
@@ -38,9 +39,10 @@ export class DayNameBuilder implements NameBuilder<Day> {
             this.logger.logAndThrow('Could not find the folder to create the daily note');
         }
 
-        const name = format(this.day.completeDate, this.template);
+        const path = this.dateParser.parse(this.day?.completeDate, this.path);
+        const name = this.dateParser.parse(this.day.completeDate, this.template);
         const fileName = name.appendMarkdownExtension();
 
-        return [this.path, fileName].join('/');
+        return [path, fileName].join('/');
     }
 }

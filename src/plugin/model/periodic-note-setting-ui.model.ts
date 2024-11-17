@@ -1,4 +1,4 @@
-export interface SettingUiModel {
+export interface PeriodicNoteSettingUiModel {
     name: string,
     description: string,
     placeholder: string,

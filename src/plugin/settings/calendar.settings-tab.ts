@@ -11,6 +11,7 @@ import {WeeklyNoteSettingItems} from 'src/plugin/settings/weekly-note.setting-it
 import {MonthlyNoteSettingItems} from 'src/plugin/settings/monthly-note.setting-items';
 import {YearlyNoteSettingItems} from 'src/plugin/settings/yearly-note.setting-items';
 import {QuarterlyNoteSettingItems} from 'src/plugin/settings/quarterly-note.setting-items';
+import {DateParser} from 'src/domain/parsers/date.parser';
 
 export class CalendarSettingsTab extends PluginSettingTab {
     private readonly dailyNoteSettingItems: DailyNoteSettingItems;
@@ -21,6 +22,7 @@ export class CalendarSettingsTab extends PluginSettingTab {
 
     constructor(
         plugin: Plugin,
+        dateParser: DateParser,
         dailyNotesSettingsRepository: SettingsRepository<DailyNoteSettings>,
         weeklyNotesSettingsRepository: SettingsRepository<WeeklyNoteSettings>,
         monthlyNotesSettingsRepository: SettingsRepository<MonthlyNoteSettings>,
@@ -29,11 +31,11 @@ export class CalendarSettingsTab extends PluginSettingTab {
     ) {
         super(plugin.app, plugin);
 
-        this.dailyNoteSettingItems = new DailyNoteSettingItems(this, dailyNotesSettingsRepository);
-        this.weeklyNoteSettingItems = new WeeklyNoteSettingItems(this, weeklyNotesSettingsRepository);
-        this.monthlyNoteSettingItems = new MonthlyNoteSettingItems(this, monthlyNotesSettingsRepository);
-        this.quarterlyNoteSettingItems = new QuarterlyNoteSettingItems(this, quarterlyNotesSettingsRepository);
-        this.yearlyNoteSettingItems = new YearlyNoteSettingItems(this, yearlyNotesSettingsRepository);
+        this.dailyNoteSettingItems = new DailyNoteSettingItems(this, dateParser, dailyNotesSettingsRepository);
+        this.weeklyNoteSettingItems = new WeeklyNoteSettingItems(this, dateParser, weeklyNotesSettingsRepository);
+        this.monthlyNoteSettingItems = new MonthlyNoteSettingItems(this, dateParser, monthlyNotesSettingsRepository);
+        this.quarterlyNoteSettingItems = new QuarterlyNoteSettingItems(this, dateParser, quarterlyNotesSettingsRepository);
+        this.yearlyNoteSettingItems = new YearlyNoteSettingItems(this, dateParser, yearlyNotesSettingsRepository);
     }
 
     override async display(): Promise<void> {

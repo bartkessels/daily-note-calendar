@@ -1,7 +1,7 @@
 import {NameBuilder} from 'src/domain/builders/name.builder';
-import {format} from 'date-fns';
 import {Month} from 'src/domain/models/month';
 import {Logger} from 'src/domain/loggers/logger';
+import {DateParser} from 'src/domain/parsers/date.parser';
 
 export class MonthNameBuilder implements NameBuilder<Month> {
     private template?: string;
@@ -9,6 +9,7 @@ export class MonthNameBuilder implements NameBuilder<Month> {
     private month?: Month;
 
     constructor(
+        private readonly dateParser: DateParser,
         private readonly logger: Logger
     ) {
 
@@ -43,9 +44,10 @@ export class MonthNameBuilder implements NameBuilder<Month> {
         }
 
         const date = this.month.weeks[0].days[0].completeDate;
-        const name = format(date, this.template);
+        const path = this.dateParser.parse(date, this.path);
+        const name = this.dateParser.parse(date, this.template);
         const fileName = name.appendMarkdownExtension();
 
-        return [this.path, fileName].join('/');
+        return [path, fileName].join('/');
     }
 }
