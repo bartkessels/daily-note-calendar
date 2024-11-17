@@ -41,10 +41,33 @@ export class CalendarSettingsTab extends PluginSettingTab {
     override async display(): Promise<void> {
         this.containerEl.empty();
 
-        await this.dailyNoteSettingItems.registerSettings();
-        await this.weeklyNoteSettingItems.registerSettings();
-        await this.monthlyNoteSettingItems.registerSettings();
-        await this.quarterlyNoteSettingItems.registerSettings();
-        await this.yearlyNoteSettingItems.registerSettings();
+        const title = this.containerEl.createEl('h2');
+        title.setText('Daily note calendar settings');
+
+        const docsUri = new DocumentFragment();
+        docsUri.createEl('a', {href: 'https://date-fns.org/docs/format'}).setText('date-fns');
+
+        const example = new DocumentFragment();
+        example.createEl('br');
+        example.createEl('span').setText('Folder name: ');
+        example.createEl('code').setText(`'Journaling/'yyyy`);
+        example.createEl('span').setText(' would turn into ');
+        example.createEl('code').setText(`Journaling/2023`);
+
+        const extraInformation = new DocumentFragment().createEl('p');
+        extraInformation.setText('The name and the folder of the periodic notes can include parsable date strings. To include non-parsable characters, use the \'-character (single-quote) to escape them.');
+        extraInformation.append(example);
+
+        const documentationInformation = this.containerEl.createEl('p');
+        documentationInformation.setText('The daily note calender uses date-fns to parse dates. You can find the format options here: ');
+        documentationInformation.append(docsUri);
+        documentationInformation.append(extraInformation);
+
+
+        await this.dailyNoteSettingItems.displaySettings();
+        await this.weeklyNoteSettingItems.displaySettings();
+        await this.monthlyNoteSettingItems.displaySettings();
+        await this.quarterlyNoteSettingItems.displaySettings();
+        await this.yearlyNoteSettingItems.displaySettings(false);
     }
 }

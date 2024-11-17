@@ -12,7 +12,15 @@ export abstract class PeriodicNoteSettingItems {
         this.today = new Date();
     }
 
-    public abstract registerSettings(): Promise<void>;
+    public async displaySettings(displaySeparator: boolean = true): Promise<void> {
+        await this.registerSettings();
+
+        if (displaySeparator) {
+            this.settingsTab.containerEl.createEl('hr');
+        }
+    }
+
+    protected abstract registerSettings(): Promise<void>;
 
     protected addHeading(title: string, description: string) {
         new Setting(this.settingsTab.containerEl)
