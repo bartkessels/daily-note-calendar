@@ -2,12 +2,13 @@ import {MonthNameBuilder} from 'src/implementation/builders/month.name-builder';
 import {Month} from 'src/domain/models/month';
 import {Week} from 'src/domain/models/week';
 import {Day, DayOfWeek} from 'src/domain/models/day';
-import {join} from 'path';
 import 'src/extensions/extensions';
 import {Logger} from 'src/domain/loggers/logger';
+import {DateParser} from 'src/domain/parsers/date.parser';
 
 describe('MonthNameBuilder', () => {
     let logger: Logger;
+    let dateParser: DateParser;
     let builder: MonthNameBuilder;
     let month: Month;
 
@@ -17,7 +18,10 @@ describe('MonthNameBuilder', () => {
                 throw new Error(message)
             })
         };
-        builder = new MonthNameBuilder(logger);
+        dateParser = {
+            parse: jest.fn()
+        };
+        builder = new MonthNameBuilder(dateParser, logger);
         month = {
             monthIndex: 11,
             quarter: 4,
@@ -73,11 +77,18 @@ describe('MonthNameBuilder', () => {
     });
 
     it('should build the correct file path with the template', () => {
-        const expectedPath = join('/path/to/monthly/notes', '11-2024.md');
+        const expectedPath = '/parsed/path/parsed-name.md';
+        const expectedDate = month.weeks[0].days[0].completeDate;
 
-        builder.withNameTemplate('MM-yyyy').withValue(month).withPath('/path/to/monthly/notes');
+        (dateParser.parse as jest.Mock)
+            .mockReturnValueOnce('/parsed/path')
+            .mockReturnValueOnce('parsed-name');
+
+        builder.withNameTemplate('dd-MM-yyyy').withValue(month).withPath('/path/to/daily/notes');
         const result = builder.build();
 
         expect(result).toBe(expectedPath);
+        expect(dateParser.parse).toHaveBeenCalledWith(expectedDate, '/path/to/daily/notes');
+        expect(dateParser.parse).toHaveBeenCalledWith(expectedDate, 'dd-MM-yyyy');
     });
 });

@@ -2,6 +2,7 @@ import {NameBuilder} from 'src/domain/builders/name.builder';
 import {Year} from 'src/domain/models/year';
 import {format} from 'date-fns';
 import {Logger} from 'src/domain/loggers/logger';
+import {DateParser} from 'src/domain/parsers/date.parser';
 
 export class YearNameBuilder implements NameBuilder<Year> {
     private template?: string;
@@ -9,6 +10,7 @@ export class YearNameBuilder implements NameBuilder<Year> {
     private year?: Year;
 
     constructor(
+        private readonly dateParser: DateParser,
         private readonly logger: Logger
     ) {
 
@@ -45,9 +47,10 @@ export class YearNameBuilder implements NameBuilder<Year> {
         }
 
         const date = this.year.months[0].weeks[0].days[0].completeDate;
-        const name = format(date, this.template);
+        const path = this.dateParser.parse(date, this.path);
+        const name = this.dateParser.parse(date, this.template);
         const fileName = name.appendMarkdownExtension();
 
-        return [this.path, fileName].join('/');
+        return [path, fileName].join('/');
     }
 }

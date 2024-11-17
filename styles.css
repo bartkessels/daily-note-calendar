@@ -61,3 +61,7 @@ td:hover:not(:empty), .weekNumber:hover {
 .header .buttons > *:hover {
   color: var(--text-accent);
 }
+
+.setting-example {
+  color: var(--text-accent);
+}

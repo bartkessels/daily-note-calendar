@@ -6,9 +6,11 @@ import 'src/extensions/extensions';
 import {Year} from 'src/domain/models/year';
 import {YearNameBuilder} from 'src/implementation/builders/year.name-builder';
 import {Logger} from 'src/domain/loggers/logger';
+import {DateParser} from 'src/domain/parsers/date.parser';
 
 describe('YearNameBuilder', () => {
     let logger: Logger;
+    let dateParser: DateParser;
     let builder: YearNameBuilder;
     let year: Year;
 
@@ -18,7 +20,10 @@ describe('YearNameBuilder', () => {
                 throw new Error(message)
             })
         };
-        builder = new YearNameBuilder(logger);
+        dateParser = {
+            parse: jest.fn()
+        };
+        builder = new YearNameBuilder(dateParser, logger);
         year = {
             year: 2024,
             name: '2024',
@@ -86,11 +91,18 @@ describe('YearNameBuilder', () => {
     });
 
     it('should build the correct file path with the template', () => {
-        const expectedPath = join('/path/to/monthly/notes', '11-2024.md');
+        const expectedPath = '/parsed/path/parsed-name.md';
+        const expectedDate = year.months[0].weeks[0].days[0].completeDate;
 
-        builder.withNameTemplate('MM-yyyy').withValue(year).withPath('/path/to/monthly/notes');
+        (dateParser.parse as jest.Mock)
+            .mockReturnValueOnce('/parsed/path')
+            .mockReturnValueOnce('parsed-name');
+
+        builder.withNameTemplate('dd-MM-yyyy').withValue(year).withPath('/path/to/daily/notes');
         const result = builder.build();
 
         expect(result).toBe(expectedPath);
+        expect(dateParser.parse).toHaveBeenCalledWith(expectedDate, '/path/to/daily/notes');
+        expect(dateParser.parse).toHaveBeenCalledWith(expectedDate, 'dd-MM-yyyy');
     });
 });

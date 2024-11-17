@@ -1,7 +1,7 @@
 import {NameBuilder} from 'src/domain/builders/name.builder';
-import {format} from 'date-fns';
 import {Week} from 'src/domain/models/week';
 import {Logger} from 'src/domain/loggers/logger';
+import {DateParser} from 'src/domain/parsers/date.parser';
 
 export class WeekNameBuilder implements NameBuilder<Week> {
     private template?: string;
@@ -9,6 +9,7 @@ export class WeekNameBuilder implements NameBuilder<Week> {
     private week?: Week;
 
     constructor(
+        private readonly dateParser: DateParser,
         private readonly logger: Logger
     ) {
 
@@ -41,9 +42,10 @@ export class WeekNameBuilder implements NameBuilder<Week> {
         }
 
         const date = this.week.days[0].completeDate;
-        const name = format(date, this.template);
+        const path = this.dateParser.parse(date, this.path);
+        const name = this.dateParser.parse(date, this.template);
         const fileName = name.appendMarkdownExtension();
 
-        return [this.path, fileName].join('/');
+        return [path, fileName].join('/');
     }
 }

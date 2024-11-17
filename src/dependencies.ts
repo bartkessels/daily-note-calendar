@@ -38,9 +38,12 @@ import {NotifyLogger} from 'src/implementation/loggers/notify.logger';
 import {QuarterlyNoteEvent} from 'src/implementation/events/quarterly-note.event';
 import {QuarterlyNoteSettingsRepository} from 'src/implementation/repositories/quarterly-note.settings-repository';
 import {QuarterlyNoteManager} from 'src/implementation/managers/quarterly.note-manager';
+import {DateParser} from 'src/domain/parsers/date.parser';
+import {DateFnsDateParser} from 'src/implementation/parsers/date-fns.date-parser';
 
 export interface Dependencies {
     readonly dateManager: RepositoryDateManager;
+    readonly dateParser: DateParser;
 
     readonly dailyNoteEvent: Event<Day>;
     readonly dailyNoteSettingsRepository: SettingsRepository<DailyNoteSettings>;
@@ -65,6 +68,7 @@ export interface Dependencies {
 
 export function createDependencies(plugin: Plugin): Dependencies {
     const dateRepository = new DefaultDateRepository();
+    const dateParser = new DateFnsDateParser();
     const dateManager = new RepositoryDateManager(dateRepository);
     const fileAdapter = new ObsidianFileAdapter(plugin.app.vault, plugin.app.workspace);
     const settingsAdapter = new PluginSettingsAdapter(plugin);
@@ -74,17 +78,17 @@ export function createDependencies(plugin: Plugin): Dependencies {
 
     const dailyNoteSettingsRepository = new DailyNoteSettingsRepository(settingsAdapter);
     const dailyNoteEvent = new DailyNoteEvent();
-    const dayNameBuilder = new DayNameBuilder(logger);
+    const dayNameBuilder = new DayNameBuilder(dateParser, logger);
     const dailyNoteManager = new DailyNoteManager(dailyNoteEvent, dailyNoteSettingsRepository, dayNameBuilder, fileService);
 
     const weeklyNoteSettingsRepository = new WeeklyNoteSettingsRepository(settingsAdapter);
     const weeklyNoteEvent = new WeeklyNoteEvent();
-    const weekNameBuilder = new WeekNameBuilder(logger);
+    const weekNameBuilder = new WeekNameBuilder(dateParser, logger);
     const weeklyNoteManager = new WeeklyNoteManager(weeklyNoteEvent, weeklyNoteSettingsRepository, weekNameBuilder, fileService);
 
     const monthlyNoteSettingsRepository = new MonthlyNoteSettingsRepository(settingsAdapter);
     const monthlyNoteEvent = new MonthlyNoteEvent();
-    const monthNameBuilder = new MonthNameBuilder(logger);
+    const monthNameBuilder = new MonthNameBuilder(dateParser, logger);
     const monthlyNoteManager = new MonthlyNoteManager(monthlyNoteEvent, monthlyNoteSettingsRepository, monthNameBuilder, fileService);
 
     const quarterlyNoteSettingsRepository = new QuarterlyNoteSettingsRepository(settingsAdapter);
@@ -93,11 +97,12 @@ export function createDependencies(plugin: Plugin): Dependencies {
 
     const yearlyNoteSettingsRepository = new YearlyNoteSettingsRepository(settingsAdapter);
     const yearlyNoteEvent = new YearlyNoteEvent();
-    const yearNameBuilder = new YearNameBuilder(logger);
+    const yearNameBuilder = new YearNameBuilder(dateParser, logger);
     const yearlyNoteManager = new YearlyNoteManager(yearlyNoteEvent, yearlyNoteSettingsRepository, yearNameBuilder, fileService);
 
     return {
         dateManager,
+        dateParser,
 
         dailyNoteEvent,
         dailyNoteSettingsRepository,
