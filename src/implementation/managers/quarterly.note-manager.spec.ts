@@ -31,7 +31,8 @@ describe('QuarterlyNoteManager', () => {
             build: jest.fn(),
         } as jest.Mocked<NameBuilder<Month>>;
         fileService = {
-            tryOpenFile: jest.fn(),
+            tryOpenFileWithTemplate: jest.fn(),
+            tryOpenFile: jest.fn()
         } as jest.Mocked<FileService>;
         month = {
             monthIndex: 11,
@@ -67,7 +68,7 @@ describe('QuarterlyNoteManager', () => {
         await manager.tryOpenNote(month);
 
         expect(settingsRepository.getSettings).toHaveBeenCalled();
-        expect(fileService.tryOpenFile).toHaveBeenCalledWith(filePath, settings.templateFile);
+        expect(fileService.tryOpenFileWithTemplate).toHaveBeenCalledWith(filePath, settings.templateFile);
     });
 
     it('should call tryOpenNote when an event is emitted', async () => {

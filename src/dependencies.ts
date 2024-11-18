@@ -42,11 +42,17 @@ import {WeeklyNotesPeriodicNoteSettings} from 'src/domain/models/settings/weekly
 import {MonthlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/monthly-notes.periodic-note-settings';
 import {QuarterlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/quarterly-notes.periodic-note-settings';
 import {YearlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/yearly-notes.periodic-note-settings';
+import { Note } from 'src/domain/models/note';
+import {NotesManager} from 'src/domain/managers/notes.manager';
+import {NoteEvent} from 'src/implementation/events/note.event';
+import {GenericNotesManager} from 'src/implementation/managers/generic.notes-manager';
 
 export interface Dependencies {
     readonly dateManager: RepositoryDateManager;
-    readonly dayNoteRepository: NoteRepository<Day>;
     readonly dateParser: DateParser;
+
+    readonly noteEvent: Event<Note>,
+    readonly notesManager: NotesManager;
 
     readonly dailyNoteEvent: Event<Day>;
     readonly dailyNoteSettingsRepository: SettingsRepository<DailyNotesPeriodicNoteSettings>;
@@ -79,7 +85,10 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const noticeAdapter = new ObsidianNoticeAdapter();
     const logger = new NotifyLogger(noticeAdapter);
     const fileService = new AdapterFileService(fileAdapter, logger);
-    const dayNoteRepository = new DayNoteRepository(noteAdapter);
+
+    const notesRepository = new DayNoteRepository(noteAdapter);
+    const noteEvent = new NoteEvent();
+    const notesManager = new GenericNotesManager(noteEvent, fileService, notesRepository);
 
     const dailyNoteSettingsRepository = new DailyNoteSettingsRepository(settingsAdapter);
     const dailyNoteEvent = new DailyNoteEvent();
@@ -107,8 +116,10 @@ export function createDependencies(plugin: Plugin): Dependencies {
 
     return {
         dateManager,
-        dayNoteRepository,
         dateParser,
+
+        noteEvent,
+        notesManager,
 
         dailyNoteEvent,
         dailyNoteSettingsRepository,

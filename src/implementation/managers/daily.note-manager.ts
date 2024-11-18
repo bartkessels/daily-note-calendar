@@ -24,6 +24,6 @@ export class DailyNoteManager implements NoteManager<Day> {
             .withPath(settings.folder)
             .build();
 
-        return this.fileService.tryOpenFile(filePath, settings.templateFile);
+        return this.fileService.tryOpenFileWithTemplate(filePath, settings.templateFile);
     }
 }

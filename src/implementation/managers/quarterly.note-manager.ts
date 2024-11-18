@@ -24,6 +24,6 @@ export class QuarterlyNoteManager implements NoteManager<Month> {
             .withPath(settings.folder)
             .build();
 
-        return this.fileService.tryOpenFile(filePath, settings.templateFile);
+        return this.fileService.tryOpenFileWithTemplate(filePath, settings.templateFile);
     }
 }

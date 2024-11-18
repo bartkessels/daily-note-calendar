@@ -26,7 +26,7 @@ describe('AdapterFileService', () => {
     it('should not create a file if it already exists', async () => {
         fileAdapter.doesFileExist.mockResolvedValue(true);
 
-        await service.tryOpenFile('path/to/file', 'path/to/template');
+        await service.tryOpenFileWithTemplate('path/to/file', 'path/to/template');
 
         expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/file.md');
         expect(fileAdapter.createFileFromTemplate).not.toHaveBeenCalled();
@@ -37,7 +37,7 @@ describe('AdapterFileService', () => {
         fileAdapter.doesFileExist.mockResolvedValueOnce(false);
         fileAdapter.doesFileExist.mockResolvedValueOnce(false);
 
-        await expect(service.tryOpenFile('path/to/file', 'path/to/template')).rejects.toThrow('Template file does not exist: path/to/template');
+        await expect(service.tryOpenFileWithTemplate('path/to/file', 'path/to/template')).rejects.toThrow('Template file does not exist: path/to/template');
 
         expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/file.md');
         expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/template.md');
@@ -50,7 +50,7 @@ describe('AdapterFileService', () => {
         fileAdapter.doesFileExist.mockResolvedValueOnce(true);
         fileAdapter.createFileFromTemplate.mockResolvedValue('path/to/new/file');
 
-        await service.tryOpenFile('path/to/file', 'path/to/template');
+        await service.tryOpenFileWithTemplate('path/to/file', 'path/to/template');
 
         expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/file.md');
         expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/template.md');
@@ -61,7 +61,7 @@ describe('AdapterFileService', () => {
     it('should append markdown extension to file paths if it doesnt already contain the extension', async () => {
         fileAdapter.doesFileExist.mockResolvedValue(true);
 
-        await service.tryOpenFile('path/to/file', 'path/to/template');
+        await service.tryOpenFileWithTemplate('path/to/file', 'path/to/template');
 
         expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/file.md');
         expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/template.md');
@@ -70,7 +70,7 @@ describe('AdapterFileService', () => {
     it('should not append markdown extension to file paths if it already contain the extension', async () => {
         fileAdapter.doesFileExist.mockResolvedValue(true);
 
-        await service.tryOpenFile('path/to/file.md', 'path/to/template.md');
+        await service.tryOpenFileWithTemplate('path/to/file.md', 'path/to/template.md');
 
         expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/file.md');
         expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/template.md');

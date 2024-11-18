@@ -12,7 +12,8 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             new CalendarView(
                 leaf,
                 this.dependencies.dateManager,
-                this.dependencies.dayNoteRepository,
+                this.dependencies.notesManager,
+                this.dependencies.noteEvent,
                 this.dependencies.yearlyNoteEvent,
                 this.dependencies.quarterlyNoteEvent,
                 this.dependencies.monthlyNoteEvent,
@@ -32,7 +33,6 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         ));
 
         this.app.workspace.onLayoutReady(this.setViewStates.bind(this));
-        // TODO: Get current day and emit the event
     }
 
     private setViewStates(): void {

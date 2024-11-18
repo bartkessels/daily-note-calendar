@@ -7,7 +7,7 @@ import { Note } from 'src/domain/models/note';
 import { Event } from 'src/domain/events/event';
 import { jest } from '@jest/globals';
 import {DailyNoteEvent} from 'src/implementation/events/daily-note.event';
-import {DayNoteRepositoryContext} from 'src/components/providers/day-note-repository.context';
+import {NotesManagerContext} from 'src/components/providers/notes-manager.context';
 
 describe('NotesComponent', () => {
     let dailyNoteEvent: Event<Day>;
@@ -24,11 +24,11 @@ describe('NotesComponent', () => {
         const day: Day = { dayOfWeek: 1, date: 2, completeDate: new Date(2023, 9, 2), name: '2' };
 
         render(
-            <DayNoteRepositoryContext.Provider value={mockDayNoteRepository}>
+            <NotesManagerContext.Provider value={mockDayNoteRepository}>
                 <DailyNoteEventContext.Provider value={dailyNoteEvent}>
                     <NotesComponent />
                 </DailyNoteEventContext.Provider>
-            </DayNoteRepositoryContext.Provider>
+            </NotesManagerContext.Provider>
         );
 
         React.act(() => dailyNoteEvent.emitEvent(day));
@@ -46,11 +46,11 @@ describe('NotesComponent', () => {
         mockDayNoteRepository.getNotesCreatedOn.mockResolvedValueOnce(notes);
 
         render(
-            <DayNoteRepositoryContext.Provider value={mockDayNoteRepository}>
+            <NotesManagerContext.Provider value={mockDayNoteRepository}>
                 <DailyNoteEventContext.Provider value={dailyNoteEvent}>
                     <NotesComponent />
                 </DailyNoteEventContext.Provider>
-            </DayNoteRepositoryContext.Provider>
+            </NotesManagerContext.Provider>
         );
 
         React.act(() => dailyNoteEvent.emitEvent(day));
@@ -69,11 +69,11 @@ describe('NotesComponent', () => {
         mockDayNoteRepository.getNotesCreatedOn.mockResolvedValueOnce([]);
 
         render(
-            <DayNoteRepositoryContext.Provider value={mockDayNoteRepository}>
+            <NotesManagerContext.Provider value={mockDayNoteRepository}>
                 <DailyNoteEventContext.Provider value={dailyNoteEvent}>
                     <NotesComponent />
                 </DailyNoteEventContext.Provider>
-            </DayNoteRepositoryContext.Provider>
+            </NotesManagerContext.Provider>
         );
 
         React.act(() => dailyNoteEvent.emitEvent(day));

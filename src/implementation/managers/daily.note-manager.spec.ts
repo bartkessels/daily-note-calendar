@@ -29,7 +29,8 @@ describe('DailyNoteManager', () => {
             build: jest.fn(),
         } as jest.Mocked<NameBuilder<Day>>;
         fileService = {
-            tryOpenFile: jest.fn(),
+            tryOpenFileWithTemplate: jest.fn(),
+            tryOpenFile: jest.fn()
         } as jest.Mocked<FileService>;
         day = {
             dayOfWeek: DayOfWeek.Tuesday,
@@ -55,7 +56,7 @@ describe('DailyNoteManager', () => {
         await manager.tryOpenNote(day);
 
         expect(settingsRepository.getSettings).toHaveBeenCalled();
-        expect(fileService.tryOpenFile).toHaveBeenCalledWith(filePath, settings.templateFile);
+        expect(fileService.tryOpenFileWithTemplate).toHaveBeenCalledWith(filePath, settings.templateFile);
     });
 
     it('should try to open a note when an event is triggered', async () => {

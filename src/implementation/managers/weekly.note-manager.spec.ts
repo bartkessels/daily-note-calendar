@@ -30,7 +30,8 @@ describe('WeeklyNoteManager', () => {
             build: jest.fn(),
         } as jest.Mocked<NameBuilder<Week>>;
         fileService = {
-            tryOpenFile: jest.fn(),
+            tryOpenFileWithTemplate: jest.fn(),
+            tryOpenFile: jest.fn()
         } as jest.Mocked<FileService>;
         week = {
             weekNumber: 46,
@@ -59,7 +60,7 @@ describe('WeeklyNoteManager', () => {
         await manager.tryOpenNote(week);
 
         expect(settingsRepository.getSettings).toHaveBeenCalled();
-        expect(fileService.tryOpenFile).toHaveBeenCalledWith(filePath, settings.templateFile);
+        expect(fileService.tryOpenFileWithTemplate).toHaveBeenCalledWith(filePath, settings.templateFile);
     });
 
     it('should call tryOpenNote when an event is emitted', async () => {

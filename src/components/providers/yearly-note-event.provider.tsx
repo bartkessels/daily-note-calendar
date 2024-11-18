@@ -4,5 +4,5 @@ import {Year} from 'src/domain/models/year';
 
 export const YearlyNoteEventContext = createContext<Event<Year> | null>(null);
 export const getYearlyNoteEvent = (): Event<Year> | null => {
-    return useContext(YearlyNoteEventContext)
+    return useContext(YearlyNoteEventContext);
 }
