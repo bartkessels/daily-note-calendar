@@ -46,11 +46,15 @@ import { Note } from 'src/domain/models/note';
 import {NotesManager} from 'src/domain/managers/notes.manager';
 import {NoteEvent} from 'src/implementation/events/note.event';
 import {GenericNotesManager} from 'src/implementation/managers/generic.notes-manager';
+import {GeneralSettings} from 'src/domain/models/settings/general.settings';
+import {GeneralSettingsRepository} from 'src/implementation/repositories/general.settings-repository';
 
 export interface Dependencies {
     readonly dateManager: RepositoryDateManager;
     readonly dateParser: DateParser;
 
+    readonly generalSettingsRepository: SettingsRepository<GeneralSettings>,
+    
     readonly noteEvent: Event<Note>,
     readonly notesManager: NotesManager;
 
@@ -86,9 +90,11 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const logger = new NotifyLogger(noticeAdapter);
     const fileService = new AdapterFileService(fileAdapter, logger);
 
+    const generalSettingsRepository = new GeneralSettingsRepository(settingsAdapter);
+
     const notesRepository = new DayNoteRepository(noteAdapter);
     const noteEvent = new NoteEvent();
-    const notesManager = new GenericNotesManager(noteEvent, fileService, notesRepository);
+    const notesManager = new GenericNotesManager(noteEvent, fileService, notesRepository, generalSettingsRepository);
 
     const dailyNoteSettingsRepository = new DailyNoteSettingsRepository(settingsAdapter);
     const dailyNoteEvent = new DailyNoteEvent();
@@ -117,6 +123,8 @@ export function createDependencies(plugin: Plugin): Dependencies {
     return {
         dateManager,
         dateParser,
+
+        generalSettingsRepository,
 
         noteEvent,
         notesManager,

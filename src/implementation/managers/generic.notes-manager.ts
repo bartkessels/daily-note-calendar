@@ -4,12 +4,15 @@ import {FileService} from 'src/domain/services/file.service';
 import {NoteRepository} from 'src/domain/repositories/note.repository';
 import {NotesManager} from 'src/domain/managers/notes.manager';
 import {Day} from 'src/domain/models/day';
+import {SettingsRepository} from 'src/domain/repositories/settings.repository';
+import {GeneralSettings} from 'src/domain/models/settings/general.settings';
 
 export class GenericNotesManager implements NotesManager {
     constructor(
         event: Event<Note>,
         private readonly fileService: FileService,
-        private readonly noteRepository: NoteRepository<Day>
+        private readonly noteRepository: NoteRepository<Day>,
+        private readonly settingsRepository: SettingsRepository<GeneralSettings>
     ) {
         event.onEvent((note) => this.tryOpenNote(note));
     }
@@ -19,7 +22,12 @@ export class GenericNotesManager implements NotesManager {
     }
 
     public async getNotesCreatedOn(day: Day): Promise<Note[]> {
-        // TODO: Check if the user wants to display the notes created on a date
+        const settings = await this.settingsRepository.getSettings();
+
+        if (!settings.displayNotesCreatedOnDate) {
+            return [];
+        }
+
         return this.noteRepository.getNotesCreatedOn(day);
     }
 }

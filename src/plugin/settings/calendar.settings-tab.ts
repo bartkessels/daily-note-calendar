@@ -11,6 +11,7 @@ import {WeeklyNotesPeriodicNoteSettings} from 'src/domain/models/settings/weekly
 import {MonthlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/monthly-notes.periodic-note-settings';
 import {QuarterlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/quarterly-notes.periodic-note-settings';
 import {YearlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/yearly-notes.periodic-note-settings';
+import {GeneralSettings} from 'src/domain/models/settings/general.settings';
 
 export class CalendarSettingsTab extends PluginSettingTab {
     private readonly dailyNoteSettingItems: DailyNoteSettingItems;
@@ -22,6 +23,7 @@ export class CalendarSettingsTab extends PluginSettingTab {
     constructor(
         plugin: Plugin,
         dateParser: DateParser,
+        generalSettingsRepository: SettingsRepository<GeneralSettings>,
         dailyNotesSettingsRepository: SettingsRepository<DailyNotesPeriodicNoteSettings>,
         weeklyNotesSettingsRepository: SettingsRepository<WeeklyNotesPeriodicNoteSettings>,
         monthlyNotesSettingsRepository: SettingsRepository<MonthlyNotesPeriodicNoteSettings>,
@@ -39,6 +41,8 @@ export class CalendarSettingsTab extends PluginSettingTab {
 
     override async display(): Promise<void> {
         this.containerEl.empty();
+
+        // TODO: Turn the following into a settings class itself
 
         const title = this.containerEl.createEl('h2');
         title.setText('Daily note calendar settings');
@@ -62,6 +66,7 @@ export class CalendarSettingsTab extends PluginSettingTab {
         documentationInformation.append(docsUri);
         documentationInformation.append(extraInformation);
 
+        // TODO: Register the general settings here
 
         await this.dailyNoteSettingItems.displaySettings();
         await this.weeklyNoteSettingItems.displaySettings();
