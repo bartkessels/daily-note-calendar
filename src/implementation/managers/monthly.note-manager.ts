@@ -4,12 +4,12 @@ import {Month} from 'src/domain/models/month';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {NameBuilder} from 'src/domain/builders/name.builder';
 import {FileService} from 'src/domain/services/file.service';
-import {MonthlyNoteSettings} from 'src/domain/models/settings';
+import {MonthlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/monthly-notes.periodic-note-settings';
 
 export class MonthlyNoteManager implements NoteManager<Month> {
     constructor(
         event: Event<Month>,
-        private readonly settingsRepository: SettingsRepository<MonthlyNoteSettings>,
+        private readonly settingsRepository: SettingsRepository<MonthlyNotesPeriodicNoteSettings>,
         private readonly fileNameBuilder: NameBuilder<Month>,
         private readonly fileService: FileService
     ) {

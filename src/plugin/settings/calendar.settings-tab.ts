@@ -1,17 +1,16 @@
 import {Plugin, PluginSettingTab} from 'obsidian';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
-import {
-    DailyNoteSettings,
-    MonthlyNoteSettings, QuarterlyNoteSettings,
-    WeeklyNoteSettings,
-    YearlyNoteSettings
-} from 'src/domain/models/settings';
 import {DailyNoteSettingItems} from 'src/plugin/settings/daily-note.setting-items';
 import {WeeklyNoteSettingItems} from 'src/plugin/settings/weekly-note.setting-items';
 import {MonthlyNoteSettingItems} from 'src/plugin/settings/monthly-note.setting-items';
 import {YearlyNoteSettingItems} from 'src/plugin/settings/yearly-note.setting-items';
 import {QuarterlyNoteSettingItems} from 'src/plugin/settings/quarterly-note.setting-items';
 import {DateParser} from 'src/domain/parsers/date.parser';
+import {DailyNotesPeriodicNoteSettings} from 'src/domain/models/settings/daily-notes.periodic-note-settings';
+import {WeeklyNotesPeriodicNoteSettings} from 'src/domain/models/settings/weekly-notes.periodic-note-settings';
+import {MonthlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/monthly-notes.periodic-note-settings';
+import {QuarterlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/quarterly-notes.periodic-note-settings';
+import {YearlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/yearly-notes.periodic-note-settings';
 
 export class CalendarSettingsTab extends PluginSettingTab {
     private readonly dailyNoteSettingItems: DailyNoteSettingItems;
@@ -23,11 +22,11 @@ export class CalendarSettingsTab extends PluginSettingTab {
     constructor(
         plugin: Plugin,
         dateParser: DateParser,
-        dailyNotesSettingsRepository: SettingsRepository<DailyNoteSettings>,
-        weeklyNotesSettingsRepository: SettingsRepository<WeeklyNoteSettings>,
-        monthlyNotesSettingsRepository: SettingsRepository<MonthlyNoteSettings>,
-        quarterlyNotesSettingsRepository: SettingsRepository<QuarterlyNoteSettings>,
-        yearlyNotesSettingsRepository: SettingsRepository<YearlyNoteSettings>
+        dailyNotesSettingsRepository: SettingsRepository<DailyNotesPeriodicNoteSettings>,
+        weeklyNotesSettingsRepository: SettingsRepository<WeeklyNotesPeriodicNoteSettings>,
+        monthlyNotesSettingsRepository: SettingsRepository<MonthlyNotesPeriodicNoteSettings>,
+        quarterlyNotesSettingsRepository: SettingsRepository<QuarterlyNotesPeriodicNoteSettings>,
+        yearlyNotesSettingsRepository: SettingsRepository<YearlyNotesPeriodicNoteSettings>
     ) {
         super(plugin.app, plugin);
 

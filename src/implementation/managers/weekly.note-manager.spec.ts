@@ -4,14 +4,14 @@ import {Week} from 'src/domain/models/week';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {NameBuilder} from 'src/domain/builders/name.builder';
 import {FileService} from 'src/domain/services/file.service';
-import {WeeklyNoteSettings} from 'src/domain/models/settings';
 import {jest} from '@jest/globals';
 import {WeeklyNoteEvent} from 'src/implementation/events/weekly-note.event';
 import {Day, DayOfWeek} from 'src/domain/models/day';
+import {WeeklyNotesPeriodicNoteSettings} from 'src/domain/models/settings/weekly-notes.periodic-note-settings';
 
 describe('WeeklyNoteManager', () => {
     let event: Event<Week>;
-    let settingsRepository: jest.Mocked<SettingsRepository<WeeklyNoteSettings>>;
+    let settingsRepository: jest.Mocked<SettingsRepository<WeeklyNotesPeriodicNoteSettings>>;
     let fileNameBuilder: jest.Mocked<NameBuilder<Week>>;
     let fileService: jest.Mocked<FileService>;
     let week: Week;
@@ -22,7 +22,7 @@ describe('WeeklyNoteManager', () => {
         settingsRepository = {
             getSettings: jest.fn(),
             storeSettings: jest.fn(),
-        } as jest.Mocked<SettingsRepository<WeeklyNoteSettings>>;
+        } as jest.Mocked<SettingsRepository<WeeklyNotesPeriodicNoteSettings>>;
         fileNameBuilder = {
             withNameTemplate: jest.fn().mockReturnThis(),
             withValue: jest.fn().mockReturnThis(),
@@ -47,7 +47,7 @@ describe('WeeklyNoteManager', () => {
 
     it('should open a note based on the week and settings', async () => {
         const filePath = 'folder/Week-46-2024.md';
-        const settings: WeeklyNoteSettings = {
+        const settings: WeeklyNotesPeriodicNoteSettings = {
             nameTemplate: 'Week-ww-yyyy',
             folder: 'folder',
             templateFile: 'templateFile',
@@ -64,7 +64,7 @@ describe('WeeklyNoteManager', () => {
 
     it('should call tryOpenNote when an event is emitted', async () => {
         const filePath = 'folder/Week-46-2024.md';
-        const settings: WeeklyNoteSettings = {
+        const settings: WeeklyNotesPeriodicNoteSettings = {
             nameTemplate: 'Week-ww-yyyy',
             folder: 'folder',
             templateFile: 'templateFile',

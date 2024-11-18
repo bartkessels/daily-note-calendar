@@ -4,12 +4,12 @@ import {Day} from 'src/domain/models/day';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {NameBuilder} from 'src/domain/builders/name.builder';
 import {FileService} from 'src/domain/services/file.service';
-import {DailyNoteSettings} from 'src/domain/models/settings';
+import {DailyNotesPeriodicNoteSettings} from 'src/domain/models/settings/daily-notes.periodic-note-settings';
 
 export class DailyNoteManager implements NoteManager<Day> {
     constructor(
         event: Event<Day>,
-        private readonly settingsRepository: SettingsRepository<DailyNoteSettings>,
+        private readonly settingsRepository: SettingsRepository<DailyNotesPeriodicNoteSettings>,
         private readonly fileNameBuilder: NameBuilder<Day>,
         private readonly fileService: FileService
     ) {

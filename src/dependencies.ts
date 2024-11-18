@@ -22,12 +22,6 @@ import {WeeklyNoteSettingsRepository} from 'src/implementation/repositories/week
 import {MonthlyNoteSettingsRepository} from 'src/implementation/repositories/monthly-note.settings-repository';
 import {Event} from 'src/domain/events/event';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
-import {
-    DailyNoteSettings,
-    MonthlyNoteSettings,
-    WeeklyNoteSettings,
-    YearlyNoteSettings
-} from 'src/domain/models/settings';
 import {Year} from 'src/domain/models/year';
 import {YearlyNoteSettingsRepository} from 'src/implementation/repositories/yearly-note.settings-repository';
 import {YearlyNoteEvent} from 'src/implementation/events/yearly-note.event';
@@ -43,6 +37,11 @@ import {ObsidianNoteAdapter} from 'src/plugin/adapters/obsidian.note-adapter';
 import {DayNoteRepository} from 'src/implementation/repositories/day.note-repository';
 import {DateParser} from 'src/domain/parsers/date.parser';
 import {DateFnsDateParser} from 'src/implementation/parsers/date-fns.date-parser';
+import {DailyNotesPeriodicNoteSettings} from 'src/domain/models/settings/daily-notes.periodic-note-settings';
+import {WeeklyNotesPeriodicNoteSettings} from 'src/domain/models/settings/weekly-notes.periodic-note-settings';
+import {MonthlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/monthly-notes.periodic-note-settings';
+import {QuarterlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/quarterly-notes.periodic-note-settings';
+import {YearlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/yearly-notes.periodic-note-settings';
 
 export interface Dependencies {
     readonly dateManager: RepositoryDateManager;
@@ -50,23 +49,23 @@ export interface Dependencies {
     readonly dateParser: DateParser;
 
     readonly dailyNoteEvent: Event<Day>;
-    readonly dailyNoteSettingsRepository: SettingsRepository<DailyNoteSettings>;
+    readonly dailyNoteSettingsRepository: SettingsRepository<DailyNotesPeriodicNoteSettings>;
     readonly dailyNoteManager: NoteManager<Day>;
 
     readonly weeklyNoteEvent: Event<Week>;
-    readonly weeklyNoteSettingsRepository: SettingsRepository<WeeklyNoteSettings>;
+    readonly weeklyNoteSettingsRepository: SettingsRepository<WeeklyNotesPeriodicNoteSettings>;
     readonly weeklyNoteManager: NoteManager<Week>;
 
     readonly monthlyNoteEvent: Event<Month>;
-    readonly monthlyNoteSettingsRepository: SettingsRepository<MonthlyNoteSettings>;
+    readonly monthlyNoteSettingsRepository: SettingsRepository<MonthlyNotesPeriodicNoteSettings>;
     readonly monthlyNoteManager: NoteManager<Month>;
 
     readonly quarterlyNoteEvent: Event<Month>;
-    readonly quarterlyNoteSettingsRepository: SettingsRepository<MonthlyNoteSettings>;
+    readonly quarterlyNoteSettingsRepository: SettingsRepository<QuarterlyNotesPeriodicNoteSettings>;
     readonly quarterlyNoteManager: NoteManager<Month>;
 
     readonly yearlyNoteEvent: Event<Year>;
-    readonly yearlyNoteSettingsRepository: SettingsRepository<YearlyNoteSettings>;
+    readonly yearlyNoteSettingsRepository: SettingsRepository<YearlyNotesPeriodicNoteSettings>;
     readonly yearlyNoteManager: NoteManager<Year>;
 }
 

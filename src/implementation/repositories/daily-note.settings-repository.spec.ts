@@ -1,6 +1,7 @@
 import {DailyNoteSettingsRepository} from 'src/implementation/repositories/daily-note.settings-repository';
 import {SettingsAdapter} from 'src/domain/adapters/settings.adapter';
-import {DailyNoteSettings, DEFAULT_SETTINGS} from 'src/domain/models/settings';
+import {DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS} from 'src/domain/models/settings/daily-note-calendar.settings';
+import {DailyNotesPeriodicNoteSettings} from 'src/domain/models/settings/daily-notes.periodic-note-settings';
 
 describe('DailyNoteSettingsRepository', () => {
     let settingsAdapter: jest.Mocked<SettingsAdapter>;
@@ -16,23 +17,23 @@ describe('DailyNoteSettingsRepository', () => {
     });
 
     it('should get daily note settings', async () => {
-        const mockSettings = { ...DEFAULT_SETTINGS, dailyNotes: { nameTemplate: 'template', folder: 'folder', templateFile: 'templateFile' } };
+        const mockSettings = { ...DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS, dailyNotes: { nameTemplate: 'template', folder: 'folder', templateFile: 'templateFile' } };
         settingsAdapter.getSettings.mockResolvedValueOnce(mockSettings);
 
         const settings = await repository.getSettings();
 
-        expect(settingsAdapter.getSettings).toHaveBeenCalledWith(DEFAULT_SETTINGS);
+        expect(settingsAdapter.getSettings).toHaveBeenCalledWith(DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS);
         expect(settings).toEqual(mockSettings.dailyNotes);
     });
 
     it('should store daily note settings', async () => {
-        const newSettings: DailyNoteSettings = { nameTemplate: 'newTemplate', folder: 'newFolder', templateFile: 'newTemplateFile' };
-        const mockSettings = { ...DEFAULT_SETTINGS, dailyNotes: { nameTemplate: 'template', folder: 'folder', templateFile: 'templateFile' } };
+        const newSettings: DailyNotesPeriodicNoteSettings = { nameTemplate: 'newTemplate', folder: 'newFolder', templateFile: 'newTemplateFile' };
+        const mockSettings = { ...DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS, dailyNotes: { nameTemplate: 'template', folder: 'folder', templateFile: 'templateFile' } };
         settingsAdapter.getSettings.mockResolvedValueOnce(mockSettings);
 
         await repository.storeSettings(newSettings);
 
-        expect(settingsAdapter.getSettings).toHaveBeenCalledWith(DEFAULT_SETTINGS);
+        expect(settingsAdapter.getSettings).toHaveBeenCalledWith(DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS);
         expect(settingsAdapter.storeSettings).toHaveBeenCalledWith({
             ...mockSettings,
             dailyNotes: newSettings,
