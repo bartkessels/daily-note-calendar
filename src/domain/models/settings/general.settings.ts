@@ -5,5 +5,5 @@ export interface GeneralSettings extends Settings {
 }
 
 export const DEFAULT_GENERAL_SETTINGS: GeneralSettings = {
-    displayNotesCreatedOnDate: true
+    displayNotesCreatedOnDate: false
 }
