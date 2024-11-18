@@ -4,12 +4,12 @@ import {Week} from 'src/domain/models/week';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {NameBuilder} from 'src/domain/builders/name.builder';
 import {FileService} from 'src/domain/services/file.service';
-import {WeeklyNoteSettings} from 'src/domain/models/settings';
+import {WeeklyNotesPeriodicNoteSettings} from 'src/domain/models/settings/weekly-notes.periodic-note-settings';
 
 export class WeeklyNoteManager implements NoteManager<Week> {
     constructor(
         event: Event<Week>,
-        private readonly settingsRepository: SettingsRepository<WeeklyNoteSettings>,
+        private readonly settingsRepository: SettingsRepository<WeeklyNotesPeriodicNoteSettings>,
         private readonly fileNameBuilder: NameBuilder<Week>,
         private readonly fileService: FileService
     ) {
@@ -24,6 +24,6 @@ export class WeeklyNoteManager implements NoteManager<Week> {
             .withPath(settings.folder)
             .build();
 
-        return this.fileService.tryOpenFile(filePath, settings.templateFile);
+        return this.fileService.tryOpenFileWithTemplate(filePath, settings.templateFile);
     }
 }

@@ -39,7 +39,7 @@ export class DayNameBuilder implements NameBuilder<Day> {
             this.logger.logAndThrow('Could not find the folder to create the daily note');
         }
 
-        const path = this.dateParser.parse(this.day?.completeDate, this.path);
+        const path = this.dateParser.parse(this.day.completeDate, this.path);
         const name = this.dateParser.parse(this.day.completeDate, this.template);
         const fileName = name.appendMarkdownExtension();
 

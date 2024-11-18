@@ -1,6 +1,6 @@
 import {Plugin} from 'obsidian';
-import {Settings} from 'src/domain/models/settings';
 import {SettingsAdapter} from 'src/domain/adapters/settings.adapter';
+import {DailyNoteCalendarSettings} from 'src/domain/models/settings/daily-note-calendar.settings';
 
 export class PluginSettingsAdapter implements SettingsAdapter {
     constructor(
@@ -9,12 +9,12 @@ export class PluginSettingsAdapter implements SettingsAdapter {
 
     }
 
-    async getSettings(defaultSettings: Settings): Promise<Settings> {
+    async getSettings(defaultSettings: DailyNoteCalendarSettings): Promise<DailyNoteCalendarSettings> {
         const settings = await this.plugin.loadData()
         return { ...defaultSettings, ...settings };
     }
 
-    async storeSettings(settings: Settings): Promise<void> {
+    async storeSettings(settings: DailyNoteCalendarSettings): Promise<void> {
         await this.plugin.saveData(settings);
     }
 }

@@ -14,6 +14,12 @@ import {Month} from 'src/domain/models/month';
 import {YearlyNoteEventContext} from 'src/components/providers/yearly-note-event.provider';
 import {Year} from 'src/domain/models/year';
 import {QuarterlyNoteEventContext} from 'src/components/providers/quarterly-note-event.context';
+import {NotesManagerContext} from 'src/components/providers/notes-manager.context';
+import {NotesComponent} from 'src/components/notes.component';
+import {NoteRepository} from 'src/domain/repositories/note.repository';
+import {NoteEventContext} from 'src/components/providers/note-event.context';
+import {Note} from 'src/domain/models/note';
+import {NotesManager} from 'src/domain/managers/notes.manager';
 
 export class CalendarView extends ItemView {
     public static VIEW_TYPE = 'daily-note-calendar';
@@ -23,6 +29,8 @@ export class CalendarView extends ItemView {
     constructor(
         leaf: WorkspaceLeaf,
         private readonly dateManager: DateManager,
+        private readonly notesManager: NotesManager,
+        private readonly noteEvent: Event<Note>,
         private readonly yearlyNoteEvent: Event<Year>,
         private readonly quarterlyNoteEvent: Event<Month>,
         private readonly monthlyNoteEvent: Event<Month>,
@@ -56,6 +64,12 @@ export class CalendarView extends ItemView {
                                         <CalendarComponent/>
                                     </DateManagerContext.Provider>
                                 </WeeklyNoteEventContext.Provider>
+
+                                <NoteEventContext.Provider value={this.noteEvent}>
+                                    <NotesManagerContext.Provider value={this.notesManager}>
+                                        <NotesComponent />
+                                    </NotesManagerContext.Provider>
+                                </NoteEventContext.Provider>
                             </DailyNoteEventContext.Provider>
                         </MonthlyNoteEventContext.Provider>
                     </QuarterlyNoteEventContext.Provider>

@@ -1,15 +1,15 @@
 import {PeriodicNoteSettingItems} from 'src/plugin/settings/periodic-note-setting-items';
 import {PluginSettingTab} from 'obsidian';
-import {YearlyNoteSettings} from 'src/domain/models/settings';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import type {PeriodicNoteSettingUiModel} from 'src/plugin/model/periodic-note-setting-ui.model';
 import {DateParser} from 'src/domain/parsers/date.parser';
+import {YearlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/yearly-notes.periodic-note-settings';
 
 export class YearlyNoteSettingItems extends PeriodicNoteSettingItems {
     constructor(
         settingsTab: PluginSettingTab,
         dateParser: DateParser,
-        private readonly settingsRepository: SettingsRepository<YearlyNoteSettings>
+        private readonly settingsRepository: SettingsRepository<YearlyNotesPeriodicNoteSettings>
     ) {
         super(settingsTab, dateParser);
     }

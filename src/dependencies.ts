@@ -22,12 +22,6 @@ import {WeeklyNoteSettingsRepository} from 'src/implementation/repositories/week
 import {MonthlyNoteSettingsRepository} from 'src/implementation/repositories/monthly-note.settings-repository';
 import {Event} from 'src/domain/events/event';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
-import {
-    DailyNoteSettings,
-    MonthlyNoteSettings,
-    WeeklyNoteSettings,
-    YearlyNoteSettings
-} from 'src/domain/models/settings';
 import {Year} from 'src/domain/models/year';
 import {YearlyNoteSettingsRepository} from 'src/implementation/repositories/yearly-note.settings-repository';
 import {YearlyNoteEvent} from 'src/implementation/events/yearly-note.event';
@@ -38,43 +32,69 @@ import {NotifyLogger} from 'src/implementation/loggers/notify.logger';
 import {QuarterlyNoteEvent} from 'src/implementation/events/quarterly-note.event';
 import {QuarterlyNoteSettingsRepository} from 'src/implementation/repositories/quarterly-note.settings-repository';
 import {QuarterlyNoteManager} from 'src/implementation/managers/quarterly.note-manager';
+import {NoteRepository} from 'src/domain/repositories/note.repository';
+import {ObsidianNoteAdapter} from 'src/plugin/adapters/obsidian.note-adapter';
+import {DayNoteRepository} from 'src/implementation/repositories/day.note-repository';
 import {DateParser} from 'src/domain/parsers/date.parser';
 import {DateFnsDateParser} from 'src/implementation/parsers/date-fns.date-parser';
+import {DailyNotesPeriodicNoteSettings} from 'src/domain/models/settings/daily-notes.periodic-note-settings';
+import {WeeklyNotesPeriodicNoteSettings} from 'src/domain/models/settings/weekly-notes.periodic-note-settings';
+import {MonthlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/monthly-notes.periodic-note-settings';
+import {QuarterlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/quarterly-notes.periodic-note-settings';
+import {YearlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/yearly-notes.periodic-note-settings';
+import { Note } from 'src/domain/models/note';
+import {NotesManager} from 'src/domain/managers/notes.manager';
+import {NoteEvent} from 'src/implementation/events/note.event';
+import {GenericNotesManager} from 'src/implementation/managers/generic.notes-manager';
+import {GeneralSettings} from 'src/domain/models/settings/general.settings';
+import {GeneralSettingsRepository} from 'src/implementation/repositories/general.settings-repository';
 
 export interface Dependencies {
     readonly dateManager: RepositoryDateManager;
     readonly dateParser: DateParser;
 
+    readonly generalSettingsRepository: SettingsRepository<GeneralSettings>,
+    
+    readonly noteEvent: Event<Note>,
+    readonly notesManager: NotesManager;
+
     readonly dailyNoteEvent: Event<Day>;
-    readonly dailyNoteSettingsRepository: SettingsRepository<DailyNoteSettings>;
+    readonly dailyNoteSettingsRepository: SettingsRepository<DailyNotesPeriodicNoteSettings>;
     readonly dailyNoteManager: NoteManager<Day>;
 
     readonly weeklyNoteEvent: Event<Week>;
-    readonly weeklyNoteSettingsRepository: SettingsRepository<WeeklyNoteSettings>;
+    readonly weeklyNoteSettingsRepository: SettingsRepository<WeeklyNotesPeriodicNoteSettings>;
     readonly weeklyNoteManager: NoteManager<Week>;
 
     readonly monthlyNoteEvent: Event<Month>;
-    readonly monthlyNoteSettingsRepository: SettingsRepository<MonthlyNoteSettings>;
+    readonly monthlyNoteSettingsRepository: SettingsRepository<MonthlyNotesPeriodicNoteSettings>;
     readonly monthlyNoteManager: NoteManager<Month>;
 
     readonly quarterlyNoteEvent: Event<Month>;
-    readonly quarterlyNoteSettingsRepository: SettingsRepository<MonthlyNoteSettings>;
+    readonly quarterlyNoteSettingsRepository: SettingsRepository<QuarterlyNotesPeriodicNoteSettings>;
     readonly quarterlyNoteManager: NoteManager<Month>;
 
     readonly yearlyNoteEvent: Event<Year>;
-    readonly yearlyNoteSettingsRepository: SettingsRepository<YearlyNoteSettings>;
+    readonly yearlyNoteSettingsRepository: SettingsRepository<YearlyNotesPeriodicNoteSettings>;
     readonly yearlyNoteManager: NoteManager<Year>;
 }
 
 export function createDependencies(plugin: Plugin): Dependencies {
     const dateRepository = new DefaultDateRepository();
-    const dateParser = new DateFnsDateParser();
     const dateManager = new RepositoryDateManager(dateRepository);
+    const dateParser = new DateFnsDateParser();
     const fileAdapter = new ObsidianFileAdapter(plugin.app.vault, plugin.app.workspace);
     const settingsAdapter = new PluginSettingsAdapter(plugin);
+    const noteAdapter = new ObsidianNoteAdapter(plugin.app);
     const noticeAdapter = new ObsidianNoticeAdapter();
     const logger = new NotifyLogger(noticeAdapter);
     const fileService = new AdapterFileService(fileAdapter, logger);
+
+    const generalSettingsRepository = new GeneralSettingsRepository(settingsAdapter);
+
+    const notesRepository = new DayNoteRepository(noteAdapter);
+    const noteEvent = new NoteEvent();
+    const notesManager = new GenericNotesManager(noteEvent, fileService, notesRepository, generalSettingsRepository);
 
     const dailyNoteSettingsRepository = new DailyNoteSettingsRepository(settingsAdapter);
     const dailyNoteEvent = new DailyNoteEvent();
@@ -103,6 +123,11 @@ export function createDependencies(plugin: Plugin): Dependencies {
     return {
         dateManager,
         dateParser,
+
+        generalSettingsRepository,
+
+        noteEvent,
+        notesManager,
 
         dailyNoteEvent,
         dailyNoteSettingsRepository,

@@ -8,12 +8,12 @@ import {Day, DayOfWeek} from 'src/domain/models/day';
 import {Year} from 'src/domain/models/year';
 import {YearlyNoteManager} from 'src/implementation/managers/yearly.note-manager';
 import {Month} from 'src/domain/models/month';
-import {YearlyNoteSettings} from 'src/domain/models/settings';
 import {YearlyNoteEvent} from 'src/implementation/events/yearly-note.event';
+import {YearlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/yearly-notes.periodic-note-settings';
 
 describe('YearlyNoteManager', () => {
     let event: Event<Year>;
-    let settingsRepository: jest.Mocked<SettingsRepository<YearlyNoteSettings>>;
+    let settingsRepository: jest.Mocked<SettingsRepository<YearlyNotesPeriodicNoteSettings>>;
     let fileNameBuilder: jest.Mocked<NameBuilder<Year>>;
     let fileService: jest.Mocked<FileService>;
     let year: Year;
@@ -24,7 +24,7 @@ describe('YearlyNoteManager', () => {
         settingsRepository = {
             getSettings: jest.fn(),
             storeSettings: jest.fn(),
-        } as jest.Mocked<SettingsRepository<YearlyNoteSettings>>;
+        } as jest.Mocked<SettingsRepository<YearlyNotesPeriodicNoteSettings>>;
         fileNameBuilder = {
             withNameTemplate: jest.fn().mockReturnThis(),
             withValue: jest.fn().mockReturnThis(),
@@ -32,7 +32,8 @@ describe('YearlyNoteManager', () => {
             build: jest.fn(),
         } as jest.Mocked<NameBuilder<Year>>;
         fileService = {
-            tryOpenFile: jest.fn(),
+            tryOpenFileWithTemplate: jest.fn(),
+            tryOpenFile: jest.fn()
         } as jest.Mocked<FileService>;
         year = {
             year: 2024,
@@ -58,7 +59,7 @@ describe('YearlyNoteManager', () => {
 
     it('should open a note based on the week and settings', async () => {
         const filePath = 'folder/Week-46-2024.md';
-        const settings: YearlyNoteSettings = {
+        const settings: YearlyNotesPeriodicNoteSettings = {
             nameTemplate: 'yyyy',
             folder: 'folder',
             templateFile: 'templateFile',
@@ -70,12 +71,12 @@ describe('YearlyNoteManager', () => {
         await manager.tryOpenNote(year);
 
         expect(settingsRepository.getSettings).toHaveBeenCalled();
-        expect(fileService.tryOpenFile).toHaveBeenCalledWith(filePath, settings.templateFile);
+        expect(fileService.tryOpenFileWithTemplate).toHaveBeenCalledWith(filePath, settings.templateFile);
     });
 
     it('should call tryOpenNote when an event is emitted', async () => {
         const filePath = 'folder/Week-46-2024.md';
-        const settings: YearlyNoteSettings = {
+        const settings: YearlyNotesPeriodicNoteSettings = {
             nameTemplate: 'yyyy',
             folder: 'folder',
             templateFile: 'templateFile',

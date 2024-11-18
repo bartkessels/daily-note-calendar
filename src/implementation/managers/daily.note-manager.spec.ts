@@ -4,13 +4,13 @@ import {Day, DayOfWeek} from 'src/domain/models/day';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {NameBuilder} from 'src/domain/builders/name.builder';
 import {FileService} from 'src/domain/services/file.service';
-import {DailyNoteSettings} from 'src/domain/models/settings';
 import {jest} from '@jest/globals';
 import {DailyNoteEvent} from 'src/implementation/events/daily-note.event';
+import {DailyNotesPeriodicNoteSettings} from 'src/domain/models/settings/daily-notes.periodic-note-settings';
 
 describe('DailyNoteManager', () => {
     let event: Event<Day>;
-    let settingsRepository: jest.Mocked<SettingsRepository<DailyNoteSettings>>;
+    let settingsRepository: jest.Mocked<SettingsRepository<DailyNotesPeriodicNoteSettings>>;
     let fileNameBuilder: jest.Mocked<NameBuilder<Day>>;
     let fileService: jest.Mocked<FileService>;
     let day: Day;
@@ -21,7 +21,7 @@ describe('DailyNoteManager', () => {
         settingsRepository = {
             getSettings: jest.fn(),
             storeSettings: jest.fn(),
-        } as jest.Mocked<SettingsRepository<DailyNoteSettings>>;
+        } as jest.Mocked<SettingsRepository<DailyNotesPeriodicNoteSettings>>;
         fileNameBuilder = {
             withNameTemplate: jest.fn().mockReturnThis(),
             withValue: jest.fn().mockReturnThis(),
@@ -29,7 +29,8 @@ describe('DailyNoteManager', () => {
             build: jest.fn(),
         } as jest.Mocked<NameBuilder<Day>>;
         fileService = {
-            tryOpenFile: jest.fn(),
+            tryOpenFileWithTemplate: jest.fn(),
+            tryOpenFile: jest.fn()
         } as jest.Mocked<FileService>;
         day = {
             dayOfWeek: DayOfWeek.Tuesday,
@@ -43,7 +44,7 @@ describe('DailyNoteManager', () => {
 
     it('should open a note based on the day and settings', async () => {
         const filePath = 'folder/12-11-2024.md';
-        const settings: DailyNoteSettings = {
+        const settings: DailyNotesPeriodicNoteSettings = {
             nameTemplate: 'dd-MM-yyyy',
             folder: 'folder',
             templateFile: 'templateFile',
@@ -55,12 +56,12 @@ describe('DailyNoteManager', () => {
         await manager.tryOpenNote(day);
 
         expect(settingsRepository.getSettings).toHaveBeenCalled();
-        expect(fileService.tryOpenFile).toHaveBeenCalledWith(filePath, settings.templateFile);
+        expect(fileService.tryOpenFileWithTemplate).toHaveBeenCalledWith(filePath, settings.templateFile);
     });
 
     it('should try to open a note when an event is triggered', async () => {
         const filePath = 'folder/12-11-2024.md';
-        const settings: DailyNoteSettings = {
+        const settings: DailyNotesPeriodicNoteSettings = {
             nameTemplate: 'dd-MM-yyyy',
             folder: 'folder',
             templateFile: 'templateFile',

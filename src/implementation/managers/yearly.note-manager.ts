@@ -1,15 +1,15 @@
 import {Year} from 'src/domain/models/year';
 import {Event} from 'src/domain/events/event';
 import {NoteManager} from 'src/domain/managers/note.manager';
-import {YearlyNoteSettings} from 'src/domain/models/settings';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {NameBuilder} from 'src/domain/builders/name.builder';
 import {FileService} from 'src/domain/services/file.service';
+import {YearlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/yearly-notes.periodic-note-settings';
 
 export class YearlyNoteManager implements NoteManager<Year> {
     constructor(
         event: Event<Year>,
-        private readonly settingsRepository: SettingsRepository<YearlyNoteSettings>,
+        private readonly settingsRepository: SettingsRepository<YearlyNotesPeriodicNoteSettings>,
         private readonly fileNameBuilder: NameBuilder<Year>,
         private readonly fileService: FileService
     ) {
@@ -24,6 +24,6 @@ export class YearlyNoteManager implements NoteManager<Year> {
             .withPath(settings.folder)
             .build();
 
-        return this.fileService.tryOpenFile(filePath, settings.templateFile);
+        return this.fileService.tryOpenFileWithTemplate(filePath, settings.templateFile);
     }
 }

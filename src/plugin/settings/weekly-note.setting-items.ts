@@ -1,15 +1,15 @@
 import {PeriodicNoteSettingItems} from 'src/plugin/settings/periodic-note-setting-items';
 import {PluginSettingTab} from 'obsidian';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
-import {WeeklyNoteSettings} from 'src/domain/models/settings';
 import type {PeriodicNoteSettingUiModel} from 'src/plugin/model/periodic-note-setting-ui.model';
 import {DateParser} from 'src/domain/parsers/date.parser';
+import {WeeklyNotesPeriodicNoteSettings} from 'src/domain/models/settings/weekly-notes.periodic-note-settings';
 
 export class WeeklyNoteSettingItems extends PeriodicNoteSettingItems {
     constructor(
         settingsTab: PluginSettingTab,
         dateParser: DateParser,
-        private readonly settingsRepository: SettingsRepository<WeeklyNoteSettings>
+        private readonly settingsRepository: SettingsRepository<WeeklyNotesPeriodicNoteSettings>
     ) {
         super(settingsTab, dateParser);
     }

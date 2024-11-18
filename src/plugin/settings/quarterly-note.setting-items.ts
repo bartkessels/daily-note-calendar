@@ -2,14 +2,14 @@ import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {PluginSettingTab} from 'obsidian';
 import {PeriodicNoteSettingItems} from 'src/plugin/settings/periodic-note-setting-items';
 import {PeriodicNoteSettingUiModel} from 'src/plugin/model/periodic-note-setting-ui.model';
-import {QuarterlyNoteSettings} from 'src/domain/models/settings';
 import {DateParser} from 'src/domain/parsers/date.parser';
+import {QuarterlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/quarterly-notes.periodic-note-settings';
 
 export class QuarterlyNoteSettingItems extends PeriodicNoteSettingItems {
     constructor(
         settingsTab: PluginSettingTab,
         dateParser: DateParser,
-        private readonly settingsRepository: SettingsRepository<QuarterlyNoteSettings>
+        private readonly settingsRepository: SettingsRepository<QuarterlyNotesPeriodicNoteSettings>
     ) {
         super(settingsTab, dateParser);
     }
