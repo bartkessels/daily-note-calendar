@@ -102,7 +102,7 @@ The _Daily notes calendar_ project does not use a development branch but instead
 
 # 5. Create a new release
 
-To create a new release of the plugin, edit the `package.json`, `manifest.json` and `versions.json` files and update the `version` property in both. Edit these files in a `release/MAJOR.MINOR.PATCH` branch, and create a tag from this branch.
+To create a new release of the plugin, edit the `package.json` file and update the `version` property. Then run `npm run version` to update the version in the `manifest.json` and `versions.json` file.
 Once the release is completed, merge the branch back into the `main` branch.
 
 For versioning _Daily note calendar_ uses semantic versioning.
