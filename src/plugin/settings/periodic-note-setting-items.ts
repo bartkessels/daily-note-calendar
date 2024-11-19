@@ -22,7 +22,7 @@ export abstract class PeriodicNoteSettingItems extends SettingItems {
         const description = new DocumentFragment();
         description.appendText(setting.description);
         description.append(new DocumentFragment().createEl('br'));
-        description.append('Format example: ')
+        description.append('Format example: ');
         description.append(exampleElement);
 
         new Setting(this.settingsTab.containerEl)
