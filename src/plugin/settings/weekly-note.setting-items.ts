@@ -37,21 +37,21 @@ export class WeeklyNoteSettingItems extends PeriodicNoteSettingItems {
 
 const nameTemplateSetting = (value: string): PeriodicNoteSettingUiModel => ({
     name: 'Weekly note name template',
-    description: 'Format example:',
+    description: 'The template used to create the weekly note name.',
     placeholder: 'yyyy - ww',
     value: value
 });
 
 const folderSetting = (value: string): PeriodicNoteSettingUiModel => ({
     name: 'Weekly notes folder',
-    description: 'The folder where you store your weekly notes:',
+    description: 'The folder where you store your weekly notes.',
     placeholder: 'Weekly notes',
     value: value
 });
 
 const templateFileSetting = (value: string): PeriodicNoteSettingUiModel => ({
     name: 'Weekly note template',
-    description: 'The template used to create the weekly note',
+    description: 'The template used to create the weekly note.',
     placeholder: 'Templates/weekly-note',
     value: value
 });

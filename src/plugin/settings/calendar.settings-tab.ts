@@ -44,9 +44,10 @@ export class CalendarSettingsTab extends PluginSettingTab {
 
     override async display(): Promise<void> {
         this.containerEl.empty();
-        this.displayExtraInformation();
 
         await this.generalSettingItems.displaySettings();
+
+        this.displayExtraInformation();
         await this.dailyNoteSettingItems.displaySettings();
         await this.weeklyNoteSettingItems.displaySettings();
         await this.monthlyNoteSettingItems.displaySettings();
@@ -55,9 +56,6 @@ export class CalendarSettingsTab extends PluginSettingTab {
     }
 
     private displayExtraInformation(): void {
-        const title = this.containerEl.createEl('h2');
-        title.setText('Daily note calendar settings');
-
         const docsUri = new DocumentFragment();
         docsUri.createEl('a', {href: 'https://date-fns.org/docs/format'}).setText('date-fns');
 
