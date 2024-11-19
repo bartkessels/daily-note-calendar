@@ -37,21 +37,21 @@ export class DailyNoteSettingItems extends PeriodicNoteSettingItems {
 
 const nameTemplateSetting = (value: string): PeriodicNoteSettingUiModel => ({
     name: 'Daily note name template',
-    description: 'Format example:',
+    description: 'The template used to create the daily note name.',
     placeholder: 'yyyy-MM-dd - eeee',
     value: value
 });
 
 const templateFileSetting = (value: string): PeriodicNoteSettingUiModel => ({
     name: 'Daily note template',
-    description: 'The template used to create the daily note',
+    description: 'The template used to create the daily note.',
     placeholder: 'Templates/daily-note',
     value: value
 });
 
 const folderSetting = (value: string): PeriodicNoteSettingUiModel => ({
     name: 'Daily notes folder',
-    description: 'The folder where you store your daily notes:',
+    description: 'The folder where you store your daily notes.',
     placeholder: `yyyy-'Daily notes'`,
     value: value
 });

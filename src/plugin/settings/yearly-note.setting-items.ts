@@ -37,21 +37,21 @@ export class YearlyNoteSettingItems extends PeriodicNoteSettingItems {
 
 const nameTemplateSetting = (value: string): PeriodicNoteSettingUiModel => ({
     name: 'Yearly note name template',
-    description: 'Format example:',
+    description: 'The template used to create the yearly note name.',
     placeholder: 'yyyy',
     value: value
 });
 
 const folderSetting = (value: string): PeriodicNoteSettingUiModel => ({
     name: 'Yearly notes folder',
-    description: 'The folder where you store your yearly notes:',
+    description: 'The folder where you store your yearly notes.',
     placeholder: 'Yearly notes',
     value: value
 });
 
 const templateFileSetting = (value: string): PeriodicNoteSettingUiModel => ({
     name: 'Yearly note template',
-    description: 'The template used to create the yearly note',
+    description: 'The template used to create the yearly note.',
     placeholder: 'Templates/yearly-note',
     value: value
 });

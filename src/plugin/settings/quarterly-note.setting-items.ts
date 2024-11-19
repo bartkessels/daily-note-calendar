@@ -37,21 +37,21 @@ export class QuarterlyNoteSettingItems extends PeriodicNoteSettingItems {
 
 const nameTemplateSetting = (value: string): PeriodicNoteSettingUiModel => ({
     name: 'Quarterly note name template',
-    description: 'Format example:',
+    description: 'The template used to create the quarterly note name.',
     placeholder: 'yyyy - qqq',
     value: value
 });
 
 const folderSetting = (value: string): PeriodicNoteSettingUiModel => ({
     name: 'Quarterly notes folder',
-    description: 'The folder where you store your quarterly notes:',
+    description: 'The folder where you store your quarterly notes.',
     placeholder: 'Quarterly notes',
     value: value
 });
 
 const templateFileSetting = (value: string): PeriodicNoteSettingUiModel => ({
     name: 'Quarterly note template',
-    description: 'The template used to create the quarterly note',
+    description: 'The template used to create the quarterly note.',
     placeholder: 'Templates/quarterly-note',
     value: value
 });

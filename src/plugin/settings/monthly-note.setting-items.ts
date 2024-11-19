@@ -37,21 +37,21 @@ export class MonthlyNoteSettingItems extends PeriodicNoteSettingItems {
 
 const nameTemplateSetting = (value: string): PeriodicNoteSettingUiModel => ({
     name: 'Monthly note name template',
-    description: 'Format example:',
+    description: 'The template used to create the monthly note name.',
     placeholder: 'yyyy - MM',
     value: value
 });
 
 const folderSetting = (value: string): PeriodicNoteSettingUiModel => ({
     name: 'Monthly notes folder',
-    description: 'The folder where you store your monthly notes:',
+    description: 'The folder where you store your monthly notes.',
     placeholder: 'Monthly notes',
     value: value
 });
 
 const templateFileSetting = (value: string): PeriodicNoteSettingUiModel => ({
     name: 'Monthly note template',
-    description: 'The template used to create the daily note',
+    description: 'The template used to create the monthly note.',
     placeholder: 'Templates/monthly-note',
     value: value
 });
