@@ -55,12 +55,15 @@ export const CalendarComponent = () => {
 
                 <div className="buttons">
                     <ChevronLeft
+                        size={18}
                         strokeWidth={1}
                         onClick={goToPreviousMonth} />
                     <CalendarHeart
+                        size={18}
                         strokeWidth={1}
                         onClick={goToCurrentMonth} />
                     <ChevronRight
+                        size={18}
                         strokeWidth={1}
                         onClick={goToNextMonth} />
                 </div>
