@@ -13,7 +13,9 @@ export default class DailyNoteCalendarPlugin extends Plugin {
                 leaf,
                 this.dependencies.dateManager,
                 this.dependencies.notesManager,
+                this.dependencies.selectDayEvent,
                 this.dependencies.noteEvent,
+                this.dependencies.refreshNotesEvent,
                 this.dependencies.yearlyNoteEvent,
                 this.dependencies.quarterlyNoteEvent,
                 this.dependencies.monthlyNoteEvent,
@@ -33,10 +35,16 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             this.dependencies.yearlyNoteSettingsRepository
         ));
 
-        this.app.workspace.onLayoutReady(this.setViewStates.bind(this));
+        this.app.vault.on('create', this.dependencies.notesManager.refreshNotes.bind(this.dependencies.notesManager));
+        this.app.vault.on('rename', this.dependencies.notesManager.refreshNotes.bind(this.dependencies.notesManager));
+        this.app.vault.on('delete', this.dependencies.notesManager.refreshNotes.bind(this.dependencies.notesManager));
+        this.app.workspace.onLayoutReady(this.initializePlugin.bind(this));
     }
 
-    private setViewStates(): void {
+    private initializePlugin(): void {
+        const today = this.dependencies.dateManager.getCurrentDay();
+        this.dependencies.selectDayEvent.emitEvent(today);
+
         if (this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE).length > 0) {
             return;
         }

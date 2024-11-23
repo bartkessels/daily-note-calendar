@@ -8,26 +8,38 @@ import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {GeneralSettings} from 'src/domain/models/settings/general.settings';
 
 export class GenericNotesManager implements NotesManager {
+    private selectedDay: Day | undefined;
+
     constructor(
-        event: Event<Note>,
+        noteEvent: Event<Note>,
+        dailyNoteEvent: Event<Day>,
+        selectDayEvent: Event<Day>,
+        private readonly refreshNotesEvent: Event<Note[]>,
         private readonly fileService: FileService,
         private readonly noteRepository: NoteRepository<Day>,
         private readonly settingsRepository: SettingsRepository<GeneralSettings>
     ) {
-        event.onEvent((note) => this.tryOpenNote(note));
+        noteEvent.onEvent(GenericNotesManager, (note) => this.tryOpenNote(note));
+        dailyNoteEvent.onEvent(GenericNotesManager, (day) => this.refreshNotesCreatedOn(day));
+        selectDayEvent.onEvent(GenericNotesManager, (day) => this.refreshNotesCreatedOn(day));
     }
 
     public async tryOpenNote(note: Note) : Promise<void> {
         return this.fileService.tryOpenFile(note.path);
     }
 
-    public async getNotesCreatedOn(day: Day): Promise<Note[]> {
+    public async refreshNotes(): Promise<void> {
         const settings = await this.settingsRepository.getSettings();
-
-        if (!settings.displayNotesCreatedOnDate) {
-            return [];
+        if (!this.selectedDay || !settings.displayNotesCreatedOnDate) {
+            return;
         }
 
-        return this.noteRepository.getNotesCreatedOn(day);
+        const notes = await this.noteRepository.getNotesCreatedOn(this.selectedDay);
+        this.refreshNotesEvent.emitEvent(notes);
+    }
+
+    private async refreshNotesCreatedOn(date: Day): Promise<void> {
+        this.selectedDay = date;
+        await this.refreshNotes();
     }
 }

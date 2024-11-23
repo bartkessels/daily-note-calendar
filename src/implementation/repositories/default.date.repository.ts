@@ -1,13 +1,26 @@
-import { Day, DayOfWeek } from "src/domain/models/day";
-import { Month } from "src/domain/models/month";
-import { Week } from "src/domain/models/week";
-import { DateRepository } from "src/domain/repositories/date.repository";
+import {Day, DayOfWeek} from 'src/domain/models/day';
+import {Month} from 'src/domain/models/month';
+import {Week} from 'src/domain/models/week';
+import {DateRepository} from 'src/domain/repositories/date.repository';
 import {Year} from 'src/domain/models/year';
 
 export class DefaultDateRepository implements DateRepository {
-    private readonly monthFormat = "long";
-    private readonly dayFormat = "numeric";
-    private readonly yearFormat = "numeric";
+    private readonly monthFormat = 'long';
+    private readonly dayFormat = 'numeric';
+    private readonly yearFormat = 'numeric';
+
+    public getDay(date: Date): Day {
+        const formatter = new Intl.DateTimeFormat(undefined, {
+            day: this.dayFormat
+        });
+
+        return <Day>{
+            dayOfWeek: this.getDayOfWeek(date.getDay()),
+            date: date.getDate(),
+            name: formatter.format(date),
+            completeDate: date
+        };
+    }
 
     public getYear(year: number): Year {
         const months: Month[] = [];
@@ -19,7 +32,7 @@ export class DefaultDateRepository implements DateRepository {
             months.push(this.getMonth(year, i));
         }
 
-        return <Year> {
+        return <Year>{
             year: year,
             name: formatter.format(new Date(year, months[0].monthIndex)),
             months: months
@@ -35,7 +48,7 @@ export class DefaultDateRepository implements DateRepository {
         const weeks = this.groupDaysIntoWeeks(days);
         const quarter = Math.floor(month / 3) + 1;
 
-        return <Month> {
+        return <Month>{
             monthIndex: month,
             quarter: quarter,
             year: year,
@@ -48,7 +61,7 @@ export class DefaultDateRepository implements DateRepository {
         const date = new Date(year, month, 1);
         const daysList = [];
 
-        while(date.getMonth() === month) {
+        while (date.getMonth() === month) {
             daysList.push(new Date(date));
             date.setDate(date.getDate() + 1);
         }
@@ -56,17 +69,8 @@ export class DefaultDateRepository implements DateRepository {
         const formatter = new Intl.DateTimeFormat(undefined, {
             day: this.dayFormat
         });
-        
-        return daysList.map(day => {
-            const completeDate = new Date(year, month, day.getDate());
 
-            return <Day> {
-                dayOfWeek: this.getDayOfWeek(completeDate.getDay()),
-                date: day.getDate(),
-                name: formatter.format(new Date(year, month, day.getDate())),
-                completeDate: completeDate
-            };
-        });
+        return daysList.map(day => this.getDay(day));
     }
 
     private groupDaysIntoWeeks(days: Day[]): Week[] {
@@ -101,15 +105,22 @@ export class DefaultDateRepository implements DateRepository {
         return Math.ceil((pastDaysOfYear + startOfYear.getDay()) / 7);
     }
 
-    private getDayOfWeek(value: number): DayOfWeek  {
+    private getDayOfWeek(value: number): DayOfWeek {
         switch (value) {
-            case 1: return DayOfWeek.Monday;
-            case 2: return DayOfWeek.Tuesday;
-            case 3: return DayOfWeek.Wednesday;
-            case 4: return DayOfWeek.Thursday;
-            case 5: return DayOfWeek.Friday;
-            case 6: return DayOfWeek.Saturday;
-            default: return DayOfWeek.Sunday;
+            case 1:
+                return DayOfWeek.Monday;
+            case 2:
+                return DayOfWeek.Tuesday;
+            case 3:
+                return DayOfWeek.Wednesday;
+            case 4:
+                return DayOfWeek.Thursday;
+            case 5:
+                return DayOfWeek.Friday;
+            case 6:
+                return DayOfWeek.Saturday;
+            default:
+                return DayOfWeek.Sunday;
         }
     };
 }

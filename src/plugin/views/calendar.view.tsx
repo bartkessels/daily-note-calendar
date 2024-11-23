@@ -3,7 +3,7 @@ import {IconName, ItemView, WorkspaceLeaf} from 'obsidian';
 import {createRoot} from 'react-dom/client';
 import {DateManager} from 'src/domain/managers/date.manager';
 import {CalendarComponent} from 'src/components/calendar.component';
-import {DateManagerContext} from 'src/components/providers/datemanager.provider';
+import {DateManagerContext} from 'src/components/providers/date-manager.context';
 import {Day} from 'src/domain/models/day';
 import {Event} from 'src/domain/events/event';
 import {DailyNoteEventContext} from 'src/components/providers/daily-note-event.context';
@@ -11,15 +11,15 @@ import {WeeklyNoteEventContext} from 'src/components/providers/weekly-note-event
 import {Week} from 'src/domain/models/week';
 import {MonthlyNoteEventContext} from 'src/components/providers/monthly-note-event.context';
 import {Month} from 'src/domain/models/month';
-import {YearlyNoteEventContext} from 'src/components/providers/yearly-note-event.provider';
+import {YearlyNoteEventContext} from 'src/components/providers/yearly-note-event.context';
 import {Year} from 'src/domain/models/year';
 import {QuarterlyNoteEventContext} from 'src/components/providers/quarterly-note-event.context';
-import {NotesManagerContext} from 'src/components/providers/notes-manager.context';
 import {NotesComponent} from 'src/components/notes.component';
-import {NoteRepository} from 'src/domain/repositories/note.repository';
 import {NoteEventContext} from 'src/components/providers/note-event.context';
 import {Note} from 'src/domain/models/note';
 import {NotesManager} from 'src/domain/managers/notes.manager';
+import {RefreshNotesEventContext} from 'src/components/providers/refresh-notes-event.context';
+import {SelectDayEventContext} from 'src/components/providers/select-day-event.context';
 
 export class CalendarView extends ItemView {
     public static VIEW_TYPE = 'daily-note-calendar';
@@ -30,7 +30,9 @@ export class CalendarView extends ItemView {
         leaf: WorkspaceLeaf,
         private readonly dateManager: DateManager,
         private readonly notesManager: NotesManager,
+        private readonly selectDayEvent: Event<Day>,
         private readonly noteEvent: Event<Note>,
+        private readonly refreshNotesEvent: Event<Note[]>,
         private readonly yearlyNoteEvent: Event<Year>,
         private readonly quarterlyNoteEvent: Event<Month>,
         private readonly monthlyNoteEvent: Event<Month>,
@@ -60,15 +62,17 @@ export class CalendarView extends ItemView {
                         <MonthlyNoteEventContext.Provider value={this.monthlyNoteEvent}>
                             <DailyNoteEventContext.Provider value={this.dailyNoteEvent}>
                                 <WeeklyNoteEventContext.Provider value={this.weeklyNoteEvent}>
-                                    <DateManagerContext.Provider value={this.dateManager}>
-                                        <CalendarComponent/>
-                                    </DateManagerContext.Provider>
+                                    <SelectDayEventContext.Provider value={this.selectDayEvent}>
+                                        <DateManagerContext.Provider value={this.dateManager}>
+                                            <CalendarComponent/>
+                                        </DateManagerContext.Provider>
+                                    </SelectDayEventContext.Provider>
                                 </WeeklyNoteEventContext.Provider>
 
                                 <NoteEventContext.Provider value={this.noteEvent}>
-                                    <NotesManagerContext.Provider value={this.notesManager}>
+                                    <RefreshNotesEventContext.Provider value={this.refreshNotesEvent}>
                                         <NotesComponent />
-                                    </NotesManagerContext.Provider>
+                                    </RefreshNotesEventContext.Provider>
                                 </NoteEventContext.Provider>
                             </DailyNoteEventContext.Provider>
                         </MonthlyNoteEventContext.Provider>

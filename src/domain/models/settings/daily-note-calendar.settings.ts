@@ -26,15 +26,7 @@ export interface DailyNoteCalendarSettings {
     weeklyNotes: WeeklyNotesPeriodicNoteSettings,
     monthlyNotes: MonthlyNotesPeriodicNoteSettings,
     quarterlyNotes: QuarterlyNotesPeriodicNoteSettings,
-    yearlyNotes: YearlyNotesPeriodicNoteSettings,
-
-    // Required for legacy reasons; todo: Remove these in the upcoming release
-    dailyNoteNameTemplate: string,
-    dailyNoteTemplateFile: string,
-    dailyNotesFolder: string,
-    weeklyNoteNameTemplate: string,
-    weeklyNoteTemplateFile: string,
-    weeklyNoteFolder: string
+    yearlyNotes: YearlyNotesPeriodicNoteSettings
 }
 
 export const DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS: DailyNoteCalendarSettings = {
@@ -43,13 +35,5 @@ export const DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS: DailyNoteCalendarSettings = {
     weeklyNotes: DEFAULT_WEEKLY_NOTES_PERIODIC_SETTINGS,
     monthlyNotes: DEFAULT_MONTHLY_NOTES_PERIODIC_SETTINGS,
     quarterlyNotes: DEFAULT_QUARTERLY_NOTES_PERIODIC_NOTE_SETTINGS,
-    yearlyNotes: DEFAULT_YEARLY_NOTES_PERIODIC_NOTE_SETTINGS,
-
-    // Required for legacy reasons; todo: Remove these in the upcoming release
-    dailyNoteNameTemplate: 'yyyy-MM-dd - eeee',
-    dailyNoteTemplateFile: 'Templates/Daily note',
-    dailyNotesFolder: 'Daily notes',
-    weeklyNoteNameTemplate: 'yyyy - ww',
-    weeklyNoteTemplateFile: 'Templates/Weekly note',
-    weeklyNoteFolder: 'Weekly notes'
+    yearlyNotes: DEFAULT_YEARLY_NOTES_PERIODIC_NOTE_SETTINGS
 }
