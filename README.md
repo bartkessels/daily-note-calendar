@@ -13,7 +13,6 @@ The Daily note calendar plugin started as a hobby project because another calend
 # Table of contents
 
 - [1. Overview](#1-overview)
-  - [1.1 Roadmap](#11-roadmap)
 - [2. External dependencies](#2-external-dependencies)
 - [3. Build and test](#3-build-and-test)
 - [4. Contribute](#4-contribute)
@@ -45,12 +44,6 @@ The plugin also allows you to customize the format of your daily and weekly note
 To make it even more customizable, you can specify the template for your notes name, the template file on which your notes are based, and the location of your notes.
 
 ![Daily note calendar plugin settings](./docs/images/daily-note-calendar-settings.png)
-
-## 1.1 Roadmap
-
-Right now, the Daily note calendar plugin only allows you to navigate to your notes. But in the future, I would like to add the following features.
-
-- Add an indicator for each date that has a note.
 
 # 2. External dependencies
 
