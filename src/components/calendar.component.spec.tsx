@@ -12,7 +12,7 @@ import {Month} from 'src/domain/models/month';
 import {DailyNoteEventContext} from 'src/components/providers/daily-note-event.context';
 import {WeeklyNoteEventContext} from 'src/components/providers/weekly-note-event.context';
 import {MonthlyNoteEventContext} from 'src/components/providers/monthly-note-event.context';
-import {YearlyNoteEventContext} from 'src/components/providers/yearly-note-event.provider';
+import {YearlyNoteEventContext} from 'src/components/providers/yearly-note-event.context';
 import {Year} from 'src/domain/models/year';
 import {QuarterlyNoteEventContext} from 'src/components/providers/quarterly-note-event.context';
 

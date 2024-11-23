@@ -2,7 +2,7 @@ import React from 'react';
 import {renderHook} from '@testing-library/react';
 import {Event} from 'src/domain/events/event';
 import {Year} from 'src/domain/models/year';
-import {getYearlyNoteEvent, YearlyNoteEventContext} from 'src/components/providers/yearly-note-event.provider';
+import {getYearlyNoteEvent, YearlyNoteEventContext} from 'src/components/providers/yearly-note-event.context';
 
 describe('YearlyNoteEventContext', () => {
     const mockEvent = {

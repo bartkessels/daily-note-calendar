@@ -2,6 +2,7 @@ import {DateManager} from 'src/domain/managers/date.manager';
 import {Month} from 'src/domain/models/month';
 import {DateRepository} from 'src/domain/repositories/date.repository';
 import {Year} from 'src/domain/models/year';
+import {Day} from 'src/domain/models/day';
 
 export class RepositoryDateManager implements DateManager {
     private readonly DECEMBER_INDEX = 11;
@@ -13,6 +14,10 @@ export class RepositoryDateManager implements DateManager {
         private readonly dateRepository: DateRepository
     ) {
         this.today = new Date();
+    }
+
+    public getCurrentDay(): Day {
+        return this.dateRepository.getDay(this.today);
     }
 
     public getCurrentYear(): Year {

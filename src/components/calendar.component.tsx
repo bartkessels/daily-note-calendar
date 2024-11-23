@@ -5,7 +5,7 @@ import {useDateManager} from 'src/components/providers/datemanager.provider';
 import {getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
 import {getWeeklyNoteEvent} from 'src/components/providers/weekly-note-event.context';
 import {getMonthlyNoteEvent} from 'src/components/providers/monthly-note-event.context';
-import {getYearlyNoteEvent} from 'src/components/providers/yearly-note-event.provider';
+import {getYearlyNoteEvent} from 'src/components/providers/yearly-note-event.context';
 import {Month} from 'src/domain/models/month';
 import {getQuarterlyNoteEvent} from 'src/components/providers/quarterly-note-event.context';
 
@@ -31,14 +31,11 @@ export const CalendarComponent = () => {
     const quarterlyNoteEvent = getQuarterlyNoteEvent();
     const yearlyNoteEvent = getYearlyNoteEvent();
 
+    dailyNoteEvent?.onEvent(CalendarComponent, (day) => setSelectedDay(day));
+
     const updateMonth = (getMonth: () => Month | undefined): void => {
         setCurrentMonth(getMonth());
         setCurrentYear(dateManager?.getYear(currentMonth));
-    };
-
-    const selectDay = (day?: Day) => {
-        setSelectedDay(day);
-        dailyNoteEvent?.emitEvent(day);
     };
 
     const goToCurrentMonth = () => updateMonth(() => dateManager?.getCurrentMonth());
@@ -97,7 +94,7 @@ export const CalendarComponent = () => {
                             return (
                                 <td key={dayOfWeekIndex}
                                     id={isToday ? 'today': ''}
-                                    onClick={() => selectDay(day)}
+                                    onClick={() => dailyNoteEvent?.emitEvent(day)}
                                     className={isSelected ? 'selected-day' : '' }>{day?.name}</td>
                             )
                         })}

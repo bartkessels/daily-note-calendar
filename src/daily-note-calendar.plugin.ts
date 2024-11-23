@@ -14,6 +14,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
                 this.dependencies.dateManager,
                 this.dependencies.notesManager,
                 this.dependencies.noteEvent,
+                this.dependencies.refreshNotesEvent,
                 this.dependencies.yearlyNoteEvent,
                 this.dependencies.quarterlyNoteEvent,
                 this.dependencies.monthlyNoteEvent,
@@ -34,6 +35,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         ));
 
         this.app.workspace.onLayoutReady(this.setViewStates.bind(this));
+        this.app.vault.on('create', this.dependencies.notesManager.refreshNotes.bind(this));
     }
 
     private setViewStates(): void {

@@ -1,19 +1,15 @@
-import {getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
-import {Day} from 'src/domain/models/day';
 import {useState} from 'react';
 import {Note} from 'src/domain/models/note';
 import {getNoteEvent} from 'src/components/providers/note-event.context';
-import {getNotesManager} from 'src/components/providers/notes-manager.context';
+import {getRefreshNotesEvent} from 'src/components/providers/refresh-notes-event.context';
 
 export const NotesComponent = () => {
     const [notes, setNotes] = useState<Note[]>([]);
-    const dailyNoteEvent = getDailyNoteEvent();
     const noteEvent = getNoteEvent();
-    const notesManager = getNotesManager();
+    const refreshNotesEvent = getRefreshNotesEvent();
 
-    dailyNoteEvent?.onEvent(async (day: Day) => {
-        const notes = await notesManager?.getNotesCreatedOn(day);
-        setNotes(notes ?? []);
+    refreshNotesEvent?.onEvent(NotesComponent, (notes: Note[]) => {
+       setNotes(notes);
     });
 
     return (

@@ -1,8 +1,10 @@
-export abstract class Event<T> {
-    private listeners: ((value: T) => void)[] = [];
+export type EventListener<T> = (value: T) => void;
 
-    public onEvent(listener: (value: T) => void): void {
-        this.listeners.push(listener);
+export abstract class Event<T> {
+    private listeners: Map<string, EventListener<T>> = new Map<string, EventListener<T>>();
+
+    public onEvent(key: Function, listener: EventListener<T>): void {
+        this.listeners.set(key.name, listener);
     }
 
     public emitEvent(value?: T): void {

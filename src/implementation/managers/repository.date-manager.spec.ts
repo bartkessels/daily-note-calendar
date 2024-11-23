@@ -8,11 +8,30 @@ describe('RepositoryDateManager', () => {
 
     beforeEach(() => {
         dateRepository = {
+            getDay: jest.fn(),
             getYear: jest.fn(),
             getMonth: jest.fn()
         } as DateRepository;
         dateManager = new RepositoryDateManager(dateRepository);
     });
+
+    it('should return the current day', () => {
+        const today = new Date(2024, 12, 31, 12, 11, 19, 100);
+        const currentDay = {
+            dayOfWeek: 'Monday',
+            date: today.getDate(),
+            name: 'Monday',
+            completeDate: today
+        };
+
+        (dateRepository.getDay as jest.Mock).mockReturnValue(currentDay);
+
+        const result = dateManager.getCurrentDay();
+
+        expect(result).toBe(currentDay);
+        expect(dateRepository.getDay).toHaveBeenCalled();
+    });
+
 
     it('should return the current year', () => {
         const today = new Date();

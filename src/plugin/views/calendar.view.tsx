@@ -11,7 +11,7 @@ import {WeeklyNoteEventContext} from 'src/components/providers/weekly-note-event
 import {Week} from 'src/domain/models/week';
 import {MonthlyNoteEventContext} from 'src/components/providers/monthly-note-event.context';
 import {Month} from 'src/domain/models/month';
-import {YearlyNoteEventContext} from 'src/components/providers/yearly-note-event.provider';
+import {YearlyNoteEventContext} from 'src/components/providers/yearly-note-event.context';
 import {Year} from 'src/domain/models/year';
 import {QuarterlyNoteEventContext} from 'src/components/providers/quarterly-note-event.context';
 import {NotesManagerContext} from 'src/components/providers/notes-manager.context';
@@ -20,6 +20,7 @@ import {NoteRepository} from 'src/domain/repositories/note.repository';
 import {NoteEventContext} from 'src/components/providers/note-event.context';
 import {Note} from 'src/domain/models/note';
 import {NotesManager} from 'src/domain/managers/notes.manager';
+import {RefreshNotesEventContext} from 'src/components/providers/refresh-notes-event.context';
 
 export class CalendarView extends ItemView {
     public static VIEW_TYPE = 'daily-note-calendar';
@@ -31,6 +32,7 @@ export class CalendarView extends ItemView {
         private readonly dateManager: DateManager,
         private readonly notesManager: NotesManager,
         private readonly noteEvent: Event<Note>,
+        private readonly refreshNotesEvent: Event<Note[]>,
         private readonly yearlyNoteEvent: Event<Year>,
         private readonly quarterlyNoteEvent: Event<Month>,
         private readonly monthlyNoteEvent: Event<Month>,
@@ -66,9 +68,11 @@ export class CalendarView extends ItemView {
                                 </WeeklyNoteEventContext.Provider>
 
                                 <NoteEventContext.Provider value={this.noteEvent}>
-                                    <NotesManagerContext.Provider value={this.notesManager}>
-                                        <NotesComponent />
-                                    </NotesManagerContext.Provider>
+                                    <RefreshNotesEventContext.Provider value={this.refreshNotesEvent}>
+                                        <NotesManagerContext.Provider value={this.notesManager}>
+                                            <NotesComponent />
+                                        </NotesManagerContext.Provider>
+                                    </RefreshNotesEventContext.Provider>
                                 </NoteEventContext.Provider>
                             </DailyNoteEventContext.Provider>
                         </MonthlyNoteEventContext.Provider>

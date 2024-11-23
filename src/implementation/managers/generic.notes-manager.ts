@@ -8,26 +8,44 @@ import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {GeneralSettings} from 'src/domain/models/settings/general.settings';
 
 export class GenericNotesManager implements NotesManager {
+    private selectedDay: Day | undefined;
+
     constructor(
-        event: Event<Note>,
+        noteEvent: Event<Note>,
+        dailyNoteEvent: Event<Day>,
+        private readonly refreshNotesEvent: Event<Note[]>,
         private readonly fileService: FileService,
         private readonly noteRepository: NoteRepository<Day>,
         private readonly settingsRepository: SettingsRepository<GeneralSettings>
     ) {
-        event.onEvent((note) => this.tryOpenNote(note));
+        dailyNoteEvent.onEvent(GenericNotesManager, (day) => this.refreshNotesCreatedOnDay(day));
+        noteEvent.onEvent(GenericNotesManager, (note) => this.tryOpenNote(note));
     }
 
     public async tryOpenNote(note: Note) : Promise<void> {
         return this.fileService.tryOpenFile(note.path);
     }
 
-    public async getNotesCreatedOn(day: Day): Promise<Note[]> {
-        const settings = await this.settingsRepository.getSettings();
-
-        if (!settings.displayNotesCreatedOnDate) {
-            return [];
+    public async refreshNotes(): Promise<void> {
+        console.log('Refreshing notes, current day is', this.selectedDay);
+        if (!this.selectedDay) {
+            return;
         }
 
-        return this.noteRepository.getNotesCreatedOn(day);
+        const settings = await this.settingsRepository.getSettings();
+        if (!settings.displayNotesCreatedOnDate) {
+            return;
+        }
+
+        const notes = await this.noteRepository.getNotesCreatedOn(this.selectedDay);
+        this.refreshNotesEvent.emitEvent(notes);
+    }
+
+    private refreshNotesCreatedOnDay(day: Day): Promise<void> {
+        console.log('Refreshing notes for day', day);
+
+        this.selectedDay = day;
+        console.log(this.selectedDay);
+        return this.refreshNotes();
     }
 }

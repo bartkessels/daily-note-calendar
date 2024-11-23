@@ -9,6 +9,16 @@ describe('DefaultDateRepository', () => {
         repository = new DefaultDateRepository();
     });
 
+    it('should return the correct day data', () => {
+        const date = new Date(2023, 9, 1);
+        const result = repository.getDay(date);
+
+        expect(result.dayOfWeek).toBe(DayOfWeek.Sunday);
+        expect(result.date).toBe(1);
+        expect(result.name).toBe('1');
+        expect(result.completeDate).toBe(date);
+    });
+
     it('should return the correct month data', () => {
         const year = 2023;
         const month = 9;
