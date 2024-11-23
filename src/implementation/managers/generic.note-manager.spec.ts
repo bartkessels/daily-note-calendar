@@ -8,9 +8,13 @@ import { SettingsRepository } from 'src/domain/repositories/settings.repository'
 import { GeneralSettings } from 'src/domain/models/settings/general.settings';
 import { jest } from '@jest/globals';
 import { NoteEvent } from 'src/implementation/events/note.event';
+import {DailyNoteEvent} from 'src/implementation/events/daily-note.event';
+import {RefreshNotesEvent} from 'src/implementation/events/refresh-notes.event';
 
 describe('GenericNotesManager', () => {
-    let event: Event<Note>;
+    let noteEvent: Event<Note>;
+    let dailyNoteEvent: Event<Day>;
+    let refreshNotesEvent: Event<Note[]>;
     let fileService: jest.Mocked<FileService>;
     let noteRepository: jest.Mocked<NoteRepository<Day>>;
     let settingsRepository: jest.Mocked<SettingsRepository<GeneralSettings>>;
@@ -19,19 +23,21 @@ describe('GenericNotesManager', () => {
     let day: Day;
 
     beforeEach(() => {
-        event = new NoteEvent();
+        noteEvent = new NoteEvent();
+        dailyNoteEvent = new DailyNoteEvent();
+        refreshNotesEvent = new RefreshNotesEvent();
         fileService = {
+            tryOpenFileWithTemplate: jest.fn(),
             tryOpenFile: jest.fn(),
-            tryOpenFileWithTemplate: jest.fn()
         } as jest.Mocked<FileService>;
         noteRepository = {
             getNotesCreatedOn: jest.fn(),
         } as jest.Mocked<NoteRepository<Day>>;
         settingsRepository = {
+            storeSettings: jest.fn(),
             getSettings: jest.fn(),
-            storeSettings: jest.fn()
         } as jest.Mocked<SettingsRepository<GeneralSettings>>;
-        manager = new GenericNotesManager(event, fileService, noteRepository, settingsRepository);
+        manager = new GenericNotesManager(noteEvent, dailyNoteEvent, refreshNotesEvent, fileService, noteRepository, settingsRepository);
         note = {
             createdOn: new Date('2024-11-12'),
             name: 'My first note',
@@ -53,41 +59,73 @@ describe('GenericNotesManager', () => {
 
     it('should try to open a note when an event is emitted', async () => {
         const tryOpenNoteSpy = jest.spyOn(manager, 'tryOpenNote');
-        event.emitEvent(note);
+
+        noteEvent.emitEvent(note);
 
         expect(tryOpenNoteSpy).toHaveBeenCalledWith(note);
     });
 
-    it('should return notes created on a specific day if displayNotesCreatedOnDate is true', async () => {
+    it('should call the refresh notes event with the notes created on a specific day when a day event has been sent', async () => {
+        const refreshNotesEventSpy = jest.spyOn(manager, 'refreshNotes');
+        const settings: GeneralSettings = {
+            displayNotesCreatedOnDate: true
+        };
+
+        settingsRepository.getSettings.mockResolvedValue(settings);
+
+        dailyNoteEvent.emitEvent(day);
+
+        expect(refreshNotesEventSpy).toHaveBeenCalled();
+    });
+
+    it('should call the refresh notes event with a specific day if displayNotesCreatedOnDate is true and a date has been selected previously', async () => {
+        const refreshNotesEventSpy = jest.spyOn(refreshNotesEvent, 'emitEvent');
         const notes: Note[] = [
             { name: 'Note 1', createdOn: new Date('2024-11-12'), path: 'path/to/note1' },
             { name: 'Note 2', createdOn: new Date('2024-11-12'), path: 'path/to/note2' },
         ];
         const settings: GeneralSettings = {
-            displayNotesCreatedOnDate: true,
+            displayNotesCreatedOnDate: true
         };
 
-        settingsRepository.getSettings.mockResolvedValueOnce(settings);
-        noteRepository.getNotesCreatedOn.mockResolvedValueOnce(notes);
+        settingsRepository.getSettings.mockResolvedValue(settings);
+        noteRepository.getNotesCreatedOn.mockResolvedValue(notes);
 
-        const result = await manager.getNotesCreatedOn(day);
+        dailyNoteEvent.emitEvent(day);
+        await manager.refreshNotes();
 
         expect(settingsRepository.getSettings).toHaveBeenCalled();
         expect(noteRepository.getNotesCreatedOn).toHaveBeenCalledWith(day);
-        expect(result).toEqual(notes);
+        expect(refreshNotesEventSpy).toHaveBeenCalledWith(notes);
     });
 
-    it('should return an empty array if displayNotesCreatedOnDate is false', async () => {
+    it('should not emit an refreshNotes event when the setting displayNotesCreatedOnDate is true but no day has been selected yet', async () => {
+        const refreshNotesEventSpy = jest.spyOn(refreshNotesEvent, 'emitEvent');
         const settings: GeneralSettings = {
-            displayNotesCreatedOnDate: false,
+            displayNotesCreatedOnDate: true
         };
 
         settingsRepository.getSettings.mockResolvedValueOnce(settings);
 
-        const result = await manager.getNotesCreatedOn(day);
+        await manager.refreshNotes();
 
         expect(settingsRepository.getSettings).toHaveBeenCalled();
         expect(noteRepository.getNotesCreatedOn).not.toHaveBeenCalled();
-        expect(result).toEqual([]);
+        expect(refreshNotesEventSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not emit an refreshNotes event when the setting displayNotesCreatedOnDate is false', async () => {
+        const refreshNotesEventSpy = jest.spyOn(refreshNotesEvent, 'emitEvent');
+        const settings: GeneralSettings = {
+            displayNotesCreatedOnDate: false
+        };
+
+        settingsRepository.getSettings.mockResolvedValueOnce(settings);
+
+        await manager.refreshNotes();
+
+        expect(settingsRepository.getSettings).toHaveBeenCalled();
+        expect(noteRepository.getNotesCreatedOn).not.toHaveBeenCalled();
+        expect(refreshNotesEventSpy).not.toHaveBeenCalled();
     });
 });

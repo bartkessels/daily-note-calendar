@@ -18,7 +18,7 @@ export class GenericNotesManager implements NotesManager {
         private readonly noteRepository: NoteRepository<Day>,
         private readonly settingsRepository: SettingsRepository<GeneralSettings>
     ) {
-        dailyNoteEvent.onEvent(GenericNotesManager, (day) => this.refreshNotesCreatedOnDay(day));
+        dailyNoteEvent.onEvent(GenericNotesManager, (day) => this.refreshNotesCreatedOn(day));
         noteEvent.onEvent(GenericNotesManager, (note) => this.tryOpenNote(note));
     }
 
@@ -27,13 +27,8 @@ export class GenericNotesManager implements NotesManager {
     }
 
     public async refreshNotes(): Promise<void> {
-        console.log('Refreshing notes, current day is', this.selectedDay);
-        if (!this.selectedDay) {
-            return;
-        }
-
         const settings = await this.settingsRepository.getSettings();
-        if (!settings.displayNotesCreatedOnDate) {
+        if (!this.selectedDay || !settings.displayNotesCreatedOnDate) {
             return;
         }
 
@@ -41,11 +36,8 @@ export class GenericNotesManager implements NotesManager {
         this.refreshNotesEvent.emitEvent(notes);
     }
 
-    private refreshNotesCreatedOnDay(day: Day): Promise<void> {
-        console.log('Refreshing notes for day', day);
-
-        this.selectedDay = day;
-        console.log(this.selectedDay);
-        return this.refreshNotes();
+    private async refreshNotesCreatedOn(date: Day): Promise<void> {
+        this.selectedDay = date;
+        await this.refreshNotes();
     }
 }

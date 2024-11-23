@@ -34,11 +34,13 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             this.dependencies.yearlyNoteSettingsRepository
         ));
 
-        this.app.workspace.onLayoutReady(this.setViewStates.bind(this));
-        this.app.vault.on('create', this.dependencies.notesManager.refreshNotes.bind(this));
+        this.app.vault.on('create', this.dependencies.notesManager.refreshNotes.bind(this.dependencies.notesManager));
+        this.app.vault.on('rename', this.dependencies.notesManager.refreshNotes.bind(this.dependencies.notesManager));
+        this.app.vault.on('delete', this.dependencies.notesManager.refreshNotes.bind(this.dependencies.notesManager));
+        this.app.workspace.onLayoutReady(this.initializePlugin.bind(this));
     }
 
-    private setViewStates(): void {
+    private initializePlugin(): void {
         if (this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE).length > 0) {
             return;
         }
