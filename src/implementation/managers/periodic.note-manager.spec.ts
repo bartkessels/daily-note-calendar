@@ -5,8 +5,8 @@ import { NameBuilder } from 'src/domain/builders/name.builder';
 import { SettingsRepository } from 'src/domain/repositories/settings.repository';
 import { PeriodicNoteSettings } from 'src/domain/models/settings/periodic-note.settings';
 import { jest } from '@jest/globals';
-import {DailyNoteEvent} from 'src/implementation/events/daily-note.event';
 import {Day, DayOfWeek} from 'src/domain/models/day';
+import {PeriodicNoteEvent} from 'src/implementation/events/periodic-note.event';
 
 describe('PeriodicNoteManager', () => {
     let event: Event<Day>;
@@ -18,7 +18,7 @@ describe('PeriodicNoteManager', () => {
     let settings: PeriodicNoteSettings;
 
     beforeEach(() => {
-        event = new DailyNoteEvent();
+        event = new PeriodicNoteEvent<Day>();
         settingsRepository = {
             getSettings: jest.fn(),
             storeSettings: jest.fn()

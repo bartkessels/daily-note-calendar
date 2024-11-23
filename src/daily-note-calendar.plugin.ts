@@ -13,6 +13,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
                 leaf,
                 this.dependencies.dateManager,
                 this.dependencies.notesManager,
+                this.dependencies.selectDayEvent,
                 this.dependencies.noteEvent,
                 this.dependencies.refreshNotesEvent,
                 this.dependencies.yearlyNoteEvent,
@@ -41,6 +42,9 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     }
 
     private initializePlugin(): void {
+        const today = this.dependencies.dateManager.getCurrentDay();
+        this.dependencies.selectDayEvent.emitEvent(today);
+
         if (this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE).length > 0) {
             return;
         }

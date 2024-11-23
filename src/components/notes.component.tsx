@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {Note} from 'src/domain/models/note';
-import {getNoteEvent} from 'src/components/providers/note-event.context';
 import {getRefreshNotesEvent} from 'src/components/providers/refresh-notes-event.context';
+import {getNoteEvent} from 'src/components/providers/note-event.context';
 
 export const NotesComponent = () => {
     const [notes, setNotes] = useState<Note[]>([]);

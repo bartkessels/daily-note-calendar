@@ -1,10 +1,10 @@
 import React, {ReactElement} from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import {CalendarComponent} from 'src/components/calendar.component';
 import {DateManager} from 'src/domain/managers/date.manager';
 import 'src/extensions/extensions';
-import {DateManagerContext} from 'src/components/providers/datemanager.provider';
+import {DateManagerContext} from 'src/components/providers/date-manager.context';
 import {Day} from 'src/domain/models/day';
 import {Event} from 'src/domain/events/event';
 import {Week} from 'src/domain/models/week';
@@ -15,6 +15,9 @@ import {MonthlyNoteEventContext} from 'src/components/providers/monthly-note-eve
 import {YearlyNoteEventContext} from 'src/components/providers/yearly-note-event.context';
 import {Year} from 'src/domain/models/year';
 import {QuarterlyNoteEventContext} from 'src/components/providers/quarterly-note-event.context';
+import {SelectDayEventContext} from 'src/components/providers/select-day-event.context';
+import {SelectDayEvent} from 'src/implementation/events/select-day.event';
+import {PeriodicNoteEvent} from 'src/implementation/events/periodic-note.event';
 
 describe('CalendarComponent', () => {
     let month: Month;
@@ -26,6 +29,7 @@ describe('CalendarComponent', () => {
         getNextMonth: jest.fn(),
         getPreviousMonth: jest.fn()
     } as DateManager;
+    let selectDayEvent: Event<Day>;
     const mockDailyNoteEvent = {
         onEvent: jest.fn(),
         emitEvent: jest.fn(),
@@ -48,6 +52,7 @@ describe('CalendarComponent', () => {
     } as unknown as Event<Year>;
 
     beforeEach(() => {
+        selectDayEvent = new SelectDayEvent();
         month = {
             name: 'October',
             quarter: 4,
@@ -82,6 +87,7 @@ describe('CalendarComponent', () => {
     it('renders the current month and year', () => {
         render(setupContent(
             mockDateManager,
+            selectDayEvent,
             mockYearlyNoteEvent,
             mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
@@ -96,6 +102,7 @@ describe('CalendarComponent', () => {
     it('calls goToNextMonth when ChevronRight is clicked', () => {
         render(setupContent(
             mockDateManager,
+            selectDayEvent,
             mockYearlyNoteEvent,
             mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
@@ -110,6 +117,7 @@ describe('CalendarComponent', () => {
     it('calls goToPreviousMonth when ChevronLeft is clicked', () => {
         render(setupContent(
             mockDateManager,
+            selectDayEvent,
             mockYearlyNoteEvent,
             mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
@@ -124,6 +132,7 @@ describe('CalendarComponent', () => {
     it('calls goToCurrentMonth when CalendarHeart is clicked', () => {
         render(setupContent(
             mockDateManager,
+            selectDayEvent,
             mockYearlyNoteEvent,
             mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
@@ -138,6 +147,7 @@ describe('CalendarComponent', () => {
     it('emits the daily note event when a day is clicked', () => {
         render(setupContent(
             mockDateManager,
+            selectDayEvent,
             mockYearlyNoteEvent,
             mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
@@ -152,6 +162,7 @@ describe('CalendarComponent', () => {
     it('emits the weekly note event when a week is clicked', () => {
         render(setupContent(
             mockDateManager,
+            selectDayEvent,
             mockYearlyNoteEvent,
             mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
@@ -166,6 +177,7 @@ describe('CalendarComponent', () => {
     it('emits the monthly note event when a month is clicked', () => {
         render(setupContent(
             mockDateManager,
+            selectDayEvent,
             mockYearlyNoteEvent,
             mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
@@ -180,6 +192,7 @@ describe('CalendarComponent', () => {
     it('emits the quarterly note event when a quarter is clicked', () => {
         render(setupContent(
             mockDateManager,
+            selectDayEvent,
             mockYearlyNoteEvent,
             mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
@@ -194,6 +207,7 @@ describe('CalendarComponent', () => {
     it('emits the yearly note event when a year is clicked', () => {
         render(setupContent(
             mockDateManager,
+            selectDayEvent,
             mockYearlyNoteEvent,
             mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
@@ -205,9 +219,31 @@ describe('CalendarComponent', () => {
         expect(mockYearlyNoteEvent.emitEvent).toHaveBeenCalledWith(year);
     });
 
-    it('should set selectedDay class on the day when the user presses on a day', () => {
+    it('should set selectDay class on the day that is emitted on the daily note event', async () => {
+        const day: Day = { dayOfWeek: 1, date: 2, completeDate: new Date(2023, 9, 2), name: '2' };
+        const dailyNoteEvent = new PeriodicNoteEvent<Day>();
+
         render(setupContent(
             mockDateManager,
+            selectDayEvent,
+            mockYearlyNoteEvent,
+            mockQuarterlyNoteEvent,
+            mockMonthlyNoteEvent,
+            mockWeeklyNoteEvent,
+            dailyNoteEvent
+        ));
+
+        React.act(() => dailyNoteEvent.emitEvent(day));
+
+        await waitFor(() => expect(screen.getByText('2').classList).toContain('selected-day'));
+    });
+
+    it('should set selectDay class on the day that is emitted on the select day event', async () => {
+        const day: Day = { dayOfWeek: 1, date: 2, completeDate: new Date(2023, 9, 2), name: '2' };
+
+        render(setupContent(
+            mockDateManager,
+            selectDayEvent,
             mockYearlyNoteEvent,
             mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
@@ -215,10 +251,9 @@ describe('CalendarComponent', () => {
             mockDailyNoteEvent
         ));
 
-        fireEvent.click(screen.getByText('2'));
+        React.act(() => selectDayEvent.emitEvent(day));
 
-
-        expect(screen.getByText('2').classList).toContain('selected-day');
+        await waitFor(() => expect(screen.getByText('2').classList).toContain('selected-day'));
     });
 
     it('should set today id on today when the component is being rendered', () => {
@@ -228,6 +263,7 @@ describe('CalendarComponent', () => {
 
         render(setupContent(
             mockDateManager,
+            selectDayEvent,
             mockYearlyNoteEvent,
             mockQuarterlyNoteEvent,
             mockMonthlyNoteEvent,
@@ -241,6 +277,7 @@ describe('CalendarComponent', () => {
 
 function setupContent(
     mockDateManager: DateManager,
+    mockSelectDayEvent: Event<Day>,
     mockYearlyNoteEvent: Event<Year>,
     mockQuarterlyNoteEvent: Event<Month>,
     mockMonthlyNoteEvent: Event<Month>,
@@ -249,17 +286,19 @@ function setupContent(
 ): ReactElement {
     return (
         <DateManagerContext.Provider value={mockDateManager}>
-            <YearlyNoteEventContext.Provider value={mockYearlyNoteEvent}>
-                <QuarterlyNoteEventContext.Provider value={mockQuarterlyNoteEvent}>
-                    <MonthlyNoteEventContext.Provider value={mockMonthlyNoteEvent}>
-                        <WeeklyNoteEventContext.Provider value={mockWeeklyNoteEvent}>
-                            <DailyNoteEventContext.Provider value={mockDailyNoteEvent}>
-                                <CalendarComponent />
-                            </DailyNoteEventContext.Provider>
-                        </WeeklyNoteEventContext.Provider>
-                    </MonthlyNoteEventContext.Provider>
-                </QuarterlyNoteEventContext.Provider>
-            </YearlyNoteEventContext.Provider>
+            <SelectDayEventContext.Provider value={mockSelectDayEvent}>
+                <YearlyNoteEventContext.Provider value={mockYearlyNoteEvent}>
+                    <QuarterlyNoteEventContext.Provider value={mockQuarterlyNoteEvent}>
+                        <MonthlyNoteEventContext.Provider value={mockMonthlyNoteEvent}>
+                            <WeeklyNoteEventContext.Provider value={mockWeeklyNoteEvent}>
+                                <DailyNoteEventContext.Provider value={mockDailyNoteEvent}>
+                                    <CalendarComponent />
+                                </DailyNoteEventContext.Provider>
+                            </WeeklyNoteEventContext.Provider>
+                        </MonthlyNoteEventContext.Provider>
+                    </QuarterlyNoteEventContext.Provider>
+                </YearlyNoteEventContext.Provider>
+            </SelectDayEventContext.Provider>
         </DateManagerContext.Provider>
     )
 }

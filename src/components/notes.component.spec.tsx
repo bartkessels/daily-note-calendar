@@ -1,61 +1,33 @@
 import React from 'react';
 import {render, waitFor, screen} from '@testing-library/react';
 import { NotesComponent } from './notes.component';
-import { DailyNoteEventContext } from 'src/components/providers/daily-note-event.context';
-import { Day } from 'src/domain/models/day';
 import { Note } from 'src/domain/models/note';
 import { Event } from 'src/domain/events/event';
-import { jest } from '@jest/globals';
-import {DailyNoteEvent} from 'src/implementation/events/daily-note.event';
-import {NotesManagerContext} from 'src/components/providers/notes-manager.context';
+import {RefreshNotesEvent} from 'src/implementation/events/refresh-notes.event';
+import {RefreshNotesEventContext} from 'src/components/providers/refresh-notes-event.context';
 
 describe('NotesComponent', () => {
-    let dailyNoteEvent: Event<Day>;
-    let mockDayNoteRepository: any;
+    let refreshNotesEvent: Event<Note[]>;
 
     beforeEach(() => {
-        dailyNoteEvent = new DailyNoteEvent();
-        mockDayNoteRepository = {
-            getNotesCreatedOn: jest.fn(),
-        };
+        refreshNotesEvent = new RefreshNotesEvent();
     });
 
-    it('should get all the notes from the repository when an event is emitted', async () => {
-        const day: Day = { dayOfWeek: 1, date: 2, completeDate: new Date(2023, 9, 2), name: '2' };
-
-        render(
-            <NotesManagerContext.Provider value={mockDayNoteRepository}>
-                <DailyNoteEventContext.Provider value={dailyNoteEvent}>
-                    <NotesComponent />
-                </DailyNoteEventContext.Provider>
-            </NotesManagerContext.Provider>
-        );
-
-        React.act(() => dailyNoteEvent.emitEvent(day));
-
-        await waitFor(() => expect(mockDayNoteRepository.getNotesCreatedOn).toHaveBeenCalledWith(day));
-    });
-
-    it('should render notes when an event is emitted', async () => {
-        const day: Day = { dayOfWeek: 1, date: 2, completeDate: new Date(2023, 9, 2), name: '2' };
+    it('should render notes when a refresh notes event is emitted', async () => {
         const notes: Note[] = [
             { name: 'Note 1', createdOn: new Date(2023, 9, 2, 10), path: 'path/to/note1' },
             { name: 'Note 2', createdOn: new Date(2023, 9, 2, 11), path: 'path/to/note2' },
         ];
 
-        mockDayNoteRepository.getNotesCreatedOn.mockResolvedValueOnce(notes);
-
         render(
-            <NotesManagerContext.Provider value={mockDayNoteRepository}>
-                <DailyNoteEventContext.Provider value={dailyNoteEvent}>
-                    <NotesComponent />
-                </DailyNoteEventContext.Provider>
-            </NotesManagerContext.Provider>
+            <RefreshNotesEventContext.Provider value={refreshNotesEvent}>
+                <NotesComponent />
+            </RefreshNotesEventContext.Provider>
         );
 
-        React.act(() => dailyNoteEvent.emitEvent(day));
+        React.act(() => refreshNotesEvent.emitEvent(notes));
 
-        await waitFor(() => expect(screen.queryByRole('listitem')?.firstChild).not.toBeNull());
+        await waitFor(() => expect(screen.findAllByRole('listitem')).not.toBeNull());
         for (const note of notes) {
             await waitFor(() => expect(screen.getByText(note.name)).toBeDefined());
             await waitFor(() => expect(screen.getByText(`Created at ${note.createdOn.toLocaleTimeString()}`)).toBeDefined());
@@ -63,20 +35,14 @@ describe('NotesComponent', () => {
         }
     });
 
-    it('should render an empty list when no notes are available', async () => {
-        const day: Day = { dayOfWeek: 1, date: 2, completeDate: new Date(2023, 9, 2), name: '2' };
-
-        mockDayNoteRepository.getNotesCreatedOn.mockResolvedValueOnce([]);
-
+    it('should render nothing when the refresh notes event emits an empty list', async () => {
         render(
-            <NotesManagerContext.Provider value={mockDayNoteRepository}>
-                <DailyNoteEventContext.Provider value={dailyNoteEvent}>
-                    <NotesComponent />
-                </DailyNoteEventContext.Provider>
-            </NotesManagerContext.Provider>
+            <RefreshNotesEventContext.Provider value={refreshNotesEvent}>
+                <NotesComponent />
+            </RefreshNotesEventContext.Provider>
         );
 
-        React.act(() => dailyNoteEvent.emitEvent(day));
+        React.act(() => refreshNotesEvent.emitEvent([]));
 
         await waitFor(() => expect(screen.queryByRole('listitem')).toBeNull());
     });

@@ -1,13 +1,14 @@
 import {CalendarHeart, ChevronLeft, ChevronRight, Dot} from 'lucide-react';
 import * as React from 'react';
 import {Day, DayOfWeek} from 'src/domain/models/day';
-import {useDateManager} from 'src/components/providers/datemanager.provider';
+import {useDateManager} from 'src/components/providers/date-manager.context';
 import {getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
 import {getWeeklyNoteEvent} from 'src/components/providers/weekly-note-event.context';
 import {getMonthlyNoteEvent} from 'src/components/providers/monthly-note-event.context';
 import {getYearlyNoteEvent} from 'src/components/providers/yearly-note-event.context';
 import {Month} from 'src/domain/models/month';
 import {getQuarterlyNoteEvent} from 'src/components/providers/quarterly-note-event.context';
+import {getSelectDayEvent} from 'src/components/providers/select-day-event.context';
 
 const WEEK_DAYS_ORDER = [
     DayOfWeek.Monday,
@@ -25,6 +26,7 @@ export const CalendarComponent = () => {
     const [currentYear, setCurrentYear] = React.useState(dateManager?.getCurrentYear());
     const [currentMonth, setCurrentMonth] = React.useState(dateManager?.getCurrentMonth());
 
+    const selectDayEvent = getSelectDayEvent();
     const dailyNoteEvent = getDailyNoteEvent();
     const weeklyNoteEvent = getWeeklyNoteEvent();
     const monthlyNoteEvent = getMonthlyNoteEvent();
@@ -32,6 +34,7 @@ export const CalendarComponent = () => {
     const yearlyNoteEvent = getYearlyNoteEvent();
 
     dailyNoteEvent?.onEvent(CalendarComponent, (day) => setSelectedDay(day));
+    selectDayEvent?.onEvent(CalendarComponent, (day) => setSelectedDay(day));
 
     const updateMonth = (getMonth: () => Month | undefined): void => {
         setCurrentMonth(getMonth());
@@ -88,7 +91,7 @@ export const CalendarComponent = () => {
                             onClick={() => weeklyNoteEvent?.emitEvent(week)}>{week.weekNumber}</td>
                         {WEEK_DAYS_ORDER.map((dayOfWeek, dayOfWeekIndex) => {
                             const day = week.days.find(d => d.dayOfWeek === dayOfWeek);
-                            const isSelected = day != null && selectedDay?.completeDate === day.completeDate;
+                            const isSelected = day != null && selectedDay?.completeDate?.toDateString() === day.completeDate.toDateString();
                             const isToday = day?.completeDate.isToday();
 
                             return (

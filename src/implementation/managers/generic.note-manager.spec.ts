@@ -8,12 +8,14 @@ import { SettingsRepository } from 'src/domain/repositories/settings.repository'
 import { GeneralSettings } from 'src/domain/models/settings/general.settings';
 import { jest } from '@jest/globals';
 import { NoteEvent } from 'src/implementation/events/note.event';
-import {DailyNoteEvent} from 'src/implementation/events/daily-note.event';
+import {PeriodicNoteEvent} from 'src/implementation/events/periodic-note.event';
 import {RefreshNotesEvent} from 'src/implementation/events/refresh-notes.event';
+import {SelectDayEvent} from 'src/implementation/events/select-day.event';
 
 describe('GenericNotesManager', () => {
     let noteEvent: Event<Note>;
     let dailyNoteEvent: Event<Day>;
+    let selectDayEvent: Event<Day>;
     let refreshNotesEvent: Event<Note[]>;
     let fileService: jest.Mocked<FileService>;
     let noteRepository: jest.Mocked<NoteRepository<Day>>;
@@ -24,7 +26,8 @@ describe('GenericNotesManager', () => {
 
     beforeEach(() => {
         noteEvent = new NoteEvent();
-        dailyNoteEvent = new DailyNoteEvent();
+        dailyNoteEvent = new PeriodicNoteEvent<Day>();
+        selectDayEvent = new SelectDayEvent();
         refreshNotesEvent = new RefreshNotesEvent();
         fileService = {
             tryOpenFileWithTemplate: jest.fn(),
@@ -37,7 +40,15 @@ describe('GenericNotesManager', () => {
             storeSettings: jest.fn(),
             getSettings: jest.fn(),
         } as jest.Mocked<SettingsRepository<GeneralSettings>>;
-        manager = new GenericNotesManager(noteEvent, dailyNoteEvent, refreshNotesEvent, fileService, noteRepository, settingsRepository);
+        manager = new GenericNotesManager(
+            noteEvent,
+            dailyNoteEvent,
+            selectDayEvent,
+            refreshNotesEvent,
+            fileService,
+            noteRepository,
+            settingsRepository
+        );
         note = {
             createdOn: new Date('2024-11-12'),
             name: 'My first note',
@@ -57,7 +68,7 @@ describe('GenericNotesManager', () => {
         expect(fileService.tryOpenFile).toHaveBeenCalledWith(note.path);
     });
 
-    it('should try to open a note when an event is emitted', async () => {
+    it('should try to open a note when a note event is emitted', async () => {
         const tryOpenNoteSpy = jest.spyOn(manager, 'tryOpenNote');
 
         noteEvent.emitEvent(note);
@@ -65,7 +76,7 @@ describe('GenericNotesManager', () => {
         expect(tryOpenNoteSpy).toHaveBeenCalledWith(note);
     });
 
-    it('should call the refresh notes event with the notes created on a specific day when a day event has been sent', async () => {
+    it('should call the refresh notes event with the notes when a daily note event has been sent', async () => {
         const refreshNotesEventSpy = jest.spyOn(manager, 'refreshNotes');
         const settings: GeneralSettings = {
             displayNotesCreatedOnDate: true
@@ -74,6 +85,19 @@ describe('GenericNotesManager', () => {
         settingsRepository.getSettings.mockResolvedValue(settings);
 
         dailyNoteEvent.emitEvent(day);
+
+        expect(refreshNotesEventSpy).toHaveBeenCalled();
+    });
+
+    it('should call the refresh notes event with the notes a select day event has been sent', async () => {
+        const refreshNotesEventSpy = jest.spyOn(manager, 'refreshNotes');
+        const settings: GeneralSettings = {
+            displayNotesCreatedOnDate: true
+        };
+
+        settingsRepository.getSettings.mockResolvedValue(settings);
+
+        selectDayEvent.emitEvent(day);
 
         expect(refreshNotesEventSpy).toHaveBeenCalled();
     });

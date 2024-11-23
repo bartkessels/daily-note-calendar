@@ -12,7 +12,7 @@ export class PeriodicNoteManager<T, S extends PeriodicNoteSettings> implements N
         private readonly fileNameBuilder: NameBuilder<T>,
         private readonly fileService: FileService
     ) {
-        event.onEvent(PeriodicNoteManager, (value) => this.tryOpenNote(value));
+        event.onEvent(PeriodicNoteManager, (data) => this.tryOpenNote(data));
     }
 
     public async tryOpenNote(value: T): Promise<void> {
