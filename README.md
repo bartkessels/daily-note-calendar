@@ -21,10 +21,11 @@ The Daily note calendar plugin started as a hobby project because another calend
 
 # 1. Overview
 
-The main focus of the Daily note calendar plugin is to provide a calendar view to access or create your own daily, or weekly notes. This allows you to quickly navigate to your notes without having to search for them in the file-tree.
+The main focus for the Daily note calendar plugin is to easily navigate your vault using a calendar view.
+Whether it's to quickly navigate your periodic notes, or notes you've created on a specific day.
 
-![Daily note calendar plugin in light mode](./docs/images/daily-note-calendar-light-mode.png)
-![Daily note calendar plugin in dark mode](./docs/images/daily-note-calendar-dark-mode.png)
+<img src="./docs/images/daily-note-calendar-light-mode.png" alt="Daily note calendar plugin in light mode" width="400" />
+<img src="./docs/images/daily-note-calendar-dark-mode.png" alt="Daily note calendar plugin in dark mode" width="400" />
 
 The plugin allows you to browse your periodic notes using a calendar view. Right now the following types of periodic notes are supported
 
@@ -35,15 +36,18 @@ The plugin allows you to browse your periodic notes using a calendar view. Right
 - Monthly notes
   - By clicking on the month name
 - Quarterly notes
-    - By clicking on the quarter name in the upper-left corner
+  - By clicking on the quarter name in the upper-left corner
 - Yearly notes
   - By clicking on the year number
 
-The plugin also allows you to customize the format of your daily and weekly notes using the date formatting rules of [`date-fns`](https://date-fns.org/v4.1.0/docs/format).
+You can customize the format of your notes'
+name and path using the date formatting rules of [`date-fns`](https://date-fns.org/v4.1.0/docs/format).
+To create your periodic notes, a template must be specified in the settings.
+This allows you to create your periodic note based on the same template every time.
 
-To make it even more customizable, you can specify the template for your notes name, the template file on which your notes are based, and the location of your notes.
+<img src="./docs/images/daily-note-calendar-settings.png" alt="Daily note calendar plugin settings" width="400" />
 
-![Daily note calendar plugin settings](./docs/images/daily-note-calendar-settings.png)
+Below the calendar, you can display all the notes created on the day you've selected. This allows you to quickly navigate back to the notes you created on that day.
 
 # 2. External dependencies
 
