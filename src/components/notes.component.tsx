@@ -8,7 +8,7 @@ export const NotesComponent = () => {
     const noteEvent = getNoteEvent();
     const refreshNotesEvent = getRefreshNotesEvent();
 
-    refreshNotesEvent?.onEvent(NotesComponent, (notes: Note[]) => {
+    refreshNotesEvent?.onEvent('NotesComponent', (notes: Note[]) => {
        setNotes(notes);
     });
 

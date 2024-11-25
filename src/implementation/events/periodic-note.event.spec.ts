@@ -17,7 +17,7 @@ describe('PeriodicNoteEvent', () => {
 
     it('should trigger event listeners when an event is emitted', () => {
         const listener = jest.fn();
-        event.onEvent(PeriodicNoteEvent, listener);
+        event.onEvent('PeriodicNoteEvent', listener);
 
         event.emitEvent(day);
 
@@ -26,8 +26,8 @@ describe('PeriodicNoteEvent', () => {
 
     it('should trigger event listeners only once when an event is emitted', () => {
         const listener = jest.fn();
-        event.onEvent(PeriodicNoteEvent, listener);
-        event.onEvent(PeriodicNoteEvent, listener);
+        event.onEvent('PeriodicNoteEvent', listener);
+        event.onEvent('PeriodicNoteEvent', listener);
 
         event.emitEvent(day);
 
@@ -37,7 +37,7 @@ describe('PeriodicNoteEvent', () => {
 
     it('should not trigger event listeners when an undefined event is emitted', () => {
         const listener = jest.fn();
-        event.onEvent(PeriodicNoteEvent, listener);
+        event.onEvent('PeriodicNoteEvent', listener);
 
         event.emitEvent(undefined);
 

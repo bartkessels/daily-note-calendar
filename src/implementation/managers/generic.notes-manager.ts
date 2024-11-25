@@ -19,9 +19,9 @@ export class GenericNotesManager implements NotesManager {
         private readonly noteRepository: NoteRepository<Day>,
         private readonly settingsRepository: SettingsRepository<GeneralSettings>
     ) {
-        noteEvent.onEvent(GenericNotesManager, (note) => this.tryOpenNote(note));
-        dailyNoteEvent.onEvent(GenericNotesManager, (day) => this.refreshNotesCreatedOn(day));
-        selectDayEvent.onEvent(GenericNotesManager, (day) => this.refreshNotesCreatedOn(day));
+        noteEvent.onEvent('GenericNotesManager', (note) => this.tryOpenNote(note));
+        dailyNoteEvent.onEvent('GenericNotesManager', (day) => this.refreshNotesCreatedOn(day));
+        selectDayEvent.onEvent('GenericNotesManager', (day) => this.refreshNotesCreatedOn(day));
     }
 
     public async tryOpenNote(note: Note) : Promise<void> {

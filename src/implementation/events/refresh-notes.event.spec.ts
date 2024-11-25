@@ -16,7 +16,7 @@ describe('RefreshNotesEvent', () => {
 
     it('should trigger event listeners when an event is emitted', () => {
         const listener = jest.fn();
-        event.onEvent(RefreshNotesEvent, listener);
+        event.onEvent('RefreshNotesEvent', listener);
 
         event.emitEvent(notes);
 
@@ -25,8 +25,8 @@ describe('RefreshNotesEvent', () => {
 
     it('should trigger event listeners only once when an event is emitted', () => {
         const listener = jest.fn();
-        event.onEvent(RefreshNotesEvent, listener);
-        event.onEvent(RefreshNotesEvent, listener);
+        event.onEvent('RefreshNotesEvent', listener);
+        event.onEvent('RefreshNotesEvent', listener);
 
         event.emitEvent(notes);
 
@@ -36,7 +36,7 @@ describe('RefreshNotesEvent', () => {
 
     it('should not trigger event listeners when an undefined event is emitted', () => {
         const listener = jest.fn();
-        event.onEvent(RefreshNotesEvent, listener);
+        event.onEvent('RefreshNotesEvent', listener);
 
         event.emitEvent(undefined);
 

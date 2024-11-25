@@ -33,8 +33,8 @@ export const CalendarComponent = () => {
     const quarterlyNoteEvent = getQuarterlyNoteEvent();
     const yearlyNoteEvent = getYearlyNoteEvent();
 
-    dailyNoteEvent?.onEvent(CalendarComponent, (day) => setSelectedDay(day));
-    selectDayEvent?.onEvent(CalendarComponent, (day) => setSelectedDay(day));
+    dailyNoteEvent?.onEvent('CalendarComponent', (day) => setSelectedDay(day));
+    selectDayEvent?.onEvent('CalendarComponent', (day) => setSelectedDay(day));
 
     const updateMonth = (getMonth: () => Month | undefined): void => {
         setCurrentMonth(getMonth());
