@@ -17,7 +17,6 @@ import {QuarterlyNoteEventContext} from 'src/components/providers/quarterly-note
 import {NotesComponent} from 'src/components/notes.component';
 import {NoteEventContext} from 'src/components/providers/note-event.context';
 import {Note} from 'src/domain/models/note';
-import {NotesManager} from 'src/domain/managers/notes.manager';
 import {RefreshNotesEventContext} from 'src/components/providers/refresh-notes-event.context';
 import {SelectDayEventContext} from 'src/components/providers/select-day-event.context';
 
@@ -29,7 +28,6 @@ export class CalendarView extends ItemView {
     constructor(
         leaf: WorkspaceLeaf,
         private readonly dateManager: DateManager,
-        private readonly notesManager: NotesManager,
         private readonly selectDayEvent: Event<Day>,
         private readonly noteEvent: Event<Note>,
         private readonly refreshNotesEvent: Event<Note[]>,

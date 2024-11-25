@@ -16,7 +16,7 @@ describe('NoteEvent', () => {
 
     it('should trigger event listeners when an event is emitted', () => {
         const listener = jest.fn();
-        event.onEvent(NoteEvent, listener);
+        event.onEvent('NoteEvent', listener);
 
         event.emitEvent(note);
 
@@ -25,8 +25,8 @@ describe('NoteEvent', () => {
 
     it('should trigger event listeners only once when an event is emitted', () => {
         const listener = jest.fn();
-        event.onEvent(NoteEvent, listener);
-        event.onEvent(NoteEvent, listener);
+        event.onEvent('NoteEvent', listener);
+        event.onEvent('NoteEvent', listener);
 
         event.emitEvent(note);
 
@@ -36,7 +36,7 @@ describe('NoteEvent', () => {
 
     it('should not trigger event listeners when an undefined event is emitted', () => {
         const listener = jest.fn();
-        event.onEvent(NoteEvent, listener);
+        event.onEvent('NoteEvent', listener);
 
         event.emitEvent(undefined);
 
