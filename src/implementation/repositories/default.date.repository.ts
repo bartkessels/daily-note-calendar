@@ -66,10 +66,6 @@ export class DefaultDateRepository implements DateRepository {
             date.setDate(date.getDate() + 1);
         }
 
-        const formatter = new Intl.DateTimeFormat(undefined, {
-            day: this.dayFormat
-        });
-
         return daysList.map(day => this.getDay(day));
     }
 

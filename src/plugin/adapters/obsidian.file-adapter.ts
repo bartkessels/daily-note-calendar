@@ -40,6 +40,32 @@ export class ObsidianFileAdapter implements FileAdapter {
         await this.workspace.getLeaf().openFile(file, { active: true });
     }
 
+    public async readFileContents(filePath: string): Promise<string> {
+        const normalizedPath = this.normalizePath(filePath);
+        const file = this.vault.getAbstractFileByPath(normalizedPath);
+
+        if (!file) {
+            throw new Error(`File does not exist: ${normalizedPath}.`);
+        } else if (file instanceof TFolder) {
+            throw new Error(`Path is a folder: ${normalizedPath}.`);
+        }
+
+        return await this.vault.adapter.read(normalizedPath);
+    }
+
+    public async writeFileContents(filePath: string, contents: string): Promise<void> {
+        const normalizedPath = this.normalizePath(filePath);
+        const file = this.vault.getAbstractFileByPath(normalizedPath);
+
+        if (!file) {
+            throw new Error(`File does not exist: ${normalizedPath}.`);
+        } else if (file instanceof TFolder) {
+            throw new Error(`Path is a folder: ${normalizedPath}.`);
+        }
+
+        await this.vault.adapter.write(normalizedPath, contents);
+    }
+
     private async createFolder(filePath: string): Promise<void> {
         const folder = filePath.split('/').slice(0, -1).join('/');
             const file = this.vault.getAbstractFileByPath(folder);

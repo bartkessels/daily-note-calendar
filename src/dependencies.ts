@@ -41,6 +41,12 @@ import {RefreshNotesEvent} from 'src/implementation/events/refresh-notes.event';
 import {PeriodicNoteManager} from 'src/implementation/managers/periodic.note-manager';
 import {PeriodicNoteEvent} from 'src/implementation/events/periodic-note.event';
 import {SelectDayEvent} from 'src/implementation/events/select-day.event';
+import {DateVariableParser} from 'src/implementation/parsers/date.variable-parser';
+import {DefaultVariableBuilder} from 'src/implementation/builders/default.variable-builder';
+import {VariableFileProcessor} from 'src/implementation/processors/variable.file-processor';
+import {DefaultVariableParserFactory} from 'src/implementation/factories/default.variable-parser-factory';
+import {NoteCreatedEvent} from 'src/implementation/events/date.event';
+import {TodayVariableParser} from 'src/implementation/parsers/today.variable-parser';
 
 export interface Dependencies {
     readonly dateManager: RepositoryDateManager;
@@ -75,6 +81,8 @@ export interface Dependencies {
 }
 
 export function createDependencies(plugin: Plugin): Dependencies {
+    const noteCreatedEvent = new NoteCreatedEvent();
+
     const dateRepository = new DefaultDateRepository();
     const dateManager = new RepositoryDateManager(dateRepository);
     const dateParser = new DateFnsDateParser();
@@ -83,7 +91,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const noteAdapter = new ObsidianNoteAdapter(plugin.app);
     const noticeAdapter = new ObsidianNoticeAdapter();
     const logger = new NotifyLogger(noticeAdapter);
-    const fileService = new AdapterFileService(fileAdapter, logger);
+    const fileService = new AdapterFileService(noteCreatedEvent, fileAdapter, logger);
 
     const selectDayEvent = new SelectDayEvent();
     const generalSettingsRepository = new GeneralSettingsRepository(settingsAdapter);
@@ -111,6 +119,13 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const yearlyNoteEvent = new PeriodicNoteEvent<Year>();
     const yearNameBuilder = new YearNameBuilder(dateParser, logger);
     const yearlyNoteManager = new PeriodicNoteManager(yearlyNoteEvent, yearlyNoteSettingsRepository, yearNameBuilder, fileService);
+
+    // TODO this is all new
+    const dateVariableParser = new DateVariableParser(dailyNoteEvent, weeklyNoteEvent, monthlyNoteEvent, quarterlyNoteEvent, yearlyNoteEvent, dateParser);
+    const todayVariableParser = new TodayVariableParser(dateParser);
+    const variableBuilder = new DefaultVariableBuilder(logger);
+    const variableParserFactory = new DefaultVariableParserFactory(dateVariableParser, todayVariableParser, dateVariableParser, logger);
+    const variableFileProcessor = new VariableFileProcessor(noteCreatedEvent ,fileAdapter, variableBuilder, variableParserFactory, logger);
 
     const notesRepository = new DayNoteRepository(noteAdapter);
     const noteEvent = new NoteEvent();

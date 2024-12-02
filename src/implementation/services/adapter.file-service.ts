@@ -1,9 +1,11 @@
 import {FileService} from 'src/domain/services/file.service';
 import {FileAdapter} from 'src/domain/adapters/file.adapter';
 import {Logger} from 'src/domain/loggers/logger';
+import {Event} from 'src/domain/events/event';
 
 export class AdapterFileService implements FileService {
     constructor(
+        private readonly noteCreatedEvent: Event<string>,
         private readonly fileAdapter: FileAdapter,
         private readonly logger: Logger
     ) {
@@ -21,6 +23,7 @@ export class AdapterFileService implements FileService {
             this.logger.logAndThrow(`Template file does not exist: ${completeTemplateFilePath}`);
         } else if (!fileExists) {
             await this.fileAdapter.createFileFromTemplate(completeFilePath, completeTemplateFilePath);
+            this.noteCreatedEvent.emitEvent(completeFilePath);
         }
 
         await this.fileAdapter.openFile(completeFilePath);
