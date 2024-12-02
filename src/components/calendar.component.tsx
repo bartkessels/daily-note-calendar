@@ -1,4 +1,4 @@
-import {CalendarHeart, ChevronLeft, ChevronRight, Dot} from 'lucide-react';
+import {CalendarHeart, ChevronLeft, ChevronRight} from 'lucide-react';
 import * as React from 'react';
 import {Day, DayOfWeek} from 'src/domain/models/day';
 import {useDateManager} from 'src/components/providers/date-manager.context';
@@ -46,7 +46,7 @@ export const CalendarComponent = () => {
     const goToNextMonth = () => updateMonth(() => dateManager?.getNextMonth(currentMonth));
 
     return (
-        <>
+        <div className="dnc">
             <div className="header">
                 <span className="title">
                     <h1 onClick={() => monthlyNoteEvent?.emitEvent(currentMonth)}>{currentMonth?.name}</h1>&nbsp;
@@ -105,6 +105,6 @@ export const CalendarComponent = () => {
                 ))}
                 </tbody>
             </table>
-        </>
+        </div>
     );
 };
