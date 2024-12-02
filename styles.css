@@ -1,45 +1,45 @@
-table {
+.dnc table {
     table-layout: fixed;
     width: 100%;
 }
 
-th {
+.dnc th {
     opacity: 50%;
     font-weight: var(--font-medium);
     font-size: var(--font-ui-small)
 }
 
-th.quarter {
+.dnc th.quarter {
     font-weight: var(--font-semibold);
 }
 
-td {
+.dnc td {
     opacity: 90%;
 }
 
-th, td {
+.dnc th, .dnc td {
     text-align: center;
     width: 0.45em;
     height: 0.45em;
     padding: 0.2em;
 }
 
-td:hover:not(:empty), .weekNumber:hover {
+.dnc td:hover:not(:empty), .dnc .weekNumber:hover {
     background-color: var(--background-modifier-active-hover);
     border-radius: 10%;
 }
 
-.weekNumber {
+.dnc .weekNumber {
     opacity: 30%;
     text-align: start;
     font-weight: var(----font-light);
 }
 
-#today {
+.dnc #today {
     color: var(--text-accent);
 }
 
-.selected-day:after {
+.dnc .selected-day:after {
     content: "";
     display: block;
     width: 30%;
@@ -47,63 +47,63 @@ td:hover:not(:empty), .weekNumber:hover {
     border-bottom: 0.15em solid var(--text-accent);
 }
 
-.header {
+.dnc .header {
     opacity: 75%;
     display: flex;
     justify-content: space-between;
 }
 
-.header h1, .header .buttons {
+.dnc .header h1, .dnc .header .buttons {
     display: inline-block;
 }
 
-.header h1 {
+.dnc .header h1 {
     font-weight: var(--font-light);
     font-size: var(--font-ui-medium);
     margin: auto;
 }
 
-.header .buttons {
+.dnc .header .buttons {
     align-content: center;
 }
 
-.header .buttons > *:hover {
+.dnc .header .buttons > *:hover {
     color: var(--text-accent);
 }
 
-ul {
+.dnc ul {
     list-style-type: none;
     padding: 0 0 0 0.2em;
 }
 
-ul li {
+.dnc ul li {
     padding-bottom: 0.4em;
 }
 
-ul li:after {
+.dnc ul li:after {
     content: "";
     display: block;
     border-bottom: 1px solid var(--background-modifier-border);
     padding-top: 0.4em;
 }
 
-ul li .note-title {
+.dnc ul li .note-title {
     font-weight: var(--font-semibold);
     font-size: var(--font-ui-small);
 }
 
-ul li .note-date {
+.dnc ul li .note-date {
     font-weight: var(--font-light);
     font-size: var(--font-ui-small);
     color: var(--text-muted);
 }
 
-ul li .note-path {
+.dnc ul li .note-path {
     font-weight: var(--font-light);
     font-size: var(--font-ui-small);
     color: var(--text-faint);
 }
 
-.setting-example {
+.dnc .setting-example {
     color: var(--text-accent);
 }
