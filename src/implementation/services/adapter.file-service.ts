@@ -1,15 +1,25 @@
 import {FileService} from 'src/domain/services/file.service';
 import {FileAdapter} from 'src/domain/adapters/file.adapter';
 import {Logger} from 'src/domain/loggers/logger';
-import {Event} from 'src/domain/events/event';
+import {VariableParser} from 'src/domain/parsers/variable.parser';
+import {VariableType} from 'src/domain/models/variable';
+import {VariableBuilder} from 'src/domain/builders/variable.builder';
+import {VariableParserFactory} from 'src/domain/factories/variable-parser.factory';
 
 export class AdapterFileService implements FileService {
+    private readonly variableDeclarationRegex = /{{.*?}}/g;
+
     constructor(
-        private readonly noteCreatedEvent: Event<string>,
         private readonly fileAdapter: FileAdapter,
+        private readonly variableParserFactory: VariableParserFactory,
+        private readonly variableBuilder: VariableBuilder,
         private readonly logger: Logger
     ) {
 
+    }
+
+    public registerVariableParser<T>(type: VariableType, parser: VariableParser<T>): void {
+        this.variableParserFactory.registerVariableParser(type, parser);
     }
 
     public async tryOpenFileWithTemplate(filePath: string, templateFilePath: string): Promise<void> {
@@ -23,7 +33,7 @@ export class AdapterFileService implements FileService {
             this.logger.logAndThrow(`Template file does not exist: ${completeTemplateFilePath}`);
         } else if (!fileExists) {
             await this.fileAdapter.createFileFromTemplate(completeFilePath, completeTemplateFilePath);
-            this.noteCreatedEvent.emitEvent(completeFilePath);
+            await this.parseVariables(completeTemplateFilePath);
         }
 
         await this.fileAdapter.openFile(completeFilePath);
@@ -39,5 +49,15 @@ export class AdapterFileService implements FileService {
         }
 
         await this.fileAdapter.openFile(completeFilePath);
+    }
+
+    private async parseVariables(filePath: string): Promise<void> {
+        const fileContents = await this.fileAdapter.readFileContents(filePath);
+        const updatedFileContent = fileContents.replace(this.variableDeclarationRegex, (value: string, _: any) => {
+            const variable = this.variableBuilder.fromString(value).build();
+            return this.variableParserFactory.getVariableParser(variable).tryParse(value);
+        });
+
+        await this.fileAdapter.writeFileContents(filePath, updatedFileContent);
     }
 }
