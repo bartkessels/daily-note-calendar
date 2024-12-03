@@ -36,14 +36,15 @@ export const CalendarComponent = () => {
     dailyNoteEvent?.onEvent('CalendarComponent', (day) => setSelectedDay(day));
     selectDayEvent?.onEvent('CalendarComponent', (day) => setSelectedDay(day));
 
-    const updateMonth = (getMonth: () => Month | undefined): void => {
-        setCurrentMonth(getMonth());
-        setCurrentYear(dateManager?.getYear(currentMonth));
+    const updateMonth = (month?: Month): void => {
+        setCurrentMonth(month);
+        // setCurrentYear(dateManager?.getYear(currentMonth));
+        setCurrentYear(dateManager?.getYear(month));
     };
 
-    const goToCurrentMonth = () => updateMonth(() => dateManager?.getCurrentMonth());
-    const goToPreviousMonth = () => updateMonth(() => dateManager?.getPreviousMonth(currentMonth));
-    const goToNextMonth = () => updateMonth(() => dateManager?.getNextMonth(currentMonth));
+    const goToCurrentMonth = () => updateMonth(dateManager?.getCurrentMonth());
+    const goToPreviousMonth = () => updateMonth(dateManager?.getPreviousMonth(currentMonth));
+    const goToNextMonth = () => updateMonth(dateManager?.getNextMonth(currentMonth));
 
     return (
         <div className="dnc">

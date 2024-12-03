@@ -273,6 +273,106 @@ describe('CalendarComponent', () => {
 
         expect(screen.getByText('2').id).toContain('today');
     });
+
+    it('updates the year when the next month is clicked while it is December', () => {
+        const december = {
+            name: 'December',
+            quarter: 4,
+            monthIndex: 11,
+            number: 12,
+            year: 2024,
+            weeks: []
+        };
+        const january = {
+            name: 'January',
+            quarter: 1,
+            monthIndex: 0,
+            number: 1,
+            year: 2025,
+            weeks: []
+        };
+        const currentYear = {
+            year: 2024,
+            name: '2024',
+            months: [december]
+        };
+        const nextYear = {
+            year: 2025,
+            name: '2025',
+            months: [january]
+        };
+
+        (mockDateManager.getCurrentMonth as jest.Mock).mockReturnValue(december);
+        (mockDateManager.getNextMonth as jest.Mock).mockReturnValue(january);
+        (mockDateManager.getCurrentYear as jest.Mock).mockReturnValue(currentYear);
+        (mockDateManager.getYear as jest.Mock).mockReturnValue(nextYear);
+
+        render(setupContent(
+            mockDateManager,
+            selectDayEvent,
+            mockYearlyNoteEvent,
+            mockQuarterlyNoteEvent,
+            mockMonthlyNoteEvent,
+            mockWeeklyNoteEvent,
+            mockDailyNoteEvent
+        ));
+
+        fireEvent.click(document.querySelector('.lucide-chevron-right')!);
+
+        expect(mockDateManager.getYear).toHaveBeenCalledWith(january);
+        expect(screen.getByText('January')).toBeDefined();
+        expect(screen.getByText('2025')).toBeDefined();
+    });
+
+    it('updates the year when the previous month is clicked while it is January', () => {
+        const january = {
+            name: 'January',
+            quarter: 1,
+            monthIndex: 0,
+            number: 1,
+            year: 2025,
+            weeks: []
+        };
+        const december = {
+            name: 'December',
+            quarter: 4,
+            monthIndex: 11,
+            number: 12,
+            year: 2024,
+            weeks: []
+        };
+        const currentYear = {
+            year: 2025,
+            name: '2025',
+            months: [january]
+        };
+        const previousYear = {
+            year: 2024,
+            name: '2024',
+            months: [december]
+        };
+
+        (mockDateManager.getCurrentMonth as jest.Mock).mockReturnValue(january);
+        (mockDateManager.getPreviousMonth as jest.Mock).mockReturnValue(december);
+        (mockDateManager.getCurrentYear as jest.Mock).mockReturnValue(currentYear);
+        (mockDateManager.getYear as jest.Mock).mockReturnValue(previousYear);
+
+        render(setupContent(
+            mockDateManager,
+            selectDayEvent,
+            mockYearlyNoteEvent,
+            mockQuarterlyNoteEvent,
+            mockMonthlyNoteEvent,
+            mockWeeklyNoteEvent,
+            mockDailyNoteEvent
+        ));
+
+        fireEvent.click(document.querySelector('.lucide-chevron-left')!);
+
+        expect(mockDateManager.getYear).toHaveBeenCalledWith(december);
+        expect(screen.getByText('December')).toBeDefined();
+        expect(screen.getByText('2024')).toBeDefined();
+    });
 });
 
 function setupContent(
