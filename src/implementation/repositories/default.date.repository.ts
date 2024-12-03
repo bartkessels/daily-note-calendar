@@ -28,8 +28,8 @@ export class DefaultDateRepository implements DateRepository {
             year: this.yearFormat
         });
 
-        for (let i = 0; i < 12; i++) {
-            months.push(this.getMonth(year, i));
+        for (let monthIndex = 0; monthIndex <= 11; monthIndex++) {
+            months.push(this.getMonth(year, monthIndex));
         }
 
         return <Year>{
@@ -39,36 +39,32 @@ export class DefaultDateRepository implements DateRepository {
         };
     }
 
-    public getMonth(year: number, month: number): Month {
+    public getMonth(year: number, monthIndex: number): Month {
         const formatter = new Intl.DateTimeFormat(undefined, {
             month: this.monthFormat
         });
 
-        const days = this.getDaysOfMonth(year, month);
+        const days = this.getDaysOfMonth(year, monthIndex);
         const weeks = this.groupDaysIntoWeeks(days);
-        const quarter = Math.floor(month / 3) + 1;
+        const quarter = Math.floor(monthIndex / 3) + 1;
 
         return <Month>{
-            monthIndex: month,
+            monthIndex: monthIndex,
             quarter: quarter,
             year: year,
-            name: formatter.format(new Date(year, month)),
+            name: formatter.format(new Date(year, monthIndex)),
             weeks: weeks
         };
     }
 
-    private getDaysOfMonth(year: number, month: number): Day[] {
-        const date = new Date(year, month, 1);
+    private getDaysOfMonth(year: number, monthIndex: number): Day[] {
+        const date = new Date(year, monthIndex, 1);
         const daysList = [];
 
-        while (date.getMonth() === month) {
+        while (date.getMonth() === monthIndex) {
             daysList.push(new Date(date));
             date.setDate(date.getDate() + 1);
         }
-
-        const formatter = new Intl.DateTimeFormat(undefined, {
-            day: this.dayFormat
-        });
 
         return daysList.map(day => this.getDay(day));
     }
