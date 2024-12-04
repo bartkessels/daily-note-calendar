@@ -55,7 +55,6 @@ export class RepositoryDateManager implements DateManager {
             currentMonthIndex = this.JANUARY_INDEX;
         }
 
-        console.log(currentYear, currentMonthIndex);
         return this.dateRepository.getMonth(currentYear, currentMonthIndex);
     }
 
@@ -72,7 +71,6 @@ export class RepositoryDateManager implements DateManager {
             currentMonthIndex = this.DECEMBER_INDEX;
         }
 
-        console.log(currentYear, currentMonthIndex);
         return this.dateRepository.getMonth(currentYear, currentMonthIndex);
     }
 }
