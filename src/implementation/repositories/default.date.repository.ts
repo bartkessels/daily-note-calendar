@@ -3,6 +3,7 @@ import {Month} from 'src/domain/models/month';
 import {Week} from 'src/domain/models/week';
 import {DateRepository} from 'src/domain/repositories/date.repository';
 import {Year} from 'src/domain/models/year';
+import {getISOWeek} from 'date-fns';
 
 export class DefaultDateRepository implements DateRepository {
     private readonly monthFormat = 'long';
@@ -78,7 +79,7 @@ export class DefaultDateRepository implements DateRepository {
 
             if (day.dayOfWeek === DayOfWeek.Sunday) {
                 weeks.push({
-                    weekNumber: this.getWeekNumber(day.completeDate),
+                    weekNumber: getISOWeek(currentWeek[0].completeDate),
                     days: currentWeek
                 });
                 currentWeek = [];
@@ -87,18 +88,12 @@ export class DefaultDateRepository implements DateRepository {
 
         if (currentWeek.length > 0) {
             weeks.push({
-                weekNumber: this.getWeekNumber(currentWeek[0].completeDate),
+                weekNumber: getISOWeek(currentWeek[0].completeDate),
                 days: currentWeek
             });
         }
 
         return weeks;
-    }
-
-    private getWeekNumber(date: Date): number {
-        const startOfYear = new Date(date.getFullYear(), 0, 1);
-        const pastDaysOfYear = (date.getTime() - startOfYear.getTime()) / 86400000;
-        return Math.ceil((pastDaysOfYear + startOfYear.getDay()) / 7);
     }
 
     private getDayOfWeek(value: number): DayOfWeek {

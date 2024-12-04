@@ -122,6 +122,28 @@ describe('DefaultDateRepository', () => {
         expect(weekNumber).toBe(39);
     });
 
+    it('should return week number 1 for the last week of December 2024', () => {
+        const year = 2024;
+        const month = 11; // December (0-based index)
+        const weeks = repository.getMonth(year, month).weeks;
+
+        // Find the last week of December 2024
+        const lastWeek = weeks[weeks.length - 1];
+
+        expect(lastWeek.weekNumber).toBe(1);
+    });
+
+    it('should return week number 1 for the first week of January 2025', () => {
+        const year = 2025;
+        const month = 0; // January (0-based index)
+        const weeks = repository.getMonth(year, month).weeks;
+
+        // Find the last week of December 2024
+        const lastWeek = weeks[0];
+
+        expect(lastWeek.weekNumber).toBe(1);
+    });
+
     it('should return the correct day of the week', () => {
         const year = 2023;
         const month = 9; // October (0-based index)
