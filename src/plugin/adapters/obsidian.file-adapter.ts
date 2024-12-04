@@ -68,7 +68,7 @@ export class ObsidianFileAdapter implements FileAdapter {
 
     private async createFolder(filePath: string): Promise<void> {
         const folder = filePath.split('/').slice(0, -1).join('/');
-            const file = this.vault.getAbstractFileByPath(folder);
+        const file = this.vault.getAbstractFileByPath(folder);
 
         if (file && file instanceof TFolder) {
             return;

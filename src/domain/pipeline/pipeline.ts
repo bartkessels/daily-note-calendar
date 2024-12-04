@@ -30,18 +30,31 @@ export abstract class Pipeline<T> {
         const doesFileExist = await this.fileService.doesFileExist(filePath);
 
         if (!doesFileExist) {
-            await Promise.all(this.preCreateSteps.map(async step => await step.executePreCreate(value)))
+            await this.executePreCreateSteps(value);
             await this.createFile(filePath);
-            await Promise.all(this.postCreateSteps.map(async step => await step.executePostCreate(filePath, value)));
+            await this.executePostCreateSteps(filePath, value);
         }
 
         await this.fileService.tryOpenFile(filePath);
+    }
+
+    private async executePreCreateSteps(value: T): Promise<void> {
+        for (const step of this.preCreateSteps) {
+            await step.executePreCreate(value);
+        }
+    }
+
+    private async executePostCreateSteps(filePath: string, value: T): Promise<void> {
+        for (const step of this.postCreateSteps) {
+            await step.executePostCreate(filePath, value);
+        }
     }
 }
 
 export interface PreCreateStep<T> {
     executePreCreate(value: T): Promise<void>;
 }
+
 export interface PostCreateStep<T> {
     executePostCreate(filePath: string, value: T): Promise<void>;
 }

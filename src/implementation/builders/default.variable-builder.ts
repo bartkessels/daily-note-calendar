@@ -6,7 +6,7 @@ export class DefaultVariableBuilder implements VariableBuilder {
     private name?: string;
     private template?: string;
 
-    private readonly typesThatRequireTemplate = [VariableType.Date, VariableType.Date];
+    private readonly typesThatRequireTemplate = [VariableType.Date, VariableType.Today];
     private readonly types = new Map<string, VariableType>()
         .set('date', VariableType.Date)
         .set('today', VariableType.Today)
@@ -19,20 +19,8 @@ export class DefaultVariableBuilder implements VariableBuilder {
 
     public fromString(value: string): VariableBuilder {
         const cleanTemplate = value.replace(/{{|}}/g, '');
-        const [name, template] = cleanTemplate.split(':');
+        [this.name, this.template] = cleanTemplate.split(':');
 
-        return this
-            .withName(name)
-            .withTemplate(template);
-    }
-
-    public withName(name: string): VariableBuilder {
-        this.name = name;
-        return this;
-    }
-
-    public withTemplate(template: string): VariableBuilder {
-        this.template = template;
         return this;
     }
 

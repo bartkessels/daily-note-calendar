@@ -9,6 +9,20 @@ export class ObsidianNoteAdapter implements NoteAdapter {
 
     }
 
+    public async getActiveNote(): Promise<Note | null> {
+        const activeFile = this.app.workspace.getActiveFile();
+
+        if (!activeFile) {
+            return null;
+        }
+
+        return <Note> {
+            path: activeFile.path,
+            name: activeFile.name,
+            createdOn: new Date(activeFile.stat.ctime)
+        };
+    }
+
     public async getNotesCreatedOn(date: Date): Promise<Note[]> {
         const files = this.app.vault.getMarkdownFiles()
             .filter((file) => {
