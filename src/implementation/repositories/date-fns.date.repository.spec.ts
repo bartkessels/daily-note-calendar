@@ -1,12 +1,12 @@
-import {DefaultDateRepository} from 'src/implementation/repositories/default.date.repository';
+import {DateFnsDateRepository} from 'src/implementation/repositories/date-fns.date.repository';
 import {DayOfWeek} from 'src/domain/models/day';
 import 'src/extensions/extensions';
 
 describe('DefaultDateRepository', () => {
-    let repository: DefaultDateRepository;
+    let repository: DateFnsDateRepository;
 
     beforeEach(() => {
-        repository = new DefaultDateRepository();
+        repository = new DateFnsDateRepository();
     });
 
     it('should return the correct day data', () => {

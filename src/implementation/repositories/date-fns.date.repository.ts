@@ -5,7 +5,7 @@ import {DateRepository} from 'src/domain/repositories/date.repository';
 import {Year} from 'src/domain/models/year';
 import {getISOWeek} from 'date-fns';
 
-export class DefaultDateRepository implements DateRepository {
+export class DateFnsDateRepository implements DateRepository {
     private readonly monthFormat = 'long';
     private readonly dayFormat = 'numeric';
     private readonly yearFormat = 'numeric';
