@@ -2,7 +2,7 @@ import {Plugin} from 'obsidian';
 import {AdapterFileService} from 'src/implementation/services/adapter.file-service';
 import {ObsidianFileAdapter} from 'src/plugin/adapters/obsidian.file-adapter';
 import {RepositoryDateManager} from 'src/implementation/managers/repository.date-manager';
-import {DefaultDateRepository} from 'src/implementation/repositories/default.date.repository';
+import {DateFnsDateRepository} from 'src/implementation/repositories/date-fns.date.repository';
 import {NoteManager} from 'src/domain/managers/note.manager';
 import {Day} from 'src/domain/models/day';
 import {Week} from 'src/domain/models/week';
@@ -82,7 +82,7 @@ export interface Dependencies {
 }
 
 export function createDependencies(plugin: Plugin): Dependencies {
-    const dateRepository = new DefaultDateRepository();
+    const dateRepository = new DateFnsDateRepository();
     const dateManager = new RepositoryDateManager(dateRepository);
     const dateParser = new DateFnsDateParser();
     const fileAdapter = new ObsidianFileAdapter(plugin.app.vault, plugin.app.workspace);

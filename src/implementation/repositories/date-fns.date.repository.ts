@@ -3,8 +3,9 @@ import {Month} from 'src/domain/models/month';
 import {Week} from 'src/domain/models/week';
 import {DateRepository} from 'src/domain/repositories/date.repository';
 import {Year} from 'src/domain/models/year';
+import {getISOWeek} from 'date-fns';
 
-export class DefaultDateRepository implements DateRepository {
+export class DateFnsDateRepository implements DateRepository {
     private readonly monthFormat = 'long';
     private readonly dayFormat = 'numeric';
     private readonly yearFormat = 'numeric';
@@ -28,8 +29,8 @@ export class DefaultDateRepository implements DateRepository {
             year: this.yearFormat
         });
 
-        for (let i = 0; i < 12; i++) {
-            months.push(this.getMonth(year, i));
+        for (let monthIndex = 0; monthIndex <= 11; monthIndex++) {
+            months.push(this.getMonth(year, monthIndex));
         }
 
         return <Year>{
@@ -39,29 +40,29 @@ export class DefaultDateRepository implements DateRepository {
         };
     }
 
-    public getMonth(year: number, month: number): Month {
+    public getMonth(year: number, monthIndex: number): Month {
         const formatter = new Intl.DateTimeFormat(undefined, {
             month: this.monthFormat
         });
 
-        const days = this.getDaysOfMonth(year, month);
+        const days = this.getDaysOfMonth(year, monthIndex);
         const weeks = this.groupDaysIntoWeeks(days);
-        const quarter = Math.floor(month / 3) + 1;
+        const quarter = Math.floor(monthIndex / 3) + 1;
 
         return <Month>{
-            monthIndex: month,
+            monthIndex: monthIndex,
             quarter: quarter,
             year: year,
-            name: formatter.format(new Date(year, month)),
+            name: formatter.format(new Date(year, monthIndex)),
             weeks: weeks
         };
     }
 
-    private getDaysOfMonth(year: number, month: number): Day[] {
-        const date = new Date(year, month, 1);
+    private getDaysOfMonth(year: number, monthIndex: number): Day[] {
+        const date = new Date(year, monthIndex, 1);
         const daysList = [];
 
-        while (date.getMonth() === month) {
+        while (date.getMonth() === monthIndex) {
             daysList.push(new Date(date));
             date.setDate(date.getDate() + 1);
         }
@@ -78,7 +79,7 @@ export class DefaultDateRepository implements DateRepository {
 
             if (day.dayOfWeek === DayOfWeek.Sunday) {
                 weeks.push({
-                    weekNumber: this.getWeekNumber(day.completeDate),
+                    weekNumber: getISOWeek(currentWeek[0].completeDate),
                     days: currentWeek
                 });
                 currentWeek = [];
@@ -87,18 +88,12 @@ export class DefaultDateRepository implements DateRepository {
 
         if (currentWeek.length > 0) {
             weeks.push({
-                weekNumber: this.getWeekNumber(currentWeek[0].completeDate),
+                weekNumber: getISOWeek(currentWeek[0].completeDate),
                 days: currentWeek
             });
         }
 
         return weeks;
-    }
-
-    private getWeekNumber(date: Date): number {
-        const startOfYear = new Date(date.getFullYear(), 0, 1);
-        const pastDaysOfYear = (date.getTime() - startOfYear.getTime()) / 86400000;
-        return Math.ceil((pastDaysOfYear + startOfYear.getDay()) / 7);
     }
 
     private getDayOfWeek(value: number): DayOfWeek {
