@@ -1,6 +1,7 @@
 import {NoteAdapter} from 'src/domain/adapters/note.adapter';
 import {Note} from 'src/domain/models/note';
 import {App} from 'obsidian';
+import 'src/extensions/extensions';
 
 export class ObsidianNoteAdapter implements NoteAdapter {
     constructor(
@@ -18,7 +19,7 @@ export class ObsidianNoteAdapter implements NoteAdapter {
 
         return <Note> {
             path: activeFile.path,
-            name: activeFile.name,
+            name: activeFile.name.removeMarkdownExtension(),
             createdOn: new Date(activeFile.stat.ctime)
         };
     }
@@ -32,7 +33,7 @@ export class ObsidianNoteAdapter implements NoteAdapter {
 
         return files.map((file) => <Note>{
            path: file.path,
-           name: file.name,
+           name: file.name.removeMarkdownExtension(),
            createdOn: new Date(file.stat.ctime)
         });
     }

@@ -26,6 +26,32 @@ describe('String.prototype.appendMarkdownExtension', () => {
     });
 });
 
+describe('String.prototype.removeMarkdownExtension', () => {
+    it('should remove .md if present', () => {
+        const filename = 'note.md';
+        const result = filename.removeMarkdownExtension();
+        expect(result).toBe('note');
+    });
+
+    it('should not remove .md if not present', () => {
+        const filename = 'note';
+        const result = filename.removeMarkdownExtension();
+        expect(result).toBe('note');
+    });
+
+    it('should handle empty strings', () => {
+        const filename = '';
+        const result = filename.removeMarkdownExtension();
+        expect(result).toBe('');
+    });
+
+    it('should handle strings with different extensions', () => {
+        const filename = 'note.txt';
+        const result = filename.removeMarkdownExtension();
+        expect(result).toBe('note.txt');
+    });
+});
+
 describe('Date.prototype.isToday', () => {
     it('should return true for todays date', () => {
         const today = new Date();
