@@ -11,6 +11,6 @@ export class DayNoteRepository implements NoteRepository<Day> {
     }
 
     public async getNotesCreatedOn(date: Day): Promise<Note[]> {
-        return await this.noteRepository.getNotesCreatedOn(date.completeDate);
+        return await this.noteRepository.getNotesCreatedOn(date.date);
     }
 }
