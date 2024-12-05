@@ -2,7 +2,8 @@ export interface Day {
     dayOfWeek: DayOfWeek,
     date: number,
     name: string,
-    completeDate: Date
+    completeDate: Date,
+    properties: Property[]
 }
 
 export enum DayOfWeek {
@@ -13,4 +14,10 @@ export enum DayOfWeek {
     Friday = 5,
     Saturday = 6,
     Sunday = 0
+}
+
+export interface Property {}
+
+export interface IndicatorProperty extends Property {
+    hasPeriodicNote: boolean
 }
