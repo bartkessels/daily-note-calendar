@@ -3,7 +3,6 @@ import {AdapterFileService} from 'src/implementation/services/adapter.file-servi
 import {ObsidianFileAdapter} from 'src/plugin/adapters/obsidian.file-adapter';
 import {RepositoryDateManager} from 'src/implementation/managers/repository.date-manager';
 import {DateFnsDateRepository} from 'src/implementation/repositories/date-fns.date.repository';
-import {NoteManager} from 'src/domain/managers/note.manager';
 import {Day} from 'src/domain/models/day';
 import {Week} from 'src/domain/models/week';
 import {Month} from 'src/domain/models/month';
@@ -38,21 +37,20 @@ import {GenericNotesManager} from 'src/implementation/managers/generic.notes-man
 import {GeneralSettings} from 'src/domain/models/settings/general.settings';
 import {GeneralSettingsRepository} from 'src/implementation/repositories/general.settings-repository';
 import {RefreshNotesEvent} from 'src/implementation/events/refresh-notes.event';
-import {PeriodicNoteManager} from 'src/implementation/managers/periodic.note-manager';
 import {PeriodicNoteEvent} from 'src/implementation/events/periodic-note.event';
 import {SelectDayEvent} from 'src/implementation/events/select-day.event';
 import {DefaultVariableBuilder} from 'src/implementation/builders/default.variable-builder';
 import {PeriodicNotePipeline} from 'src/implementation/pipelines/periodic-note.pipeline';
-import {DayVariableParserStep} from 'src/implementation/pipelines/steps/periodic-parser-steps/day.variable-parser.step';
+import {DayVariableParserStep} from 'src/implementation/pipelines/steps/periodic-parser-steps/day-variable-parser.step';
 import {
     WeekVariableParserStep
-} from 'src/implementation/pipelines/steps/periodic-parser-steps/week.variable-parser.step';
+} from 'src/implementation/pipelines/steps/periodic-parser-steps/week-variable-parser.step';
 import {
     MonthVariableParserStep
-} from 'src/implementation/pipelines/steps/periodic-parser-steps/month.variable-parser.step';
+} from 'src/implementation/pipelines/steps/periodic-parser-steps/month-variable-parser.step';
 import {
     YearVariableParserStep
-} from 'src/implementation/pipelines/steps/periodic-parser-steps/year.variable-parser.step';
+} from 'src/implementation/pipelines/steps/periodic-parser-steps/year-variable-parser.step';
 import {TodayVariableParserStep} from 'src/implementation/pipelines/steps/today-variable-parser.step';
 import {TitleVariableParserStep} from 'src/implementation/pipelines/steps/title-variable-parser.step';
 
@@ -98,7 +96,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const selectDayEvent = new SelectDayEvent();
     const generalSettingsRepository = new GeneralSettingsRepository(settingsAdapter);
     const todayVariableParserStep = new TodayVariableParserStep(fileAdapter, variableBuilder, dateParser);
-    const titleVariableParserStep = new TitleVariableParserStep(fileAdapter, noteAdapter, variableBuilder);
+    const titleVariableParserStep = new TitleVariableParserStep(fileAdapter, noteAdapter);
 
     // Daily note dependencies
     const dailyNoteSettingsRepository = new DailyNoteSettingsRepository(settingsAdapter);

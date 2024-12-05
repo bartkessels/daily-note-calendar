@@ -1,4 +1,4 @@
-import {PeriodicVariableParserStep} from 'src/implementation/pipelines/steps/periodic.variable-parser.step';
+import {PeriodicVariableParserStep} from 'src/implementation/pipelines/steps/periodic-variable-parser.step';
 import {DateParser} from 'src/domain/parsers/date.parser';
 import {VariableBuilder} from 'src/domain/builders/variable.builder';
 import {FileAdapter} from 'src/domain/adapters/file.adapter';
@@ -9,7 +9,11 @@ export class WeekVariableParserStep extends PeriodicVariableParserStep<Week> {
         super(fileAdapter, variableBuilder, dateParser);
     }
 
-    protected override getDate(value: Week): Date {
+    protected override getDate(value: Week): Date | null {
+        if (value.days.length === 0) {
+            return null;
+        }
+
         return value.days[0].completeDate;
     }
 }

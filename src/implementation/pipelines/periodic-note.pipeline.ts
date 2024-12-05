@@ -4,7 +4,7 @@ import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {PeriodicNoteSettings} from 'src/domain/models/settings/periodic-note.settings';
 import {NameBuilder} from 'src/domain/builders/name.builder';
 import {FileService} from 'src/domain/services/file.service';
-import {PeriodicVariableParserStep} from 'src/implementation/pipelines/steps/periodic.variable-parser.step';
+import {PeriodicVariableParserStep} from 'src/implementation/pipelines/steps/periodic-variable-parser.step';
 
 export class PeriodicNotePipeline<T, S extends PeriodicNoteSettings> extends Pipeline<T> {
     constructor(

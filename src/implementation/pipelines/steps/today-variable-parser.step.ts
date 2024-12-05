@@ -1,9 +1,9 @@
 import {DateParser} from 'src/domain/parsers/date.parser';
 import {FileAdapter} from 'src/domain/adapters/file.adapter';
 import {VariableBuilder} from 'src/domain/builders/variable.builder';
-import {VariableParserStep} from 'src/domain/pipeline/steps/variable-parser.step';
+import {PostCreateStep} from 'src/domain/pipeline/pipeline';
 
-export class TodayVariableParserStep implements VariableParserStep<any> {
+export class TodayVariableParserStep implements PostCreateStep<any> {
     private readonly variableDeclarationRegex = /{{today:.*?}}/g;
 
     constructor(

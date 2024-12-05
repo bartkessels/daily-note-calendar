@@ -9,7 +9,8 @@ describe('DayNoteRepository', () => {
 
     beforeEach(() => {
         mockNoteAdapter = {
-            getNotesCreatedOn: jest.fn(),
+            getActiveNote: jest.fn(),
+            getNotesCreatedOn: jest.fn()
         };
         repository = new DayNoteRepository(mockNoteAdapter);
     });
