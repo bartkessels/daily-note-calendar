@@ -10,11 +10,16 @@ export class AdapterFileService implements FileService {
 
     }
 
-    public async tryOpenFileWithTemplate(filePath: string, templateFilePath: string): Promise<void> {
+    public async doesFileExist(filePath: string): Promise<boolean> {
+        const completeFilePath = filePath.appendMarkdownExtension()
+        return await this.fileAdapter.doesFileExist(completeFilePath);
+    }
+
+    public async createFileWithTemplate(filePath: string, templateFilePath: string): Promise<void> {
         const completeFilePath = filePath.appendMarkdownExtension()
         const completeTemplateFilePath = templateFilePath.appendMarkdownExtension()
 
-        const fileExists = await this.fileAdapter.doesFileExist(completeFilePath);
+        const fileExists = await this.doesFileExist(completeFilePath);
         const templateFileExists = await this.fileAdapter.doesFileExist(completeTemplateFilePath);
 
         if (!templateFileExists) {
@@ -22,14 +27,12 @@ export class AdapterFileService implements FileService {
         } else if (!fileExists) {
             await this.fileAdapter.createFileFromTemplate(completeFilePath, completeTemplateFilePath);
         }
-
-        await this.fileAdapter.openFile(completeFilePath);
     }
 
     public async tryOpenFile(filePath: string): Promise<void> {
         const completeFilePath = filePath.appendMarkdownExtension()
 
-        const fileExists = await this.fileAdapter.doesFileExist(completeFilePath);
+        const fileExists = await this.doesFileExist(completeFilePath);
 
         if (!fileExists) {
             this.logger.logAndThrow(`File does not exist: ${completeFilePath}`);

@@ -30,7 +30,8 @@ describe('GenericNotesManager', () => {
         selectDayEvent = new SelectDayEvent();
         refreshNotesEvent = new RefreshNotesEvent();
         fileService = {
-            tryOpenFileWithTemplate: jest.fn(),
+            doesFileExist: jest.fn(),
+            createFileWithTemplate: jest.fn(),
             tryOpenFile: jest.fn(),
         } as jest.Mocked<FileService>;
         noteRepository = {

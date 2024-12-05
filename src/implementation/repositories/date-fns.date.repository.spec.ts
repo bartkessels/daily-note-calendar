@@ -124,10 +124,9 @@ describe('DefaultDateRepository', () => {
 
     it('should return week number 1 for the last week of December 2024', () => {
         const year = 2024;
-        const month = 11; // December (0-based index)
+        const month = 11;
         const weeks = repository.getMonth(year, month).weeks;
 
-        // Find the last week of December 2024
         const lastWeek = weeks[weeks.length - 1];
 
         expect(lastWeek.weekNumber).toBe(1);
@@ -135,10 +134,9 @@ describe('DefaultDateRepository', () => {
 
     it('should return week number 1 for the first week of January 2025', () => {
         const year = 2025;
-        const month = 0; // January (0-based index)
+        const month = 0;
         const weeks = repository.getMonth(year, month).weeks;
 
-        // Find the last week of December 2024
         const lastWeek = weeks[0];
 
         expect(lastWeek.weekNumber).toBe(1);

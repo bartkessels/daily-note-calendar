@@ -1,4 +1,5 @@
 export interface FileService {
-    tryOpenFileWithTemplate(filePath: string, templateFilePath: string): Promise<void>;
+    doesFileExist(filePath: string): Promise<boolean>;
+    createFileWithTemplate(filePath: string, templateFilePath: string): Promise<void>;
     tryOpenFile(filePath: string): Promise<void>;
 }
