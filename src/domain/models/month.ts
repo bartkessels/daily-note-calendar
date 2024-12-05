@@ -1,10 +1,10 @@
 import {Week} from 'src/domain/models/week';
+import {Period, PeriodProperty} from 'src/domain/models/period';
 
-export interface Month {
-    monthIndex: number,
+export interface Month extends Period<MonthProperty> {
     quarter: number,
-    year: number,
     name: string,
-    number: number,
     weeks: Week[]
 }
+
+export interface MonthProperty extends PeriodProperty {}

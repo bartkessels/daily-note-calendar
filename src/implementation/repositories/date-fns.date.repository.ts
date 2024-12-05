@@ -17,13 +17,14 @@ export class DateFnsDateRepository implements DateRepository {
 
         return <Day>{
             dayOfWeek: this.getDayOfWeek(date.getDay()),
-            date: date.getDate(),
+            date: date,
             name: formatter.format(date),
-            completeDate: date
+            properties: []
         };
     }
 
     public getYear(year: number): Year {
+        const date = new Date(year, 0);
         const months: Month[] = [];
         const formatter = new Intl.DateTimeFormat(undefined, {
             year: this.yearFormat
@@ -34,9 +35,10 @@ export class DateFnsDateRepository implements DateRepository {
         }
 
         return <Year>{
-            year: year,
-            name: formatter.format(new Date(year, months[0].monthIndex)),
-            months: months
+            date: date,
+            name: formatter.format(date.getMonth()),
+            months: months,
+            properties: []
         };
     }
 
@@ -45,16 +47,17 @@ export class DateFnsDateRepository implements DateRepository {
             month: this.monthFormat
         });
 
+        const date = new Date(year, monthIndex);
         const days = this.getDaysOfMonth(year, monthIndex);
         const weeks = this.groupDaysIntoWeeks(days);
         const quarter = Math.floor(monthIndex / 3) + 1;
 
         return <Month>{
-            monthIndex: monthIndex,
+            date: date,
             quarter: quarter,
-            year: year,
-            name: formatter.format(new Date(year, monthIndex)),
-            weeks: weeks
+            name: formatter.format(date),
+            weeks: weeks,
+            properties: []
         };
     }
 
@@ -76,20 +79,27 @@ export class DateFnsDateRepository implements DateRepository {
 
         days.forEach(day => {
             currentWeek.push(day);
+            const date = day.date;
 
             if (day.dayOfWeek === DayOfWeek.Sunday) {
                 weeks.push({
-                    weekNumber: getISOWeek(currentWeek[0].completeDate),
-                    days: currentWeek
+                    date: date,
+                    weekNumber: getISOWeek(date),
+                    days: currentWeek,
+                    properties: []
                 });
                 currentWeek = [];
             }
         });
 
         if (currentWeek.length > 0) {
+            const date = currentWeek[0].date;
+
             weeks.push({
-                weekNumber: getISOWeek(currentWeek[0].completeDate),
-                days: currentWeek
+                date: date,
+                weekNumber: getISOWeek(date),
+                days: currentWeek,
+                properties: []
             });
         }
 
