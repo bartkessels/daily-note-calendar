@@ -3,7 +3,7 @@ import {Event} from 'src/domain/events/event';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {NameBuilder} from 'src/domain/builders/name.builder';
 import {FileService} from 'src/domain/services/file.service';
-import {PeriodicVariableParserStep} from 'src/implementation/pipelines/steps/periodic-variable-parser.step';
+import {PeriodVariableParserStep} from 'src/implementation/pipelines/steps/period-variable-parser.step';
 import {PeriodicNoteSettings} from 'src/domain/models/settings/periodic-note.settings';
 import {Day, DayOfWeek} from 'src/domain/models/day';
 import {DailyNotesPeriodicNoteSettings} from 'src/domain/models/settings/daily-notes.periodic-note-settings';
@@ -13,7 +13,7 @@ describe('PeriodicNotePipeline', () => {
     let event: Event<Day>;
     let day: Day;
     let fileService: FileService;
-    let variableParserStep: PeriodicVariableParserStep<Day>;
+    let variableParserStep: PeriodVariableParserStep<Day>;
     let settingsRepository: SettingsRepository<DailyNotesPeriodicNoteSettings>;
     let nameBuilder: NameBuilder<Day>;
     let pipeline: PeriodicNotePipeline<Day, DailyNotesPeriodicNoteSettings>;
@@ -33,7 +33,7 @@ describe('PeriodicNotePipeline', () => {
         } as FileService;
         variableParserStep = {
             executePostCreate: jest.fn()
-        } as unknown as PeriodicVariableParserStep<Day>;
+        } as unknown as PeriodVariableParserStep<Day>;
         settingsRepository = {
             storeSettings: jest.fn(),
             getSettings: jest.fn().mockResolvedValue({
