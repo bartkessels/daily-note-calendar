@@ -2,8 +2,9 @@ import {DateParser} from 'src/domain/parsers/date.parser';
 import {FileAdapter} from 'src/domain/adapters/file.adapter';
 import {VariableBuilder} from 'src/domain/builders/variable.builder';
 import {PostCreateStep} from 'src/domain/pipeline/pipeline';
+import {Period} from 'src/domain/models/period';
 
-export abstract class PeriodicVariableParserStep<T> implements PostCreateStep<T> {
+export class PeriodicVariableParserStep<T extends Period<any>> implements PostCreateStep<T> {
     private readonly variableDeclarationRegex = /{{date:.*?}}/g;
 
     protected constructor(
@@ -14,13 +15,11 @@ export abstract class PeriodicVariableParserStep<T> implements PostCreateStep<T>
 
     }
 
-    protected abstract getDate(value: T): Date | null;
-
     public async executePostCreate(filePath: string, value: T): Promise<void> {
         const content = await this.fileAdapter.readFileContents(filePath);
         const updatedContent = content.replace(this.variableDeclarationRegex, (variableDeclaration: string, _: any) => {
             const variable = this.variableBuilder.fromString(variableDeclaration).build();
-            const date = this.getDate(value);
+            const date = value.date;
 
             if (!date) {
                 return variableDeclaration;
