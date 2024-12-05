@@ -106,7 +106,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
 
     new PeriodicNotePipeline(dailyNoteEvent, fileService, dayVariableParser, dailyNoteSettingsRepository, dayNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
-        .registerPostCreateStep(todayVariableParserStep)
+        .registerPostCreateStep(titleVariableParserStep)
         .registerPostCreateStep(todayVariableParserStep);
 
     // Weekly note dependencies
@@ -116,7 +116,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const weekNameBuilder = new WeekNameBuilder(dateParser, logger);
     new PeriodicNotePipeline(weeklyNoteEvent, fileService, weekVariableParser, weeklyNoteSettingsRepository, weekNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
-        .registerPostCreateStep(todayVariableParserStep)
+        .registerPostCreateStep(titleVariableParserStep)
         .registerPostCreateStep(todayVariableParserStep);
 
     // Monthly note dependencies
@@ -126,7 +126,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const monthNameBuilder = new MonthNameBuilder(dateParser, logger);
     new PeriodicNotePipeline(monthlyNoteEvent, fileService, monthVariableParser, monthlyNoteSettingsRepository, monthNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
-        .registerPostCreateStep(todayVariableParserStep)
+        .registerPostCreateStep(titleVariableParserStep)
         .registerPostCreateStep(todayVariableParserStep);
 
     // Quarterly note dependencies
@@ -134,7 +134,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const quarterlyNoteEvent = new PeriodicNoteEvent<Month>();
     new PeriodicNotePipeline(quarterlyNoteEvent, fileService, monthVariableParser, quarterlyNoteSettingsRepository, monthNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
-        .registerPostCreateStep(todayVariableParserStep)
+        .registerPostCreateStep(titleVariableParserStep)
         .registerPostCreateStep(todayVariableParserStep);
 
     // Yearly note dependencies
@@ -144,7 +144,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const yearNameBuilder = new YearNameBuilder(dateParser, logger);
     new PeriodicNotePipeline(yearlyNoteEvent, fileService, yearVariableParser, yearlyNoteSettingsRepository, yearNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
-        .registerPostCreateStep(todayVariableParserStep)
+        .registerPostCreateStep(titleVariableParserStep)
         .registerPostCreateStep(todayVariableParserStep);
 
     const notesRepository = new DayNoteRepository(noteAdapter);

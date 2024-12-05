@@ -4,7 +4,7 @@ import {Note} from 'src/domain/models/note';
 import {NoteAdapter} from 'src/domain/adapters/note.adapter';
 
 export class TitleVariableParserStep implements PostCreateStep<any>, PreCreateStep<any> {
-    private readonly variableDeclarationRegex = /{{title?}}/g;
+    private readonly variableDeclarationRegex = /{{title}}/g;
     private activeNote: Note | null;
 
     constructor(
