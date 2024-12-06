@@ -1,6 +1,6 @@
 export interface Period<P extends PeriodProperty> {
     date: Date,
-    properties: P[]
+    properties: P
 }
 
 export interface PeriodProperty {}

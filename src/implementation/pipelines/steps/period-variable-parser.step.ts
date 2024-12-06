@@ -2,9 +2,9 @@ import {DateParser} from 'src/domain/parsers/date.parser';
 import {FileAdapter} from 'src/domain/adapters/file.adapter';
 import {VariableBuilder} from 'src/domain/builders/variable.builder';
 import {PostCreateStep} from 'src/domain/pipeline/pipeline';
-import {Period} from 'src/domain/models/period';
+import {Period, PeriodProperty} from 'src/domain/models/period';
 
-export class PeriodVariableParserStep<T extends Period<any>> implements PostCreateStep<T> {
+export class PeriodVariableParserStep<T extends Period<PeriodProperty>> implements PostCreateStep<T> {
     private readonly variableDeclarationRegex = /{{date:.*?}}/g;
 
     protected constructor(

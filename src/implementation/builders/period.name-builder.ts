@@ -1,9 +1,9 @@
-import {Period} from 'src/domain/models/period';
+import {Period, PeriodProperty} from 'src/domain/models/period';
 import {NameBuilder} from 'src/domain/builders/name.builder';
 import {DateParser} from 'src/domain/parsers/date.parser';
 import {Logger} from 'src/domain/loggers/logger';
 
-export class PeriodNameBuilder<T extends Period<any>> implements NameBuilder<T> {
+export class PeriodNameBuilder<T extends Period<PeriodProperty>> implements NameBuilder<T> {
     private template?: string;
     private path?: string;
     private value?: T;
