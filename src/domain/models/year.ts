@@ -1,9 +1,7 @@
 import {Month} from 'src/domain/models/month';
-import {Period, PeriodProperty} from 'src/domain/models/period';
+import {Period} from 'src/domain/models/period';
 
-export interface Year extends Period<YearProperty> {
+export interface Year extends Period {
     name: string,
     months: Month[]
 }
-
-export interface YearProperty extends PeriodProperty {}

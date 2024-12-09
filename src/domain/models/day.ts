@@ -1,6 +1,6 @@
-import {Period, PeriodProperty} from 'src/domain/models/period';
+import {Period} from 'src/domain/models/period';
 
-export interface Day extends Period<DayProperty> {
+export interface Day extends Period {
     dayOfWeek: DayOfWeek,
     name: string,
 }
@@ -13,8 +13,4 @@ export enum DayOfWeek {
     Friday = 5,
     Saturday = 6,
     Sunday = 0
-}
-
-export interface DayProperty extends PeriodProperty {
-    hasPeriodicNote: boolean
 }

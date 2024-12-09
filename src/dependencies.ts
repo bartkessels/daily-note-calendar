@@ -37,22 +37,15 @@ import {PeriodicNoteEvent} from 'src/implementation/events/periodic-note.event';
 import {SelectDayEvent} from 'src/implementation/events/select-day.event';
 import {DefaultVariableBuilder} from 'src/implementation/builders/default.variable-builder';
 import {PeriodicNotePipeline} from 'src/implementation/pipelines/periodic-note.pipeline';
-import {DayVariableParserStep} from 'src/implementation/pipelines/steps/periodic-parser-steps/day-variable-parser.step';
-import {
-    WeekVariableParserStep
-} from 'src/implementation/pipelines/steps/periodic-parser-steps/week-variable-parser.step';
-import {
-    MonthVariableParserStep
-} from 'src/implementation/pipelines/steps/periodic-parser-steps/month-variable-parser.step';
-import {
-    YearVariableParserStep
-} from 'src/implementation/pipelines/steps/periodic-parser-steps/year-variable-parser.step';
 import {TodayVariableParserStep} from 'src/implementation/pipelines/steps/today-variable-parser.step';
 import {TitleVariableParserStep} from 'src/implementation/pipelines/steps/title-variable-parser.step';
 import {PeriodNameBuilder} from 'src/implementation/builders/period.name-builder';
+import {ContainsPeriodicNoteEnhancer} from 'src/implementation/enhancers/contains-periodic-note.enhancer';
+import {PeriodVariableParserStep} from 'src/implementation/pipelines/steps/period-variable-parser.step';
+import {DateManager} from 'src/domain/managers/date.manager';
 
 export interface Dependencies {
-    readonly dateManager: RepositoryDateManager;
+    readonly dateManager: DateManager;
     readonly dateParser: DateParser;
     readonly selectDayEvent: Event<Day>;
 
@@ -80,7 +73,6 @@ export interface Dependencies {
 
 export function createDependencies(plugin: Plugin): Dependencies {
     const dateRepository = new DateFnsDateRepository();
-    const dateManager = new RepositoryDateManager(dateRepository);
     const dateParser = new DateFnsDateParser();
     const fileAdapter = new ObsidianFileAdapter(plugin.app.vault, plugin.app.workspace);
     const settingsAdapter = new PluginSettingsAdapter(plugin);
@@ -97,9 +89,10 @@ export function createDependencies(plugin: Plugin): Dependencies {
 
     // Daily note dependencies
     const dailyNoteSettingsRepository = new DailyNoteSettingsRepository(settingsAdapter);
-    const dayVariableParser = new DayVariableParserStep(fileAdapter, variableBuilder, dateParser);
+    const dayVariableParser = new PeriodVariableParserStep<Day>(fileAdapter, variableBuilder, dateParser);
     const dailyNoteEvent = new PeriodicNoteEvent<Day>();
     const dayNameBuilder = new PeriodNameBuilder<Day>(dateParser, logger);
+    const dailyNoteThing = new ContainsPeriodicNoteEnhancer(dailyNoteSettingsRepository, dayNameBuilder, fileAdapter);
     new PeriodicNotePipeline(dailyNoteEvent, fileService, dayVariableParser, dailyNoteSettingsRepository, dayNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
         .registerPostCreateStep(titleVariableParserStep)
@@ -107,7 +100,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
 
     // Weekly note dependencies
     const weeklyNoteSettingsRepository = new WeeklyNoteSettingsRepository(settingsAdapter);
-    const weekVariableParser = new WeekVariableParserStep(fileAdapter, variableBuilder, dateParser);
+    const weekVariableParser = new PeriodVariableParserStep<Week>(fileAdapter, variableBuilder, dateParser);
     const weeklyNoteEvent = new PeriodicNoteEvent<Week>();
     const weekNameBuilder = new PeriodNameBuilder<Week>(dateParser, logger);
     new PeriodicNotePipeline(weeklyNoteEvent, fileService, weekVariableParser, weeklyNoteSettingsRepository, weekNameBuilder)
@@ -117,7 +110,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
 
     // Monthly note dependencies
     const monthlyNoteSettingsRepository = new MonthlyNoteSettingsRepository(settingsAdapter);
-    const monthVariableParser = new MonthVariableParserStep(fileAdapter, variableBuilder, dateParser);
+    const monthVariableParser = new PeriodVariableParserStep<Month>(fileAdapter, variableBuilder, dateParser);
     const monthlyNoteEvent = new PeriodicNoteEvent<Month>();
     const monthNameBuilder = new PeriodNameBuilder<Month>(dateParser, logger);
     new PeriodicNotePipeline(monthlyNoteEvent, fileService, monthVariableParser, monthlyNoteSettingsRepository, monthNameBuilder)
@@ -135,7 +128,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
 
     // Yearly note dependencies
     const yearlyNoteSettingsRepository = new YearlyNoteSettingsRepository(settingsAdapter);
-    const yearVariableParser = new YearVariableParserStep(fileAdapter, variableBuilder, dateParser);
+    const yearVariableParser = new PeriodVariableParserStep<Year>(fileAdapter, variableBuilder, dateParser);
     const yearlyNoteEvent = new PeriodicNoteEvent<Year>();
     const yearNameBuilder = new PeriodNameBuilder<Year>(dateParser, logger);
     new PeriodicNotePipeline(dailyNoteEvent, fileService, dayVariableParser, dailyNoteSettingsRepository, dayNameBuilder)
@@ -156,6 +149,9 @@ export function createDependencies(plugin: Plugin): Dependencies {
         notesRepository,
         generalSettingsRepository
     );
+
+    const dateManager = new RepositoryDateManager(dateRepository);
+        // .registerDayEnhancer(dailyNoteThing);
 
     return {
         dateManager,

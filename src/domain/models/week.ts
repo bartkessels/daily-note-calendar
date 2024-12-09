@@ -1,11 +1,7 @@
 import {Day} from 'src/domain/models/day';
-import {Period, PeriodProperty} from 'src/domain/models/period';
+import {Period} from 'src/domain/models/period';
 
-export interface Week extends Period<WeekProperty> {
+export interface Week extends Period {
     weekNumber: number,
     days: Day[]
-}
-
-export interface WeekProperty extends PeriodProperty {
-    hasNote: boolean
 }

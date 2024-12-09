@@ -1,6 +1,8 @@
-export interface Period<P extends PeriodProperty> {
+export interface Period {
     date: Date,
-    properties: P
+    properties: PeriodProperty
 }
 
-export interface PeriodProperty {}
+export interface PeriodProperty {
+    hasPeriodicNote: boolean
+}
