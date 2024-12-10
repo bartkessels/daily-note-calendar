@@ -18,26 +18,34 @@ export class AdapterFileService implements FileService {
     public async createFileWithTemplate(filePath: string, templateFilePath: string): Promise<void> {
         const completeFilePath = filePath.appendMarkdownExtension()
         const completeTemplateFilePath = templateFilePath.appendMarkdownExtension()
-
         const fileExists = await this.doesFileExist(completeFilePath);
-        const templateFileExists = await this.fileAdapter.doesFileExist(completeTemplateFilePath);
+        const templateFileExists = await this.doesFileExist(completeTemplateFilePath);
 
-        if (!templateFileExists) {
+        if (fileExists) {
+            this.logger.logAndThrow(`File already exists: ${completeFilePath}`);
+        } else if (!templateFileExists) {
             this.logger.logAndThrow(`Template file does not exist: ${completeTemplateFilePath}`);
-        } else if (!fileExists) {
+        }
+
+        try {
             await this.fileAdapter.createFileFromTemplate(completeFilePath, completeTemplateFilePath);
+        } catch (_) {
+            this.logger.logAndThrow(`Error creating file: ${completeFilePath}`);
         }
     }
 
     public async tryOpenFile(filePath: string): Promise<void> {
         const completeFilePath = filePath.appendMarkdownExtension()
-
         const fileExists = await this.doesFileExist(completeFilePath);
 
         if (!fileExists) {
             this.logger.logAndThrow(`File does not exist: ${completeFilePath}`);
         }
 
-        await this.fileAdapter.openFile(completeFilePath);
+        try {
+            await this.fileAdapter.openFile(completeFilePath);
+        } catch (_) {
+            this.logger.logAndThrow(`Error opening file: ${completeFilePath}`);
+        }
     }
 }
