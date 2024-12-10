@@ -11,7 +11,7 @@ export class ObsidianFileAdapter implements FileAdapter {
 
     public async doesFileExist(filePath: string): Promise<boolean> {
         const normalizedPath = this.normalizePath(filePath);
-        return await this.vault.adapter.exists(normalizedPath, false);
+        return await this.vault.adapter.exists(normalizedPath, true);
     }
 
     public async createFileFromTemplate(filePath: string, templateFilePath: string): Promise<string> {

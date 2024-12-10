@@ -54,6 +54,23 @@ describe('AdapterFileService', () => {
         expect(fileAdapter.createFileFromTemplate).not.toHaveBeenCalled();
     });
 
+    it('should throw an error if the file does exist', async () => {
+        fileAdapter.doesFileExist.mockResolvedValueOnce(true).mockResolvedValueOnce(false);
+
+        await expect(service.createFileWithTemplate('path/to/file', 'path/to/template')).rejects.toThrow('File already exists: path/to/file.md');
+
+        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/file.md');
+        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/template.md');
+        expect(fileAdapter.createFileFromTemplate).not.toHaveBeenCalled();
+    });
+
+    it('should throw an error when the adapter throws an error when creating a file', async () => {
+        fileAdapter.doesFileExist.mockResolvedValueOnce(false).mockResolvedValueOnce(true);
+        fileAdapter.createFileFromTemplate.mockRejectedValue(() => new Error('Error creating file'));
+
+        await expect(service.createFileWithTemplate('path/to/file', 'path/to/template')).rejects.toThrow('Error creating file: path/to/file.md');
+    });
+
     it('should open a file if it exists', async () => {
         fileAdapter.doesFileExist.mockResolvedValue(true);
 
@@ -70,5 +87,12 @@ describe('AdapterFileService', () => {
 
         expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('path/to/file.md');
         expect(fileAdapter.openFile).not.toHaveBeenCalled();
+    });
+
+    it('should throw an error when the adapter throws an error when opening the file', async () => {
+        fileAdapter.doesFileExist.mockResolvedValue(true);
+        fileAdapter.openFile.mockRejectedValue(() => new Error('Error opening file'));
+
+        await expect(service.tryOpenFile('path/to/file')).rejects.toThrow('Error opening file: path/to/file.md');
     });
 });
