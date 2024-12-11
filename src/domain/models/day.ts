@@ -5,6 +5,14 @@ export interface Day {
     completeDate: Date
 }
 
+export function dayEquals(dayA?: Day, dayB?: Day): boolean {
+    if (!dayA || !dayB) {
+        return false;
+    }
+
+    return dayA.completeDate.toDateString() === dayB.completeDate.toDateString();
+}
+
 export enum DayOfWeek {
     Monday = 1,
     Tuesday = 2,
