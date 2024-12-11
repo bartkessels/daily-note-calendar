@@ -54,8 +54,6 @@ export const useCalendarViewModel = (): CalendarViewModel => {
         });
     }, [dateManager]);
 
-    const openPeriodicNote(period: Period)
-
     const openYearlyNote = (year?: Year): void => yearlyNoteEvent?.emitEvent(year);
     const openQuarterlyNote = (quarter?: Month): void => quarterlyNoteEvent?.emitEvent(quarter);
     const openMonthlyNote = (month?: Month): void => monthlyNoteEvent?.emitEvent(month);
