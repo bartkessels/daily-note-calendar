@@ -5,6 +5,14 @@ export interface Day extends Period {
     name: string,
 }
 
+export function dayEquals(dayA?: Day, dayB?: Day): boolean {
+    if (!dayA || !dayB) {
+        return false;
+    }
+
+    return dayA.date.toDateString() === dayB.date.toDateString();
+}
+
 export enum DayOfWeek {
     Monday = 1,
     Tuesday = 2,
