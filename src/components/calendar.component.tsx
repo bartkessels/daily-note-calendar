@@ -1,7 +1,9 @@
 import {CalendarHeart, ChevronLeft, ChevronRight} from 'lucide-react';
 import * as React from 'react';
 import {dayEquals, DayOfWeek} from 'src/domain/models/day';
-import {useCalendarViewModel} from 'src/components/calendar.viewmodel';
+import {useCalendarViewModel} from 'src/components/calendar.view-model';
+import {useDayViewModel} from 'src/components/day.view-model';
+import {useMonthViewModel} from 'src/components/month.view-model';
 
 const WEEK_DAYS_ORDER = [
     DayOfWeek.Monday,
@@ -15,12 +17,19 @@ const WEEK_DAYS_ORDER = [
 
 export const CalendarComponent = () => {
     const viewModel = useCalendarViewModel();
+    const dayViewModel = useDayViewModel();
+    const monthViewModel = useMonthViewModel();
+
+    viewModel.init();
+    monthViewModel.init();
+
+    console.log(monthViewModel.viewState);
 
     return (
         <div className="dnc">
             <div className="header">
                 <span className="title">
-                    <h1 onClick={() => viewModel.openMonthlyNote(viewModel.viewState?.currentMonth)}>{viewModel.viewState?.currentMonth?.name}</h1>&nbsp;
+                    <h1 onClick={() => monthViewModel.openMonthlyNote(monthViewModel.viewState?.currentMonth)}>{monthViewModel.viewState?.currentMonth?.name}</h1>&nbsp;
                     <h1 onClick={() => viewModel.openYearlyNote(viewModel.viewState?.currentYear)}>{viewModel.viewState?.currentYear?.name}</h1>&nbsp;
                 </span>
 
@@ -28,23 +37,23 @@ export const CalendarComponent = () => {
                     <ChevronLeft
                         size={18}
                         strokeWidth={1}
-                        onClick={() => viewModel.navigateToPreviousMonth()} />
+                        onClick={() => monthViewModel.navigateToPreviousMonth()} />
                     <CalendarHeart
                         size={18}
                         strokeWidth={1}
-                        onClick={() => viewModel.navigateToCurrentMonth()} />
+                        onClick={() => monthViewModel.navigateToCurrentMonth()} />
                     <ChevronRight
                         size={18}
                         strokeWidth={1}
-                        onClick={() => viewModel.navigateToNextMonth()} />
+                        onClick={() => monthViewModel.navigateToNextMonth()} />
                 </div>
             </div>
 
             <table>
                 <thead>
                 <tr>
-                    <th className="quarter" onClick={() => viewModel.openQuarterlyNote(viewModel.viewState?.currentMonth)}>
-                        {viewModel.viewState?.currentMonth?.quarter}
+                    <th className="quarter" onClick={() => viewModel.openQuarterlyNote(monthViewModel.viewState?.currentMonth)}>
+                        {monthViewModel.viewState?.currentMonth?.quarter}
                     </th>
                     <th>Mon</th>
                     <th>Tue</th>
@@ -56,7 +65,7 @@ export const CalendarComponent = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {viewModel.viewState?.currentMonth?.weeks.map((week, weekIndex) => (
+                {monthViewModel.viewState?.currentMonth?.weeks.map((week, weekIndex) => (
                     <tr key={weekIndex}>
                         <td
                             className="weekNumber"
@@ -70,7 +79,7 @@ export const CalendarComponent = () => {
                             return (
                                 <td key={dayOfWeekIndex}
                                     id={isToday ? 'today': ''}
-                                    onClick={() => viewModel.openDailyNote(day)}
+                                    onClick={() => dayViewModel.openDailyNote(day)}
                                     className={isSelected ? 'selected-day' : '' }>{day?.name}</td>
                             )
                         })}

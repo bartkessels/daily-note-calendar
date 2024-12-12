@@ -16,10 +16,10 @@ export class DateFnsDateRepository implements DateRepository {
         });
 
         return <Day>{
+            name: formatter.format(date),
             dayOfWeek: this.getDayOfWeek(date.getDay()),
             date: date,
-            name: formatter.format(date),
-            properties: []
+            properties: {}
         };
     }
 
@@ -35,10 +35,10 @@ export class DateFnsDateRepository implements DateRepository {
         }
 
         return <Year>{
-            date: date,
             name: formatter.format(date.getMonth()),
             months: months,
-            properties: []
+            date: date,
+            properties: {}
         };
     }
 
@@ -53,11 +53,11 @@ export class DateFnsDateRepository implements DateRepository {
         const quarter = Math.floor(monthIndex / 3) + 1;
 
         return <Month>{
-            date: date,
             quarter: quarter,
             name: formatter.format(date),
             weeks: weeks,
-            properties: []
+            date: date,
+            properties: {}
         };
     }
 
@@ -82,28 +82,26 @@ export class DateFnsDateRepository implements DateRepository {
             const date = day.date;
 
             if (day.dayOfWeek === DayOfWeek.Sunday) {
-                weeks.push({
-                    date: date,
-                    weekNumber: getISOWeek(date),
-                    days: currentWeek,
-                    properties: []
-                });
+                weeks.push(this.getWeek(date, currentWeek));
                 currentWeek = [];
             }
         });
 
         if (currentWeek.length > 0) {
             const date = currentWeek[0].date;
-
-            weeks.push({
-                date: date,
-                weekNumber: getISOWeek(date),
-                days: currentWeek,
-                properties: []
-            });
+            weeks.push(this.getWeek(date, currentWeek));
         }
 
         return weeks;
+    }
+
+    private getWeek(date: Date, days: Day[]): Week {
+        return {
+            date: date,
+            weekNumber: getISOWeek(date),
+            days: days,
+            properties: { hasPeriodicNote: false }
+        };
     }
 
     private getDayOfWeek(value: number): DayOfWeek {
