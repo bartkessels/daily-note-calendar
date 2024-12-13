@@ -4,7 +4,7 @@ import {VariableBuilder} from 'src/domain/builders/variable.builder';
 import {PostCreateStep} from 'src/domain/pipeline/pipeline';
 
 export class TodayVariableParserStep implements PostCreateStep<any> {
-    private readonly variableDeclarationRegex = /{{today:.*?}}/g;
+    private readonly variableDeclarationRegex = /{{today.*}}/g;
 
     constructor(
         private readonly fileAdapter: FileAdapter,

@@ -2,9 +2,10 @@ import {DateParser} from 'src/domain/parsers/date.parser';
 import {FileAdapter} from 'src/domain/adapters/file.adapter';
 import {VariableBuilder} from 'src/domain/builders/variable.builder';
 import {PostCreateStep} from 'src/domain/pipeline/pipeline';
+import {CalculusOperator} from 'src/domain/models/variable';
 
 export abstract class PeriodicVariableParserStep<T> implements PostCreateStep<T> {
-    private readonly variableDeclarationRegex = /{{date:.*?}}/g;
+    private readonly variableDeclarationRegex = /{{date.*}}/g;
 
     protected constructor(
         private readonly fileAdapter: FileAdapter,
@@ -26,7 +27,7 @@ export abstract class PeriodicVariableParserStep<T> implements PostCreateStep<T>
                 return variableDeclaration;
             }
 
-            return this.dateParser.parse(date, variable.template!);
+            return this.dateParser.parse(date.calculate(variable.calculus), variable.template!);
         });
 
         await this.fileAdapter.writeFileContents(filePath, updatedContent);
