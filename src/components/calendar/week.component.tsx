@@ -1,40 +1,28 @@
 import {Week} from 'src/domain/models/week';
-import {DayComponent} from 'src/components/calendar/day.component';
-import {DayOfWeek} from 'src/domain/models/day';
+import {DayComponent, DayProps} from 'src/components/calendar/day.component';
 import * as React from 'react';
-import { getWeeklyNoteEvent } from 'src/components/providers/weekly-note-event.context';
+import {DayViewModel} from 'src/components/calendar/day.view-model';
 
-interface WeekProps {
+export interface WeekProps {
     week?: Week;
+    viewModel: WeekViewModel;
+    dayViewModel: DayViewModel;
 }
 
-const WEEK_DAYS_ORDER = [
-    DayOfWeek.Monday,
-    DayOfWeek.Tuesday,
-    DayOfWeek.Wednesday,
-    DayOfWeek.Thursday,
-    DayOfWeek.Friday,
-    DayOfWeek.Saturday,
-    DayOfWeek.Sunday
-];
-
-export const WeekComponent = ({ week }: WeekProps) => {
-    const weeklyNoteEvent = getWeeklyNoteEvent();
-
-    const sortedDays = WEEK_DAYS_ORDER.map((dayOfWeek) =>
-        week?.days.find((day) => day.date.getDay() === dayOfWeek
-    ));
+export const WeekComponent = ({ week, viewModel, dayViewModel }: WeekProps) => {
+    const sortedDays = viewModel.sortDays(week);
 
     return (
         <tr>
             <td
                 className="weekNumber"
                 key={week?.weekNumber}
-                onClick={() => weeklyNoteEvent?.emitEvent(week)}
+                onClick={() => viewModel.openWeeklyNote(week)}
             >{week?.weekNumber}</td>
 
-            {sortedDays.map((day, dayIndex) =>
-                <DayComponent key={dayIndex} day={day} />)}
+            {sortedDays.map((day, dayIndex) => {
+                return (<DayComponent key={dayIndex} day={day} viewModel={dayViewModel}/>);
+            })}
         </tr>
     );
 }

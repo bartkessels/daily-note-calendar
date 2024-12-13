@@ -35,7 +35,7 @@ export class DateFnsDateRepository implements DateRepository {
         }
 
         return <Year>{
-            name: formatter.format(date.getMonth()),
+            name: formatter.format(date),
             months: months,
             date: date,
             properties: {}
