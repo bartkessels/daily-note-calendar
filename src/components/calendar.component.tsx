@@ -1,23 +1,18 @@
 import * as React from 'react';
 import {useCalendarViewModel} from 'src/components/calendar.view-model';
-import {useDayViewModel} from 'src/components/calendar/day.view-model';
-import {useWeekViewModel} from 'src/components/calendar/week.view-model';
 import {MonthComponent} from 'src/components/calendar/month.component';
-import {useHeadingViewModel} from 'src/components/calendar/heading.view-model';
 import {HeadingComponent} from 'src/components/calendar/heading.component';
+import {getQuarterlyNoteEvent} from 'src/components/providers/quarterly-note-event.context';
 
 export const CalendarComponent = () => {
     const viewModel = useCalendarViewModel();
-    const dayViewModel = useDayViewModel();
-    const weekViewModel = useWeekViewModel();
-    const headingViewModel = useHeadingViewModel();
+    const quarterlyNoteEvent = getQuarterlyNoteEvent();
 
     return (
         <div className="dnc">
             <HeadingComponent
                 month={viewModel.viewState?.currentMonth}
                 year={viewModel.viewState?.currentYear}
-                viewModel={headingViewModel}
                 navigateToPreviousMonth={viewModel.navigateToPreviousMonth}
                 navigateToCurrentMonth={viewModel.navigateToCurrentMonth}
                 navigateToNextMonth={viewModel.navigateToNextMonth} />
@@ -26,8 +21,8 @@ export const CalendarComponent = () => {
                 <thead>
                 <tr>
                     <th className="quarter"
-                        onClick={() => viewModel.openQuarterlyNote(viewModel.viewState?.currentMonth)}>
-                        Q{viewModel.viewState?.currentMonth?.quarter}
+                        onClick={() => quarterlyNoteEvent?.emitEvent(viewModel.viewState?.currentMonth?.month)}>
+                        Q{viewModel.viewState?.currentMonth?.month?.quarter}
                     </th>
                     <th>Mon</th>
                     <th>Tue</th>
@@ -39,10 +34,7 @@ export const CalendarComponent = () => {
                 </tr>
                 </thead>
                 <tbody>
-                    <MonthComponent
-                        month={viewModel.viewState?.currentMonth}
-                        weekViewModel={weekViewModel}
-                        dayViewModel={dayViewModel} />
+                    <MonthComponent month={viewModel.viewState?.currentMonth} />
                 </tbody>
             </table>
         </div>

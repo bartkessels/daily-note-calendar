@@ -1,21 +1,27 @@
+import React from 'react';
+import {DayUiModel} from 'src/components/day.ui-model';
+import {getSelectDayEvent} from 'src/components/providers/select-day-event.context';
+import {getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
 import {Day} from 'src/domain/models/day';
-import React, {useMemo} from 'react';
-import {DayViewModel, useDayViewModel} from 'src/components/calendar/day.view-model';
 
 interface DayProps {
-    day?: Day;
-    viewModel: DayViewModel;
+    day?: DayUiModel;
 }
 
-export const DayComponent = ({ day, viewModel }: DayProps) => {
-    const isToday = viewModel.isToday(day);
-    const isSelected = viewModel.isSelected(day);
+export const DayComponent = ({ day }: DayProps) => {
+    const selectDayEvent = getSelectDayEvent();
+    const dailyNoteEvent = getDailyNoteEvent();
+
+    const openDailyNote = (day?: Day): void => {
+        selectDayEvent?.emitEvent(day);
+        dailyNoteEvent?.emitEvent(day);
+    };
 
     return (
         <td
-            id={isToday ? 'today' : ''}
-            className={isSelected ? 'selected-day' : ''}
-            onClick={() => viewModel.openDailyNote(day)}
-        >{day?.name}</td>
+            id={day?.isToday ? 'today' : ''}
+            className={day?.isSelected ? 'selected-day' : ''}
+            onClick={() => openDailyNote(day?.currentDay)}
+        >{day?.currentDay?.name}</td>
     )
 };
