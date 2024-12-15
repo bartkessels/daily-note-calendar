@@ -43,6 +43,8 @@ import {PeriodNameBuilder} from 'src/implementation/builders/period.name-builder
 import {ContainsPeriodicNoteEnhancer} from 'src/implementation/enhancers/contains-periodic-note.enhancer';
 import {PeriodVariableParserStep} from 'src/implementation/pipelines/steps/period-variable-parser.step';
 import {DateManager} from 'src/domain/managers/date.manager';
+import {CalendarUiModelEnhancer} from 'src/components/enhancers/calendar.ui-model.enhancer';
+import {DayUiModelEnhancer} from 'src/components/enhancers/day.ui-model.enhancer';
 
 export interface Dependencies {
     readonly dateManager: DateManager;
@@ -69,6 +71,8 @@ export interface Dependencies {
 
     readonly yearlyNoteEvent: Event<Year>;
     readonly yearlyNoteSettingsRepository: SettingsRepository<YearlyNotesPeriodicNoteSettings>;
+
+    readonly uiModelEnhancer: CalendarUiModelEnhancer;
 }
 
 export function createDependencies(plugin: Plugin): Dependencies {
@@ -151,7 +155,9 @@ export function createDependencies(plugin: Plugin): Dependencies {
     );
 
     const dateManager = new RepositoryDateManager(dateRepository);
-        // .registerDayEnhancer(dailyNoteThing);
+    const dayUiModelEnhancer = new DayUiModelEnhancer(dailyNoteSettingsRepository, dayNameBuilder, fileAdapter);
+    const weekUiModelEnhancer = new DayUiModelEnhancer(weeklyNoteSettingsRepository, weekNameBuilder, fileAdapter);
+    const uiModelEnhancer = new CalendarUiModelEnhancer(dayUiModelEnhancer, weekUiModelEnhancer);
 
     return {
         dateManager,
@@ -178,5 +184,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
 
         yearlyNoteEvent,
         yearlyNoteSettingsRepository,
+
+        uiModelEnhancer
     };
 }

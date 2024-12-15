@@ -16,18 +16,7 @@ export class CalendarUiModelEnhancer implements Enhancer<CalendarUiModel> {
             return calendar;
         }
 
-        const enhancedWeeks = await Promise.all(calendar.currentMonth?.weeks.map(async (week) => {
-            const enhancedWeek = await this.weekEnhancer.enhance(week);
-
-            if (!enhancedWeek?.days) {
-                return enhancedWeek;
-            }
-
-            return await Promise.all(enhancedWeek.days.map(async (day) => {
-                return await this.dayEnhancer.enhance(day);
-            })) as DayUiModel[];
-        })) as WeekUiModel[];
-
+        const enhancedWeeks = await this.enhanceWeeks(calendar.currentMonth.weeks);
         return {
             ...calendar,
             currentMonth: {
@@ -35,5 +24,29 @@ export class CalendarUiModelEnhancer implements Enhancer<CalendarUiModel> {
                 weeks: enhancedWeeks
             }
         };
+    }
+
+    private async enhanceWeeks(weeks: WeekUiModel[]): Promise<WeekUiModel[]> {
+        let enhancedWeeks = [];
+
+        for (const week of weeks) {
+            let enhancedWeek = await this.weekEnhancer.enhance(week);
+            enhancedWeek.days = await this.enhanceDays(week.days);
+
+            enhancedWeeks.push(enhancedWeek);
+        }
+
+        return enhancedWeeks;
+    }
+
+    private async enhanceDays(days: DayUiModel[]): Promise<DayUiModel[]> {
+        let enhancedDays = [];
+
+        for (const day of days) {
+            const enhancedDay = await this.dayEnhancer.enhance(day);
+            enhancedDays.push(enhancedDay);
+        }
+
+        return enhancedDays;
     }
 }
