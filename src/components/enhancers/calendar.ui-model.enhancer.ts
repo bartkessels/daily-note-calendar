@@ -17,6 +17,7 @@ export class CalendarUiModelEnhancer implements Enhancer<CalendarUiModel> {
         }
 
         const enhancedWeeks = await this.enhanceWeeks(calendar.currentMonth.weeks);
+
         return {
             ...calendar,
             currentMonth: {
@@ -31,9 +32,14 @@ export class CalendarUiModelEnhancer implements Enhancer<CalendarUiModel> {
 
         for (const week of weeks) {
             let enhancedWeek = await this.weekEnhancer.enhance(week);
-            enhancedWeek.days = await this.enhanceDays(week.days);
 
-            enhancedWeeks.push(enhancedWeek);
+            if (enhancedWeek) {
+                enhancedWeek.days = await this.enhanceDays(week.days);
+                enhancedWeeks.push(enhancedWeek);
+            } else {
+                console.log(week);
+                enhancedWeeks.push(week);
+            }
         }
 
         return enhancedWeeks;
@@ -44,7 +50,10 @@ export class CalendarUiModelEnhancer implements Enhancer<CalendarUiModel> {
 
         for (const day of days) {
             const enhancedDay = await this.dayEnhancer.enhance(day);
-            enhancedDays.push(enhancedDay);
+
+            if (enhancedDay) {
+                enhancedDays.push(enhancedDay);
+            }
         }
 
         return enhancedDays;

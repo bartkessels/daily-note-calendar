@@ -26,7 +26,7 @@ export class WeekUiModelEnhancer implements Enhancer<WeekUiModel> {
             this.settings = await this.settingsRepository.getSettings();
         }
 
-        return this.enhanceHasNote(week, week.week, this.settings);
+        return await this.enhanceHasNote(week, week.week, this.settings);
     }
 
     private async enhanceHasNote(model: WeekUiModel, week: Week, settings: WeeklyNotesPeriodicNoteSettings): Promise<WeekUiModel> {

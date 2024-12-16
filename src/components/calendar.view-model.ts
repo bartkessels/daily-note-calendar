@@ -21,16 +21,17 @@ export const useCalendarViewModel = (): CalendarViewModel => {
     const dateManager = useDateManager();
     const uiModelEnhancer = getCalendarUiModelEnhancer();
     const [viewState, setViewState] = React.useState<CalendarViewState>();
-    const [selectedMonth, setSelectedMonth] = React.useState<Month>(dateManager?.getCurrentMonth());
-    const [selectedYear, setSelectedYear] = React.useState<Year>(dateManager?.getCurrentYear());
-    const [selectedDay, setSelectedDay] = React.useState<Day>(dateManager?.getCurrentDay());
+    const [selectedMonth, setSelectedMonth] = React.useState(dateManager?.getCurrentMonth());
+    const [selectedYear, setSelectedYear] = React.useState(dateManager?.getCurrentYear());
+    const [selectedDay, setSelectedDay] = React.useState(dateManager?.getCurrentDay());
 
     const selectDayEvent = getSelectDayEvent();
     const dailyNoteEvent = getDailyNoteEvent();
 
     React.useEffect(() => {
         const updateUiModel = async (): Promise<void> => {
-            const uiModel = createCalendarUiModel(selectedYear, createMonthUiModel(selectedMonth, selectedDay));
+            const monthUiModel = createMonthUiModel(selectedMonth, selectedDay);
+            const uiModel = createCalendarUiModel(selectedYear, monthUiModel);
             const enhancedUiModel = await uiModelEnhancer?.enhance(uiModel);
 
             setViewState({
@@ -63,8 +64,11 @@ export const useCalendarViewModel = (): CalendarViewModel => {
 
     const navigateToMonth = (month?: Month): void => {
         const year = dateManager?.getYear(month);
-        setSelectedMonth(month);
-        setSelectedYear(year);
+
+        if (month && year) {
+            setSelectedMonth(month);
+            setSelectedYear(year);
+        }
     };
 
     return <CalendarViewModel>{

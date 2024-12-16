@@ -18,6 +18,7 @@
 }
 
 .dnc th, .dnc td {
+    vertical-align: text-top;
     text-align: center;
     width: 0.45em;
     height: 0.45em;

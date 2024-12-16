@@ -8,7 +8,7 @@ export interface CalendarUiModel {
     currentYear?: Year;
 }
 
-export function createCalendarUiModel(currentYear?: Year, currentMonth?: Month, selectedDay?: Day): CalendarUiModel {
+export function createCalendarUiModel(currentYear?: Year, currentMonth?: MonthUiModel): CalendarUiModel {
     return <CalendarUiModel>{
         currentYear: currentYear,
         currentMonth: currentMonth

@@ -17,9 +17,9 @@ export const WeekComponent = ({week}: WeekProps) => {
         <tr>
             <td
                 className="weekNumber"
-                key={week?.week.weekNumber}
+                key={week?.week?.weekNumber}
                 onClick={() => weeklyNoteEvent?.emitEvent(week?.week)}
-            >{week?.week.weekNumber}</td>
+            >{week?.week?.weekNumber}</td>
 
             {sortedDays.map((day, dayIndex) =>
                 <DayComponent key={dayIndex} day={day}/>

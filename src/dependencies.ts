@@ -45,6 +45,7 @@ import {PeriodVariableParserStep} from 'src/implementation/pipelines/steps/perio
 import {DateManager} from 'src/domain/managers/date.manager';
 import {CalendarUiModelEnhancer} from 'src/components/enhancers/calendar.ui-model.enhancer';
 import {DayUiModelEnhancer} from 'src/components/enhancers/day.ui-model.enhancer';
+import {WeekUiModelEnhancer} from 'src/components/enhancers/week.ui-model.enhancer';
 
 export interface Dependencies {
     readonly dateManager: DateManager;
@@ -156,7 +157,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
 
     const dateManager = new RepositoryDateManager(dateRepository);
     const dayUiModelEnhancer = new DayUiModelEnhancer(dailyNoteSettingsRepository, dayNameBuilder, fileAdapter);
-    const weekUiModelEnhancer = new DayUiModelEnhancer(weeklyNoteSettingsRepository, weekNameBuilder, fileAdapter);
+    const weekUiModelEnhancer = new WeekUiModelEnhancer(weeklyNoteSettingsRepository, weekNameBuilder, fileAdapter);
     const uiModelEnhancer = new CalendarUiModelEnhancer(dayUiModelEnhancer, weekUiModelEnhancer);
 
     return {
