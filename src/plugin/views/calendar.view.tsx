@@ -19,7 +19,9 @@ import {NoteEventContext} from 'src/components/providers/note-event.context';
 import {Note} from 'src/domain/models/note';
 import {RefreshNotesEventContext} from 'src/components/providers/refresh-notes-event.context';
 import {SelectDayEventContext} from 'src/components/providers/select-day-event.context';
-import {CalendarUiModelEnhancerContext} from 'src/components/providers/calendar-ui-model-enhancer.context';
+import {CalendarEnhancerContext} from 'src/components/providers/calendar-enhancer.context';
+import {Enhancer} from 'src/domain/enhancers/enhancer';
+import {CalendarUiModel} from 'src/components/calendar.ui-model';
 
 export class CalendarView extends ItemView {
     public static VIEW_TYPE = 'daily-note-calendar';
@@ -37,7 +39,7 @@ export class CalendarView extends ItemView {
         private readonly monthlyNoteEvent: Event<Month>,
         private readonly weeklyNoteEvent: Event<Week>,
         private readonly dailyNoteEvent: Event<Day>,
-        private readonly uiModelEnhancer: CalendarUiModelEnhancer
+        private readonly calendarEnhancer: Enhancer<CalendarUiModel>
     ) {
         super(leaf);
     }
@@ -64,9 +66,9 @@ export class CalendarView extends ItemView {
                                 <WeeklyNoteEventContext.Provider value={this.weeklyNoteEvent}>
                                     <SelectDayEventContext.Provider value={this.selectDayEvent}>
                                         <DateManagerContext.Provider value={this.dateManager}>
-                                            <CalendarUiModelEnhancerContext.Provider value={this.uiModelEnhancer}>
+                                            <CalendarEnhancerContext.Provider value={this.calendarEnhancer}>
                                                 <CalendarComponent/>
-                                            </CalendarUiModelEnhancerContext.Provider>
+                                            </CalendarEnhancerContext.Provider>
                                         </DateManagerContext.Provider>
                                     </SelectDayEventContext.Provider>
                                 </WeeklyNoteEventContext.Provider>

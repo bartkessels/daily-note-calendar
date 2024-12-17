@@ -6,7 +6,7 @@ import {createMonthUiModel, MonthUiModel} from 'src/components/month.ui-model';
 import {Day} from 'src/domain/models/day';
 import {getSelectDayEvent} from 'src/components/providers/select-day-event.context';
 import {getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
-import {getCalendarUiModelEnhancer} from 'src/components/providers/calendar-ui-model-enhancer.context';
+import {useCalenderEnhancer} from 'src/components/providers/calendar-enhancer.context';
 import {createCalendarUiModel} from 'src/components/calendar.ui-model';
 
 export interface CalendarViewModel {
@@ -19,7 +19,7 @@ export interface CalendarViewModel {
 
 export const useCalendarViewModel = (): CalendarViewModel => {
     const dateManager = useDateManager();
-    const uiModelEnhancer = getCalendarUiModelEnhancer();
+    const calendarEnhancer = useCalenderEnhancer();
     const [viewState, setViewState] = React.useState<CalendarViewState>();
     const [selectedMonth, setSelectedMonth] = React.useState(dateManager?.getCurrentMonth());
     const [selectedYear, setSelectedYear] = React.useState(dateManager?.getCurrentYear());
@@ -32,7 +32,7 @@ export const useCalendarViewModel = (): CalendarViewModel => {
         const updateUiModel = async (): Promise<void> => {
             const monthUiModel = createMonthUiModel(selectedMonth, selectedDay);
             const uiModel = createCalendarUiModel(selectedYear, monthUiModel);
-            const enhancedUiModel = await uiModelEnhancer?.enhance(uiModel);
+            const enhancedUiModel = await calendarEnhancer?.withValue(uiModel).build();
 
             setViewState({
                 ...viewState,
@@ -42,7 +42,7 @@ export const useCalendarViewModel = (): CalendarViewModel => {
         }
 
         updateUiModel().catch(_ => {});
-    }, [dateManager, uiModelEnhancer, selectedYear, selectedMonth, selectedDay]);
+    }, [dateManager, calendarEnhancer, selectedYear, selectedMonth, selectedDay]);
 
     selectDayEvent?.onEvent('CalendarViewModel', (day) => setSelectedDay(day));
     dailyNoteEvent?.onEvent('CalendarViewModel', (day) => setSelectedDay(day));

@@ -18,8 +18,7 @@ export class DateFnsDateRepository implements DateRepository {
         return <Day>{
             name: formatter.format(date),
             dayOfWeek: this.getDayOfWeek(date.getDay()),
-            date: date,
-            properties: {}
+            date: date
         };
     }
 
@@ -37,8 +36,7 @@ export class DateFnsDateRepository implements DateRepository {
         return <Year>{
             name: formatter.format(date),
             months: months,
-            date: date,
-            properties: {}
+            date: date
         };
     }
 
@@ -56,8 +54,7 @@ export class DateFnsDateRepository implements DateRepository {
             quarter: quarter,
             name: formatter.format(date),
             weeks: weeks,
-            date: date,
-            properties: {}
+            date: date
         };
     }
 
@@ -99,8 +96,7 @@ export class DateFnsDateRepository implements DateRepository {
         return {
             date: date,
             weekNumber: getISOWeek(date),
-            days: days,
-            properties: { hasPeriodicNote: false }
+            days: days
         };
     }
 

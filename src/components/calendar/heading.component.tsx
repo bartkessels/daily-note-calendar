@@ -20,7 +20,6 @@ export const HeadingComponent = ({
     navigateToNextMonth,
     navigateToCurrentMonth
 }: HeadingProps) => {
-
     const monthlyNoteEvent = getMonthlyNoteEvent();
     const yearlyNoteEvent = getYearlyNoteEvent();
 

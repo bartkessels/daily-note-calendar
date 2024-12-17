@@ -3,7 +3,7 @@ import {DayUiModel} from 'src/components/day.ui-model';
 import {getSelectDayEvent} from 'src/components/providers/select-day-event.context';
 import {getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
 import {Day} from 'src/domain/models/day';
-import {Circle, CircleCheckIcon, CircleDot, Dot} from 'lucide-react';
+import {Dot} from 'lucide-react';
 
 interface DayProps {
     day?: DayUiModel;

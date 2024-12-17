@@ -40,12 +40,12 @@ import {PeriodicNotePipeline} from 'src/implementation/pipelines/periodic-note.p
 import {TodayVariableParserStep} from 'src/implementation/pipelines/steps/today-variable-parser.step';
 import {TitleVariableParserStep} from 'src/implementation/pipelines/steps/title-variable-parser.step';
 import {PeriodNameBuilder} from 'src/implementation/builders/period.name-builder';
-import {ContainsPeriodicNoteEnhancer} from 'src/implementation/enhancers/contains-periodic-note.enhancer';
 import {PeriodVariableParserStep} from 'src/implementation/pipelines/steps/period-variable-parser.step';
 import {DateManager} from 'src/domain/managers/date.manager';
-import {CalendarUiModelEnhancer} from 'src/components/enhancers/calendar.ui-model.enhancer';
-import {DayUiModelEnhancer} from 'src/components/enhancers/day.ui-model.enhancer';
-import {WeekUiModelEnhancer} from 'src/components/enhancers/week.ui-model.enhancer';
+import {CalendarUiModel} from 'src/components/calendar.ui-model';
+import { Enhancer } from './domain/enhancers/enhancer';
+import {CalendarDayEnhancerStep} from 'src/implementation/enhancers/steps/calendar-day.enhancer-step';
+import {CalendarWeekEnhancerStep} from 'src/implementation/enhancers/steps/calendar-week.enhancer-step';
 
 export interface Dependencies {
     readonly dateManager: DateManager;
@@ -73,11 +73,12 @@ export interface Dependencies {
     readonly yearlyNoteEvent: Event<Year>;
     readonly yearlyNoteSettingsRepository: SettingsRepository<YearlyNotesPeriodicNoteSettings>;
 
-    readonly uiModelEnhancer: CalendarUiModelEnhancer;
+    readonly calendarEnhancer: Enhancer<CalendarUiModel>;
 }
 
 export function createDependencies(plugin: Plugin): Dependencies {
     const dateRepository = new DateFnsDateRepository();
+    const dateManager = new RepositoryDateManager(dateRepository);
     const dateParser = new DateFnsDateParser();
     const fileAdapter = new ObsidianFileAdapter(plugin.app.vault, plugin.app.workspace);
     const settingsAdapter = new PluginSettingsAdapter(plugin);
@@ -97,7 +98,6 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const dayVariableParser = new PeriodVariableParserStep<Day>(fileAdapter, variableBuilder, dateParser);
     const dailyNoteEvent = new PeriodicNoteEvent<Day>();
     const dayNameBuilder = new PeriodNameBuilder<Day>(dateParser, logger);
-    const dailyNoteThing = new ContainsPeriodicNoteEnhancer(dailyNoteSettingsRepository, dayNameBuilder, fileAdapter);
     new PeriodicNotePipeline(dailyNoteEvent, fileService, dayVariableParser, dailyNoteSettingsRepository, dayNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
         .registerPostCreateStep(titleVariableParserStep)
@@ -155,10 +155,12 @@ export function createDependencies(plugin: Plugin): Dependencies {
         generalSettingsRepository
     );
 
-    const dateManager = new RepositoryDateManager(dateRepository);
-    const dayUiModelEnhancer = new DayUiModelEnhancer(dailyNoteSettingsRepository, dayNameBuilder, fileAdapter);
-    const weekUiModelEnhancer = new WeekUiModelEnhancer(weeklyNoteSettingsRepository, weekNameBuilder, fileAdapter);
-    const uiModelEnhancer = new CalendarUiModelEnhancer(dayUiModelEnhancer, weekUiModelEnhancer);
+
+    const dayEnhancerStep = new CalendarDayEnhancerStep(dailyNoteSettingsRepository, dayNameBuilder, fileAdapter);
+    const weekEnhancerStep = new CalendarWeekEnhancerStep(weeklyNoteSettingsRepository, weekNameBuilder, fileAdapter);
+    const calendarEnhancer = new Enhancer<CalendarUiModel>()
+        .withStep(dayEnhancerStep)
+        .withStep(weekEnhancerStep);
 
     return {
         dateManager,
@@ -186,6 +188,6 @@ export function createDependencies(plugin: Plugin): Dependencies {
         yearlyNoteEvent,
         yearlyNoteSettingsRepository,
 
-        uiModelEnhancer
+        calendarEnhancer
     };
 }
