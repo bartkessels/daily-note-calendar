@@ -1,12 +1,10 @@
-import React from 'react';
+import React, {ReactElement} from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MonthComponent } from './month.component';
 import {createMonthUiModel, MonthUiModel} from 'src/components/month.ui-model';
 import {Month} from 'src/domain/models/month';
 import 'src/extensions/extensions';
-
-jest.mock('src/components/calendar/week.component');
 
 describe('MonthComponent', () => {
     let month: Month;
@@ -35,10 +33,6 @@ describe('MonthComponent', () => {
         uiModel = createMonthUiModel(month);
     });
 
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-
     it('displays all weeks of the month', () => {
         render(setupContent(uiModel));
 
@@ -52,7 +46,7 @@ describe('MonthComponent', () => {
     });
 });
 
-function setupContent(month: MonthUiModel) {
+function setupContent(month: MonthUiModel): ReactElement {
     return (
         <table>
             <tbody>

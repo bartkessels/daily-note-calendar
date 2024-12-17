@@ -1,7 +1,5 @@
 import {Year} from 'src/domain/models/year';
 import {MonthUiModel} from 'src/components/month.ui-model';
-import {Month} from 'src/domain/models/month';
-import {Day} from 'src/domain/models/day';
 
 export interface CalendarUiModel {
     currentMonth?: MonthUiModel;
