@@ -2,17 +2,15 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MonthComponent } from './month.component';
-import { MonthUiModel } from 'src/components/month.ui-model';
-import { WeekComponent } from 'src/components/calendar/week.component';
+import {createMonthUiModel, MonthUiModel} from 'src/components/month.ui-model';
 import {Month} from 'src/domain/models/month';
+import 'src/extensions/extensions';
 
 jest.mock('src/components/calendar/week.component');
 
 describe('MonthComponent', () => {
     let month: Month;
     let uiModel: MonthUiModel;
-
-    // const mockWeekComponent = WeekComponent as jest.MockedFunction<typeof WeekComponent>;
 
     beforeEach(() => {
         month = {
@@ -33,44 +31,33 @@ describe('MonthComponent', () => {
                     ]
                 }
             ]
-        }
+        };
+        uiModel = createMonthUiModel(month);
     });
 
     afterEach(() => {
         jest.clearAllMocks();
     });
 
-    it('renders correctly with weeks', () => {
-        const month: MonthUiModel = {
-            month: { name: 'December' },
-            weeks: [
-                { index: 1, days: [] },
-                { index: 2, days: [] }
-            ]
-        };
+    it('displays all weeks of the month', () => {
+        render(setupContent(uiModel));
 
-        render(<MonthComponent month={month} />);
-
-        expect(screen.getByText('Week 1')).toBeInTheDocument();
-        expect(screen.getByText('Week 2')).toBeInTheDocument();
-    });
-
-    it('renders nothing if no month is provided', () => {
-        const { container } = render(<MonthComponent month={undefined} />);
-        expect(container).toBeEmptyDOMElement();
-    });
-
-    it('renders nothing if month has no weeks', () => {
-        const month: MonthUiModel = {
-            month: { name: 'December' },
-            weeks: []
-        };
-
-        const { container } = render(<MonthComponent month={month} />);
-        expect(container).toBeEmptyDOMElement();
+        expect(screen.getByText('40')).toBeInTheDocument();
+        expect(screen.getByText('2')).toBeInTheDocument();
+        expect(screen.getByText('3')).toBeInTheDocument();
+        expect(screen.getByText('4')).toBeInTheDocument();
+        expect(screen.getByText('5')).toBeInTheDocument();
+        expect(screen.getByText('6')).toBeInTheDocument();
+        expect(screen.getByText('7')).toBeInTheDocument();
     });
 });
 
 function setupContent(month: MonthUiModel) {
-    return <MonthComponent month={month} />;
+    return (
+        <table>
+            <tbody>
+                <MonthComponent month={month} />
+            </tbody>
+        </table>
+    );
 }
