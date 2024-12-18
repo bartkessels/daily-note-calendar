@@ -21,7 +21,7 @@ import {RefreshNotesEventContext} from 'src/components/providers/refresh-notes-e
 import {SelectDayEventContext} from 'src/components/providers/select-day-event.context';
 import {CalendarEnhancerContext} from 'src/components/providers/calendar-enhancer.context';
 import {Enhancer} from 'src/domain/enhancers/enhancer';
-import {CalendarUiModel} from 'src/components/calendar.ui-model';
+import {CalendarUiModel} from 'src/components/models/calendar.ui-model';
 
 export class CalendarView extends ItemView {
     public static VIEW_TYPE = 'daily-note-calendar';

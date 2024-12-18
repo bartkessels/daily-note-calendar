@@ -1,12 +1,12 @@
-import {CalendarDayEnhancerStep} from 'src/implementation/enhancers/steps/calendar-day.enhancer-step';
-import {SettingsRepository} from 'src/domain/repositories/settings.repository';
-import {NameBuilder} from 'src/domain/builders/name.builder';
-import {FileAdapter} from 'src/domain/adapters/file.adapter';
-import {CalendarUiModel} from 'src/components/models/calendar.ui-model';
-import {DailyNotesPeriodicNoteSettings} from 'src/domain/models/settings/daily-notes.periodic-note-settings';
-import {Day, DayOfWeek} from 'src/domain/models/day';
-import {WeekUiModel} from 'src/components/models/week.ui-model';
-import {DayUiModel} from 'src/components/models/day.ui-model';
+import { CalendarDayEnhancerStep } from 'src/implementation/enhancers/steps/calendar-day.enhancer-step';
+import { SettingsRepository } from 'src/domain/repositories/settings.repository';
+import { NameBuilder } from 'src/domain/builders/name.builder';
+import { FileAdapter } from 'src/domain/adapters/file.adapter';
+import { CalendarUiModel } from 'src/components/models/calendar.ui-model';
+import { DailyNotesPeriodicNoteSettings } from 'src/domain/models/settings/daily-notes.periodic-note-settings';
+import { Day, DayOfWeek } from 'src/domain/models/day';
+import { WeekUiModel } from 'src/components/models/week.ui-model';
+import { DayUiModel } from 'src/components/models/day.ui-model';
 
 describe('CalendarDayEnhancerStep', () => {
     let settingsRepository: jest.Mocked<SettingsRepository<DailyNotesPeriodicNoteSettings>>;
@@ -50,8 +50,17 @@ describe('CalendarDayEnhancerStep', () => {
         };
         settingsRepository.getSettings.mockResolvedValue(settings);
 
-        const day: DayUiModel = { currentDay: { date: new Date(2023, 9, 2), dayOfWeek: DayOfWeek.Monday, name: '2' }, hasNote: false };
-        const week: WeekUiModel = { days: [day] };
+        const day: DayUiModel = {
+            currentDay: { date: new Date(2023, 9, 2), dayOfWeek: DayOfWeek.Monday, name: '2' },
+            isSelected: false,
+            isToday: false,
+            hasNote: false
+        };
+        const week: WeekUiModel = {
+            week: { date: new Date(2023, 9, 2), weekNumber: 2, days: [] },
+            days: [day],
+            hasNote: false
+        };
         const calendar: CalendarUiModel = { currentMonth: { weeks: [week] } };
 
         nameBuilder.build.mockReturnValue('/notes/2023-10-02.md');
@@ -75,8 +84,17 @@ describe('CalendarDayEnhancerStep', () => {
         };
         settingsRepository.getSettings.mockResolvedValue(settings);
 
-        const day: DayUiModel = { currentDay: undefined, hasNote: false };
-        const week: WeekUiModel = { days: [day] };
+        const day: DayUiModel = {
+            currentDay: undefined,
+            isSelected: false,
+            isToday: false,
+            hasNote: false
+        };
+        const week: WeekUiModel = {
+            week: { date: new Date(2023, 9, 2), weekNumber: 2, days: [] },
+            days: [day],
+            hasNote: false
+        };
         const calendar: CalendarUiModel = { currentMonth: { weeks: [week] } };
 
         const result = await enhancerStep.execute(calendar);

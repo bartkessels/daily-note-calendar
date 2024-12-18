@@ -46,6 +46,7 @@ import {CalendarUiModel} from 'src/components/models/calendar.ui-model';
 import { Enhancer } from './domain/enhancers/enhancer';
 import {CalendarDayEnhancerStep} from 'src/implementation/enhancers/steps/calendar-day.enhancer-step';
 import {CalendarWeekEnhancerStep} from 'src/implementation/enhancers/steps/calendar-week.enhancer-step';
+import {DefaultEnhancer} from 'src/implementation/enhancers/default.enhancer';
 
 export interface Dependencies {
     readonly dateManager: DateManager;
@@ -158,7 +159,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
 
     const dayEnhancerStep = new CalendarDayEnhancerStep(dailyNoteSettingsRepository, dayNameBuilder, fileAdapter);
     const weekEnhancerStep = new CalendarWeekEnhancerStep(weeklyNoteSettingsRepository, weekNameBuilder, fileAdapter);
-    const calendarEnhancer = new Enhancer<CalendarUiModel>()
+    const calendarEnhancer = new DefaultEnhancer<CalendarUiModel>()
         .withStep(dayEnhancerStep)
         .withStep(weekEnhancerStep);
 
