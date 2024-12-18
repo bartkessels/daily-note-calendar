@@ -16,7 +16,6 @@ import {Week} from 'src/domain/models/week';
 import {Month} from 'src/domain/models/month';
 import {Year} from 'src/domain/models/year';
 
-
 describe('useCalendarViewModel', () => {
     let currentDay: Day;
     let currentWeek: Week;

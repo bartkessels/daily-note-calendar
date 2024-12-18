@@ -2,6 +2,7 @@ import { createWeekUiModel, WeekUiModel } from 'src/components/models/week.ui-mo
 import { Week } from 'src/domain/models/week';
 import { Day, DayOfWeek } from 'src/domain/models/day';
 import 'src/extensions/extensions';
+import {EMPTY_DAY} from 'src/components/models/day.ui-model';
 
 describe('createWeekUiModel', () => {
     let week: Week;
@@ -68,5 +69,24 @@ describe('createWeekUiModel', () => {
         expect(result.days[4].currentDay?.dayOfWeek).toBe(DayOfWeek.Friday);
         expect(result.days[5].currentDay?.dayOfWeek).toBe(DayOfWeek.Saturday);
         expect(result.days[6].currentDay?.dayOfWeek).toBe(DayOfWeek.Sunday);
+    });
+
+    it('maps days that arent from the current month as EMPTY_DAY', () => {
+        const weekWithMissingDays: Week = {
+            date: new Date(2024, 11, 1),
+            weekNumber: 48,
+            days: [
+                { dayOfWeek: DayOfWeek.Sunday, date: new Date(2024, 11, 1), name: '1' },
+            ]
+        };
+        const result: WeekUiModel = createWeekUiModel(weekWithMissingDays);
+
+        expect(result.days[0]).toBe(EMPTY_DAY);
+        expect(result.days[1]).toBe(EMPTY_DAY);
+        expect(result.days[2]).toBe(EMPTY_DAY);
+        expect(result.days[3]).toBe(EMPTY_DAY);
+        expect(result.days[4]).toBe(EMPTY_DAY);
+        expect(result.days[5]).toBe(EMPTY_DAY);
+        expect(result.days[6]?.currentDay?.dayOfWeek).toBe(DayOfWeek.Sunday);
     });
 });

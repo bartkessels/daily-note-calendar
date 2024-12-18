@@ -7,6 +7,13 @@ export interface DayUiModel {
     hasNote: boolean;
 }
 
+export const EMPTY_DAY = <DayUiModel>{
+    currentDay: undefined,
+    isSelected: false,
+    isToday: false,
+    hasNote: false
+};
+
 export function createDayUiModel(day: Day, selectedDay?: Day): DayUiModel {
     const isSelected = dayEquals(day, selectedDay);
     const isToday = day.date.isToday();

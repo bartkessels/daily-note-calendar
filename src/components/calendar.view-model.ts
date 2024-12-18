@@ -29,6 +29,7 @@ export const useCalendarViewModel = (): CalendarViewModel => {
     const dailyNoteEvent = getDailyNoteEvent();
 
     React.useEffect(() => {
+        console.log(calendarEnhancer);
         const updateUiModel = async (year: Year, month: Month): Promise<void> => {
             const uiModel = createCalendarUiModel(year, month);
             const enhancedUiModel = await calendarEnhancer?.withValue(uiModel).build();
@@ -41,7 +42,7 @@ export const useCalendarViewModel = (): CalendarViewModel => {
         }
 
         if (selectedYear && selectedMonth) {
-            updateUiModel(selectedYear, selectedMonth).catch(_ => {});
+            updateUiModel(selectedYear, selectedMonth).catch(e => { console.log(e); });
         }
     }, [dateManager, calendarEnhancer, selectedYear, selectedMonth, selectedDay]);
 
