@@ -1,11 +1,11 @@
 import {EnhancerStep} from 'src/domain/enhancers/enhancer-step';
-import {CalendarUiModel} from 'src/components/calendar.ui-model';
+import {CalendarUiModel} from 'src/components/models/calendar.ui-model';
 import {WeeklyNotesPeriodicNoteSettings} from 'src/domain/models/settings/weekly-notes.periodic-note-settings';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import { NameBuilder } from 'src/domain/builders/name.builder';
 import {Week} from 'src/domain/models/week';
 import { FileAdapter } from 'src/domain/adapters/file.adapter';
-import {WeekUiModel} from 'src/components/week.ui-model';
+import {WeekUiModel} from 'src/components/models/week.ui-model';
 import {PeriodicNoteSettings} from 'src/domain/models/settings/periodic-note.settings';
 
 export class CalendarWeekEnhancerStep implements EnhancerStep<CalendarUiModel> {

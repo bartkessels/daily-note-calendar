@@ -1,7 +1,7 @@
 import React from 'react';
 import {renderHook} from '@testing-library/react';
 import {Enhancer} from 'src/domain/enhancers/enhancer';
-import {CalendarUiModel} from 'src/components/calendar.ui-model';
+import {CalendarUiModel} from 'src/components/models/calendar.ui-model';
 import {CalendarEnhancerContext, useCalenderEnhancer} from 'src/components/providers/calendar-enhancer.context';
 
 describe('CalendarEnhancerContext', () => {

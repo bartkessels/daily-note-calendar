@@ -2,7 +2,7 @@ import React, {ReactElement} from 'react';
 import {render, screen, fireEvent} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import {HeadingComponent} from './heading.component';
-import {MonthUiModel} from 'src/components/month.ui-model';
+import {MonthUiModel} from 'src/components/models/month.ui-model';
 import {Year} from 'src/domain/models/year';
 import {Event} from 'src/domain/events/event';
 import {Month} from 'src/domain/models/month';

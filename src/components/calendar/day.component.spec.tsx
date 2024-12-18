@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { DayComponent } from './day.component';
 import { Day, DayOfWeek } from 'src/domain/models/day';
-import {DayUiModel} from 'src/components/day.ui-model';
+import {DayUiModel} from 'src/components/models/day.ui-model';
 import {Event} from 'src/domain/events/event';
 import {SelectDayEventContext} from 'src/components/providers/select-day-event.context';
 import {DailyNoteEventContext} from 'src/components/providers/daily-note-event.context';

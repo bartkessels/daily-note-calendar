@@ -1,7 +1,7 @@
 import React from 'react';
 import {Year} from 'src/domain/models/year';
 import {CalendarHeart, ChevronLeft, ChevronRight} from 'lucide-react';
-import {MonthUiModel} from 'src/components/month.ui-model';
+import {MonthUiModel} from 'src/components/models/month.ui-model';
 import {getYearlyNoteEvent} from 'src/components/providers/yearly-note-event.context';
 import {getMonthlyNoteEvent} from 'src/components/providers/monthly-note-event.context';
 

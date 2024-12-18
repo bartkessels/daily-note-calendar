@@ -2,12 +2,12 @@ import {Month} from 'src/domain/models/month';
 import {useDateManager} from 'src/components/providers/date-manager.context';
 import React from 'react';
 import {Year} from 'src/domain/models/year';
-import {createMonthUiModel, MonthUiModel} from 'src/components/month.ui-model';
+import {MonthUiModel} from 'src/components/models/month.ui-model';
 import {Day} from 'src/domain/models/day';
 import {getSelectDayEvent} from 'src/components/providers/select-day-event.context';
 import {getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
 import {useCalenderEnhancer} from 'src/components/providers/calendar-enhancer.context';
-import {createCalendarUiModel} from 'src/components/calendar.ui-model';
+import {createCalendarUiModel} from 'src/components/models/calendar.ui-model';
 
 export interface CalendarViewModel {
     viewState: CalendarViewState;
@@ -29,9 +29,8 @@ export const useCalendarViewModel = (): CalendarViewModel => {
     const dailyNoteEvent = getDailyNoteEvent();
 
     React.useEffect(() => {
-        const updateUiModel = async (): Promise<void> => {
-            const monthUiModel = createMonthUiModel(selectedMonth, selectedDay);
-            const uiModel = createCalendarUiModel(selectedYear, monthUiModel);
+        const updateUiModel = async (year: Year, month: Month): Promise<void> => {
+            const uiModel = createCalendarUiModel(year, month);
             const enhancedUiModel = await calendarEnhancer?.withValue(uiModel).build();
 
             setViewState({
@@ -41,7 +40,9 @@ export const useCalendarViewModel = (): CalendarViewModel => {
             });
         }
 
-        updateUiModel().catch(_ => {});
+        if (selectedYear && selectedMonth) {
+            updateUiModel(selectedYear, selectedMonth).catch(_ => {});
+        }
     }, [dateManager, calendarEnhancer, selectedYear, selectedMonth, selectedDay]);
 
     selectDayEvent?.onEvent('CalendarViewModel', (day) => setSelectedDay(day));

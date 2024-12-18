@@ -2,7 +2,7 @@ import React, {ReactElement} from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MonthComponent } from './month.component';
-import {createMonthUiModel, MonthUiModel} from 'src/components/month.ui-model';
+import {createMonthUiModel, MonthUiModel} from 'src/components/models/month.ui-model';
 import {Month} from 'src/domain/models/month';
 import 'src/extensions/extensions';
 

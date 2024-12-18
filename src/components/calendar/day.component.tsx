@@ -1,5 +1,5 @@
 import React from 'react';
-import {DayUiModel} from 'src/components/day.ui-model';
+import {DayUiModel} from 'src/components/models/day.ui-model';
 import {getSelectDayEvent} from 'src/components/providers/select-day-event.context';
 import {getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
 import {Day} from 'src/domain/models/day';

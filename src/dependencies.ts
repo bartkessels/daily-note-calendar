@@ -42,7 +42,7 @@ import {TitleVariableParserStep} from 'src/implementation/pipelines/steps/title-
 import {PeriodNameBuilder} from 'src/implementation/builders/period.name-builder';
 import {PeriodVariableParserStep} from 'src/implementation/pipelines/steps/period-variable-parser.step';
 import {DateManager} from 'src/domain/managers/date.manager';
-import {CalendarUiModel} from 'src/components/calendar.ui-model';
+import {CalendarUiModel} from 'src/components/models/calendar.ui-model';
 import { Enhancer } from './domain/enhancers/enhancer';
 import {CalendarDayEnhancerStep} from 'src/implementation/enhancers/steps/calendar-day.enhancer-step';
 import {CalendarWeekEnhancerStep} from 'src/implementation/enhancers/steps/calendar-week.enhancer-step';

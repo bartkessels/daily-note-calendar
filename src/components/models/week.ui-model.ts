@@ -1,6 +1,6 @@
 import {Week} from 'src/domain/models/week';
-import {createDayUiModel, DayUiModel} from 'src/components/day.ui-model';
-import {Day} from 'src/domain/models/day';
+import {createDayUiModel, DayUiModel} from 'src/components/models/day.ui-model';
+import {Day, DayOfWeek} from 'src/domain/models/day';
 
 export interface WeekUiModel {
     week: Week;
@@ -9,9 +9,27 @@ export interface WeekUiModel {
 }
 
 export function createWeekUiModel(week: Week, selectedDay?: Day): WeekUiModel {
+    const days = week.days.map(day => createDayUiModel(day, selectedDay));
+
     return <WeekUiModel>{
         week: week,
-        days: week.days.map(day => createDayUiModel(day, selectedDay)),
+        days: sortDays(days),
         hasNote: false
     };
+}
+
+function sortDays(days: DayUiModel[]): DayUiModel[] {
+    const WEEK_DAYS_ORDER = [
+        DayOfWeek.Monday,
+        DayOfWeek.Tuesday,
+        DayOfWeek.Wednesday,
+        DayOfWeek.Thursday,
+        DayOfWeek.Friday,
+        DayOfWeek.Saturday,
+        DayOfWeek.Sunday
+    ];
+
+    return WEEK_DAYS_ORDER.map((dayOfWeek) =>
+        days.find((day) => day.currentDay?.date.getDay() === dayOfWeek
+    )) as DayUiModel[];
 }
