@@ -15,6 +15,7 @@ import {act, renderHook, waitFor} from '@testing-library/react';
 import {Week} from 'src/domain/models/week';
 import {Month} from 'src/domain/models/month';
 import {Year} from 'src/domain/models/year';
+import 'src/extensions/extensions';
 
 describe('useCalendarViewModel', () => {
     let currentDay: Day;
@@ -34,8 +35,8 @@ describe('useCalendarViewModel', () => {
     const mockEnhancer = {
         withValue: jest.fn(),
         withStep: jest.fn(),
-        build: jest.fn((value?: CalendarUiModel) => new Promise((resolve) => resolve(value)))
-    } as Enhancer<CalendarUiModel>;
+        build: jest.fn((value?: CalendarUiModel) => Promise.resolve(value))
+    } as Enhancer<CalendarUiModel> as jest.Mocked<Enhancer<CalendarUiModel>>;
 
     let selectDayEvent: Event<Day>;
     let dailyNoteEvent: Event<Day>;
@@ -70,6 +71,8 @@ describe('useCalendarViewModel', () => {
         mockDateManager.getCurrentDay.mockReturnValue(currentDay);
         mockDateManager.getCurrentMonth.mockReturnValue(currentMonth);
         mockDateManager.getCurrentYear.mockReturnValue(currentYear);
+        mockEnhancer.withStep.mockReturnValue(mockEnhancer);
+        mockEnhancer.withValue.mockReturnValue(mockEnhancer);
 
         selectDayEvent = new SelectDayEvent();
         dailyNoteEvent = new PeriodicNoteEvent<Day>();

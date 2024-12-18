@@ -3,7 +3,6 @@ import {DayUiModel} from 'src/components/models/day.ui-model';
 import {getSelectDayEvent} from 'src/components/providers/select-day-event.context';
 import {getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
 import {Day} from 'src/domain/models/day';
-import {Dot} from 'lucide-react';
 
 interface DayProps {
     day?: DayUiModel;
@@ -35,10 +34,6 @@ export const DayComponent = ({ day }: DayProps) => {
             className={classes.join(' ')}
             onClick={() => openDailyNote(day?.currentDay)}>
             {day?.currentDay?.name}
-
-            {day?.hasNote ? <Dot
-                size="15"
-            /> : null}
         </td>
     )
 };

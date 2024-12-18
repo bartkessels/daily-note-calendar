@@ -83,13 +83,13 @@ describe('DayComponent', () => {
 
         render(setupContent(noteUiModel, mockSelectDayEvent, mockDailyNoteEvent));
 
-        expect(document.querySelector('.lucide-dot')).toBeInTheDocument();
+        expect(screen.getByText('17')).toHaveClass('has-note');
     });
 
     it('should not display an indicator if the day does not have a note', () => {
         render(setupContent(uiModel, mockSelectDayEvent, mockDailyNoteEvent));
 
-        expect(document.querySelector('.lucide-dot')).not.toBeInTheDocument();
+        expect(screen.getByText('17')).not.toHaveClass('has-note');
     });
 });
 
