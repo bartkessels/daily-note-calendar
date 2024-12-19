@@ -8,9 +8,9 @@ import {getMonthlyNoteEvent} from 'src/components/providers/monthly-note-event.c
 export interface HeadingProps {
     month?: MonthUiModel;
     year?: Year;
-    navigateToPreviousMonth: () => void;
-    navigateToNextMonth: () => void;
-    navigateToCurrentMonth: () => void;
+    navigateToPreviousMonth?: () => void;
+    navigateToNextMonth?: () => void;
+    navigateToCurrentMonth?: () => void;
 }
 
 export const HeadingComponent = ({

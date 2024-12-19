@@ -7,16 +7,16 @@ import {getQuarterlyNoteEvent} from 'src/components/providers/quarterly-note-eve
 export const CalendarComponent = () => {
     const viewModel = useCalendarViewModel();
     const quarterlyNoteEvent = getQuarterlyNoteEvent();
-    const uiModel = viewModel.viewState?.uiModel;
+    const uiModel = viewModel?.viewState?.uiModel;
 
     return (
         <div className="dnc">
             <HeadingComponent
                 month={uiModel?.currentMonth}
                 year={uiModel?.currentYear}
-                navigateToPreviousMonth={viewModel.navigateToPreviousMonth}
-                navigateToCurrentMonth={viewModel.navigateToCurrentMonth}
-                navigateToNextMonth={viewModel.navigateToNextMonth} />
+                navigateToPreviousMonth={viewModel?.navigateToPreviousMonth}
+                navigateToCurrentMonth={viewModel?.navigateToCurrentMonth}
+                navigateToNextMonth={viewModel?.navigateToNextMonth} />
 
             <table>
                 <thead>
