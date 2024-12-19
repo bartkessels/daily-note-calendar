@@ -24,36 +24,8 @@ export const useCalendarViewModel = (): CalendarViewModel => {
     const [selectedYear, setSelectedYear] = React.useState(dateManager?.getCurrentYear());
     const [selectedDay, setSelectedDay] = React.useState(dateManager?.getCurrentDay());
 
-    const selectDayEvent = getSelectDayEvent();
-    const dailyNoteEvent = getDailyNoteEvent();
-
-    const updateViewState = async (year?: Year, month?: Month, selectedDay?: Day): Promise<void> => {
-        if (!year || !month) {
-            return;
-        }
-
-        const uiModel = createCalendarUiModel(year, month, selectedDay);
-        const enhancedModel = await calendarEnhancer?.withValue(uiModel).build();
-        setViewState({
-            ...viewState,
-            uiModel: enhancedModel
-        });
-    };
-
-    selectDayEvent?.onEvent('CalendarViewModel', (day: Day): void => selectDay(day));
-    dailyNoteEvent?.onEvent('CalendarViewModel', (day: Day): void => selectDay(day));
-
-    const selectDay = (day: Day): void => {
-        updateViewState(selectedYear, selectedMonth, day).then(() => setSelectedDay(day));
-    }
-
-    const selectMonth = (month?: Month): void => {
-        const year = dateManager?.getYear(month);
-        updateViewState(year, month, selectedDay).then(() => {
-            setSelectedMonth(month);
-            setSelectedYear(year);
-        });
-    }
+    getSelectDayEvent()?.onEvent('CalendarViewModel', (day: Day): void => selectDay(day));
+    getDailyNoteEvent()?.onEvent('CalendarViewModel', (day: Day): void => selectDay(day));
 
     const navigateToPreviousMonth = (): void => {
         const previousMonth = dateManager?.getPreviousMonth(viewState?.uiModel?.currentMonth?.month);
@@ -68,6 +40,31 @@ export const useCalendarViewModel = (): CalendarViewModel => {
     const navigateToCurrentMonth = (): void => {
         const currentMonth = dateManager?.getCurrentMonth();
         selectMonth(currentMonth);
+    };
+
+    const selectDay = (day: Day): void => {
+        updateViewState(selectedYear, selectedMonth, day).then(() => setSelectedDay(day));
+    }
+
+    const selectMonth = (month?: Month): void => {
+        const year = dateManager?.getYear(month);
+        updateViewState(year, month, selectedDay).then(() => {
+            setSelectedMonth(month);
+            setSelectedYear(year);
+        });
+    }
+
+    const updateViewState = async (year?: Year, month?: Month, selectedDay?: Day): Promise<void> => {
+        if (!year || !month) {
+            return;
+        }
+
+        const uiModel = createCalendarUiModel(year, month, selectedDay);
+        const enhancedModel = await calendarEnhancer?.withValue(uiModel).build();
+        setViewState({
+            ...viewState,
+            uiModel: enhancedModel
+        });
     };
 
     return <CalendarViewModel>{
