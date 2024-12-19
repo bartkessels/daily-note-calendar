@@ -2,12 +2,11 @@ import {Month} from 'src/domain/models/month';
 import {useDateManager} from 'src/components/providers/date-manager.context';
 import React from 'react';
 import {Year} from 'src/domain/models/year';
-import {MonthUiModel} from 'src/components/models/month.ui-model';
 import {Day} from 'src/domain/models/day';
 import {getSelectDayEvent} from 'src/components/providers/select-day-event.context';
 import {getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
 import {useCalenderEnhancer} from 'src/components/providers/calendar-enhancer.context';
-import {createCalendarUiModel} from 'src/components/models/calendar.ui-model';
+import {CalendarUiModel, createCalendarUiModel} from 'src/components/models/calendar.ui-model';
 
 export interface CalendarViewModel {
     viewState: CalendarViewState;
@@ -28,48 +27,47 @@ export const useCalendarViewModel = (): CalendarViewModel => {
     const selectDayEvent = getSelectDayEvent();
     const dailyNoteEvent = getDailyNoteEvent();
 
-    React.useEffect(() => {
-        const updateUiModel = async (year: Year, month: Month, selectedDay?: Day): Promise<void> => {
-            const uiModel = createCalendarUiModel(year, month, selectedDay);
-            const enhancedUiModel = await calendarEnhancer?.withValue(uiModel).build();
-
-            setViewState({
-                ...viewState,
-                currentYear: selectedYear,
-                currentMonth: enhancedUiModel?.currentMonth
-            });
+    const updateViewState = async (year?: Year, month?: Month, selectedDay?: Day): Promise<void> => {
+        if (!year || !month) {
+            return;
         }
 
-        if (selectedYear && selectedMonth) {
-            updateUiModel(selectedYear, selectedMonth, selectedDay).catch(e => { console.log(e); });
-        }
-    }, [dateManager, calendarEnhancer, selectedYear, selectedMonth, selectedDay]);
+        const uiModel = createCalendarUiModel(year, month, selectedDay);
+        const enhancedModel = await calendarEnhancer?.withValue(uiModel).build();
+        setViewState({
+            ...viewState,
+            uiModel: enhancedModel
+        });
+    };
 
-    selectDayEvent?.onEvent('CalendarViewModel', (day) => setSelectedDay(day));
-    dailyNoteEvent?.onEvent('CalendarViewModel', (day) => setSelectedDay(day));
+    selectDayEvent?.onEvent('CalendarViewModel', (day: Day): void => selectDay(day));
+    dailyNoteEvent?.onEvent('CalendarViewModel', (day: Day): void => selectDay(day));
+
+    const selectDay = (day: Day): void => {
+        updateViewState(selectedYear, selectedMonth, day).then(() => setSelectedDay(day));
+    }
+
+    const selectMonth = (month?: Month): void => {
+        const year = dateManager?.getYear(month);
+        updateViewState(year, month, selectedDay).then(() => {
+            setSelectedMonth(month);
+            setSelectedYear(year);
+        });
+    }
 
     const navigateToPreviousMonth = (): void => {
-        const previousMonth = dateManager?.getPreviousMonth(viewState?.currentMonth?.month);
-        navigateToMonth(previousMonth);
+        const previousMonth = dateManager?.getPreviousMonth(viewState?.uiModel?.currentMonth?.month);
+        selectMonth(previousMonth);
     };
 
     const navigateToNextMonth = (): void => {
-        const nextMonth = dateManager?.getNextMonth(viewState?.currentMonth?.month);
-        navigateToMonth(nextMonth);
+        const nextMonth = dateManager?.getNextMonth(viewState?.uiModel?.currentMonth?.month);
+        selectMonth(nextMonth);
     };
 
     const navigateToCurrentMonth = (): void => {
         const currentMonth = dateManager?.getCurrentMonth();
-        navigateToMonth(currentMonth);
-    };
-
-    const navigateToMonth = (month?: Month): void => {
-        const year = dateManager?.getYear(month);
-
-        if (month && year) {
-            setSelectedMonth(month);
-            setSelectedYear(year);
-        }
+        selectMonth(currentMonth);
     };
 
     return <CalendarViewModel>{
@@ -82,7 +80,5 @@ export const useCalendarViewModel = (): CalendarViewModel => {
 };
 
 export interface CalendarViewState {
-    selectedDay?: Day;
-    currentYear?: Year;
-    currentMonth?: MonthUiModel;
+    uiModel?: CalendarUiModel;
 }

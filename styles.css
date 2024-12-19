@@ -40,18 +40,18 @@
     color: var(--text-accent);
 }
 
-.dnc .selected-day:after {
-    content: "";
-    display: block;
-    width: 30%;
-    margin: 0 auto;
-    border-bottom: 0.15em solid var(--text-accent);
-}
-
 .dnc .has-note:after {
     content: "";
     display: block;
     width: 10%;
+    margin: 0 auto;
+    border-bottom: 0.15em solid var(--text-accent);
+}
+
+.dnc .selected-day:after {
+    content: "";
+    display: block;
+    width: 30%;
     margin: 0 auto;
     border-bottom: 0.15em solid var(--text-accent);
 }
