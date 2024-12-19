@@ -1,17 +1,18 @@
 import React from 'react';
-import {screen, fireEvent, render, waitFor} from '@testing-library/react';
+import {screen, fireEvent, render} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { CalendarComponent } from './calendar.component';
-import { CalendarViewModel, useCalendarViewModel } from 'src/components/calendar.view-model';
 import { QuarterlyNoteEventContext } from 'src/components/providers/quarterly-note-event.context';
 import {Event} from 'src/domain/events/event';
 import {Month} from 'src/domain/models/month';
 import {Year} from 'src/domain/models/year';
 import {Week} from 'src/domain/models/week';
-import {createMonthUiModel} from 'src/components/models/month.ui-model';
 import 'src/extensions/extensions';
+import { CalendarViewModel } from './viewmodels/calendar.view-model';
+import {useCalendarViewModel} from 'src/components/viewmodels/calendar.view-model.provider';
+import {createCalendarUiModel} from 'src/components/models/calendar.ui-model';
 
-jest.mock('src/components/calendar.view-model');
+jest.mock('src/components/viewmodels/calendar.view-model.provider');
 
 describe('CalendarComponent', () => {
     let mockViewModel: CalendarViewModel;
@@ -43,12 +44,11 @@ describe('CalendarComponent', () => {
             name: '2024',
             months: [month]
         };
-        const monthUiModel = createMonthUiModel(month);
+        const uiModel = createCalendarUiModel(year, month);
 
         mockViewModel = {
             viewState: {
-                currentMonth: monthUiModel,
-                currentYear: year
+                uiModel: uiModel
             },
             navigateToPreviousMonth: jest.fn(),
             navigateToCurrentMonth: jest.fn(),
@@ -96,7 +96,7 @@ describe('CalendarComponent', () => {
         render(setupContent(mockViewModel, mockQuarterlyNoteEvent));
 
         fireEvent.click(screen.getByText('Q4'));
-        expect(mockQuarterlyNoteEvent.emitEvent).toHaveBeenCalledWith(mockViewModel.viewState.currentMonth?.month);
+        expect(mockQuarterlyNoteEvent.emitEvent).toHaveBeenCalledWith(mockViewModel.viewState.uiModel?.currentMonth);
     });
 
     it('displays all days and week numbers of the current month grouped into weeks', () => {

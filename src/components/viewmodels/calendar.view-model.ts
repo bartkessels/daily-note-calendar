@@ -1,15 +1,11 @@
-import {Month} from 'src/domain/models/month';
-import {useDateManager} from 'src/components/providers/date-manager.context';
-import React from 'react';
-import {Year} from 'src/domain/models/year';
 import {Day} from 'src/domain/models/day';
-import {getSelectDayEvent} from 'src/components/providers/select-day-event.context';
-import {getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
-import {useCalenderEnhancer} from 'src/components/providers/calendar-enhancer.context';
+import {Month} from 'src/domain/models/month';
+import {Year} from 'src/domain/models/year';
 import {CalendarUiModel, createCalendarUiModel} from 'src/components/models/calendar.ui-model';
-import {Enhancer} from 'src/domain/enhancers/enhancer';
-import {DateManager} from 'src/domain/managers/date.manager';
 import {Event} from 'src/domain/events/event';
+import {DateManager} from 'src/domain/managers/date.manager';
+import {Enhancer} from 'src/domain/enhancers/enhancer';
+import {CalendarViewState} from 'src/components/viewmodels/calendar.view-state';
 
 export interface CalendarViewModel {
     viewState: CalendarViewState;
@@ -18,29 +14,6 @@ export interface CalendarViewModel {
     navigateToNextMonth: () => void;
     navigateToCurrentMonth: () => void;
 }
-
-export const useCalendarViewModel = (): CalendarViewModel | undefined => {
-    const dateManager = useDateManager();
-    const calendarEnhancer = useCalenderEnhancer();
-    const selectDayEvent = getSelectDayEvent();
-    const dailyNoteEvent = getDailyNoteEvent();
-
-    const [viewState, setViewState] = React.useState<CalendarViewState>();
-    const [viewModel, setViewModel] = React.useState<DefaultCalendarViewModel>();
-
-    React.useEffect(() => {
-        const viewModel = new DefaultCalendarViewModel(
-            (uiModel: CalendarUiModel): void => setViewState({...viewState, uiModel: uiModel}),
-            selectDayEvent,
-            dailyNoteEvent,
-            dateManager,
-            calendarEnhancer
-        );
-        setViewModel(viewModel);
-    }, [dateManager, calendarEnhancer, selectDayEvent, dailyNoteEvent]);
-
-    return viewModel?.withViewState(viewState);
-};
 
 export class DefaultCalendarViewModel implements CalendarViewModel {
     public viewState: CalendarViewState;
@@ -108,8 +81,4 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         const enhancedModel = await this.calendarEnhancer?.withValue(uiModel).build();
         this.setUiModel(enhancedModel);
     };
-}
-
-export interface CalendarViewState {
-    uiModel?: CalendarUiModel;
 }

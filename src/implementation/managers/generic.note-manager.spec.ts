@@ -57,8 +57,7 @@ describe('GenericNotesManager', () => {
         };
         day = {
             dayOfWeek: 2,
-            date: 12,
-            completeDate: new Date('2024-11-12'),
+            date: new Date('2024-11-12'),
             name: '12',
         };
     });

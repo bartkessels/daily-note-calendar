@@ -1,8 +1,8 @@
 import * as React from 'react';
-import {useCalendarViewModel} from 'src/components/calendar.view-model';
 import {MonthComponent} from 'src/components/calendar/month.component';
 import {HeadingComponent} from 'src/components/calendar/heading.component';
 import {getQuarterlyNoteEvent} from 'src/components/providers/quarterly-note-event.context';
+import {useCalendarViewModel} from 'src/components/viewmodels/calendar.view-model.provider';
 
 export const CalendarComponent = () => {
     const viewModel = useCalendarViewModel();

@@ -22,9 +22,8 @@ describe('PeriodicNotePipeline', () => {
         event = new PeriodicNoteEvent<Day>();
         day = {
             dayOfWeek: DayOfWeek.Thursday,
-            date: 5,
-            name: '05',
-            completeDate: new Date(2024, 12, 5)
+            date: new Date(2024, 12, 5),
+            name: '05'
         };
         fileService = {
             createFileWithTemplate: jest.fn(),
