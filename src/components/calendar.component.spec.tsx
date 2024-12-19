@@ -17,6 +17,7 @@ jest.mock('src/components/viewmodels/calendar.view-model.provider');
 describe('CalendarComponent', () => {
     let mockViewModel: CalendarViewModel;
     const mockQuarterlyNoteEvent = {
+        onEvent: jest.fn(),
         emitEvent: jest.fn()
     } as unknown as Event<Month>;
 
@@ -96,7 +97,7 @@ describe('CalendarComponent', () => {
         render(setupContent(mockViewModel, mockQuarterlyNoteEvent));
 
         fireEvent.click(screen.getByText('Q4'));
-        expect(mockQuarterlyNoteEvent.emitEvent).toHaveBeenCalledWith(mockViewModel.viewState.uiModel?.currentMonth);
+        expect(mockQuarterlyNoteEvent.emitEvent).toHaveBeenCalledWith(mockViewModel.viewState.uiModel?.currentMonth?.month);
     });
 
     it('displays all days and week numbers of the current month grouped into weeks', () => {
@@ -116,13 +117,13 @@ function setupContent(
     viewModel: CalendarViewModel,
     quarterlyNoteEvent: Event<Month>
 ): React.ReactElement {
-    jest.mock('src/components/calendar.view-model', () => ({
+    jest.mock('src/components/viewmodels/calendar.view-model.provider', () => ({
         useCalendarViewModel: jest.fn(() => viewModel)
     }));
 
     return (
         <QuarterlyNoteEventContext.Provider value={quarterlyNoteEvent}>
-            <CalendarComponent/>
+            <CalendarComponent />
         </QuarterlyNoteEventContext.Provider>
     );
 }

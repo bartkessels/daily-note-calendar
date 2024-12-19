@@ -1,6 +1,8 @@
 import {RepositoryDateManager} from 'src/implementation/managers/repository.date-manager';
 import {DateRepository} from 'src/domain/repositories/date.repository';
 import {Month} from 'src/domain/models/month';
+import {Year} from 'src/domain/models/year';
+import {Day, DayOfWeek} from 'src/domain/models/day';
 
 describe('RepositoryDateManager', () => {
     let dateManager: RepositoryDateManager;
@@ -17,11 +19,10 @@ describe('RepositoryDateManager', () => {
 
     it('should return the current day', () => {
         const today = new Date(2024, 12, 31, 12, 11, 19, 100);
-        const currentDay = {
-            dayOfWeek: 'Monday',
-            date: today.getDate(),
-            name: 'Monday',
-            completeDate: today
+        const currentDay: Day = {
+            date: today,
+            dayOfWeek: DayOfWeek.Monday,
+            name: today.getDate().toString()
         };
 
         (dateRepository.getDay as jest.Mock).mockReturnValue(currentDay);
@@ -35,8 +36,9 @@ describe('RepositoryDateManager', () => {
 
     it('should return the current year', () => {
         const today = new Date();
-        const currentYear = {
-            year: today.getFullYear(),
+        const currentYear: Year = {
+            date: today,
+            name: today.getFullYear().toString(),
             months: []
         };
 
@@ -50,15 +52,14 @@ describe('RepositoryDateManager', () => {
 
     it('should return the year of the provided month', () => {
         const month: Month = {
-            year: 2023,
+            date: new Date(2023, 9),
             quarter: 4,
-            monthIndex: 9,
-            number: 10,
             name: 'October',
             weeks: []
         };
-        const year = {
-            year: 2023,
+        const year: Year = {
+            date: new Date(2023, 0),
+            name: '2023',
             months: []
         };
 
@@ -72,8 +73,9 @@ describe('RepositoryDateManager', () => {
 
     it('should return the current year if the month is not provided', () => {
         const today = new Date();
-        const currentYear = {
-            year: today.getFullYear(),
+        const currentYear: Year = {
+            date: today,
+            name: today.getFullYear().toString(),
             months: []
         };
 
@@ -88,10 +90,8 @@ describe('RepositoryDateManager', () => {
     it('should return the current month', () => {
         const today = new Date();
         const currentMonth: Month = {
-            year: today.getFullYear(),
+            date: today,
             quarter: Math.floor(today.getMonth() / 3) + 1,
-            monthIndex: today.getMonth(),
-            number: 10,
             name: 'October',
             weeks: []
         };
@@ -106,18 +106,14 @@ describe('RepositoryDateManager', () => {
 
     it('should return the next month', () => {
         const currentMonth: Month = {
-            year: 2023,
+            date: new Date(2023, 9),
             quarter: 4,
-            monthIndex: 9, // October (0-based index)
-            number: 10,
             name: 'October',
             weeks: []
         };
         const nextMonth: Month = {
-            year: 2023,
+            date: new Date(2023, 10),
             quarter: 4,
-            monthIndex: 10, // November (0-based index)
-            number: 11,
             name: 'November',
             weeks: []
         };
@@ -132,10 +128,8 @@ describe('RepositoryDateManager', () => {
 
     it('should recalculate the current month and return it if no current month is provided when retrieving the next month', () => {
         const currentMonth: Month = {
-            year: 2023,
+            date: new Date(2023, 9),
             quarter: 4,
-            monthIndex: 9, // October (0-based index)
-            number: 10,
             name: 'October',
             weeks: []
         };
@@ -151,18 +145,14 @@ describe('RepositoryDateManager', () => {
 
     it('should return the previous month', () => {
         const currentMonth: Month = {
-            year: 2023,
+            date: new Date(2023, 9),
             quarter: 4,
-            monthIndex: 9, // October (0-based index)
-            number: 10,
             name: 'October',
             weeks: []
         };
         const previousMonth: Month = {
-            year: 2023,
+            date: new Date(2023, 8),
             quarter: 4,
-            monthIndex: 8, // September (0-based index)
-            number: 9,
             name: 'September',
             weeks: []
         };
@@ -177,10 +167,8 @@ describe('RepositoryDateManager', () => {
 
     it('should recalculate the current month and return it if no current month is provided when retrieving the previous month', () => {
         const currentMonth: Month = {
-            year: 2023,
+            date: new Date(2023, 9),
             quarter: 4,
-            monthIndex: 9, // October (0-based index)
-            number: 10,
             name: 'October',
             weeks: []
         };
@@ -194,20 +182,16 @@ describe('RepositoryDateManager', () => {
         expect(result).toBe(currentMonth);
     });
 
-    it('should return the next month when current month is December', () => {
+    it('should return January as the next month when current month is December', () => {
         const currentMonth: Month = {
-            year: 2023,
+            date: new Date(2023, 11),
             quarter: 4,
-            monthIndex: 11, // December (0-based index)
-            number: 12,
             name: 'December',
             weeks: []
         };
         const nextMonth: Month = {
-            year: 2024,
+            date: new Date(2024, 0),
             quarter: 1,
-            monthIndex: 0, // January (0-based index)
-            number: 1,
             name: 'January',
             weeks: []
         };
@@ -220,20 +204,16 @@ describe('RepositoryDateManager', () => {
         expect(dateRepository.getMonth).toHaveBeenCalledWith(2024, 0);
     });
 
-    it('should return the previous month when current month is January', () => {
+    it('should return December as the previous month when current month is January', () => {
         const currentMonth: Month = {
-            year: 2023,
+            date: new Date(2023, 0),
             quarter: 1,
-            monthIndex: 0, // January (0-based index)
-            number: 1,
             name: 'January',
             weeks: []
         };
         const previousMonth: Month = {
-            year: 2022,
+            date: new Date(2022, 11),
             quarter: 4,
-            monthIndex: 11, // December (0-based index)
-            number: 12,
             name: 'December',
             weeks: []
         };
