@@ -50,8 +50,6 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
 
     public navigateToNextMonth = (): void => {
         const nextMonth = this.dateManager?.getNextMonth(this.selectedMonth);
-        console.log(nextMonth);
-        console.log(this.selectedMonth);
         this.selectMonth(nextMonth);
     }
 
