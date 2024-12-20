@@ -17,7 +17,7 @@ describe('GeneralNoteSettingsRepository', () => {
     });
 
     it('should get general settings', async () => {
-        const mockSettings = { ...DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS, generalSettings: { displayNotesCreatedOnDate: false } };
+        const mockSettings = { ...DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS, generalSettings: { displayNotesCreatedOnDate: false, displayNoteIndicator: true } };
         settingsAdapter.getSettings.mockResolvedValueOnce(mockSettings);
 
         const settings = await repository.getSettings();
@@ -27,8 +27,8 @@ describe('GeneralNoteSettingsRepository', () => {
     });
 
     it('should store general settings', async () => {
-        const newSettings: GeneralSettings = { displayNotesCreatedOnDate: false };
-        const mockSettings = { ...DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS, generalSettings: { displayNotesCreatedOnDate: true } };
+        const newSettings: GeneralSettings = { displayNotesCreatedOnDate: false, displayNoteIndicator: true };
+        const mockSettings = { ...DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS, generalSettings: { displayNotesCreatedOnDate: true, displayNoteIndicator: false } };
         settingsAdapter.getSettings.mockResolvedValueOnce(mockSettings);
 
         await repository.storeSettings(newSettings);

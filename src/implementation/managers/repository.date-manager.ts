@@ -17,10 +17,7 @@ export class RepositoryDateManager implements DateManager {
     }
 
     public getCurrentDay(): Day {
-        const day = this.dateRepository.getDay(this.today);
-        return day;
-
-        // return this.enhanceDay(day);
+        return this.dateRepository.getDay(this.today);
     }
 
     public getCurrentYear(): Year {

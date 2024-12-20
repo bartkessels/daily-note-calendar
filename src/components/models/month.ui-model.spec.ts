@@ -15,7 +15,7 @@ describe('createMonthUiModel', () => {
             weeks: [
                 {
                     date: new Date(2023, 9, 1),
-                    weekNumber: 40,
+                    weekNumber: '40',
                     days: [
                         { dayOfWeek: 1, date: new Date(2023, 9, 2), name: '2' },
                         { dayOfWeek: 2, date: new Date(2023, 9, 3), name: '3' },

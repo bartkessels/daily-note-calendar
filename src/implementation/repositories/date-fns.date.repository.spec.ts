@@ -9,7 +9,7 @@ describe('DateFnsDateRepository', () => {
     });
 
     it('should return the correct day', () => {
-        const date = new Date(2023, 9, 1); // October 1, 2023
+        const date = new Date(2023, 9, 1);
         const day = repository.getDay(date);
 
         expect(day.name).toBe('1');
@@ -28,7 +28,7 @@ describe('DateFnsDateRepository', () => {
 
     it('should return the correct month information', () => {
         const year = 2023;
-        const monthIndex = 9; // October (0-based index)
+        const monthIndex = 9;
         const month = repository.getMonth(year, monthIndex);
 
         expect(month.name).toBe('October');
@@ -38,33 +38,41 @@ describe('DateFnsDateRepository', () => {
 
     it('should return the correct week number', () => {
         const year = 2023;
-        const month = 9; // October (0-based index)
+        const month = 9;
         const weekNumber = repository.getMonth(year, month).weeks[0].weekNumber;
 
-        expect(weekNumber).toBe(39);
+        expect(weekNumber).toBe('39');
     });
 
     it('should return week number 1 for the last week of December 2024', () => {
         const year = 2024;
-        const month = 11; // December (0-based index)
+        const month = 11;
         const weeks = repository.getMonth(year, month).weeks;
         const lastWeek = weeks[weeks.length - 1];
 
-        expect(lastWeek.weekNumber).toBe(1);
+        expect(lastWeek.weekNumber).toBe('01');
     });
 
     it('should return week number 1 for the first week of January 2025', () => {
         const year = 2025;
-        const month = 0; // January (0-based index)
+        const month = 0;
         const weeks = repository.getMonth(year, month).weeks;
         const firstWeek = weeks[0];
 
-        expect(firstWeek.weekNumber).toBe(1);
+        expect(firstWeek.weekNumber).toBe('01');
     });
+
+    it('should return the number of the week with 0s padded', () => {
+        const year = 2024;
+        const month = 0;
+        const week = repository.getMonth(year, month).weeks[0];
+
+        expect(week.weekNumber).toBe('01');
+    })
 
     it('should return the correct day of the week', () => {
         const year = 2023;
-        const month = 9; // October (0-based index)
+        const month = 9;
         const dayOfWeek = repository.getMonth(year, month).weeks[0].days[0].dayOfWeek;
 
         expect(dayOfWeek).toBe(DayOfWeek.Sunday);

@@ -79,7 +79,8 @@ describe('GenericNotesManager', () => {
     it('should call the refresh notes event with the notes when a daily note event has been sent', async () => {
         const refreshNotesEventSpy = jest.spyOn(manager, 'refreshNotes');
         const settings: GeneralSettings = {
-            displayNotesCreatedOnDate: true
+            displayNotesCreatedOnDate: true,
+            displayNoteIndicator: true
         };
 
         settingsRepository.getSettings.mockResolvedValue(settings);
@@ -92,7 +93,8 @@ describe('GenericNotesManager', () => {
     it('should call the refresh notes event with the notes a select day event has been sent', async () => {
         const refreshNotesEventSpy = jest.spyOn(manager, 'refreshNotes');
         const settings: GeneralSettings = {
-            displayNotesCreatedOnDate: true
+            displayNotesCreatedOnDate: true,
+            displayNoteIndicator: true
         };
 
         settingsRepository.getSettings.mockResolvedValue(settings);
@@ -109,7 +111,8 @@ describe('GenericNotesManager', () => {
             { name: 'Note 2', createdOn: new Date('2024-11-12'), path: 'path/to/note2' },
         ];
         const settings: GeneralSettings = {
-            displayNotesCreatedOnDate: true
+            displayNotesCreatedOnDate: true,
+            displayNoteIndicator: true
         };
 
         settingsRepository.getSettings.mockResolvedValue(settings);
@@ -126,7 +129,8 @@ describe('GenericNotesManager', () => {
     it('should not emit an refreshNotes event when the setting displayNotesCreatedOnDate is true but no day has been selected yet', async () => {
         const refreshNotesEventSpy = jest.spyOn(refreshNotesEvent, 'emitEvent');
         const settings: GeneralSettings = {
-            displayNotesCreatedOnDate: true
+            displayNotesCreatedOnDate: true,
+            displayNoteIndicator: true
         };
 
         settingsRepository.getSettings.mockResolvedValueOnce(settings);
@@ -141,7 +145,8 @@ describe('GenericNotesManager', () => {
     it('should not emit an refreshNotes event when the setting displayNotesCreatedOnDate is false', async () => {
         const refreshNotesEventSpy = jest.spyOn(refreshNotesEvent, 'emitEvent');
         const settings: GeneralSettings = {
-            displayNotesCreatedOnDate: false
+            displayNotesCreatedOnDate: false,
+            displayNoteIndicator: true
         };
 
         settingsRepository.getSettings.mockResolvedValueOnce(settings);

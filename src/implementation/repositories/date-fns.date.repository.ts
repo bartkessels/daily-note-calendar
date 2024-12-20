@@ -95,7 +95,7 @@ export class DateFnsDateRepository implements DateRepository {
     private getWeek(date: Date, days: Day[]): Week {
         return {
             date: date,
-            weekNumber: getISOWeek(date),
+            weekNumber: getISOWeek(date).toString().padStart(2, '0'),
             days: days
         };
     }

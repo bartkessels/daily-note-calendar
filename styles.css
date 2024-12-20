@@ -31,7 +31,7 @@
 }
 
 .dnc .weekNumber {
-    text-align: start;
+    text-align: center;
     font-weight: var(----font-light);
     color: var(--text-faint);
 }

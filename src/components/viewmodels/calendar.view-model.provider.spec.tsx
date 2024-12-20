@@ -47,7 +47,7 @@ describe('useCalendar', () => {
         currentDay = {date: new Date(2023, 9, 1), dayOfWeek: DayOfWeek.Sunday, name: '1'};
         currentWeek = {
             date: new Date(2023, 9, 1),
-            weekNumber: 40,
+            weekNumber: '40',
             days: [
                 currentDay,
                 {dayOfWeek: 1, date: new Date(2023, 9, 2), name: '2'},

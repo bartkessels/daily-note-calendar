@@ -4,6 +4,7 @@ import { CalendarUiModel } from 'src/components/models/calendar.ui-model';
 import {WeekUiModel} from 'src/components/models/week.ui-model';
 import {MonthUiModel} from 'src/components/models/month.ui-model';
 import {Month} from 'src/domain/models/month';
+import {Week} from 'src/domain/models/week';
 
 describe('DefaultEnhancer', () => {
     let enhancer: DefaultEnhancer<CalendarUiModel>;
@@ -33,7 +34,7 @@ describe('DefaultEnhancer', () => {
     });
 
     it('should return the initial value if no steps are added', async () => {
-        const week = { date: new Date(2023, 0, 1), weekNumber: 1, days: [] };
+        const week: Week = { date: new Date(2023, 0, 1), weekNumber: '1', days: [] };
         const month: Month = { date: new Date(2023, 0), name: 'January', quarter: 1, weeks: [week] };
 
         const initialWeekUiModel: WeekUiModel = { week: week, days: [], hasNote: false };
@@ -48,7 +49,7 @@ describe('DefaultEnhancer', () => {
     });
 
     it('should execute steps in order and return the final value', async () => {
-        const week = { date: new Date(2023, 0, 1), weekNumber: 1, days: [] };
+        const week: Week = { date: new Date(2023, 0, 1), weekNumber: '1', days: [] };
         const month: Month = { date: new Date(2023, 0), name: 'January', quarter: 1, weeks: [week] };
 
         const initialWeekUiModel: WeekUiModel = { week: week, days: [], hasNote: false };

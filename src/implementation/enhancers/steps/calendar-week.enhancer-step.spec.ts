@@ -44,7 +44,7 @@ describe('CalendarWeekEnhancerStep', () => {
     it('should return the calendar unchanged if the setting to display a note indicator is disabled', async () => {
         generalSettingsRepository.getSettings.mockResolvedValue({ displayNoteIndicator: false, displayNotesCreatedOnDate: false });
         const week: WeekUiModel = {
-            week: { date: new Date(2023, 9, 2), weekNumber: 40, days: [] },
+            week: { date: new Date(2023, 9, 2), weekNumber: '40', days: [] },
             days: [],
             hasNote: false
         };
@@ -65,7 +65,7 @@ describe('CalendarWeekEnhancerStep', () => {
         settingsRepository.getSettings.mockResolvedValue(settings);
 
         const week: WeekUiModel = {
-            week: { date: new Date(2023, 9, 2), weekNumber: 40, days: [] },
+            week: { date: new Date(2023, 9, 2), weekNumber: '40', days: [] },
             days: [],
             hasNote: false
         };

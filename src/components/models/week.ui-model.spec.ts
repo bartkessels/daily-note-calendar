@@ -11,7 +11,7 @@ describe('createWeekUiModel', () => {
     beforeEach(() => {
         week = {
             date: new Date(2023, 9, 1),
-            weekNumber: 40,
+            weekNumber: '40',
             days: [
                 { dayOfWeek: DayOfWeek.Monday, date: new Date(2023, 9, 2), name: '2' },
                 { dayOfWeek: DayOfWeek.Tuesday, date: new Date(2023, 9, 3), name: '3' },
@@ -74,7 +74,7 @@ describe('createWeekUiModel', () => {
     it('maps days that arent from the current month as EMPTY_DAY', () => {
         const weekWithMissingDays: Week = {
             date: new Date(2024, 11, 1),
-            weekNumber: 48,
+            weekNumber: '48',
             days: [
                 { dayOfWeek: DayOfWeek.Sunday, date: new Date(2024, 11, 1), name: '1' },
             ]

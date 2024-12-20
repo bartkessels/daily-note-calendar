@@ -57,7 +57,7 @@ describe('CalendarDayEnhancerStep', () => {
             hasNote: false
         };
         const week: WeekUiModel = {
-            week: { date: new Date(2023, 9, 2), weekNumber: 2, days: [] },
+            week: { date: new Date(2023, 9, 2), weekNumber: '2', days: [] },
             days: [day],
             hasNote: false
         };
@@ -84,7 +84,7 @@ describe('CalendarDayEnhancerStep', () => {
             hasNote: false
         };
         const week: WeekUiModel = {
-            week: { date: new Date(2023, 9, 2), weekNumber: 2, days: [] },
+            week: { date: new Date(2023, 9, 2), weekNumber: '2', days: [] },
             days: [day],
             hasNote: false
         };
@@ -119,7 +119,7 @@ describe('CalendarDayEnhancerStep', () => {
             hasNote: false
         };
         const week: WeekUiModel = {
-            week: { date: new Date(2023, 9, 2), weekNumber: 2, days: [] },
+            week: { date: new Date(2023, 9, 2), weekNumber: '2', days: [] },
             days: [day],
             hasNote: false
         };
