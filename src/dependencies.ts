@@ -91,56 +91,58 @@ export function createDependencies(plugin: Plugin): Dependencies {
 
     const selectDayEvent = new SelectDayEvent();
     const generalSettingsRepository = new GeneralSettingsRepository(settingsAdapter);
+    const periodVariableParserStep = new PeriodVariableParserStep(fileAdapter, variableBuilder, dateParser);
     const todayVariableParserStep = new TodayVariableParserStep(fileAdapter, variableBuilder, dateParser);
     const titleVariableParserStep = new TitleVariableParserStep(fileAdapter, noteAdapter);
 
     // Daily note dependencies
     const dailyNoteSettingsRepository = new DailyNoteSettingsRepository(settingsAdapter);
-    const dayVariableParser = new PeriodVariableParserStep<Day>(fileAdapter, variableBuilder, dateParser);
     const dailyNoteEvent = new PeriodicNoteEvent<Day>();
     const dayNameBuilder = new PeriodNameBuilder<Day>(dateParser, logger);
-    new PeriodicNotePipeline(dailyNoteEvent, fileService, dayVariableParser, dailyNoteSettingsRepository, dayNameBuilder)
+    new PeriodicNotePipeline(dailyNoteEvent, fileService, dailyNoteSettingsRepository, dayNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
         .registerPostCreateStep(titleVariableParserStep)
+        .registerPostCreateStep(periodVariableParserStep)
         .registerPostCreateStep(todayVariableParserStep);
 
     // Weekly note dependencies
     const weeklyNoteSettingsRepository = new WeeklyNoteSettingsRepository(settingsAdapter);
-    const weekVariableParser = new PeriodVariableParserStep<Week>(fileAdapter, variableBuilder, dateParser);
     const weeklyNoteEvent = new PeriodicNoteEvent<Week>();
     const weekNameBuilder = new PeriodNameBuilder<Week>(dateParser, logger);
-    new PeriodicNotePipeline(weeklyNoteEvent, fileService, weekVariableParser, weeklyNoteSettingsRepository, weekNameBuilder)
+    new PeriodicNotePipeline(weeklyNoteEvent, fileService, weeklyNoteSettingsRepository, weekNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
         .registerPostCreateStep(titleVariableParserStep)
+        .registerPostCreateStep(periodVariableParserStep)
         .registerPostCreateStep(todayVariableParserStep);
 
     // Monthly note dependencies
     const monthlyNoteSettingsRepository = new MonthlyNoteSettingsRepository(settingsAdapter);
-    const monthVariableParser = new PeriodVariableParserStep<Month>(fileAdapter, variableBuilder, dateParser);
     const monthlyNoteEvent = new PeriodicNoteEvent<Month>();
     const monthNameBuilder = new PeriodNameBuilder<Month>(dateParser, logger);
-    new PeriodicNotePipeline(monthlyNoteEvent, fileService, monthVariableParser, monthlyNoteSettingsRepository, monthNameBuilder)
+    new PeriodicNotePipeline(monthlyNoteEvent, fileService, monthlyNoteSettingsRepository, monthNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
         .registerPostCreateStep(titleVariableParserStep)
+        .registerPostCreateStep(periodVariableParserStep)
         .registerPostCreateStep(todayVariableParserStep);
 
     // Quarterly note dependencies
     const quarterlyNoteSettingsRepository = new QuarterlyNoteSettingsRepository(settingsAdapter);
     const quarterlyNoteEvent = new PeriodicNoteEvent<Month>();
-    new PeriodicNotePipeline(quarterlyNoteEvent, fileService, monthVariableParser, quarterlyNoteSettingsRepository, monthNameBuilder)
+    new PeriodicNotePipeline(quarterlyNoteEvent, fileService, quarterlyNoteSettingsRepository, monthNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
         .registerPostCreateStep(titleVariableParserStep)
+        .registerPostCreateStep(periodVariableParserStep)
         .registerPostCreateStep(todayVariableParserStep);
 
     // Yearly note dependencies
     const yearlyNoteSettingsRepository = new YearlyNoteSettingsRepository(settingsAdapter);
-    const yearVariableParser = new PeriodVariableParserStep<Year>(fileAdapter, variableBuilder, dateParser);
     const yearlyNoteEvent = new PeriodicNoteEvent<Year>();
     const yearNameBuilder = new PeriodNameBuilder<Year>(dateParser, logger);
-    new PeriodicNotePipeline(dailyNoteEvent, fileService, dayVariableParser, dailyNoteSettingsRepository, dayNameBuilder)
-    new PeriodicNotePipeline(yearlyNoteEvent, fileService, yearVariableParser, yearlyNoteSettingsRepository, yearNameBuilder)
+    new PeriodicNotePipeline(dailyNoteEvent, fileService, dailyNoteSettingsRepository, dayNameBuilder)
+    new PeriodicNotePipeline(yearlyNoteEvent, fileService, yearlyNoteSettingsRepository, yearNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
         .registerPostCreateStep(titleVariableParserStep)
+        .registerPostCreateStep(periodVariableParserStep)
         .registerPostCreateStep(todayVariableParserStep);
 
     const notesRepository = new DayNoteRepository(noteAdapter);

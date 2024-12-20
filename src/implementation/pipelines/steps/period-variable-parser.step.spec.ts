@@ -8,7 +8,7 @@ describe('PeriodVariableParserStep', () => {
     let fileAdapter: FileAdapter;
     let variableBuilder: VariableBuilder;
     let dateParser: DateParser;
-    let step: PeriodVariableParserStep<Day>;
+    let step: PeriodVariableParserStep;
     const day: Day = {
         date: new Date('2024-12-31'),
         dayOfWeek: DayOfWeek.Tuesday,

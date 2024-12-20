@@ -4,7 +4,7 @@ import {VariableBuilder} from 'src/domain/builders/variable.builder';
 import {PostCreateStep} from 'src/domain/pipeline/pipeline';
 import {Period} from 'src/domain/models/period';
 
-export class PeriodVariableParserStep<T extends Period> implements PostCreateStep<T> {
+export class PeriodVariableParserStep implements PostCreateStep<Period> {
     private readonly variableDeclarationRegex = /{{date:.*?}}/g;
 
     constructor(
@@ -15,7 +15,7 @@ export class PeriodVariableParserStep<T extends Period> implements PostCreateSte
 
     }
 
-    public async executePostCreate(filePath: string, value: T): Promise<void> {
+    public async executePostCreate(filePath: string, value: Period): Promise<void> {
         const content = await this.fileAdapter.readFileContents(filePath);
         const updatedContent = content.replace(this.variableDeclarationRegex, (variableDeclaration: string, _: any) => {
             const variable = this.variableBuilder.fromString(variableDeclaration).build();

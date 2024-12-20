@@ -4,20 +4,16 @@ import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {PeriodicNoteSettings} from 'src/domain/models/settings/periodic-note.settings';
 import {NameBuilder} from 'src/domain/builders/name.builder';
 import {FileService} from 'src/domain/services/file.service';
-import {PeriodVariableParserStep} from 'src/implementation/pipelines/steps/period-variable-parser.step';
 import {Period} from 'src/domain/models/period';
 
-export class PeriodicNotePipeline<T extends Period, S extends PeriodicNoteSettings> extends Pipeline<T> {
+export class PeriodicNotePipeline<T extends Period, S extends PeriodicNoteSettings> extends Pipeline<Period> {
     constructor(
         event: Event<T>,
         fileService: FileService,
-        variableParserStep: PeriodVariableParserStep<T>,
         private readonly settingsRepository: SettingsRepository<S>,
         private readonly nameBuilder: NameBuilder<T>
     ) {
         super(event, fileService);
-
-        this.registerPostCreateStep(variableParserStep);
     }
 
     protected override async getFilePath(value: T): Promise<string> {
