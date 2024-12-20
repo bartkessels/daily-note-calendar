@@ -12,14 +12,21 @@ The Daily note calendar plugin started as a hobby project because another calend
 
 # Table of contents
 
-- [1. Overview](#1-overview)
+- [1. Features](#1-features)
+  - [1.1 Periodic notes](#11-periodic-notes)
+  - [1.2 Variables](#12-variables)
+  - [1.3 Notes created on a specific day](#13-notes-created-on-a-specific-day)
 - [2. External dependencies](#2-external-dependencies)
 - [3. Build and test](#3-build-and-test)
 - [4. Contribute](#4-contribute)
   - [4.1 Branching strategy](#41-branching-strategy)
 - [5. Create a new release](#5-create-a-new-release)
 
-# 1. Overview
+# 1. Features
+
+![Daily note calendar plugin light mode](./docs/images/daily-note-calendar-light-mode.png)
+
+## 1.1 Periodic notes
 
 Quickly navigate your vault using a calendar view, this plugin allows you to create and navigate to your periodic notes such as
 
@@ -37,6 +44,11 @@ Quickly navigate your vault using a calendar view, this plugin allows you to cre
 For each note, you can specify the template of the name `yyyy-MM-dd - eeee` and the folder where the newly created periodic note should be stored.
 The path is also customizable using the date formatting rules of [`date-fns`](https://date-fns.org/docs/format).
 
+
+Below each date, you can choose to display an indicator whether or note that date already has a note.
+
+## 1.2 Variables
+
 All the notes that you create must be based on a template, this allows you to create your periodic note based on the same template every time.
 Inside your template-file you can use the following variables:
 
@@ -46,13 +58,11 @@ Inside your template-file you can use the following variables:
 | `{{today:<template>}}` | The date of today. This date is based on the date and time of creation of the note.          | You can use the same date templating rules of [date-fns](https://date-fns.org/docs/format) that you use in the name or the folder. Thus `{{today:yyyy-MM-dd - eeee, HH:mm}}` would turn into _2024-12-31 - Monday, 12:59_. |
 | `{{title}}`            | -                                                                                            | This will take the title of the note you had opened before clicking a date in the calendar.                                                                                                                                |
 
-<img src="./docs/images/daily-note-calendar-light-mode.png" alt="Daily note calendar plugin in light mode" width="400" />
-<img src="./docs/images/daily-note-calendar-dark-mode.png" alt="Daily note calendar plugin in dark mode" width="400" />
+## 1.3 Notes created on a specific day
 
-As you see in the images above, you can also enable a feature which allows you to display all the notes created on a specific day. 
-This can be helpful when you need to navigate a lot back and forth between your periodic notes and the notes you created on a specific day.
+For each day you select, you can enable the feature to display all the notes created on that specific day below the calendar.
+This allows you to easily navigate your vault using the calendar view and quickly find the notes you've created on any day.
 
-If you're missing a feature, or something is not working as expected, please let me know by creating an issue in the [issue tracker](https://github.com/bartkessels/daily-note-calendar/issues).
 
 # 2. External dependencies
 
