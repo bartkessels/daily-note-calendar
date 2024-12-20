@@ -19,12 +19,26 @@ export class GeneralSettingItems extends SettingItems {
             settings.displayNotesCreatedOnDate = value;
             await this.settingsRepository.storeSettings(settings);
         });
+        this.addDisplayNoteIndicator(settings.displayNoteIndicator, async value => {
+            settings.displayNoteIndicator = value;
+            await this.settingsRepository.storeSettings(settings);
+        });
     }
 
-    private addNotesCreatedOnDateSetting(value: boolean, onValueChange: (value: boolean) => void) {
+    private addNotesCreatedOnDateSetting(value: boolean, onValueChange: (value: boolean) => void): void {
         new Setting(this.settingsTab.containerEl)
             .setName('Display notes created on selected date')
             .setDesc('When selecting a specific date in the calender, display all the notes created on that date below the calendar.')
+            .addToggle(component => component
+                .setValue(value)
+                .onChange(onValueChange)
+            );
+    }
+
+    private addDisplayNoteIndicator(value: boolean, onValueChange: (value: boolean) => void): void {
+        new Setting(this.settingsTab.containerEl)
+            .setName('Display an indicator on each date that has a note')
+            .setDesc('Display an indicator below the date or week number if the date has a note.')
             .addToggle(component => component
                 .setValue(value)
                 .onChange(onValueChange)

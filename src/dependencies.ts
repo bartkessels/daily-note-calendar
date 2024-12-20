@@ -99,7 +99,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const dailyNoteSettingsRepository = new DailyNoteSettingsRepository(settingsAdapter);
     const dailyNoteEvent = new PeriodicNoteEvent<Day>();
     const dayNameBuilder = new PeriodNameBuilder<Day>(dateParser, logger);
-    new PeriodicNotePipeline(dailyNoteEvent, fileService, dailyNoteSettingsRepository, dayNameBuilder)
+    new PeriodicNotePipeline<DailyNotesPeriodicNoteSettings>(dailyNoteEvent, fileService, dailyNoteSettingsRepository, dayNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
         .registerPostCreateStep(titleVariableParserStep)
         .registerPostCreateStep(periodVariableParserStep)
@@ -159,8 +159,8 @@ export function createDependencies(plugin: Plugin): Dependencies {
     );
 
 
-    const dayEnhancerStep = new CalendarDayEnhancerStep(dailyNoteSettingsRepository, dayNameBuilder, fileAdapter);
-    const weekEnhancerStep = new CalendarWeekEnhancerStep(weeklyNoteSettingsRepository, weekNameBuilder, fileAdapter);
+    const dayEnhancerStep = new CalendarDayEnhancerStep(generalSettingsRepository, dailyNoteSettingsRepository, dayNameBuilder, fileAdapter);
+    const weekEnhancerStep = new CalendarWeekEnhancerStep(generalSettingsRepository, weeklyNoteSettingsRepository, weekNameBuilder, fileAdapter);
     const calendarEnhancer = new DefaultEnhancer<CalendarUiModel>()
         .withStep(dayEnhancerStep)
         .withStep(weekEnhancerStep);

@@ -9,7 +9,7 @@ export abstract class Pipeline<T> {
         event: Event<T>,
         protected readonly fileService: FileService
     ) {
-        event.onEvent('pipeline', value => this.process(value));
+        event.onEvent('pipeline', (value) => this.process(value).then());
     }
 
     public registerPreCreateStep(step: PreCreateStep<T>): Pipeline<T> {
@@ -29,7 +29,10 @@ export abstract class Pipeline<T> {
         const filePath = await this.getFilePath(value);
         const doesFileExist = await this.fileService.doesFileExist(filePath);
 
+        console.log(value);
+
         if (!doesFileExist) {
+            console.log(this.postCreateSteps);
             await this.executePreCreateSteps(value);
             await this.createFile(filePath);
             await this.executePostCreateSteps(filePath, value);

@@ -67,7 +67,7 @@ export class CalendarView extends ItemView {
                                     <SelectDayEventContext.Provider value={this.selectDayEvent}>
                                         <DateManagerContext.Provider value={this.dateManager}>
                                             <CalendarEnhancerContext.Provider value={this.calendarEnhancer}>
-                                                <CalendarComponent/>
+                                                <CalendarComponent />
                                             </CalendarEnhancerContext.Provider>
                                         </DateManagerContext.Provider>
                                     </SelectDayEventContext.Provider>

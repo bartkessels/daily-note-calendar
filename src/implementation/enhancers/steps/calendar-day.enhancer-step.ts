@@ -8,9 +8,11 @@ import {FileAdapter} from 'src/domain/adapters/file.adapter';
 import {DayUiModel} from 'src/components/models/day.ui-model';
 import {PeriodicNoteSettings} from 'src/domain/models/settings/periodic-note.settings';
 import {WeekUiModel} from 'src/components/models/week.ui-model';
+import {GeneralSettings} from 'src/domain/models/settings/general.settings';
 
 export class CalendarDayEnhancerStep implements EnhancerStep<CalendarUiModel> {
     constructor(
+        private readonly generalSettingsRepository: SettingsRepository<GeneralSettings>,
         private readonly settingsRepository: SettingsRepository<DailyNotesPeriodicNoteSettings>,
         private readonly nameBuilder: NameBuilder<Day>,
         private readonly fileAdapter: FileAdapter
@@ -19,7 +21,9 @@ export class CalendarDayEnhancerStep implements EnhancerStep<CalendarUiModel> {
     }
 
     public async execute(calendar?: CalendarUiModel): Promise<CalendarUiModel | undefined> {
-        if (!calendar?.currentMonth?.weeks) {
+        const generalSettings = await this.generalSettingsRepository.getSettings();
+
+        if (!calendar?.currentMonth?.weeks || !generalSettings.displayNoteIndicator) {
             return calendar;
         }
 

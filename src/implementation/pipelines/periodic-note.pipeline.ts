@@ -6,17 +6,17 @@ import {NameBuilder} from 'src/domain/builders/name.builder';
 import {FileService} from 'src/domain/services/file.service';
 import {Period} from 'src/domain/models/period';
 
-export class PeriodicNotePipeline<T extends Period, S extends PeriodicNoteSettings> extends Pipeline<Period> {
+export class PeriodicNotePipeline<S extends PeriodicNoteSettings> extends Pipeline<Period> {
     constructor(
-        event: Event<T>,
+        event: Event<Period>,
         fileService: FileService,
         private readonly settingsRepository: SettingsRepository<S>,
-        private readonly nameBuilder: NameBuilder<T>
+        private readonly nameBuilder: NameBuilder<Period>
     ) {
         super(event, fileService);
     }
 
-    protected override async getFilePath(value: T): Promise<string> {
+    protected override async getFilePath(value: Period): Promise<string> {
         const settings = await this.settingsRepository.getSettings();
         return this.nameBuilder
             .withNameTemplate(settings.nameTemplate)

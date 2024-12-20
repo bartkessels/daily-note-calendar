@@ -31,9 +31,9 @@
 }
 
 .dnc .weekNumber {
-    opacity: 30%;
     text-align: start;
     font-weight: var(----font-light);
+    color: var(--text-faint);
 }
 
 .dnc #today {
@@ -43,14 +43,16 @@
 .dnc .has-note:after {
     content: "";
     display: block;
-    width: 10%;
+    width: 30%;
+    opacity: 75%;
     margin: 0 auto;
-    border-bottom: 0.15em solid var(--text-accent);
+    border-bottom: 0.1em solid var(--text-faint);
 }
 
 .dnc .selected-day:after {
     content: "";
     display: block;
+    opacity: 100%;
     width: 30%;
     margin: 0 auto;
     border-bottom: 0.15em solid var(--text-accent);

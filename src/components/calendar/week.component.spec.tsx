@@ -50,6 +50,20 @@ describe('WeekComponent', () => {
         fireEvent.click(screen.getByText('40'));
         expect(mockWeeklyNoteEvent.emitEvent).toHaveBeenCalledWith(week);
     });
+
+    it('should display an indicator if the week has a note', () => {
+        const noteUiModel = {...uiModel, hasNote: true};
+
+        render(setupContent(noteUiModel, mockWeeklyNoteEvent));
+
+        expect(screen.getByText('40')).toHaveClass('has-note');
+    });
+
+    it('should not display an indicator if the day does not have a note', () => {
+        render(setupContent(uiModel, mockWeeklyNoteEvent));
+
+        expect(screen.getByText('40')).not.toHaveClass('has-note');
+    });
 });
 
 function setupContent(

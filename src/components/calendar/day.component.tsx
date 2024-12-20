@@ -1,23 +1,14 @@
 import React from 'react';
 import {DayUiModel} from 'src/components/models/day.ui-model';
-import {getSelectDayEvent} from 'src/components/providers/select-day-event.context';
 import {getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
-import {Day} from 'src/domain/models/day';
 
 interface DayProps {
     day?: DayUiModel;
 }
 
 export const DayComponent = ({ day }: DayProps) => {
-    const selectDayEvent = getSelectDayEvent();
     const dailyNoteEvent = getDailyNoteEvent();
-
-    const openDailyNote = (day?: Day): void => {
-        selectDayEvent?.emitEvent(day);
-        dailyNoteEvent?.emitEvent(day);
-    };
-
-    let classes: string[] = [];
+    const classes: string[] = [];
 
     if (day?.isSelected) {
         classes.push('selected-day');
@@ -32,7 +23,7 @@ export const DayComponent = ({ day }: DayProps) => {
             id={day?.isToday ? 'today' : ''}
             height="30"
             className={classes.join(' ')}
-            onClick={() => openDailyNote(day?.currentDay)}>
+            onClick={() => dailyNoteEvent?.emitEvent(day?.currentDay)}>
             {day?.currentDay?.name}
         </td>
     )

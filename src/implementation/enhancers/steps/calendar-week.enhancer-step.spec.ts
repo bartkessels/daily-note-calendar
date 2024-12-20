@@ -6,34 +6,34 @@ import { CalendarUiModel } from 'src/components/models/calendar.ui-model';
 import { WeeklyNotesPeriodicNoteSettings } from 'src/domain/models/settings/weekly-notes.periodic-note-settings';
 import { Week } from 'src/domain/models/week';
 import { WeekUiModel } from 'src/components/models/week.ui-model';
+import {GeneralSettings} from 'src/domain/models/settings/general.settings';
 
 describe('CalendarWeekEnhancerStep', () => {
-    let settingsRepository: jest.Mocked<SettingsRepository<WeeklyNotesPeriodicNoteSettings>>;
-    let nameBuilder: jest.Mocked<NameBuilder<Week>>;
-    let fileAdapter: jest.Mocked<FileAdapter>;
+    const generalSettingsRepository = {
+        storeSettings: jest.fn(),
+        getSettings: jest.fn()
+    } as jest.Mocked<SettingsRepository<GeneralSettings>>;
+    const settingsRepository = {
+        storeSettings: jest.fn(),
+        getSettings: jest.fn()
+    } as jest.Mocked<SettingsRepository<WeeklyNotesPeriodicNoteSettings>>;
+    const nameBuilder = {
+        withPath: jest.fn().mockReturnThis(),
+        withNameTemplate: jest.fn().mockReturnThis(),
+        withValue: jest.fn().mockReturnThis(),
+        build: jest.fn()
+    } as jest.Mocked<NameBuilder<Week>>;
+    const fileAdapter = {
+        doesFileExist: jest.fn()
+    } as unknown as jest.Mocked<FileAdapter>;
     let enhancerStep: CalendarWeekEnhancerStep;
 
     beforeEach(() => {
-        settingsRepository = {
-            storeSettings: jest.fn(),
-            getSettings: jest.fn()
-        } as jest.Mocked<SettingsRepository<WeeklyNotesPeriodicNoteSettings>>;
-
-        nameBuilder = {
-            withPath: jest.fn().mockReturnThis(),
-            withNameTemplate: jest.fn().mockReturnThis(),
-            withValue: jest.fn().mockReturnThis(),
-            build: jest.fn()
-        } as jest.Mocked<NameBuilder<Week>>;
-
-        fileAdapter = {
-            doesFileExist: jest.fn()
-        } as unknown as jest.Mocked<FileAdapter>;
-
-        enhancerStep = new CalendarWeekEnhancerStep(settingsRepository, nameBuilder, fileAdapter);
+        enhancerStep = new CalendarWeekEnhancerStep(generalSettingsRepository, settingsRepository, nameBuilder, fileAdapter);
     });
 
     it('should return the calendar unchanged if currentMonth or weeks are not defined', async () => {
+        generalSettingsRepository.getSettings.mockResolvedValue({ displayNoteIndicator: true, displayNotesCreatedOnDate: false });
         const calendar: CalendarUiModel = { currentMonth: undefined };
 
         const result = await enhancerStep.execute(calendar);
@@ -41,7 +41,22 @@ describe('CalendarWeekEnhancerStep', () => {
         expect(result).toBe(calendar);
     });
 
+    it('should return the calendar unchanged if the setting to display a note indicator is disabled', async () => {
+        generalSettingsRepository.getSettings.mockResolvedValue({ displayNoteIndicator: false, displayNotesCreatedOnDate: false });
+        const week: WeekUiModel = {
+            week: { date: new Date(2023, 9, 2), weekNumber: 40, days: [] },
+            days: [],
+            hasNote: false
+        };
+        const calendar: CalendarUiModel = { currentMonth: { weeks: [week] } };
+
+        const result = await enhancerStep.execute(calendar);
+
+        expect(result).toBe(calendar);
+    });
+
     it('should enhance the weeks with note existence information', async () => {
+        generalSettingsRepository.getSettings.mockResolvedValue({ displayNoteIndicator: true, displayNotesCreatedOnDate: false });
         const settings: WeeklyNotesPeriodicNoteSettings = {
             folder: '/notes',
             nameTemplate: 'yyyy-ww',

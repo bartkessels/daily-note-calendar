@@ -7,9 +7,11 @@ import {Week} from 'src/domain/models/week';
 import { FileAdapter } from 'src/domain/adapters/file.adapter';
 import {WeekUiModel} from 'src/components/models/week.ui-model';
 import {PeriodicNoteSettings} from 'src/domain/models/settings/periodic-note.settings';
+import {GeneralSettings} from 'src/domain/models/settings/general.settings';
 
 export class CalendarWeekEnhancerStep implements EnhancerStep<CalendarUiModel> {
     constructor(
+        private readonly generalSettingsRepository: SettingsRepository<GeneralSettings>,
         private readonly settingsRepository: SettingsRepository<WeeklyNotesPeriodicNoteSettings>,
         private readonly nameBuilder: NameBuilder<Week>,
         private readonly fileAdapter: FileAdapter
@@ -18,7 +20,9 @@ export class CalendarWeekEnhancerStep implements EnhancerStep<CalendarUiModel> {
     }
 
     public async execute(calendar?: CalendarUiModel): Promise<CalendarUiModel | undefined> {
-        if (!calendar?.currentMonth?.weeks) {
+        const generalSettings = await this.generalSettingsRepository.getSettings();
+
+        if (!calendar?.currentMonth?.weeks || !generalSettings.displayNoteIndicator) {
             return calendar;
         }
 

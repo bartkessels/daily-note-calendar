@@ -7,34 +7,39 @@ import { DailyNotesPeriodicNoteSettings } from 'src/domain/models/settings/daily
 import { Day, DayOfWeek } from 'src/domain/models/day';
 import { WeekUiModel } from 'src/components/models/week.ui-model';
 import { DayUiModel } from 'src/components/models/day.ui-model';
+import {GeneralSettings} from 'src/domain/models/settings/general.settings';
 
 describe('CalendarDayEnhancerStep', () => {
-    let settingsRepository: jest.Mocked<SettingsRepository<DailyNotesPeriodicNoteSettings>>;
-    let nameBuilder: jest.Mocked<NameBuilder<Day>>;
-    let fileAdapter: jest.Mocked<FileAdapter>;
+    const generalSettingsRepository = {
+        storeSettings: jest.fn(),
+        getSettings: jest.fn()
+    } as jest.Mocked<SettingsRepository<GeneralSettings>>;
+    const settingsRepository = {
+        storeSettings: jest.fn(),
+        getSettings: jest.fn()
+    } as jest.Mocked<SettingsRepository<DailyNotesPeriodicNoteSettings>>;
+    const nameBuilder = {
+        withPath: jest.fn().mockReturnThis(),
+        withNameTemplate: jest.fn().mockReturnThis(),
+        withValue: jest.fn().mockReturnThis(),
+        build: jest.fn()
+    } as jest.Mocked<NameBuilder<Day>>;
+    const fileAdapter = {
+        doesFileExist: jest.fn()
+    } as unknown as jest.Mocked<FileAdapter>;
     let enhancerStep: CalendarDayEnhancerStep;
 
     beforeEach(() => {
-        settingsRepository = {
-            storeSettings: jest.fn(),
-            getSettings: jest.fn()
-        } as jest.Mocked<SettingsRepository<DailyNotesPeriodicNoteSettings>>;
+        enhancerStep = new CalendarDayEnhancerStep(generalSettingsRepository, settingsRepository, nameBuilder, fileAdapter);
+    });
 
-        nameBuilder = {
-            withPath: jest.fn().mockReturnThis(),
-            withNameTemplate: jest.fn().mockReturnThis(),
-            withValue: jest.fn().mockReturnThis(),
-            build: jest.fn()
-        } as jest.Mocked<NameBuilder<Day>>;
-
-        fileAdapter = {
-            doesFileExist: jest.fn()
-        } as unknown as jest.Mocked<FileAdapter>;
-
-        enhancerStep = new CalendarDayEnhancerStep(settingsRepository, nameBuilder, fileAdapter);
+    afterEach(() => {
+        nameBuilder.build.mockReset();
+        fileAdapter.doesFileExist.mockReset();
     });
 
     it('should return the calendar unchanged if currentMonth or weeks are not defined', async () => {
+        generalSettingsRepository.getSettings.mockResolvedValue({ displayNoteIndicator: true, displayNotesCreatedOnDate: false });
         const calendar: CalendarUiModel = { currentMonth: undefined };
 
         const result = await enhancerStep.execute(calendar);
@@ -42,7 +47,29 @@ describe('CalendarDayEnhancerStep', () => {
         expect(result).toBe(calendar);
     });
 
+    it('should return the calendar unchanged if the setting to display a note indicator is disabled', async () => {
+        generalSettingsRepository.getSettings.mockResolvedValue({ displayNoteIndicator: false, displayNotesCreatedOnDate: false });
+
+        const day: DayUiModel = {
+            currentDay: { date: new Date(2023, 9, 2), dayOfWeek: DayOfWeek.Monday, name: '2' },
+            isSelected: false,
+            isToday: false,
+            hasNote: false
+        };
+        const week: WeekUiModel = {
+            week: { date: new Date(2023, 9, 2), weekNumber: 2, days: [] },
+            days: [day],
+            hasNote: false
+        };
+        const calendar: CalendarUiModel = { currentMonth: { weeks: [week] } };
+
+        const result = await enhancerStep.execute(calendar);
+
+        expect(result).toBe(calendar);
+    });
+
     it('should enhance the days with note existence information', async () => {
+        generalSettingsRepository.getSettings.mockResolvedValue({ displayNoteIndicator: true, displayNotesCreatedOnDate: false });
         const settings: DailyNotesPeriodicNoteSettings = {
             folder: '/notes',
             nameTemplate: 'yyyy-MM-dd',
@@ -77,6 +104,7 @@ describe('CalendarDayEnhancerStep', () => {
     });
 
     it('should handle days without currentDay gracefully', async () => {
+        generalSettingsRepository.getSettings.mockResolvedValue({ displayNoteIndicator: true, displayNotesCreatedOnDate: false });
         const settings: DailyNotesPeriodicNoteSettings = {
             folder: '/notes',
             nameTemplate: 'yyyy-MM-dd',

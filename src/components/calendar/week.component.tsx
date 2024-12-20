@@ -9,11 +9,16 @@ export interface WeekProps {
 
 export const WeekComponent = ({week}: WeekProps) => {
     const weeklyNoteEvent = getWeeklyNoteEvent();
+    const classes: string[] = ['weekNumber'];
+
+    if (week?.hasNote) {
+        classes.push('has-note');
+    }
 
     return (
         <tr>
             <td
-                className="weekNumber"
+                className={classes.join(' ')}
                 key={week?.week?.weekNumber}
                 onClick={() => weeklyNoteEvent?.emitEvent(week?.week)}
             >{week?.week?.weekNumber}</td>

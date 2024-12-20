@@ -52,6 +52,10 @@ describe('DefaultCalendarViewModel', () => {
         mockDateManager.getYear.mockReturnValue(currentYear);
     });
 
+    afterEach(() => {
+        mockDateManager.getCurrentMonth.mockReset();
+    })
+
     function createViewModel(): DefaultCalendarViewModel {
         return new DefaultCalendarViewModel(
             setUiModel,
@@ -201,8 +205,6 @@ describe('DefaultCalendarViewModel', () => {
     });
 
     it('calls getCurrentMonth and getYear with the correct arguments', async () => {
-        // Reset the mock so the other calls aren't counted
-        mockDateManager.getCurrentMonth.mockReset();
         mockDateManager.getCurrentMonth.mockReturnValue(currentMonth);
 
         const viewModel = createViewModel();
