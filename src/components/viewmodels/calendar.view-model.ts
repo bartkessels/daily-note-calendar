@@ -10,9 +10,9 @@ import {CalendarViewState} from 'src/components/viewmodels/calendar.view-state';
 export interface CalendarViewModel {
     viewState: CalendarViewState;
 
-    navigateToPreviousMonth: () => void;
-    navigateToNextMonth: () => void;
-    navigateToCurrentMonth: () => void;
+    navigateToPreviousMonth: () => Promise<void>;
+    navigateToNextMonth: () => Promise<void>;
+    navigateToCurrentMonth: () => Promise<void>;
 }
 
 export class DefaultCalendarViewModel implements CalendarViewModel {
@@ -28,12 +28,20 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         private readonly dateManager: DateManager | null,
         private readonly calendarEnhancer: Enhancer<CalendarUiModel> | null
     ) {
-        this.selectDayEvent?.onEvent('CalendarViewModel', (day: Day): void => this.selectDay(day));
-        this.dailyNoteEvent?.onEvent('CalendarViewModel', (day: Day): void => this.selectDay(day));
+        this.selectDayEvent?.onEvent('CalendarViewModel', (day: Day): void => {
+            this.selectDay(day).then();
+        });
+        this.dailyNoteEvent?.onEvent('CalendarViewModel', (day: Day): void => {
+            this.selectDay(day).then();
+        });
+    }
 
-        this.selectedDay = dateManager?.getCurrentDay();
-        this.selectedMonth = dateManager?.getCurrentMonth();
-        this.selectedYear = dateManager?.getCurrentYear();
+    public async initialize(): Promise<void> {
+        this.selectedDay = this.dateManager?.getCurrentDay();
+        this.selectedMonth = this.dateManager?.getCurrentMonth();
+        this.selectedYear = this.dateManager?.getCurrentYear();
+
+        await this.updateViewState();
     }
 
     public withViewState(viewState?: CalendarViewState): CalendarViewModel {
@@ -43,31 +51,31 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         };
     }
 
-    public navigateToPreviousMonth = (): void => {
+    public navigateToPreviousMonth = async (): Promise<void> => {
         const previousMonth = this.dateManager?.getPreviousMonth(this.selectedMonth);
-        this.selectMonth(previousMonth);
+        await this.selectMonth(previousMonth);
     }
 
-    public navigateToNextMonth = (): void => {
+    public navigateToNextMonth = async (): Promise<void> => {
         const nextMonth = this.dateManager?.getNextMonth(this.selectedMonth);
-        this.selectMonth(nextMonth);
+        await this.selectMonth(nextMonth);
     }
 
-    public navigateToCurrentMonth = (): void => {
+    public navigateToCurrentMonth = async (): Promise<void> => {
         const currentMonth = this.dateManager?.getCurrentMonth();
-        this.selectMonth(currentMonth);
+        await this.selectMonth(currentMonth);
     }
 
-    private selectDay = (day?: Day): void => {
+    private selectDay = async (day?: Day): Promise<void> => {
         this.selectedDay = day;
-        this.updateViewState().then();
+        await this.updateViewState();
     }
 
-    private selectMonth = (month?: Month): void => {
+    private selectMonth = async (month?: Month): Promise<void> => {
         this.selectedMonth = month;
         this.selectedYear = this.dateManager?.getYear(month);
 
-        this.updateViewState().then();
+        await this.updateViewState();
     }
 
     private updateViewState = async (): Promise<void> => {

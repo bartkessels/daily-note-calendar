@@ -25,6 +25,8 @@ export const useCalendarViewModel = (): CalendarViewModel | undefined => {
             calendarEnhancer
         );
         setViewModel(viewModel);
+
+        viewModel.initialize().then();
     }, [dateManager, calendarEnhancer, selectDayEvent, dailyNoteEvent]);
 
     return viewModel?.withViewState(viewState);

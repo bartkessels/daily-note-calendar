@@ -1,17 +1,16 @@
-import { DefaultCalendarViewModel } from 'src/components/viewmodels/calendar.view-model';
-import { Day, DayOfWeek } from 'src/domain/models/day';
-import { Month } from 'src/domain/models/month';
-import { Year } from 'src/domain/models/year';
-import { CalendarUiModel } from 'src/components/models/calendar.ui-model';
-import { Event } from 'src/domain/events/event';
-import { DateManager } from 'src/domain/managers/date.manager';
-import { Enhancer } from 'src/domain/enhancers/enhancer';
-import {createMonthUiModel} from 'src/components/models/month.ui-model';
+import {DefaultCalendarViewModel} from 'src/components/viewmodels/calendar.view-model';
+import {Day, DayOfWeek} from 'src/domain/models/day';
+import {Month} from 'src/domain/models/month';
+import {Year} from 'src/domain/models/year';
+import {CalendarUiModel} from 'src/components/models/calendar.ui-model';
+import {DateManager} from 'src/domain/managers/date.manager';
+import {Enhancer} from 'src/domain/enhancers/enhancer';
 import {PeriodicNoteEvent} from 'src/implementation/events/periodic-note.event';
+import {EnhancerStep} from 'src/domain/enhancers/enhancer-step';
+import {Week} from 'src/domain/models/week';
+import 'src/extensions/extensions';
 import {waitFor} from '@testing-library/react';
-
-jest.mock('src/domain/managers/date.manager');
-jest.mock('src/domain/enhancers/enhancer');
+import {CalendarViewState} from 'src/components/viewmodels/calendar.view-state';
 
 describe('DefaultCalendarViewModel', () => {
     const mockDateManager = {
@@ -22,28 +21,35 @@ describe('DefaultCalendarViewModel', () => {
         getNextMonth: jest.fn(),
         getYear: jest.fn()
     } as jest.Mocked<DateManager>;
-    const mockEnhancer = {
-        withValue: jest.fn(),
-        withStep: jest.fn(),
-        build: jest.fn((value?: CalendarUiModel) => Promise.resolve(value))
-    } as unknown as jest.Mocked<Enhancer<CalendarUiModel>>;
+    let mockEnhancer: Enhancer<CalendarUiModel>;
     const selectedDayEvent = new PeriodicNoteEvent<Day>();
     const dailyNoteEvent = new PeriodicNoteEvent<Day>();
     const setUiModel: jest.Mock = jest.fn();
 
     let currentDay: Day;
+    let nextDay: Day;
+    let currentWeek: Week;
+    let previousMonth: Month;
     let currentMonth: Month;
+    let nextMonth: Month;
     let currentYear: Year;
 
     beforeEach(() => {
-        currentDay = { date: new Date(2023, 9, 1), dayOfWeek: DayOfWeek.Sunday, name: '1' };
-        currentMonth = { date: new Date(2023, 9), name: 'October', quarter: 4, weeks: [] };
-        currentYear = { date: new Date(2024, 0), name: '2024', months: [currentMonth] };
+        mockEnhancer = new EnhancerDouble();
+        currentDay = {date: new Date(2023, 9, 1), dayOfWeek: DayOfWeek.Tuesday, name: '1'};
+        nextDay = {date: new Date(2023, 9, 2), dayOfWeek: DayOfWeek.Wednesday, name: '2'};
+        currentWeek = {date: new Date(2023, 9, 1), weekNumber: 40, days: [currentDay, nextDay]};
+        previousMonth = {date: new Date(2023, 8), name: 'September', quarter: 3, weeks: []};
+        currentMonth = {date: new Date(2023, 9), name: 'October', quarter: 4, weeks: [currentWeek]};
+        nextMonth = {date: new Date(2023, 9), name: 'November', quarter: 4, weeks: []};
+        currentYear = {date: new Date(2024, 0), name: '2024', months: [currentMonth]};
 
         mockDateManager.getCurrentDay.mockReturnValue(currentDay);
+        mockDateManager.getPreviousMonth.mockReturnValue(previousMonth);
         mockDateManager.getCurrentMonth.mockReturnValue(currentMonth);
+        mockDateManager.getNextMonth.mockReturnValue(nextMonth);
         mockDateManager.getCurrentYear.mockReturnValue(currentYear);
-        mockEnhancer.withValue.mockReturnValue(mockEnhancer);
+        mockDateManager.getYear.mockReturnValue(currentYear);
     });
 
     function createViewModel(): DefaultCalendarViewModel {
@@ -56,76 +62,199 @@ describe('DefaultCalendarViewModel', () => {
         );
     }
 
-    it('initializes with the current month, year, and day', async () => {
+    it('should update the selected day when the selectDayEvent has been emitted', async () => {
         const viewModel = createViewModel();
-        const monthUiModel = createMonthUiModel(currentMonth);
+        await viewModel.initialize();
 
-        // await viewModel.updateViewState();
-        dailyNoteEvent.emitEvent(currentDay);
+        selectedDayEvent.emitEvent(nextDay);
 
         await waitFor(() => {
             expect(setUiModel).toHaveBeenCalledWith(expect.objectContaining<CalendarUiModel>({
-                currentMonth: monthUiModel,
+                currentMonth: expect.objectContaining({
+                    weeks: expect.arrayContaining([
+                        expect.objectContaining({
+                            days: expect.arrayContaining([
+                                expect.objectContaining({
+                                    currentDay: nextDay,
+                                    isSelected: true
+                                })
+                            ])
+                        })
+                    ])
+                }),
                 currentYear: currentYear
             }));
-        })
+        });
+    });
 
-        // expect(viewModel.viewState.uiModel?.currentMonth?.month?.name).toBe('October');
-        // expect(viewModel.viewState.uiModel?.currentYear?.name).toBe('2024');
+    it('should update the selected day when the dailyNoteEvent has been emitted', async () => {
+        const viewModel = createViewModel();
+        await viewModel.initialize();
+
+        dailyNoteEvent.emitEvent(nextDay);
+
+        await waitFor(() => {
+            expect(setUiModel).toHaveBeenCalledWith(expect.objectContaining<CalendarUiModel>({
+                currentMonth: expect.objectContaining({
+                    weeks: expect.arrayContaining([
+                        expect.objectContaining({
+                            days: expect.arrayContaining([
+                                expect.objectContaining({
+                                    currentDay: nextDay,
+                                    isSelected: true
+                                })
+                            ])
+                        })
+                    ])
+                }),
+                currentYear: currentYear
+            }));
+        });
+    });
+
+    it('initializes with the current month, year, and day', async () => {
+        const viewModel = createViewModel();
+        await viewModel.initialize();
+
+        expect(mockDateManager.getCurrentDay).toHaveBeenCalled();
+        expect(mockDateManager.getCurrentMonth).toHaveBeenCalled();
+        expect(mockDateManager.getCurrentYear).toHaveBeenCalled();
+        expect(setUiModel).toHaveBeenCalledWith(expect.objectContaining<CalendarUiModel>({
+            currentMonth: expect.objectContaining({
+                month: currentMonth,
+                weeks: expect.arrayContaining([
+                    expect.objectContaining({
+                        days: expect.arrayContaining([
+                            expect.objectContaining({
+                                currentDay: currentDay,
+                                isSelected: true
+                            })
+                        ])
+                    })
+                ])
+            }),
+            currentYear: currentYear
+        }));
+    });
+
+    it('calls updateViewState during initialization', async () => {
+        const viewModel = createViewModel();
+
+        await viewModel.initialize();
+
+        expect(setUiModel).toHaveBeenCalled();
+    });
+
+    it('sets the view state to the provided value', () => {
+        const viewModel = createViewModel();
+        const viewState = {
+            currentMonth: currentMonth,
+            currentYear: currentYear
+        } as CalendarViewState;
+
+        const result = viewModel.withViewState(viewState);
+
+        expect(result.viewState).toBe(viewState);
     });
 
     it('navigates to the previous month', async () => {
-        const previousMonth = { date: new Date(2023, 8), name: 'September', quarter: 3, weeks: [] };
-        mockDateManager.getPreviousMonth.mockReturnValue(previousMonth);
-
         const viewModel = createViewModel();
-        viewModel.navigateToPreviousMonth();
+        await viewModel.initialize();
 
-        // await viewModel.updateViewState();
+        await viewModel.navigateToPreviousMonth();
 
-        expect(viewModel.viewState.uiModel?.currentMonth?.month?.name).toBe('September');
+        await waitFor(() => {
+            expect(setUiModel).toHaveBeenCalledWith(expect.objectContaining<CalendarUiModel>({
+                currentMonth: expect.objectContaining({
+                    month: previousMonth
+                }),
+                currentYear: currentYear
+            }));
+        });
     });
 
-    it('navigates to the next month', async () => {
-        const nextMonth = { date: new Date(2023, 10), name: 'November', quarter: 4, weeks: [] };
-        mockDateManager.getNextMonth.mockReturnValue(nextMonth);
-
+    it('calls getPreviousMonth and getYear with the correct arguments', async () => {
         const viewModel = createViewModel();
-        viewModel.navigateToNextMonth();
+        await viewModel.initialize();
 
-        // await viewModel.updateViewState();
+        await viewModel.navigateToPreviousMonth();
 
-        expect(viewModel.viewState.uiModel?.currentMonth?.month?.name).toBe('November');
+        expect(mockDateManager.getPreviousMonth).toHaveBeenCalledWith(currentMonth);
+        expect(mockDateManager.getYear).toHaveBeenCalledWith(previousMonth);
     });
 
     it('navigates to the current month', async () => {
         const viewModel = createViewModel();
-        viewModel.navigateToCurrentMonth();
+        await viewModel.initialize();
 
-        // await viewModel.updateViewState();
+        await viewModel.navigateToNextMonth();
+        await viewModel.navigateToCurrentMonth();
 
-        expect(viewModel.viewState.uiModel?.currentMonth?.month?.name).toBe('October');
+        await waitFor(() => {
+            expect(setUiModel).toHaveBeenCalledWith(expect.objectContaining<CalendarUiModel>({
+                currentMonth: expect.objectContaining({
+                    month: currentMonth
+                }),
+                currentYear: currentYear
+            }));
+        });
     });
 
-    it('updates the selected day when selectDayEvent is triggered', async () => {
-        const newDay: Day = { date: new Date(2023, 9, 2), dayOfWeek: DayOfWeek.Monday, name: '2' };
+    it('calls getCurrentMonth and getYear with the correct arguments', async () => {
+        // Reset the mock so the other calls aren't counted
+        mockDateManager.getCurrentMonth.mockReset();
+        mockDateManager.getCurrentMonth.mockReturnValue(currentMonth);
 
         const viewModel = createViewModel();
-        // mockSelectDayEvent.emitEvent(newDay);
+        await viewModel.initialize();
 
-        // await viewModel.updateViewState();
+        await viewModel.navigateToCurrentMonth();
 
-        // expect(viewModel.viewState.uiModel?.currentMonth?.name).toBe('2');
+        // Two calls because it is called during initialization
+        expect(mockDateManager.getCurrentMonth).toHaveBeenCalledTimes(2);
+        expect(mockDateManager.getYear).toHaveBeenCalledWith(currentMonth);
     });
 
-    it('updates the selected day when dailyNoteEvent is triggered', async () => {
-        const newDay: Day = { date: new Date(2023, 9, 2), dayOfWeek: DayOfWeek.Monday, name: '2' };
-
+    it('navigates to the next month', async () => {
         const viewModel = createViewModel();
-        // mockDailyNoteEvent.emitEvent(newDay);
+        await viewModel.initialize();
 
-        // await viewModel.updateViewState();
+        await viewModel.navigateToNextMonth();
 
-        // expect(viewModel.viewState.uiModel?.selectedDay?.name).toBe('2');
+        await waitFor(() => {
+            expect(setUiModel).toHaveBeenCalledWith(expect.objectContaining<CalendarUiModel>({
+                currentMonth: expect.objectContaining({
+                    month: nextMonth
+                }),
+                currentYear: currentYear
+            }));
+        });
+    });
+
+    it('calls getNextMonth and getYear with the correct arguments', async () => {
+        const viewModel = createViewModel();
+        await viewModel.initialize();
+
+        await viewModel.navigateToPreviousMonth();
+
+        expect(mockDateManager.getNextMonth).toHaveBeenCalledWith(currentMonth);
+        expect(mockDateManager.getYear).toHaveBeenCalledWith(nextMonth);
     });
 });
+
+class EnhancerDouble implements Enhancer<CalendarUiModel> {
+    private value?: CalendarUiModel;
+
+    withValue(value: CalendarUiModel): Enhancer<CalendarUiModel> {
+        this.value = value;
+        return this;
+    }
+
+    withStep(_: EnhancerStep<CalendarUiModel>): Enhancer<CalendarUiModel> {
+        return this;
+    }
+
+    async build(): Promise<CalendarUiModel | undefined> {
+        return this.value;
+    }
+}
