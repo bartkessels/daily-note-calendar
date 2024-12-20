@@ -1,404 +1,129 @@
-import React, {ReactElement} from 'react';
-import {fireEvent, render, screen, waitFor} from '@testing-library/react';
+import React from 'react';
+import {screen, fireEvent, render} from '@testing-library/react';
 import '@testing-library/jest-dom';
-import {CalendarComponent} from 'src/components/calendar.component';
-import {DateManager} from 'src/domain/managers/date.manager';
-import 'src/extensions/extensions';
-import {DateManagerContext} from 'src/components/providers/date-manager.context';
-import {Day} from 'src/domain/models/day';
+import { CalendarComponent } from './calendar.component';
+import { QuarterlyNoteEventContext } from 'src/components/providers/quarterly-note-event.context';
 import {Event} from 'src/domain/events/event';
-import {Week} from 'src/domain/models/week';
 import {Month} from 'src/domain/models/month';
-import {DailyNoteEventContext} from 'src/components/providers/daily-note-event.context';
-import {WeeklyNoteEventContext} from 'src/components/providers/weekly-note-event.context';
-import {MonthlyNoteEventContext} from 'src/components/providers/monthly-note-event.context';
-import {YearlyNoteEventContext} from 'src/components/providers/yearly-note-event.context';
 import {Year} from 'src/domain/models/year';
-import {QuarterlyNoteEventContext} from 'src/components/providers/quarterly-note-event.context';
-import {SelectDayEventContext} from 'src/components/providers/select-day-event.context';
-import {SelectDayEvent} from 'src/implementation/events/select-day.event';
-import {PeriodicNoteEvent} from 'src/implementation/events/periodic-note.event';
+import {Week} from 'src/domain/models/week';
+import 'src/extensions/extensions';
+import { CalendarViewModel } from './viewmodels/calendar.view-model';
+import {useCalendarViewModel} from 'src/components/viewmodels/calendar.view-model.provider';
+import {createCalendarUiModel} from 'src/components/models/calendar.ui-model';
+
+jest.mock('src/components/viewmodels/calendar.view-model.provider');
 
 describe('CalendarComponent', () => {
-    let month: Month;
-    let year: Year;
-    const mockDateManager = {
-        getCurrentYear: jest.fn(),
-        getYear: jest.fn(),
-        getCurrentMonth: jest.fn(),
-        getNextMonth: jest.fn(),
-        getPreviousMonth: jest.fn()
-    } as DateManager;
-    let selectDayEvent: Event<Day>;
-    const mockDailyNoteEvent = {
-        onEvent: jest.fn(),
-        emitEvent: jest.fn(),
-    } as unknown as Event<Day>;
-    const mockWeeklyNoteEvent = {
-        onEvent: jest.fn(),
-        emitEvent: jest.fn()
-    } as unknown as Event<Week>;
-    const mockMonthlyNoteEvent = {
-        onEvent: jest.fn(),
-        emitEvent: jest.fn()
-    } as unknown as Event<Month>;
+    let mockViewModel: CalendarViewModel;
     const mockQuarterlyNoteEvent = {
         onEvent: jest.fn(),
         emitEvent: jest.fn()
     } as unknown as Event<Month>;
-    const mockYearlyNoteEvent = {
-        onEvent: jest.fn(),
-        emitEvent: jest.fn()
-    } as unknown as Event<Year>;
 
     beforeEach(() => {
-        selectDayEvent = new SelectDayEvent();
-        month = {
-            name: 'October',
-            quarter: 4,
-            monthIndex: 9,
-            number: 10,
-            year: 2023,
-            weeks: [
-                {
-                    weekNumber: 40,
-                    days: [
-                        { dayOfWeek: 1, date: 2, completeDate: new Date(2023, 9, 2), name: '2' },
-                        { dayOfWeek: 2, date: 3, completeDate: new Date(2023, 9, 3), name: '3' },
-                        { dayOfWeek: 3, date: 4, completeDate: new Date(2023, 9, 4), name: '4' },
-                        { dayOfWeek: 4, date: 5, completeDate: new Date(2023, 9, 5), name: '5' },
-                        { dayOfWeek: 5, date: 6, completeDate: new Date(2023, 9, 6), name: '6' },
-                        { dayOfWeek: 6, date: 7, completeDate: new Date(2023, 9, 7), name: '7' },
-                    ]
-                }
+        const week: Week = {
+            date: new Date(2023, 9, 1),
+            weekNumber: '40',
+            days: [
+                {dayOfWeek: 1, date: new Date(2023, 9, 2), name: '2'},
+                {dayOfWeek: 2, date: new Date(2023, 9, 3), name: '3'},
+                {dayOfWeek: 3, date: new Date(2023, 9, 4), name: '4'},
+                {dayOfWeek: 4, date: new Date(2023, 9, 5), name: '5'},
+                {dayOfWeek: 5, date: new Date(2023, 9, 6), name: '6'},
+                {dayOfWeek: 6, date: new Date(2023, 9, 7), name: '7'},
             ]
         };
-
-        year = {
-            year: 2023,
-            name: '2023',
+        const month: Month = {
+            date: new Date(2024, 11),
+            name: 'December',
+            quarter: 4,
+            weeks: [week]
+        };
+        const year: Year = {
+            date: new Date(2024, 0),
+            name: '2024',
             months: [month]
         };
+        const uiModel = createCalendarUiModel(year, month);
 
-        (mockDateManager.getCurrentYear as jest.Mock).mockReturnValue(year);
-        (mockDateManager.getCurrentMonth as jest.Mock).mockReturnValue(month);
+        mockViewModel = {
+            viewState: {
+                uiModel: uiModel
+            },
+            navigateToPreviousMonth: jest.fn(),
+            navigateToCurrentMonth: jest.fn(),
+            navigateToNextMonth: jest.fn()
+        };
+
+        (useCalendarViewModel as jest.Mock).mockReturnValue(mockViewModel);
     });
 
-    it('renders the current month and year', () => {
-        render(setupContent(
-            mockDateManager,
-            selectDayEvent,
-            mockYearlyNoteEvent,
-            mockQuarterlyNoteEvent,
-            mockMonthlyNoteEvent,
-            mockWeeklyNoteEvent,
-            mockDailyNoteEvent
-        ));
+    it('displays the current month and year', () => {
+        render(setupContent(mockViewModel, mockQuarterlyNoteEvent));
 
-        expect(screen.getByText('October')).toBeDefined();
-        expect(screen.getByText('2023')).toBeDefined();
+        expect(screen.getByText('December')).toBeInTheDocument();
+        expect(screen.getByText('2024')).toBeInTheDocument();
     });
 
-    it('calls goToNextMonth when ChevronRight is clicked', () => {
-        render(setupContent(
-            mockDateManager,
-            selectDayEvent,
-            mockYearlyNoteEvent,
-            mockQuarterlyNoteEvent,
-            mockMonthlyNoteEvent,
-            mockWeeklyNoteEvent,
-            mockDailyNoteEvent
-        ));
-
-        fireEvent.click(document.querySelector('.lucide-chevron-right')!);
-        expect(mockDateManager.getNextMonth).toHaveBeenCalled();
-    });
-
-    it('calls goToPreviousMonth when ChevronLeft is clicked', () => {
-        render(setupContent(
-            mockDateManager,
-            selectDayEvent,
-            mockYearlyNoteEvent,
-            mockQuarterlyNoteEvent,
-            mockMonthlyNoteEvent,
-            mockWeeklyNoteEvent,
-            mockDailyNoteEvent
-        ));
+    it('calls navigateToPreviousMonth when the previous month button is clicked', () => {
+        render(setupContent(mockViewModel, mockQuarterlyNoteEvent));
 
         fireEvent.click(document.querySelector('.lucide-chevron-left')!);
-        expect(mockDateManager.getPreviousMonth).toHaveBeenCalled();
+        expect(mockViewModel.navigateToPreviousMonth).toHaveBeenCalled();
     });
 
-    it('calls goToCurrentMonth when CalendarHeart is clicked', () => {
-        render(setupContent(
-            mockDateManager,
-            selectDayEvent,
-            mockYearlyNoteEvent,
-            mockQuarterlyNoteEvent,
-            mockMonthlyNoteEvent,
-            mockWeeklyNoteEvent,
-            mockDailyNoteEvent
-        ));
+    it('calls navigateToCurrentMonth when the current month button is clicked', () => {
+        render(setupContent(mockViewModel, mockQuarterlyNoteEvent));
 
         fireEvent.click(document.querySelector('.lucide-calendar-heart')!);
-        expect(mockDateManager.getCurrentMonth).toHaveBeenCalled();
+        expect(mockViewModel.navigateToCurrentMonth).toHaveBeenCalled();
     });
 
-    it('emits the daily note event when a day is clicked', () => {
-        render(setupContent(
-            mockDateManager,
-            selectDayEvent,
-            mockYearlyNoteEvent,
-            mockQuarterlyNoteEvent,
-            mockMonthlyNoteEvent,
-            mockWeeklyNoteEvent,
-            mockDailyNoteEvent
-        ));
-
-        fireEvent.click(screen.getByText('2'));
-        expect(mockDailyNoteEvent.emitEvent).toHaveBeenCalledWith(month.weeks[0].days[0]);
-    });
-
-    it('emits the weekly note event when a week is clicked', () => {
-        render(setupContent(
-            mockDateManager,
-            selectDayEvent,
-            mockYearlyNoteEvent,
-            mockQuarterlyNoteEvent,
-            mockMonthlyNoteEvent,
-            mockWeeklyNoteEvent,
-            mockDailyNoteEvent
-        ));
-
-        fireEvent.click(screen.getByText('40'));
-        expect(mockWeeklyNoteEvent.emitEvent).toHaveBeenCalledWith(month.weeks[0]);
-    });
-
-    it('emits the monthly note event when a month is clicked', () => {
-        render(setupContent(
-            mockDateManager,
-            selectDayEvent,
-            mockYearlyNoteEvent,
-            mockQuarterlyNoteEvent,
-            mockMonthlyNoteEvent,
-            mockWeeklyNoteEvent,
-            mockDailyNoteEvent
-        ));
-
-        fireEvent.click(screen.getByText('October'));
-        expect(mockMonthlyNoteEvent.emitEvent).toHaveBeenCalledWith(month);
-    });
-
-    it('emits the quarterly note event when a quarter is clicked', () => {
-        render(setupContent(
-            mockDateManager,
-            selectDayEvent,
-            mockYearlyNoteEvent,
-            mockQuarterlyNoteEvent,
-            mockMonthlyNoteEvent,
-            mockWeeklyNoteEvent,
-            mockDailyNoteEvent
-        ));
-
-        fireEvent.click(screen.getByText('Q4'));
-        expect(mockQuarterlyNoteEvent.emitEvent).toHaveBeenCalledWith(month);
-    });
-
-    it('emits the yearly note event when a year is clicked', () => {
-        render(setupContent(
-            mockDateManager,
-            selectDayEvent,
-            mockYearlyNoteEvent,
-            mockQuarterlyNoteEvent,
-            mockMonthlyNoteEvent,
-            mockWeeklyNoteEvent,
-            mockDailyNoteEvent
-        ));
-
-        fireEvent.click(screen.getByText('2023'));
-        expect(mockYearlyNoteEvent.emitEvent).toHaveBeenCalledWith(year);
-    });
-
-    it('should set selectDay class on the day that is emitted on the daily note event', async () => {
-        const day: Day = { dayOfWeek: 1, date: 2, completeDate: new Date(2023, 9, 2), name: '2' };
-        const dailyNoteEvent = new PeriodicNoteEvent<Day>();
-
-        render(setupContent(
-            mockDateManager,
-            selectDayEvent,
-            mockYearlyNoteEvent,
-            mockQuarterlyNoteEvent,
-            mockMonthlyNoteEvent,
-            mockWeeklyNoteEvent,
-            dailyNoteEvent
-        ));
-
-        React.act(() => dailyNoteEvent.emitEvent(day));
-
-        await waitFor(() => expect(screen.getByText('2').classList).toContain('selected-day'));
-    });
-
-    it('should set selectDay class on the day that is emitted on the select day event', async () => {
-        const day: Day = { dayOfWeek: 1, date: 2, completeDate: new Date(2023, 9, 2), name: '2' };
-
-        render(setupContent(
-            mockDateManager,
-            selectDayEvent,
-            mockYearlyNoteEvent,
-            mockQuarterlyNoteEvent,
-            mockMonthlyNoteEvent,
-            mockWeeklyNoteEvent,
-            mockDailyNoteEvent
-        ));
-
-        React.act(() => selectDayEvent.emitEvent(day));
-
-        await waitFor(() => expect(screen.getByText('2').classList).toContain('selected-day'));
-    });
-
-    it('should set today id on today when the component is being rendered', () => {
-        jest.spyOn(Date.prototype, 'isToday').mockImplementation(function() {
-            return this.getDate() === 2 && this.getMonth() === 9 && this.getFullYear() === 2023;
-        });
-
-        render(setupContent(
-            mockDateManager,
-            selectDayEvent,
-            mockYearlyNoteEvent,
-            mockQuarterlyNoteEvent,
-            mockMonthlyNoteEvent,
-            mockWeeklyNoteEvent,
-            mockDailyNoteEvent
-        ));
-
-        expect(screen.getByText('2').id).toContain('today');
-    });
-
-    it('updates the year when the next month is clicked while it is December', () => {
-        const december = {
-            name: 'December',
-            quarter: 4,
-            monthIndex: 11,
-            number: 12,
-            year: 2024,
-            weeks: []
-        };
-        const january = {
-            name: 'January',
-            quarter: 1,
-            monthIndex: 0,
-            number: 1,
-            year: 2025,
-            weeks: []
-        };
-        const currentYear = {
-            year: 2024,
-            name: '2024',
-            months: [december]
-        };
-        const nextYear = {
-            year: 2025,
-            name: '2025',
-            months: [january]
-        };
-
-        (mockDateManager.getCurrentMonth as jest.Mock).mockReturnValue(december);
-        (mockDateManager.getNextMonth as jest.Mock).mockReturnValue(january);
-        (mockDateManager.getCurrentYear as jest.Mock).mockReturnValue(currentYear);
-        (mockDateManager.getYear as jest.Mock).mockReturnValue(nextYear);
-
-        render(setupContent(
-            mockDateManager,
-            selectDayEvent,
-            mockYearlyNoteEvent,
-            mockQuarterlyNoteEvent,
-            mockMonthlyNoteEvent,
-            mockWeeklyNoteEvent,
-            mockDailyNoteEvent
-        ));
+    it('calls navigateToNextMonth when the next month button is clicked', () => {
+        render(setupContent(mockViewModel, mockQuarterlyNoteEvent));
 
         fireEvent.click(document.querySelector('.lucide-chevron-right')!);
-
-        expect(mockDateManager.getYear).toHaveBeenCalledWith(january);
-        expect(screen.getByText('January')).toBeDefined();
-        expect(screen.getByText('2025')).toBeDefined();
+        expect(mockViewModel.navigateToNextMonth).toHaveBeenCalled();
     });
 
-    it('updates the year when the previous month is clicked while it is January', () => {
-        const january = {
-            name: 'January',
-            quarter: 1,
-            monthIndex: 0,
-            number: 1,
-            year: 2025,
-            weeks: []
-        };
-        const december = {
-            name: 'December',
-            quarter: 4,
-            monthIndex: 11,
-            number: 12,
-            year: 2024,
-            weeks: []
-        };
-        const currentYear = {
-            year: 2025,
-            name: '2025',
-            months: [january]
-        };
-        const previousYear = {
-            year: 2024,
-            name: '2024',
-            months: [december]
-        };
+    it('displays the quarter of the current month', () => {
+        render(setupContent(mockViewModel, mockQuarterlyNoteEvent));
 
-        (mockDateManager.getCurrentMonth as jest.Mock).mockReturnValue(january);
-        (mockDateManager.getPreviousMonth as jest.Mock).mockReturnValue(december);
-        (mockDateManager.getCurrentYear as jest.Mock).mockReturnValue(currentYear);
-        (mockDateManager.getYear as jest.Mock).mockReturnValue(previousYear);
+        expect(screen.getByText('Q4')).toBeInTheDocument();
+    });
 
-        render(setupContent(
-            mockDateManager,
-            selectDayEvent,
-            mockYearlyNoteEvent,
-            mockQuarterlyNoteEvent,
-            mockMonthlyNoteEvent,
-            mockWeeklyNoteEvent,
-            mockDailyNoteEvent
-        ));
+    it('emits the quarterly note event when the quarter is clicked', () => {
+        render(setupContent(mockViewModel, mockQuarterlyNoteEvent));
 
-        fireEvent.click(document.querySelector('.lucide-chevron-left')!);
+        fireEvent.click(screen.getByText('Q4'));
+        expect(mockQuarterlyNoteEvent.emitEvent).toHaveBeenCalledWith(mockViewModel.viewState.uiModel?.currentMonth?.month);
+    });
 
-        expect(mockDateManager.getYear).toHaveBeenCalledWith(december);
-        expect(screen.getByText('December')).toBeDefined();
-        expect(screen.getByText('2024')).toBeDefined();
+    it('displays all days and week numbers of the current month grouped into weeks', () => {
+        render(setupContent(mockViewModel, mockQuarterlyNoteEvent));
+
+        expect(screen.getByText('40')).toBeInTheDocument();
+        expect(screen.getByText('2')).toBeInTheDocument();
+        expect(screen.getByText('3')).toBeInTheDocument();
+        expect(screen.getByText('4')).toBeInTheDocument();
+        expect(screen.getByText('5')).toBeInTheDocument();
+        expect(screen.getByText('6')).toBeInTheDocument();
+        expect(screen.getByText('7')).toBeInTheDocument();
     });
 });
 
 function setupContent(
-    mockDateManager: DateManager,
-    mockSelectDayEvent: Event<Day>,
-    mockYearlyNoteEvent: Event<Year>,
-    mockQuarterlyNoteEvent: Event<Month>,
-    mockMonthlyNoteEvent: Event<Month>,
-    mockWeeklyNoteEvent: Event<Week>,
-    mockDailyNoteEvent: Event<Day>
-): ReactElement {
+    viewModel: CalendarViewModel,
+    quarterlyNoteEvent: Event<Month>
+): React.ReactElement {
+    jest.mock('src/components/viewmodels/calendar.view-model.provider', () => ({
+        useCalendarViewModel: jest.fn(() => viewModel)
+    }));
+
     return (
-        <DateManagerContext.Provider value={mockDateManager}>
-            <SelectDayEventContext.Provider value={mockSelectDayEvent}>
-                <YearlyNoteEventContext.Provider value={mockYearlyNoteEvent}>
-                    <QuarterlyNoteEventContext.Provider value={mockQuarterlyNoteEvent}>
-                        <MonthlyNoteEventContext.Provider value={mockMonthlyNoteEvent}>
-                            <WeeklyNoteEventContext.Provider value={mockWeeklyNoteEvent}>
-                                <DailyNoteEventContext.Provider value={mockDailyNoteEvent}>
-                                    <CalendarComponent />
-                                </DailyNoteEventContext.Provider>
-                            </WeeklyNoteEventContext.Provider>
-                        </MonthlyNoteEventContext.Provider>
-                    </QuarterlyNoteEventContext.Provider>
-                </YearlyNoteEventContext.Provider>
-            </SelectDayEventContext.Provider>
-        </DateManagerContext.Provider>
-    )
+        <QuarterlyNoteEventContext.Provider value={quarterlyNoteEvent}>
+            <CalendarComponent />
+        </QuarterlyNoteEventContext.Provider>
+    );
 }
