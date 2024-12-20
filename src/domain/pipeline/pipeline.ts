@@ -29,10 +29,7 @@ export abstract class Pipeline<T> {
         const filePath = await this.getFilePath(value);
         const doesFileExist = await this.fileService.doesFileExist(filePath);
 
-        console.log(value);
-
         if (!doesFileExist) {
-            console.log(this.postCreateSteps);
             await this.executePreCreateSteps(value);
             await this.createFile(filePath);
             await this.executePostCreateSteps(filePath, value);

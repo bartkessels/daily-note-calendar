@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {ReactElement} from 'react';
 import {DayUiModel} from 'src/components/models/day.ui-model';
 import {getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
 
@@ -6,7 +6,7 @@ interface DayProps {
     day?: DayUiModel;
 }
 
-export const DayComponent = ({ day }: DayProps) => {
+export const DayComponent = ({ day }: DayProps): ReactElement => {
     const dailyNoteEvent = getDailyNoteEvent();
     const classes: string[] = [];
 

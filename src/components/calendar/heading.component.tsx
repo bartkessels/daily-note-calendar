@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {ReactElement} from 'react';
 import {Year} from 'src/domain/models/year';
 import {CalendarHeart, ChevronLeft, ChevronRight} from 'lucide-react';
 import {MonthUiModel} from 'src/components/models/month.ui-model';
@@ -19,7 +19,7 @@ export const HeadingComponent = ({
     navigateToPreviousMonth,
     navigateToNextMonth,
     navigateToCurrentMonth
-}: HeadingProps) => {
+}: HeadingProps): ReactElement => {
     const monthlyNoteEvent = getMonthlyNoteEvent();
     const yearlyNoteEvent = getYearlyNoteEvent();
 

@@ -2,12 +2,13 @@ import {DayComponent} from 'src/components/calendar/day.component';
 import * as React from 'react';
 import {WeekUiModel} from 'src/components/models/week.ui-model';
 import {getWeeklyNoteEvent} from 'src/components/providers/weekly-note-event.context';
+import {ReactElement} from 'react';
 
 export interface WeekProps {
     week?: WeekUiModel;
 }
 
-export const WeekComponent = ({week}: WeekProps) => {
+export const WeekComponent = ({week}: WeekProps): ReactElement => {
     const weeklyNoteEvent = getWeeklyNoteEvent();
     const classes: string[] = ['weekNumber'];
 

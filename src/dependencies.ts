@@ -99,7 +99,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const dailyNoteSettingsRepository = new DailyNoteSettingsRepository(settingsAdapter);
     const dailyNoteEvent = new PeriodicNoteEvent<Day>();
     const dayNameBuilder = new PeriodNameBuilder<Day>(dateParser, logger);
-    new PeriodicNotePipeline<DailyNotesPeriodicNoteSettings>(dailyNoteEvent, fileService, dailyNoteSettingsRepository, dayNameBuilder)
+    new PeriodicNotePipeline(dailyNoteEvent, fileService, dailyNoteSettingsRepository, dayNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
         .registerPostCreateStep(titleVariableParserStep)
         .registerPostCreateStep(periodVariableParserStep)
@@ -138,7 +138,6 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const yearlyNoteSettingsRepository = new YearlyNoteSettingsRepository(settingsAdapter);
     const yearlyNoteEvent = new PeriodicNoteEvent<Year>();
     const yearNameBuilder = new PeriodNameBuilder<Year>(dateParser, logger);
-    new PeriodicNotePipeline(dailyNoteEvent, fileService, dailyNoteSettingsRepository, dayNameBuilder)
     new PeriodicNotePipeline(yearlyNoteEvent, fileService, yearlyNoteSettingsRepository, yearNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
         .registerPostCreateStep(titleVariableParserStep)
@@ -168,8 +167,8 @@ export function createDependencies(plugin: Plugin): Dependencies {
     return {
         dateManager,
         dateParser,
-
         selectDayEvent,
+
         generalSettingsRepository,
 
         noteEvent,

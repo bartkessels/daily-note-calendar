@@ -19,13 +19,10 @@ export class TitleVariableParserStep implements PostCreateStep<any>, PreCreateSt
     }
 
     public async executePostCreate(filePath: string, _: any): Promise<void> {
-        console.log('hoi');
         const content = await this.fileAdapter.readFileContents(filePath);
         const updatedContent = content.replace(this.variableDeclarationRegex, () => {
             return this.activeNote?.name ?? '';
         });
-
-        console.log(updatedContent);
 
         await this.fileAdapter.writeFileContents(filePath, updatedContent);
     }
