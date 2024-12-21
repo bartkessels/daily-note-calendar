@@ -63,6 +63,9 @@ Inside your template-file you can use the following variables:
 For each day you select, you can enable the feature to display all the notes created on that specific day below the calendar.
 This allows you to easily navigate your vault using the calendar view and quickly find the notes you've created on any day.
 
+In the settings, you can specify how you want the plugin to find the notes created on a date. Either use the default created date of the actual file or use a specific property in the frontmatter of the note.
+
+The created on time that is displayed below each note can be customized using the date formatting rules of [`date-fns`](https://date-fns.org/docs/format).
 
 # 2. External dependencies
 
