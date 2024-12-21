@@ -1,5 +1,5 @@
 import {VariableBuilder} from 'src/domain/builders/variable.builder';
-import {Calculus, CalculusOperator, fromRegex, Variable, VariableType} from 'src/domain/models/variable';
+import {Calculus, fromRegex, Variable, VariableType} from 'src/domain/models/variable';
 import {Logger} from 'src/domain/loggers/logger';
 
 export class DefaultVariableBuilder implements VariableBuilder {
@@ -16,14 +16,12 @@ export class DefaultVariableBuilder implements VariableBuilder {
     public constructor(
         private readonly logger: Logger
     ) {
+
     }
 
     public fromString(value: string): VariableBuilder {
-        const cleanTemplate = value.replace(/{{|}}/g, '');
-        const regex = /([a-z]*)(\[[+-]\d+.])?:(.+)/;
-        const [_, name, calculus, template] = regex.exec(cleanTemplate) || [];
-
-        console.log(name, calculus, template);
+        const regex = /{{([a-z]+)([+-][0-9].)?:?(.*)?}}/;
+        const [_, name, calculus, template] = regex.exec(value) || [];
 
         this.name = name;
         this.calculus = fromRegex(calculus);

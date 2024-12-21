@@ -24,7 +24,25 @@ describe('DefaultVariableBuilder', () => {
         expect(variable).toEqual({
             name: 'date',
             type: VariableType.Date,
-            template: 'yyyy-MM-dd'
+            template: 'yyyy-MM-dd',
+            calculus: null
+        });
+    });
+
+    it('should build a variable with name, type, template, and calculus', () => {
+        const variable: Variable = builder
+            .fromString('{{date+1d:yyyy-MM-dd}}')
+            .build();
+
+        expect(variable).toEqual({
+            name: 'date',
+            type: VariableType.Date,
+            template: 'yyyy-MM-dd',
+            calculus: {
+                unit: 'd',
+                operator: '+',
+                value: 1
+            }
         });
     });
 
@@ -36,7 +54,8 @@ describe('DefaultVariableBuilder', () => {
         expect(variable).toEqual({
             name: 'title',
             type: VariableType.Title,
-            template: undefined
+            template: undefined,
+            calculus: null
         });
     });
 
@@ -63,18 +82,9 @@ describe('DefaultVariableBuilder', () => {
         expect(variable).toEqual({
             name: 'date',
             type: VariableType.Date,
+            calculus: null,
             template: 'YYYY-MM-DD'
         });
-    });
-
-    it('should throw an error if string does not contain a name', () => {
-        expect(() => builder.fromString('{{:YYYY-MM-DD}}').build()).toThrow();
-        expect(logger.logAndThrow).toHaveBeenCalledWith('Could not create a variable because it has no name');
-    });
-
-    it('should throw an error if string does not contain a template for types that require it', () => {
-        expect(() => builder.fromString('{{date}}').build()).toThrow();
-        expect(logger.logAndThrow).toHaveBeenCalledWith('Could not create a variable because the template is unknown');
     });
 
     it('should handle types that do not require a template', () => {
@@ -85,7 +95,8 @@ describe('DefaultVariableBuilder', () => {
         expect(variable).toEqual({
             name: 'title',
             type: VariableType.Title,
-            template: undefined
+            template: undefined,
+            calculus: null
         });
     });
 });

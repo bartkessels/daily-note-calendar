@@ -12,7 +12,7 @@ export interface Calculus {
 }
 
 export function fromRegex(string: string): Calculus | null {
-    const regex= /([+-])(\d+)([.?])/;
+    const regex= /([+-])([0-9]+)([a-z])/;
     const [_, operator, value, unit] = regex.exec(string) || [];
 
     if (!operator || !value || !unit) {

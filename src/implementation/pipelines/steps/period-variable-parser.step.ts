@@ -3,10 +3,9 @@ import {FileAdapter} from 'src/domain/adapters/file.adapter';
 import {VariableBuilder} from 'src/domain/builders/variable.builder';
 import {PostCreateStep} from 'src/domain/pipeline/pipeline';
 import {Period} from 'src/domain/models/period';
-import {CalculusOperator} from 'src/domain/models/variable';
 
 export class PeriodVariableParserStep implements PostCreateStep<Period> {
-    private readonly variableDeclarationRegex = /{{date:.*?}}/g;
+    private readonly variableDeclarationRegex = /{{date.*?}}/g;
 
     constructor(
         private readonly fileAdapter: FileAdapter,

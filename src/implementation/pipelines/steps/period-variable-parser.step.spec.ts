@@ -3,6 +3,7 @@ import {VariableBuilder} from 'src/domain/builders/variable.builder';
 import {DateParser} from 'src/domain/parsers/date.parser';
 import {PeriodVariableParserStep} from './period-variable-parser.step';
 import {Day, DayOfWeek} from 'src/domain/models/day';
+import 'src/extensions/extensions';
 
 describe('PeriodVariableParserStep', () => {
     let fileAdapter: FileAdapter;
