@@ -9,9 +9,8 @@ describe('PeriodicNoteEvent', () => {
         event = new PeriodicNoteEvent<Day>();
         day = {
             dayOfWeek: DayOfWeek.Tuesday,
-            date: 12,
+            date: new Date('2024-11-12'),
             name: '12',
-            completeDate: new Date('2024-11-12')
         };
     });
 

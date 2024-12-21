@@ -18,12 +18,12 @@ export class WeeklyNoteSettingItems extends PeriodicNoteSettingItems {
         const settings = await this.settingsRepository.getSettings();
 
         this.addHeading("Weekly notes", "Weekly notes are created or opened by clicking on the week number in the calendar.");
-        this.addDateParseSetting(nameTemplateSetting(settings.nameTemplate), async value => {
+        this.addPeriodicDateSetting(nameTemplateSetting(settings.nameTemplate), async value => {
             settings.nameTemplate = value;
             await this.settingsRepository.storeSettings(settings);
         });
 
-        this.addDateParseSetting(folderSetting(settings.folder), async value => {
+        this.addPeriodicDateSetting(folderSetting(settings.folder), async value => {
             settings.folder = value;
             await this.settingsRepository.storeSettings(settings);
         });

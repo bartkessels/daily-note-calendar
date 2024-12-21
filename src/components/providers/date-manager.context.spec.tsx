@@ -5,6 +5,7 @@ import {DateManager} from 'src/domain/managers/date.manager';
 
 describe('DateManagerContext', () => {
     const mockDateManager = {
+        getCurrentDay: jest.fn(),
         getCurrentYear: jest.fn(),
         getYear: jest.fn(),
         getCurrentMonth: jest.fn(),

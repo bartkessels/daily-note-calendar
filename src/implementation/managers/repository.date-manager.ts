@@ -32,7 +32,7 @@ export class RepositoryDateManager implements DateManager {
             return this.dateRepository.getYear(currentYear);
         }
 
-        return this.dateRepository.getYear(month.year);
+        return this.dateRepository.getYear(month.date.getFullYear());
     }
 
     public getCurrentMonth(): Month {
@@ -47,8 +47,8 @@ export class RepositoryDateManager implements DateManager {
             return this.getCurrentMonth();
         }
 
-        let currentYear = currentMonth.year;
-        let currentMonthIndex = currentMonth.monthIndex + 1;
+        let currentYear = currentMonth.date.getFullYear();
+        let currentMonthIndex = currentMonth.date.getMonth() + 1;
 
         if (currentMonthIndex > this.DECEMBER_INDEX) {
             currentYear += 1;
@@ -63,8 +63,8 @@ export class RepositoryDateManager implements DateManager {
             return this.getCurrentMonth();
         }
 
-        let currentYear = currentMonth.year;
-        let currentMonthIndex = currentMonth.monthIndex - 1;
+        let currentYear = currentMonth.date.getFullYear();
+        let currentMonthIndex = currentMonth.date.getMonth() - 1;
 
         if (currentMonthIndex < this.JANUARY_INDEX) {
             currentYear -= 1;

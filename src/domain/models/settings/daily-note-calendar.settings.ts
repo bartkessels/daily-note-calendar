@@ -19,9 +19,11 @@ import {
     YearlyNotesPeriodicNoteSettings
 } from 'src/domain/models/settings/yearly-notes.periodic-note-settings';
 import {DEFAULT_GENERAL_SETTINGS, GeneralSettings} from 'src/domain/models/settings/general.settings';
+import {DEFAULT_NOTES_SETTINGS, NotesSettings} from 'src/domain/models/settings/notes.settings';
 
 export interface DailyNoteCalendarSettings {
     generalSettings: GeneralSettings,
+    notesSettings: NotesSettings,
     dailyNotes: DailyNotesPeriodicNoteSettings,
     weeklyNotes: WeeklyNotesPeriodicNoteSettings,
     monthlyNotes: MonthlyNotesPeriodicNoteSettings,
@@ -31,6 +33,7 @@ export interface DailyNoteCalendarSettings {
 
 export const DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS: DailyNoteCalendarSettings = {
     generalSettings: DEFAULT_GENERAL_SETTINGS,
+    notesSettings: DEFAULT_NOTES_SETTINGS,
     dailyNotes: DEFAULT_DAILY_NOTES_PERIODIC_NOTE_SETTINGS,
     weeklyNotes: DEFAULT_WEEKLY_NOTES_PERIODIC_SETTINGS,
     monthlyNotes: DEFAULT_MONTHLY_NOTES_PERIODIC_SETTINGS,

@@ -9,7 +9,7 @@ export abstract class Pipeline<T> {
         event: Event<T>,
         protected readonly fileService: FileService
     ) {
-        event.onEvent('pipeline', value => this.process(value));
+        event.onEvent('pipeline', (value) => this.process(value).then());
     }
 
     public registerPreCreateStep(step: PreCreateStep<T>): Pipeline<T> {

@@ -1,8 +1,16 @@
-export interface Day {
+import {Period} from 'src/domain/models/period';
+
+export interface Day extends Period {
     dayOfWeek: DayOfWeek,
-    date: number,
     name: string,
-    completeDate: Date
+}
+
+export function dayEquals(dayA?: Day, dayB?: Day): boolean {
+    if (!dayA || !dayB) {
+        return false;
+    }
+
+    return dayA.date.toDateString() === dayB.date.toDateString();
 }
 
 export enum DayOfWeek {
