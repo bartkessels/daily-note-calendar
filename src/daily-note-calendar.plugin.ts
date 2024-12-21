@@ -20,7 +20,8 @@ export default class DailyNoteCalendarPlugin extends Plugin {
                 this.dependencies.monthlyNoteEvent,
                 this.dependencies.weeklyNoteEvent,
                 this.dependencies.dailyNoteEvent,
-                this.dependencies.calendarEnhancer
+                this.dependencies.calendarEnhancer,
+                this.dependencies.notesEnhancer
             )
         );
 

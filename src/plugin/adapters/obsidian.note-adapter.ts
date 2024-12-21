@@ -1,6 +1,6 @@
 import {NoteAdapter} from 'src/domain/adapters/note.adapter';
 import {Note} from 'src/domain/models/note';
-import {App} from 'obsidian';
+import {App, getFrontMatterInfo} from 'obsidian';
 import 'src/extensions/extensions';
 
 export class ObsidianNoteAdapter implements NoteAdapter {

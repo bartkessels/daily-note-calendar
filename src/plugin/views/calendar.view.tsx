@@ -22,6 +22,8 @@ import {SelectDayEventContext} from 'src/components/providers/select-day-event.c
 import {CalendarEnhancerContext} from 'src/components/providers/calendar-enhancer.context';
 import {Enhancer} from 'src/domain/enhancers/enhancer';
 import {CalendarUiModel} from 'src/components/models/calendar.ui-model';
+import {NoteUiModel} from 'src/components/models/note.ui-model';
+import {NotesEnhancerContext} from 'src/components/providers/notes-enhancer.context';
 
 export class CalendarView extends ItemView {
     public static VIEW_TYPE = 'daily-note-calendar';
@@ -39,7 +41,8 @@ export class CalendarView extends ItemView {
         private readonly monthlyNoteEvent: Event<Month>,
         private readonly weeklyNoteEvent: Event<Week>,
         private readonly dailyNoteEvent: Event<Day>,
-        private readonly calendarEnhancer: Enhancer<CalendarUiModel>
+        private readonly calendarEnhancer: Enhancer<CalendarUiModel>,
+        private readonly notesEnhancer: Enhancer<NoteUiModel[]>
     ) {
         super(leaf);
     }
@@ -75,7 +78,9 @@ export class CalendarView extends ItemView {
 
                                 <NoteEventContext.Provider value={this.noteEvent}>
                                     <RefreshNotesEventContext.Provider value={this.refreshNotesEvent}>
-                                        <NotesComponent />
+                                        <NotesEnhancerContext.Provider value={this.notesEnhancer}>
+                                            <NotesComponent />
+                                        </NotesEnhancerContext.Provider>
                                     </RefreshNotesEventContext.Provider>
                                 </NoteEventContext.Provider>
                             </DailyNoteEventContext.Provider>

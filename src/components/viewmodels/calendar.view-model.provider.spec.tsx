@@ -12,14 +12,12 @@ import {DateManager} from 'src/domain/managers/date.manager';
 import {Enhancer} from 'src/domain/enhancers/enhancer';
 import {PeriodicNoteEvent} from 'src/implementation/events/periodic-note.event';
 import React from 'react';
-import {act, renderHook, waitFor} from '@testing-library/react';
+import {renderHook, waitFor} from '@testing-library/react';
 import {useCalendarViewModel} from 'src/components/viewmodels/calendar.view-model.provider';
 import {DefaultCalendarViewModel} from 'src/components/viewmodels/calendar.view-model';
+import 'src/extensions/extensions';
 
-jest.mock('src/components/providers/date-manager.context');
-jest.mock('src/components/providers/calendar-enhancer.context');
-
-describe('useCalendar', () => {
+describe('useCalendarViewModel', () => {
     let currentDay: Day;
     let currentWeek: Week;
     let currentMonth: Month;
@@ -37,7 +35,7 @@ describe('useCalendar', () => {
     const mockEnhancer = {
         withValue: jest.fn(),
         withStep: jest.fn(),
-        build: jest.fn((value?: CalendarUiModel) => Promise.resolve(value))
+        build: jest.fn()
     } as unknown as jest.Mocked<Enhancer<CalendarUiModel>>;
 
     let selectDayEvent: Event<Day>;
