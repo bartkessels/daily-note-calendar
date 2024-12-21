@@ -4,14 +4,11 @@ import {DateParser} from 'src/domain/parsers/date.parser';
 import {SettingItems} from 'src/plugin/settings/setting.items';
 
 export abstract class PeriodicNoteSettingItems extends SettingItems {
-    private readonly today: Date;
-
     protected constructor(
         readonly settingsTab: PluginSettingTab,
-        private readonly dateParser: DateParser
+        readonly dateParser: DateParser
     ) {
-        super(settingsTab);
-        this.today = new Date();
+        super(settingsTab, dateParser);
     }
 
     protected addPeriodicDateSetting(setting: PeriodicNoteSettingUiModel, onChange: (value: string) => void) {

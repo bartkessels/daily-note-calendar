@@ -38,8 +38,8 @@ export class CalendarSettingsTab extends PluginSettingTab {
     ) {
         super(plugin.app, plugin);
 
-        this.generalSettingItems = new GeneralSettingItems(this, generalSettingsRepository);
-        this.notesSettingsItems = new NotesSettingItems(this, notesSettingsRepository);
+        this.generalSettingItems = new GeneralSettingItems(this, dateParser, generalSettingsRepository);
+        this.notesSettingsItems = new NotesSettingItems(this, dateParser, notesSettingsRepository);
         this.dailyNoteSettingItems = new DailyNoteSettingItems(this, dateParser, dailyNotesSettingsRepository);
         this.weeklyNoteSettingItems = new WeeklyNoteSettingItems(this, dateParser, weeklyNotesSettingsRepository);
         this.monthlyNoteSettingItems = new MonthlyNoteSettingItems(this, dateParser, monthlyNotesSettingsRepository);
