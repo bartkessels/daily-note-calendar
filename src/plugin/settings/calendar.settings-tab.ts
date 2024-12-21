@@ -13,6 +13,8 @@ import {QuarterlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/qua
 import {YearlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/yearly-notes.periodic-note-settings';
 import {GeneralSettings} from 'src/domain/models/settings/general.settings';
 import {GeneralSettingItems} from 'src/plugin/settings/general.setting-items';
+import {NotesSettingItems} from 'src/plugin/settings/notes.setting-items';
+import { NotesSettings } from 'src/domain/models/settings/notes.settings';
 
 export class CalendarSettingsTab extends PluginSettingTab {
     private readonly generalSettingItems: GeneralSettingItems;
@@ -21,11 +23,13 @@ export class CalendarSettingsTab extends PluginSettingTab {
     private readonly monthlyNoteSettingItems: MonthlyNoteSettingItems;
     private readonly quarterlyNoteSettingItems: QuarterlyNoteSettingItems;
     private readonly yearlyNoteSettingItems: YearlyNoteSettingItems;
+    private readonly notesSettingsItems: NotesSettingItems;
 
     constructor(
         plugin: Plugin,
         dateParser: DateParser,
         generalSettingsRepository: SettingsRepository<GeneralSettings>,
+        notesSettingsRepository: SettingsRepository<NotesSettings>,
         dailyNotesSettingsRepository: SettingsRepository<DailyNotesPeriodicNoteSettings>,
         weeklyNotesSettingsRepository: SettingsRepository<WeeklyNotesPeriodicNoteSettings>,
         monthlyNotesSettingsRepository: SettingsRepository<MonthlyNotesPeriodicNoteSettings>,
@@ -34,7 +38,8 @@ export class CalendarSettingsTab extends PluginSettingTab {
     ) {
         super(plugin.app, plugin);
 
-        this.generalSettingItems = new GeneralSettingItems(this, generalSettingsRepository);
+        this.generalSettingItems = new GeneralSettingItems(this, dateParser, generalSettingsRepository);
+        this.notesSettingsItems = new NotesSettingItems(this, dateParser, notesSettingsRepository);
         this.dailyNoteSettingItems = new DailyNoteSettingItems(this, dateParser, dailyNotesSettingsRepository);
         this.weeklyNoteSettingItems = new WeeklyNoteSettingItems(this, dateParser, weeklyNotesSettingsRepository);
         this.monthlyNoteSettingItems = new MonthlyNoteSettingItems(this, dateParser, monthlyNotesSettingsRepository);
@@ -52,7 +57,8 @@ export class CalendarSettingsTab extends PluginSettingTab {
         await this.weeklyNoteSettingItems.displaySettings();
         await this.monthlyNoteSettingItems.displaySettings();
         await this.quarterlyNoteSettingItems.displaySettings();
-        await this.yearlyNoteSettingItems.displaySettings(false);
+        await this.yearlyNoteSettingItems.displaySettings();
+        await this.notesSettingsItems.displaySettings(false);
     }
 
     private displayExtraInformation(): void {

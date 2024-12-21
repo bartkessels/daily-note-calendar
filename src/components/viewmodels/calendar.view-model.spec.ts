@@ -8,9 +8,9 @@ import {Enhancer} from 'src/domain/enhancers/enhancer';
 import {PeriodicNoteEvent} from 'src/implementation/events/periodic-note.event';
 import {EnhancerStep} from 'src/domain/enhancers/enhancer-step';
 import {Week} from 'src/domain/models/week';
-import 'src/extensions/extensions';
 import {waitFor} from '@testing-library/react';
 import {CalendarViewState} from 'src/components/viewmodels/calendar.view-state';
+import 'src/extensions/extensions';
 
 describe('DefaultCalendarViewModel', () => {
     const mockDateManager = {

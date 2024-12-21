@@ -2,13 +2,15 @@ import {SettingItems} from 'src/plugin/settings/setting.items';
 import {PluginSettingTab, Setting} from 'obsidian';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {GeneralSettings} from 'src/domain/models/settings/general.settings';
+import { DateParser } from 'src/domain/parsers/date.parser';
 
 export class GeneralSettingItems extends SettingItems {
     constructor(
         readonly settingsTab: PluginSettingTab,
+        readonly dateParser: DateParser,
         private readonly settingsRepository: SettingsRepository<GeneralSettings>
     ) {
-        super(settingsTab);
+        super(settingsTab, dateParser);
     }
 
     override async registerSettings(): Promise<void> {

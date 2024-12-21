@@ -1,25 +1,20 @@
-import {useState} from 'react';
-import {Note} from 'src/domain/models/note';
-import {getRefreshNotesEvent} from 'src/components/providers/refresh-notes-event.context';
 import {getNoteEvent} from 'src/components/providers/note-event.context';
+import {useNotesViewModel} from 'src/components/viewmodels/notes.view-model.provider';
+import {NoteUiModel} from 'src/components/models/note.ui-model';
 
 export const NotesComponent = () => {
-    const [notes, setNotes] = useState<Note[]>([]);
+    const viewModel = useNotesViewModel();
     const noteEvent = getNoteEvent();
-    const refreshNotesEvent = getRefreshNotesEvent();
-
-    refreshNotesEvent?.onEvent('NotesComponent', (notes: Note[]) => {
-        setNotes(notes);
-    });
+    const uiModel = viewModel?.viewState.notes;
 
     return (
         <div className="dnc">
             <ul>
-                {notes.map((note: Note) => (
-                    <li key={note.path} title={note.path} onClick={() => noteEvent?.emitEvent(note)}>
-                        <span className="note-title">{note.name}</span><br/>
-                        <span className="note-date">Created at {note.createdOn.toLocaleTimeString()}</span><br/>
-                        <span className="note-path">{note.path}</span>
+                {uiModel?.map((note: NoteUiModel) => (
+                    <li key={note.displayFilePath} title={note.displayFilePath} onClick={() => noteEvent?.emitEvent(note?.note)}>
+                        <span className="note-title">{note.displayName}</span><br/>
+                        <span className="note-date">Created at {note.displayDate}</span><br/>
+                        <span className="note-path">{note.displayFilePath}</span>
                     </li>
                 ))}
             </ul>

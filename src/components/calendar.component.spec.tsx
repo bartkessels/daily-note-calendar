@@ -7,10 +7,10 @@ import {Event} from 'src/domain/events/event';
 import {Month} from 'src/domain/models/month';
 import {Year} from 'src/domain/models/year';
 import {Week} from 'src/domain/models/week';
-import 'src/extensions/extensions';
 import { CalendarViewModel } from './viewmodels/calendar.view-model';
 import {useCalendarViewModel} from 'src/components/viewmodels/calendar.view-model.provider';
 import {createCalendarUiModel} from 'src/components/models/calendar.ui-model';
+import 'src/extensions/extensions';
 
 jest.mock('src/components/viewmodels/calendar.view-model.provider');
 
@@ -60,48 +60,48 @@ describe('CalendarComponent', () => {
     });
 
     it('displays the current month and year', () => {
-        render(setupContent(mockViewModel, mockQuarterlyNoteEvent));
+        render(setupContent(mockQuarterlyNoteEvent));
 
         expect(screen.getByText('December')).toBeInTheDocument();
         expect(screen.getByText('2024')).toBeInTheDocument();
     });
 
     it('calls navigateToPreviousMonth when the previous month button is clicked', () => {
-        render(setupContent(mockViewModel, mockQuarterlyNoteEvent));
+        render(setupContent(mockQuarterlyNoteEvent));
 
         fireEvent.click(document.querySelector('.lucide-chevron-left')!);
         expect(mockViewModel.navigateToPreviousMonth).toHaveBeenCalled();
     });
 
     it('calls navigateToCurrentMonth when the current month button is clicked', () => {
-        render(setupContent(mockViewModel, mockQuarterlyNoteEvent));
+        render(setupContent(mockQuarterlyNoteEvent));
 
         fireEvent.click(document.querySelector('.lucide-calendar-heart')!);
         expect(mockViewModel.navigateToCurrentMonth).toHaveBeenCalled();
     });
 
     it('calls navigateToNextMonth when the next month button is clicked', () => {
-        render(setupContent(mockViewModel, mockQuarterlyNoteEvent));
+        render(setupContent(mockQuarterlyNoteEvent));
 
         fireEvent.click(document.querySelector('.lucide-chevron-right')!);
         expect(mockViewModel.navigateToNextMonth).toHaveBeenCalled();
     });
 
     it('displays the quarter of the current month', () => {
-        render(setupContent(mockViewModel, mockQuarterlyNoteEvent));
+        render(setupContent(mockQuarterlyNoteEvent));
 
         expect(screen.getByText('Q4')).toBeInTheDocument();
     });
 
     it('emits the quarterly note event when the quarter is clicked', () => {
-        render(setupContent(mockViewModel, mockQuarterlyNoteEvent));
+        render(setupContent(mockQuarterlyNoteEvent));
 
         fireEvent.click(screen.getByText('Q4'));
         expect(mockQuarterlyNoteEvent.emitEvent).toHaveBeenCalledWith(mockViewModel.viewState.uiModel?.currentMonth?.month);
     });
 
     it('displays all days and week numbers of the current month grouped into weeks', () => {
-        render(setupContent(mockViewModel, mockQuarterlyNoteEvent));
+        render(setupContent(mockQuarterlyNoteEvent));
 
         expect(screen.getByText('40')).toBeInTheDocument();
         expect(screen.getByText('2')).toBeInTheDocument();
@@ -114,13 +114,8 @@ describe('CalendarComponent', () => {
 });
 
 function setupContent(
-    viewModel: CalendarViewModel,
     quarterlyNoteEvent: Event<Month>
 ): React.ReactElement {
-    jest.mock('src/components/viewmodels/calendar.view-model.provider', () => ({
-        useCalendarViewModel: jest.fn(() => viewModel)
-    }));
-
     return (
         <QuarterlyNoteEventContext.Provider value={quarterlyNoteEvent}>
             <CalendarComponent />
