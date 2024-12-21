@@ -151,7 +151,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
         .registerPostCreateStep(todayVariableParserStep);
 
     const notesSettingsRepository = new NotesSettingsRepository(settingsAdapter);
-    const notesRepository = new DayNoteRepository(noteAdapter);
+    const notesRepository = new DayNoteRepository(notesSettingsRepository, noteAdapter, logger);
     const noteEvent = new NoteEvent();
     const refreshNotesEvent = new RefreshNotesEvent();
     const notesManager = new GenericNotesManager(

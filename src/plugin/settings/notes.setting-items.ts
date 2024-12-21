@@ -25,6 +25,10 @@ export class NotesSettingItems extends SettingItems {
             settings.useCreatedOnDateFromProperties = value;
             await this.settingsRepository.storeSettings(settings);
         });
+        this.addPropertyForCreatedDateSetting(settings.createdOnDatePropertyName, async value => {
+            settings.createdOnDatePropertyName = value;
+            await this.settingsRepository.storeSettings(settings);
+        });
     }
 
     private addDisplayDateTemplateSetting(value: string, onValueChange: (value: string) => void) {
@@ -42,6 +46,16 @@ export class NotesSettingItems extends SettingItems {
             .setName('Use property for created date')
             .setDesc('Use the property to determine the created date of the note.')
             .addToggle(component => component
+                .setValue(value)
+                .onChange(onValueChange)
+            );
+    }
+
+    private addPropertyForCreatedDateSetting(value: string, onValueChange: (value: string) => void): Setting {
+        return new Setting(this.settingsTab.containerEl)
+            .setName('Property for created date')
+            .setDesc('The property to use to determine the created date of the note. This is only applicable if the "Use property for created date" setting is enabled.')
+            .addText(component => component
                 .setValue(value)
                 .onChange(onValueChange)
             );
