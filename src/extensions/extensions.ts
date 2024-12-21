@@ -1,4 +1,4 @@
-import {Calculus} from 'src/domain/models/variable';
+import {Calculus, CalculusOperator} from 'src/domain/models/variable';
 
 declare global {
     interface String {
@@ -43,39 +43,24 @@ Date.prototype.calculate = function (calculus?: Calculus): Date {
 
     const date = new Date(this);
 
-    if (calculus.operator === '+') {
-        switch (calculus.unit) {
-            case 'd':
-                date.setDate(date.getDate() + calculus.value);
-                break;
-            case 'w':
-                date.setDate(date.getDate() + (calculus.value * 7));
-                break;
-            case 'm':
-                date.setMonth(date.getMonth() + calculus.value);
-                break;
-            case 'y':
-                date.setFullYear(date.getFullYear() + calculus.value);
-                break;
+    switch (calculus.operator) {
+        case CalculusOperator.Add: switch (calculus.unit) {
+            case 'd': date.setDate(date.getDate() + calculus.value); break;
+            case 'w': date.setDate(date.getDate() + (calculus.value * 7)); break;
+            case 'm': date.setMonth(date.getMonth() + calculus.value); break;
+            case 'y': date.setFullYear(date.getFullYear() + calculus.value); break;
         }
-    } else if (calculus.operator === '-') {
-        switch (calculus.unit) {
-            case 'd':
-                date.setDate(date.getDate() - calculus.value);
-                break;
-            case 'w':
-                date.setDate(date.getDate() - (calculus.value * 7));
-                break;
-            case 'm':
-                date.setMonth(date.getMonth() - calculus.value);
-                break;
-            case 'y':
-                date.setFullYear(date.getFullYear() - calculus.value);
-                break;
+        break;
+        case CalculusOperator.Subtract: switch (calculus.unit) {
+            case 'd': date.setDate(date.getDate() - calculus.value); break;
+            case 'w': date.setDate(date.getDate() - (calculus.value * 7)); break;
+            case 'm': date.setMonth(date.getMonth() - calculus.value); break;
+            case 'y': date.setFullYear(date.getFullYear() - calculus.value); break;
         }
+        break;
     }
 
     return date;
-}
+};
 
 export {}
