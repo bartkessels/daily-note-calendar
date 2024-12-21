@@ -23,4 +23,21 @@ export abstract class SettingItems {
             .setName(title)
             .setDesc(description);
     }
+
+    protected addDateParseSetting(
+        name: string,
+        description: string,
+        placeholder: string,
+        value: string,
+        onChange: (value: string) => void
+    ): void {
+        new Setting(this.settingsTab.containerEl)
+            .setName(name)
+            .setDesc(description)
+            .addText(component => component
+                .setPlaceholder(placeholder)
+                .setValue(value)
+                .onChange(onChange)
+            );
+    }
 }

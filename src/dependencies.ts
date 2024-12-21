@@ -50,6 +50,7 @@ import {DefaultEnhancer} from 'src/implementation/enhancers/default.enhancer';
 import {NotesDisplayDateEnhancerStep} from 'src/implementation/enhancers/steps/notes-display-date.enhancer-step';
 import {NotesSettingsRepository} from 'src/implementation/repositories/notes.settings-repository';
 import {NoteUiModel} from 'src/components/models/note.ui-model';
+import {NotesSettings} from 'src/domain/models/settings/notes.settings';
 
 export interface Dependencies {
     readonly dateManager: DateManager;
@@ -61,6 +62,7 @@ export interface Dependencies {
     readonly noteEvent: Event<Note>,
     readonly refreshNotesEvent: Event<Note[]>,
     readonly notesManager: NotesManager;
+    readonly notesSettingsRepository: SettingsRepository<NotesSettings>;
 
     readonly dailyNoteEvent: Event<Day>;
     readonly dailyNoteSettingsRepository: SettingsRepository<DailyNotesPeriodicNoteSettings>;
@@ -182,6 +184,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
         noteEvent,
         refreshNotesEvent,
         notesManager,
+        notesSettingsRepository,
 
         dailyNoteEvent,
         dailyNoteSettingsRepository,

@@ -29,6 +29,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             this,
             this.dependencies.dateParser,
             this.dependencies.generalSettingsRepository,
+            this.dependencies.notesSettingsRepository,
             this.dependencies.dailyNoteSettingsRepository,
             this.dependencies.weeklyNoteSettingsRepository,
             this.dependencies.monthlyNoteSettingsRepository,
