@@ -17,6 +17,7 @@ write my own plugin which allows you to customize the format of your daily and e
 - [1. Features](#1-features)
     - [1.1 Periodic notes](#11-periodic-notes)
     - [1.2 Variables](#12-variables)
+      - [1.2.1 Calculating dates](#121-calculating-dates)
     - [1.3 Notes created on a specific day](#13-notes-created-on-a-specific-day)
 - [2. External dependencies](#2-external-dependencies)
 - [3. Build and test](#3-build-and-test)
