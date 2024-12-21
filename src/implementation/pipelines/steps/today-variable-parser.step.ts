@@ -4,7 +4,7 @@ import {VariableBuilder} from 'src/domain/builders/variable.builder';
 import {PostCreateStep} from 'src/domain/pipeline/pipeline';
 
 export class TodayVariableParserStep implements PostCreateStep<any> {
-    private readonly variableDeclarationRegex = /{{today:.*?}}/g;
+    private readonly variableDeclarationRegex = /{{today.*}}/g;
 
     constructor(
         private readonly fileAdapter: FileAdapter,
@@ -19,7 +19,7 @@ export class TodayVariableParserStep implements PostCreateStep<any> {
         const content = await this.fileAdapter.readFileContents(filePath);
         const updatedContent = content.replace(this.variableDeclarationRegex, (variableDeclaration: string, _: any) => {
             const variable = this.variableBuilder.fromString(variableDeclaration).build();
-            return this.dateParser.parse(today, variable.template!);
+            return this.dateParser.parse(today.calculate(variable.calculus), variable.template!);
         });
 
         await this.fileAdapter.writeFileContents(filePath, updatedContent);

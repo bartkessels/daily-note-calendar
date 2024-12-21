@@ -5,7 +5,7 @@ import {PostCreateStep} from 'src/domain/pipeline/pipeline';
 import {Period} from 'src/domain/models/period';
 
 export class PeriodVariableParserStep implements PostCreateStep<Period> {
-    private readonly variableDeclarationRegex = /{{date:.*?}}/g;
+    private readonly variableDeclarationRegex = /{{date.*?}}/g;
 
     constructor(
         private readonly fileAdapter: FileAdapter,
@@ -25,7 +25,7 @@ export class PeriodVariableParserStep implements PostCreateStep<Period> {
                 return variableDeclaration;
             }
 
-            return this.dateParser.parse(date, variable.template!);
+            return this.dateParser.parse(date.calculate(variable.calculus), variable.template!);
         });
 
         await this.fileAdapter.writeFileContents(filePath, updatedContent);
