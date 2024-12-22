@@ -71,12 +71,12 @@ and _years_.
 You can use the subtract or add a period using the `+` or `-` sign followed by the period and the amount of that period
 you want to add or subtract.
 
-| Period | Variable       | Template example                 |
-|--------|----------------|----------------------------------|
-| Day    | `+1d` or `-1d` | `{{date:+1d:yyyy-MM-dd - eeee}}` |
-| Week   | `+1w` or `-1w` | `{{date:+1w:yyyy-MM-dd - eeee}}` |
-| Month  | `+1m` or `-1m` | `{{date:+1m:yyyy-MM-dd - eeee}}` |
-| Year   | `+1y` or `-1y` | `{{date:+1y:yyyy-MM-dd - eeee}}` |
+| Period | Variable       | Template example                |
+|--------|----------------|---------------------------------|
+| Day    | `+1d` or `-1d` | `{{date+1d:yyyy-MM-dd - eeee}}` |
+| Week   | `+1w` or `-1w` | `{{date+1w:yyyy-MM-dd - eeee}}` |
+| Month  | `+1m` or `-1m` | `{{date+1m:yyyy-MM-dd - eeee}}` |
+| Year   | `+1y` or `-1y` | `{{date+1y:yyyy-MM-dd - eeee}}` |
 
 Where the number is the amount of the period you want to add or subtract.
 
