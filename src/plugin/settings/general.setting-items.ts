@@ -17,8 +17,6 @@ export class GeneralSettingItems extends SettingItems {
     override async registerSettings(): Promise<void> {
         const settings = await this.settingsRepository.getSettings();
 
-        console.log(settings);
-
         this.addHeading('General settings', 'General settings for the daily note calendar.');
         this.addNotesCreatedOnDateSetting(settings.displayNotesCreatedOnDate, async value => {
             settings.displayNotesCreatedOnDate = value;
