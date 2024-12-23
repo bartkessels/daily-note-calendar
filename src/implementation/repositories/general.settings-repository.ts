@@ -1,5 +1,5 @@
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
-import {GeneralSettings} from 'src/domain/models/settings/general.settings';
+import {DEFAULT_GENERAL_SETTINGS, GeneralSettings} from 'src/domain/models/settings/general.settings';
 import {SettingsAdapter} from 'src/domain/adapters/settings.adapter';
 import {DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS} from 'src/domain/models/settings/daily-note-calendar.settings';
 
@@ -11,8 +11,8 @@ export class GeneralSettingsRepository implements SettingsRepository<GeneralSett
     }
 
     public async getSettings(): Promise<GeneralSettings> {
-        const settings = await this.settingsAdapter.getSettings(DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS);
-        return settings.generalSettings;
+        const storedSettings = await this.settingsAdapter.getSettings(DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS);
+        return {...DEFAULT_GENERAL_SETTINGS, ...storedSettings.generalSettings };
     }
 
     public async storeSettings(settings: GeneralSettings): Promise<void> {

@@ -20,31 +20,31 @@ export class RepositoryDateManager implements DateManager {
         return this.dateRepository.getDay(this.today);
     }
 
-    public getCurrentYear(): Promise<Year> {
+    public async getCurrentYear(): Promise<Year> {
         const currentYear = this.today.getFullYear();
 
-        return this.dateRepository.getYear(currentYear);
+        return await this.dateRepository.getYear(currentYear);
     }
 
-    public getYear(month?: Month): Promise<Year> {
+    public async getYear(month?: Month): Promise<Year> {
         if (!month) {
             const currentYear = this.today.getFullYear();
-            return this.dateRepository.getYear(currentYear);
+            return await this.dateRepository.getYear(currentYear);
         }
 
-        return this.dateRepository.getYear(month.date.getFullYear());
+        return await this.dateRepository.getYear(month.date.getFullYear());
     }
 
-    public getCurrentMonth(): Promise<Month> {
+    public async getCurrentMonth(): Promise<Month> {
         const currentMonthIndex = this.today.getMonth();
         const currentYear = this.today.getFullYear();
 
-        return this.dateRepository.getMonth(currentYear, currentMonthIndex);
+        return await this.dateRepository.getMonth(currentYear, currentMonthIndex);
     }
 
-    public getNextMonth(currentMonth?: Month): Promise<Month> {
+    public async getNextMonth(currentMonth?: Month): Promise<Month> {
         if (!currentMonth) {
-            return this.getCurrentMonth();
+            return await this.getCurrentMonth();
         }
 
         let currentYear = currentMonth.date.getFullYear();
@@ -55,12 +55,12 @@ export class RepositoryDateManager implements DateManager {
             currentMonthIndex = this.JANUARY_INDEX;
         }
 
-        return this.dateRepository.getMonth(currentYear, currentMonthIndex);
+        return await this.dateRepository.getMonth(currentYear, currentMonthIndex);
     }
 
-    public getPreviousMonth(currentMonth?: Month): Promise<Month> {
+    public async getPreviousMonth(currentMonth?: Month): Promise<Month> {
         if (!currentMonth) {
-            return this.getCurrentMonth();
+            return await this.getCurrentMonth();
         }
 
         let currentYear = currentMonth.date.getFullYear();
@@ -71,6 +71,6 @@ export class RepositoryDateManager implements DateManager {
             currentMonthIndex = this.DECEMBER_INDEX;
         }
 
-        return this.dateRepository.getMonth(currentYear, currentMonthIndex);
+        return await this.dateRepository.getMonth(currentYear, currentMonthIndex);
     }
 }

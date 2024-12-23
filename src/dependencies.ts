@@ -174,34 +174,34 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const notesEnhancer = new DefaultEnhancer<NoteUiModel[]>()
         .withStep(notesDisplayDateEnhancerStep);
 
-    return {
-        dateManager,
-        dateParser,
-        selectDayEvent,
+    return <Dependencies>{
+        dateManager: dateManager,
+        dateParser: dateParser,
+        selectDayEvent: selectDayEvent,
 
-        generalSettingsRepository,
+        generalSettingsRepository: generalSettingsRepository,
 
-        noteEvent,
-        refreshNotesEvent,
-        notesManager,
-        notesSettingsRepository,
+        noteEvent: noteEvent,
+        refreshNotesEvent: refreshNotesEvent,
+        notesManager: notesManager,
+        notesSettingsRepository: notesSettingsRepository,
 
-        dailyNoteEvent,
-        dailyNoteSettingsRepository,
+        dailyNoteEvent: dailyNoteEvent,
+        dailyNoteSettingsRepository: dailyNoteSettingsRepository,
 
-        weeklyNoteEvent,
-        weeklyNoteSettingsRepository,
+        weeklyNoteEvent: weeklyNoteEvent,
+        weeklyNoteSettingsRepository: weeklyNoteSettingsRepository,
 
-        monthlyNoteEvent,
-        monthlyNoteSettingsRepository,
+        monthlyNoteEvent: monthlyNoteEvent,
+        monthlyNoteSettingsRepository: monthlyNoteSettingsRepository,
 
-        quarterlyNoteEvent,
-        quarterlyNoteSettingsRepository,
+        quarterlyNoteEvent: quarterlyNoteEvent,
+        quarterlyNoteSettingsRepository: quarterlyNoteSettingsRepository,
 
-        yearlyNoteEvent,
-        yearlyNoteSettingsRepository,
+        yearlyNoteEvent: yearlyNoteEvent,
+        yearlyNoteSettingsRepository: yearlyNoteSettingsRepository,
 
-        calendarEnhancer,
-        notesEnhancer
+        calendarEnhancer: calendarEnhancer,
+        notesEnhancer: notesEnhancer
     };
 }
