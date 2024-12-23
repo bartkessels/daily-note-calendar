@@ -125,5 +125,5 @@ export class DateFnsDateRepository implements DateRepository {
             default:
                 return DayOfWeek.Sunday;
         }
-    };
+    }
 }

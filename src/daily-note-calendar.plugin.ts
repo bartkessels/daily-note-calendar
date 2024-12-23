@@ -1,11 +1,11 @@
 import {Plugin} from 'obsidian';
 import {CalendarView} from 'src/plugin/views/calendar.view';
 import {CalendarSettingsTab} from 'src/plugin/settings/calendar.settings-tab';
-import {createDependencies} from 'src/dependencies';
+import {createDependencies, Dependencies} from 'src/dependencies';
 import 'src/extensions/extensions';
 
 export default class DailyNoteCalendarPlugin extends Plugin {
-    private readonly dependencies = createDependencies(this);
+    private readonly dependencies: Dependencies = createDependencies(this);
 
     override async onload(): Promise<void> {
         this.registerView(CalendarView.VIEW_TYPE, (leaf) =>

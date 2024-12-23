@@ -1,5 +1,5 @@
 import {Week} from 'src/domain/models/week';
-import {createDayUiModel, DayUiModel, EMPTY_DAY} from 'src/components/models/day.ui-model';
+import {createDayUiModel, DayUiModel} from 'src/components/models/day.ui-model';
 import {Day} from 'src/domain/models/day';
 
 export interface WeekUiModel {
