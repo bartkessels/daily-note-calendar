@@ -7,7 +7,7 @@ import { DailyNotesPeriodicNoteSettings } from 'src/domain/models/settings/daily
 import { Day, DayOfWeek } from 'src/domain/models/day';
 import { WeekUiModel } from 'src/components/models/week.ui-model';
 import { DayUiModel } from 'src/components/models/day.ui-model';
-import {GeneralSettings} from 'src/domain/models/settings/general.settings';
+import {DEFAULT_GENERAL_SETTINGS, GeneralSettings} from 'src/domain/models/settings/general.settings';
 
 describe('CalendarDayEnhancerStep', () => {
     const generalSettingsRepository = {
@@ -39,8 +39,8 @@ describe('CalendarDayEnhancerStep', () => {
     });
 
     it('should return the calendar unchanged if currentMonth or weeks are not defined', async () => {
-        generalSettingsRepository.getSettings.mockResolvedValue({ displayNoteIndicator: true, displayNotesCreatedOnDate: false });
-        const calendar: CalendarUiModel = { currentMonth: undefined };
+        generalSettingsRepository.getSettings.mockResolvedValue(DEFAULT_GENERAL_SETTINGS);
+        const calendar: CalendarUiModel = { currentMonth: undefined, startWeekOnMonday: true };
 
         const result = await enhancerStep.execute(calendar);
 
@@ -48,7 +48,7 @@ describe('CalendarDayEnhancerStep', () => {
     });
 
     it('should return the calendar unchanged if the setting to display a note indicator is disabled', async () => {
-        generalSettingsRepository.getSettings.mockResolvedValue({ displayNoteIndicator: false, displayNotesCreatedOnDate: false });
+        generalSettingsRepository.getSettings.mockResolvedValue({...DEFAULT_GENERAL_SETTINGS, displayNoteIndicator: false });
 
         const day: DayUiModel = {
             currentDay: { date: new Date(2023, 9, 2), dayOfWeek: DayOfWeek.Monday, name: '2' },
@@ -61,7 +61,7 @@ describe('CalendarDayEnhancerStep', () => {
             days: [day],
             hasNote: false
         };
-        const calendar: CalendarUiModel = { currentMonth: { weeks: [week] } };
+        const calendar: CalendarUiModel = { currentMonth: { weeks: [week] }, startWeekOnMonday: true };
 
         const result = await enhancerStep.execute(calendar);
 
@@ -69,7 +69,7 @@ describe('CalendarDayEnhancerStep', () => {
     });
 
     it('should enhance the days with note existence information', async () => {
-        generalSettingsRepository.getSettings.mockResolvedValue({ displayNoteIndicator: true, displayNotesCreatedOnDate: false });
+        generalSettingsRepository.getSettings.mockResolvedValue({...DEFAULT_GENERAL_SETTINGS, displayNoteIndicator: true });
         const settings: DailyNotesPeriodicNoteSettings = {
             folder: '/notes',
             nameTemplate: 'yyyy-MM-dd',
@@ -88,7 +88,7 @@ describe('CalendarDayEnhancerStep', () => {
             days: [day],
             hasNote: false
         };
-        const calendar: CalendarUiModel = { currentMonth: { weeks: [week] } };
+        const calendar: CalendarUiModel = { currentMonth: { weeks: [week] }, startWeekOnMonday: true };
 
         nameBuilder.build.mockReturnValue('/notes/2023-10-02.md');
         fileAdapter.doesFileExist.mockResolvedValue(true);
@@ -104,7 +104,7 @@ describe('CalendarDayEnhancerStep', () => {
     });
 
     it('should handle days without currentDay gracefully', async () => {
-        generalSettingsRepository.getSettings.mockResolvedValue({ displayNoteIndicator: true, displayNotesCreatedOnDate: false });
+        generalSettingsRepository.getSettings.mockResolvedValue(DEFAULT_GENERAL_SETTINGS);
         const settings: DailyNotesPeriodicNoteSettings = {
             folder: '/notes',
             nameTemplate: 'yyyy-MM-dd',
@@ -123,7 +123,7 @@ describe('CalendarDayEnhancerStep', () => {
             days: [day],
             hasNote: false
         };
-        const calendar: CalendarUiModel = { currentMonth: { weeks: [week] } };
+        const calendar: CalendarUiModel = { currentMonth: { weeks: [week] }, startWeekOnMonday: true };
 
         const result = await enhancerStep.execute(calendar);
 

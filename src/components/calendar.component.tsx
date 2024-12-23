@@ -25,13 +25,14 @@ export const CalendarComponent = () => {
                         onClick={() => quarterlyNoteEvent?.emitEvent(uiModel?.currentMonth?.month)}>
                         Q{uiModel?.currentMonth?.month?.quarter}
                     </th>
+                    {!uiModel?.startWeekOnMonday && <th>Sun</th>}
                     <th>Mon</th>
                     <th>Tue</th>
                     <th>Wed</th>
                     <th>Thu</th>
                     <th>Fri</th>
                     <th>Sat</th>
-                    <th>Sun</th>
+                    {uiModel?.startWeekOnMonday && <th>Sun</th>}
                 </tr>
                 </thead>
                 <tbody>

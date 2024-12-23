@@ -4,6 +4,6 @@ import {Day} from 'src/domain/models/day';
 
 export interface DateRepository {
     getDay(date: Date): Day;
-    getYear(year: number): Year;
-    getMonth(year: number, monthIndex: number): Month;
+    getYear(year: number): Promise<Year>;
+    getMonth(year: number, monthIndex: number): Promise<Month>;
 }

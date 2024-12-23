@@ -13,5 +13,6 @@ describe('createCalendarUiModel', () => {
 
         expect(result.currentYear).toBe(year);
         expect(result.currentMonth).toEqual(uiModel);
+        expect(result.startWeekOnMonday).toBe(true);
     });
 });

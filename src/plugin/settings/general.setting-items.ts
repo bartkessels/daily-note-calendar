@@ -3,6 +3,7 @@ import {PluginSettingTab, Setting} from 'obsidian';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {GeneralSettings} from 'src/domain/models/settings/general.settings';
 import { DateParser } from 'src/domain/parsers/date.parser';
+import {DayOfWeek, dayOfWeekName} from 'src/domain/models/day';
 
 export class GeneralSettingItems extends SettingItems {
     constructor(
@@ -16,6 +17,8 @@ export class GeneralSettingItems extends SettingItems {
     override async registerSettings(): Promise<void> {
         const settings = await this.settingsRepository.getSettings();
 
+        console.log(settings);
+
         this.addHeading('General settings', 'General settings for the daily note calendar.');
         this.addNotesCreatedOnDateSetting(settings.displayNotesCreatedOnDate, async value => {
             settings.displayNotesCreatedOnDate = value;
@@ -23,6 +26,10 @@ export class GeneralSettingItems extends SettingItems {
         });
         this.addDisplayNoteIndicator(settings.displayNoteIndicator, async value => {
             settings.displayNoteIndicator = value;
+            await this.settingsRepository.storeSettings(settings);
+        });
+        this.addStartDayOfWeekSetting(settings.firstDayOfWeek, async value => {
+            settings.firstDayOfWeek = value;
             await this.settingsRepository.storeSettings(settings);
         });
     }
@@ -44,6 +51,26 @@ export class GeneralSettingItems extends SettingItems {
             .addToggle(component => component
                 .setValue(value)
                 .onChange(onValueChange)
+            );
+    }
+
+    private addStartDayOfWeekSetting(value: DayOfWeek, onValueChange: (value: DayOfWeek) => void): void {
+        new Setting(this.settingsTab.containerEl)
+            .setName('First day of the week')
+            .setDesc('Set the first day of the week for the calendar.')
+            .addDropdown(component => component
+                .addOptions({
+                    'sunday': dayOfWeekName(DayOfWeek.Sunday),
+                    'monday': dayOfWeekName(DayOfWeek.Monday)
+                })
+                .setValue(dayOfWeekName(value).toLowerCase())
+                .onChange((value) => {
+                    if (value.toLowerCase() === 'sunday') {
+                        onValueChange(DayOfWeek.Sunday);
+                    } else {
+                        onValueChange(DayOfWeek.Monday);
+                    }
+                })
             );
     }
 }

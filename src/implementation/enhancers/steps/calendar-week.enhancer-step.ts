@@ -8,8 +8,29 @@ import { FileAdapter } from 'src/domain/adapters/file.adapter';
 import {WeekUiModel} from 'src/components/models/week.ui-model';
 import {PeriodicNoteSettings} from 'src/domain/models/settings/periodic-note.settings';
 import {GeneralSettings} from 'src/domain/models/settings/general.settings';
+import {DayUiModel, EMPTY_DAY} from 'src/components/models/day.ui-model';
+import { DayOfWeek } from 'src/domain/models/day';
 
 export class CalendarWeekEnhancerStep implements EnhancerStep<CalendarUiModel> {
+    private readonly START_MONDAY_ORDER = [
+        DayOfWeek.Monday,
+        DayOfWeek.Tuesday,
+        DayOfWeek.Wednesday,
+        DayOfWeek.Thursday,
+        DayOfWeek.Friday,
+        DayOfWeek.Saturday,
+        DayOfWeek.Sunday
+    ];
+    private readonly START_SUNDAY_ORDER = [
+        DayOfWeek.Sunday,
+        DayOfWeek.Monday,
+        DayOfWeek.Tuesday,
+        DayOfWeek.Wednesday,
+        DayOfWeek.Thursday,
+        DayOfWeek.Friday,
+        DayOfWeek.Saturday
+    ];
+
     constructor(
         private readonly generalSettingsRepository: SettingsRepository<GeneralSettings>,
         private readonly settingsRepository: SettingsRepository<WeeklyNotesPeriodicNoteSettings>,
@@ -27,24 +48,35 @@ export class CalendarWeekEnhancerStep implements EnhancerStep<CalendarUiModel> {
         }
 
         const settings = await this.settingsRepository.getSettings();
-        const enhancedWeeks = await this.enhanceWeeks(calendar.currentMonth.weeks, settings);
+        const enhancedWeeks = await this.enhanceWeeks(calendar.currentMonth.weeks, settings, generalSettings);
 
         return {
             ...calendar,
+            startWeekOnMonday: generalSettings.firstDayOfWeek === DayOfWeek.Monday,
             currentMonth: {
                 ...calendar.currentMonth,
                 weeks: enhancedWeeks
             }
         };
     }
+    
+    private orderDays(days: DayUiModel[], settings: GeneralSettings): DayUiModel[] {
+        const daysOrder = settings.firstDayOfWeek === DayOfWeek.Sunday
+            ? this.START_SUNDAY_ORDER
+            : this.START_MONDAY_ORDER;
 
-    private async enhanceWeeks(weeks: WeekUiModel[], settings: PeriodicNoteSettings): Promise<WeekUiModel[]> {
+        return daysOrder.map((dayOfWeek) =>
+            days.find((day) => day.currentDay?.date.getDay() === dayOfWeek) ?? EMPTY_DAY
+        );
+    }
+
+    private async enhanceWeeks(weeks: WeekUiModel[], settings: PeriodicNoteSettings, generalSettings: GeneralSettings): Promise<WeekUiModel[]> {
         return await Promise.all(weeks.map(async week => {
-            return await this.enhanceWeek(week, settings);
+            return await this.enhanceWeek(week, settings, generalSettings);
         }));
     }
 
-    private async enhanceWeek(week: WeekUiModel, settings: PeriodicNoteSettings): Promise<WeekUiModel> {
+    private async enhanceWeek(week: WeekUiModel, settings: PeriodicNoteSettings, generalSettings: GeneralSettings): Promise<WeekUiModel> {
         if (!week.week) {
             return week;
         }
@@ -58,6 +90,7 @@ export class CalendarWeekEnhancerStep implements EnhancerStep<CalendarUiModel> {
 
         return {
             ...week,
+            days: this.orderDays(week.days, generalSettings),
             hasNote: hasNote
         };
     }

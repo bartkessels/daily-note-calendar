@@ -69,8 +69,8 @@ describe('useCalendarViewModel', () => {
         };
 
         mockDateManager.getCurrentDay.mockReturnValue(currentDay);
-        mockDateManager.getCurrentMonth.mockReturnValue(currentMonth);
-        mockDateManager.getCurrentYear.mockReturnValue(currentYear);
+        mockDateManager.getCurrentMonth.mockResolvedValue(currentMonth);
+        mockDateManager.getCurrentYear.mockResolvedValue(currentYear);
         mockEnhancer.withStep.mockReturnValue(mockEnhancer);
         mockEnhancer.withValue.mockReturnValue(mockEnhancer);
 

@@ -4,11 +4,18 @@ import {Week} from 'src/domain/models/week';
 import {DateRepository} from 'src/domain/repositories/date.repository';
 import {Year} from 'src/domain/models/year';
 import {getISOWeek} from 'date-fns';
+import {SettingsRepository} from 'src/domain/repositories/settings.repository';
+import {GeneralSettings} from 'src/domain/models/settings/general.settings';
 
 export class DateFnsDateRepository implements DateRepository {
     private readonly monthFormat = 'long';
     private readonly dayFormat = 'numeric';
     private readonly yearFormat = 'numeric';
+
+    constructor(
+        private readonly settingsRepository: SettingsRepository<GeneralSettings>
+    ) {
+    }
 
     public getDay(date: Date): Day {
         const formatter = new Intl.DateTimeFormat(undefined, {
@@ -22,7 +29,7 @@ export class DateFnsDateRepository implements DateRepository {
         };
     }
 
-    public getYear(year: number): Year {
+    public async getYear(year: number): Promise<Year> {
         const date = new Date(year, 0);
         const months: Month[] = [];
         const formatter = new Intl.DateTimeFormat(undefined, {
@@ -30,7 +37,8 @@ export class DateFnsDateRepository implements DateRepository {
         });
 
         for (let monthIndex = 0; monthIndex <= 11; monthIndex++) {
-            months.push(this.getMonth(year, monthIndex));
+            const month = await this.getMonth(year, monthIndex);
+            months.push(month);
         }
 
         return <Year>{
@@ -40,14 +48,15 @@ export class DateFnsDateRepository implements DateRepository {
         };
     }
 
-    public getMonth(year: number, monthIndex: number): Month {
+    public async getMonth(year: number, monthIndex: number): Promise<Month> {
+        const settings = await this.settingsRepository.getSettings();
         const formatter = new Intl.DateTimeFormat(undefined, {
             month: this.monthFormat
         });
 
         const date = new Date(year, monthIndex);
         const days = this.getDaysOfMonth(year, monthIndex);
-        const weeks = this.groupDaysIntoWeeks(days);
+        const weeks = this.groupDaysIntoWeeks(days, settings);
         const quarter = Math.floor(monthIndex / 3) + 1;
 
         return <Month>{
@@ -70,18 +79,17 @@ export class DateFnsDateRepository implements DateRepository {
         return daysList.map(day => this.getDay(day));
     }
 
-    private groupDaysIntoWeeks(days: Day[]): Week[] {
+    private groupDaysIntoWeeks(days: Day[], settings: GeneralSettings): Week[] {
         const weeks: Week[] = [];
         let currentWeek: Day[] = [];
 
         days.forEach(day => {
-            currentWeek.push(day);
-            const date = day.date;
-
-            if (day.dayOfWeek === DayOfWeek.Sunday) {
-                weeks.push(this.getWeek(date, currentWeek));
+            if (currentWeek.length > 0 && day.dayOfWeek === settings.firstDayOfWeek) {
+                weeks.push(this.getWeek(currentWeek[0].date, currentWeek));
                 currentWeek = [];
             }
+
+            currentWeek.push(day);
         });
 
         if (currentWeek.length > 0) {

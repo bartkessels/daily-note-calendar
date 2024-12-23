@@ -66,6 +66,34 @@ describe('CalendarComponent', () => {
         expect(screen.getByText('2024')).toBeInTheDocument();
     });
 
+    it('displays the days of the week starting with Sunday when startWeekOnMonday is false', () => {
+        mockViewModel.viewState.uiModel!.startWeekOnMonday = false;
+        render(setupContent(mockQuarterlyNoteEvent));
+
+        const headers = screen.getAllByRole('columnheader');
+        expect(headers[1]).toHaveTextContent('Sun');
+        expect(headers[2]).toHaveTextContent('Mon');
+        expect(headers[3]).toHaveTextContent('Tue');
+        expect(headers[4]).toHaveTextContent('Wed');
+        expect(headers[5]).toHaveTextContent('Thu');
+        expect(headers[6]).toHaveTextContent('Fri');
+        expect(headers[7]).toHaveTextContent('Sat');
+    });
+
+    it('displays the days of the week starting with Monday when startWeekOnMonday is true', () => {
+        mockViewModel.viewState.uiModel!.startWeekOnMonday = true;
+        render(setupContent(mockQuarterlyNoteEvent));
+
+        const headers = screen.getAllByRole('columnheader');
+        expect(headers[1]).toHaveTextContent('Mon');
+        expect(headers[2]).toHaveTextContent('Tue');
+        expect(headers[3]).toHaveTextContent('Wed');
+        expect(headers[4]).toHaveTextContent('Thu');
+        expect(headers[5]).toHaveTextContent('Fri');
+        expect(headers[6]).toHaveTextContent('Sat');
+        expect(headers[7]).toHaveTextContent('Sun');
+    });
+
     it('calls navigateToPreviousMonth when the previous month button is clicked', () => {
         render(setupContent(mockQuarterlyNoteEvent));
 

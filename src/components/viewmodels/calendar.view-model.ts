@@ -34,8 +34,8 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
 
     public async initialize(): Promise<void> {
         this.selectedDay = this.dateManager?.getCurrentDay();
-        this.selectedMonth = this.dateManager?.getCurrentMonth();
-        this.selectedYear = this.dateManager?.getCurrentYear();
+        this.selectedMonth = await this.dateManager?.getCurrentMonth();
+        this.selectedYear = await this.dateManager?.getCurrentYear();
 
         await this.updateViewState();
     }
@@ -48,17 +48,17 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
     }
 
     public navigateToPreviousMonth = async (): Promise<void> => {
-        const previousMonth = this.dateManager?.getPreviousMonth(this.selectedMonth);
+        const previousMonth =  await this.dateManager?.getPreviousMonth(this.selectedMonth);
         await this.selectMonth(previousMonth);
     }
 
     public navigateToNextMonth = async (): Promise<void> => {
-        const nextMonth = this.dateManager?.getNextMonth(this.selectedMonth);
+        const nextMonth = await this.dateManager?.getNextMonth(this.selectedMonth);
         await this.selectMonth(nextMonth);
     }
 
     public navigateToCurrentMonth = async (): Promise<void> => {
-        const currentMonth = this.dateManager?.getCurrentMonth();
+        const currentMonth = await this.dateManager?.getCurrentMonth();
         await this.selectMonth(currentMonth);
     }
 
@@ -69,7 +69,7 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
 
     private selectMonth = async (month?: Month): Promise<void> => {
         this.selectedMonth = month;
-        this.selectedYear = this.dateManager?.getYear(month);
+        this.selectedYear = await this.dateManager?.getYear(month);
 
         await this.updateViewState();
     }

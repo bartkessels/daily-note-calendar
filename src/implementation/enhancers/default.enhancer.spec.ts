@@ -39,7 +39,7 @@ describe('DefaultEnhancer', () => {
 
         const initialWeekUiModel: WeekUiModel = { week: week, days: [], hasNote: false };
         const initialMonthUiModel: MonthUiModel = { month: month, weeks: [initialWeekUiModel] };
-        const initialCalendarUiModel: CalendarUiModel = { currentMonth: initialMonthUiModel };
+        const initialCalendarUiModel: CalendarUiModel = { currentMonth: initialMonthUiModel, startWeekOnMonday: true };
 
         const result = await enhancer
             .withValue(initialCalendarUiModel)
@@ -54,11 +54,11 @@ describe('DefaultEnhancer', () => {
 
         const initialWeekUiModel: WeekUiModel = { week: week, days: [], hasNote: false };
         const initialMonthUiModel: MonthUiModel = { month: month, weeks: [initialWeekUiModel] };
-        const initialCalendarUiModel: CalendarUiModel = { currentMonth: initialMonthUiModel };
+        const initialCalendarUiModel: CalendarUiModel = { currentMonth: initialMonthUiModel, startWeekOnMonday: true };
 
         const enhancedWeekUiModel: WeekUiModel = { week: week, days: [], hasNote: true };
         const enhancedMonthUiModel: MonthUiModel = { month: month, weeks: [enhancedWeekUiModel] };
-        const enhancedCalendarUiModel: CalendarUiModel = { currentMonth: enhancedMonthUiModel };
+        const enhancedCalendarUiModel: CalendarUiModel = { currentMonth: enhancedMonthUiModel, startWeekOnMonday: true };
 
         mockStep.execute.mockResolvedValue(enhancedCalendarUiModel);
 

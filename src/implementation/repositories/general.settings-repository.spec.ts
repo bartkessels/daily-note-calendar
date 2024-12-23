@@ -2,6 +2,7 @@ import {SettingsAdapter} from 'src/domain/adapters/settings.adapter';
 import {DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS} from 'src/domain/models/settings/daily-note-calendar.settings';
 import {GeneralSettingsRepository} from 'src/implementation/repositories/general.settings-repository';
 import {GeneralSettings} from 'src/domain/models/settings/general.settings';
+import {DayOfWeek} from 'src/domain/models/day';
 
 describe('GeneralNoteSettingsRepository', () => {
     let settingsAdapter: jest.Mocked<SettingsAdapter>;
@@ -17,7 +18,7 @@ describe('GeneralNoteSettingsRepository', () => {
     });
 
     it('should get general settings', async () => {
-        const mockSettings = { ...DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS, generalSettings: { displayNotesCreatedOnDate: false, displayNoteIndicator: true } };
+        const mockSettings = { ...DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS, generalSettings: { displayNotesCreatedOnDate: false, displayNoteIndicator: true, firstDayOfWeek: DayOfWeek.Monday } };
         settingsAdapter.getSettings.mockResolvedValueOnce(mockSettings);
 
         const settings = await repository.getSettings();
@@ -27,8 +28,8 @@ describe('GeneralNoteSettingsRepository', () => {
     });
 
     it('should store general settings', async () => {
-        const newSettings: GeneralSettings = { displayNotesCreatedOnDate: false, displayNoteIndicator: true };
-        const mockSettings = { ...DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS, generalSettings: { displayNotesCreatedOnDate: true, displayNoteIndicator: false } };
+        const newSettings: GeneralSettings = { displayNotesCreatedOnDate: false, displayNoteIndicator: true, firstDayOfWeek: DayOfWeek.Monday };
+        const mockSettings = { ...DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS, generalSettings: { displayNotesCreatedOnDate: true, displayNoteIndicator: false, firstDayOfWeek: DayOfWeek.Sunday } };
         settingsAdapter.getSettings.mockResolvedValueOnce(mockSettings);
 
         await repository.storeSettings(newSettings);
