@@ -4,9 +4,9 @@ import {Day} from 'src/domain/models/day';
 
 export interface DateManager {
     getCurrentDay(): Day;
-    getCurrentYear(): Year;
-    getYear(month?: Month): Year;
-    getCurrentMonth(): Month;
-    getNextMonth(currentMonth?: Month): Month;
-    getPreviousMonth(currentMonth?: Month): Month;
+    getCurrentYear(): Promise<Year>;
+    getYear(month?: Month): Promise<Year>;
+    getCurrentMonth(): Promise<Month>;
+    getNextMonth(currentMonth?: Month): Promise<Month>;
+    getPreviousMonth(currentMonth?: Month): Promise<Month>;
 }

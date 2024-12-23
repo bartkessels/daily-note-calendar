@@ -84,11 +84,12 @@ export interface Dependencies {
 }
 
 export function createDependencies(plugin: Plugin): Dependencies {
-    const dateRepository = new DateFnsDateRepository();
+    const settingsAdapter = new PluginSettingsAdapter(plugin);
+    const generalSettingsRepository = new GeneralSettingsRepository(settingsAdapter);
+    const dateRepository = new DateFnsDateRepository(generalSettingsRepository);
     const dateManager = new RepositoryDateManager(dateRepository);
     const dateParser = new DateFnsDateParser();
     const fileAdapter = new ObsidianFileAdapter(plugin.app.vault, plugin.app.workspace);
-    const settingsAdapter = new PluginSettingsAdapter(plugin);
     const noteAdapter = new ObsidianNoteAdapter(plugin.app);
     const noticeAdapter = new ObsidianNoticeAdapter();
     const logger = new NotifyLogger(noticeAdapter);
@@ -96,7 +97,6 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const variableBuilder = new DefaultVariableBuilder(logger);
 
     const selectDayEvent = new SelectDayEvent();
-    const generalSettingsRepository = new GeneralSettingsRepository(settingsAdapter);
     const periodVariableParserStep = new PeriodVariableParserStep(fileAdapter, variableBuilder, dateParser);
     const todayVariableParserStep = new TodayVariableParserStep(fileAdapter, variableBuilder, dateParser);
     const titleVariableParserStep = new TitleVariableParserStep(fileAdapter, noteAdapter);

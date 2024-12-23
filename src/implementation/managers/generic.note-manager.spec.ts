@@ -5,7 +5,7 @@ import { Event } from 'src/domain/events/event';
 import { FileService } from 'src/domain/services/file.service';
 import { NoteRepository } from 'src/domain/repositories/note.repository';
 import { SettingsRepository } from 'src/domain/repositories/settings.repository';
-import { GeneralSettings } from 'src/domain/models/settings/general.settings';
+import {DEFAULT_GENERAL_SETTINGS, GeneralSettings} from 'src/domain/models/settings/general.settings';
 import { jest } from '@jest/globals';
 import { NoteEvent } from 'src/implementation/events/note.event';
 import {PeriodicNoteEvent} from 'src/implementation/events/periodic-note.event';
@@ -79,8 +79,8 @@ describe('GenericNotesManager', () => {
     it('should call the refresh notes event with the notes when a daily note event has been sent', async () => {
         const refreshNotesEventSpy = jest.spyOn(manager, 'refreshNotes');
         const settings: GeneralSettings = {
-            displayNotesCreatedOnDate: true,
-            displayNoteIndicator: true
+            ...DEFAULT_GENERAL_SETTINGS,
+            displayNotesCreatedOnDate: true
         };
 
         settingsRepository.getSettings.mockResolvedValue(settings);
@@ -93,8 +93,8 @@ describe('GenericNotesManager', () => {
     it('should call the refresh notes event with the notes a select day event has been sent', async () => {
         const refreshNotesEventSpy = jest.spyOn(manager, 'refreshNotes');
         const settings: GeneralSettings = {
-            displayNotesCreatedOnDate: true,
-            displayNoteIndicator: true
+            ...DEFAULT_GENERAL_SETTINGS,
+            displayNotesCreatedOnDate: true
         };
 
         settingsRepository.getSettings.mockResolvedValue(settings);
@@ -111,8 +111,8 @@ describe('GenericNotesManager', () => {
             { name: 'Note 2', createdOn: new Date('2024-11-12'), path: 'path/to/note2' },
         ];
         const settings: GeneralSettings = {
-            displayNotesCreatedOnDate: true,
-            displayNoteIndicator: true
+            ...DEFAULT_GENERAL_SETTINGS,
+            displayNotesCreatedOnDate: true
         };
 
         settingsRepository.getSettings.mockResolvedValue(settings);
@@ -129,8 +129,8 @@ describe('GenericNotesManager', () => {
     it('should not emit an refreshNotes event when the setting displayNotesCreatedOnDate is true but no day has been selected yet', async () => {
         const refreshNotesEventSpy = jest.spyOn(refreshNotesEvent, 'emitEvent');
         const settings: GeneralSettings = {
-            displayNotesCreatedOnDate: true,
-            displayNoteIndicator: true
+            ...DEFAULT_GENERAL_SETTINGS,
+            displayNotesCreatedOnDate: true
         };
 
         settingsRepository.getSettings.mockResolvedValueOnce(settings);
@@ -145,8 +145,8 @@ describe('GenericNotesManager', () => {
     it('should not emit an refreshNotes event when the setting displayNotesCreatedOnDate is false', async () => {
         const refreshNotesEventSpy = jest.spyOn(refreshNotesEvent, 'emitEvent');
         const settings: GeneralSettings = {
-            displayNotesCreatedOnDate: false,
-            displayNoteIndicator: true
+            ...DEFAULT_GENERAL_SETTINGS,
+            displayNotesCreatedOnDate: false
         };
 
         settingsRepository.getSettings.mockResolvedValueOnce(settings);

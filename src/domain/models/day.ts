@@ -13,6 +13,25 @@ export function dayEquals(dayA?: Day, dayB?: Day): boolean {
     return dayA.date.toDateString() === dayB.date.toDateString();
 }
 
+export function dayOfWeekName(dayOfWeek: DayOfWeek): string {
+    switch (dayOfWeek) {
+        case DayOfWeek.Monday:
+            return 'Monday';
+        case DayOfWeek.Tuesday:
+            return 'Tuesday';
+        case DayOfWeek.Wednesday:
+            return 'Wednesday';
+        case DayOfWeek.Thursday:
+            return 'Thursday';
+        case DayOfWeek.Friday:
+            return 'Friday';
+        case DayOfWeek.Saturday:
+            return 'Saturday';
+        case DayOfWeek.Sunday:
+            return 'Sunday';
+    }
+}
+
 export enum DayOfWeek {
     Monday = 1,
     Tuesday = 2,

@@ -20,13 +20,13 @@ export class RepositoryDateManager implements DateManager {
         return this.dateRepository.getDay(this.today);
     }
 
-    public getCurrentYear(): Year {
+    public getCurrentYear(): Promise<Year> {
         const currentYear = this.today.getFullYear();
 
         return this.dateRepository.getYear(currentYear);
     }
 
-    public getYear(month?: Month): Year {
+    public getYear(month?: Month): Promise<Year> {
         if (!month) {
             const currentYear = this.today.getFullYear();
             return this.dateRepository.getYear(currentYear);
@@ -35,14 +35,14 @@ export class RepositoryDateManager implements DateManager {
         return this.dateRepository.getYear(month.date.getFullYear());
     }
 
-    public getCurrentMonth(): Month {
+    public getCurrentMonth(): Promise<Month> {
         const currentMonthIndex = this.today.getMonth();
         const currentYear = this.today.getFullYear();
 
         return this.dateRepository.getMonth(currentYear, currentMonthIndex);
     }
 
-    public getNextMonth(currentMonth?: Month): Month {
+    public getNextMonth(currentMonth?: Month): Promise<Month> {
         if (!currentMonth) {
             return this.getCurrentMonth();
         }
@@ -58,7 +58,7 @@ export class RepositoryDateManager implements DateManager {
         return this.dateRepository.getMonth(currentYear, currentMonthIndex);
     }
 
-    public getPreviousMonth(currentMonth?: Month): Month {
+    public getPreviousMonth(currentMonth?: Month): Promise<Month> {
         if (!currentMonth) {
             return this.getCurrentMonth();
         }

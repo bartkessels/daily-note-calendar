@@ -45,11 +45,11 @@ describe('DefaultCalendarViewModel', () => {
         currentYear = {date: new Date(2024, 0), name: '2024', months: [currentMonth]};
 
         mockDateManager.getCurrentDay.mockReturnValue(currentDay);
-        mockDateManager.getPreviousMonth.mockReturnValue(previousMonth);
-        mockDateManager.getCurrentMonth.mockReturnValue(currentMonth);
-        mockDateManager.getNextMonth.mockReturnValue(nextMonth);
-        mockDateManager.getCurrentYear.mockReturnValue(currentYear);
-        mockDateManager.getYear.mockReturnValue(currentYear);
+        mockDateManager.getPreviousMonth.mockResolvedValue(previousMonth);
+        mockDateManager.getCurrentMonth.mockResolvedValue(currentMonth);
+        mockDateManager.getNextMonth.mockResolvedValue(nextMonth);
+        mockDateManager.getCurrentYear.mockResolvedValue(currentYear);
+        mockDateManager.getYear.mockResolvedValue(currentYear);
     });
 
     afterEach(() => {
@@ -86,7 +86,8 @@ describe('DefaultCalendarViewModel', () => {
                         })
                     ])
                 }),
-                currentYear: currentYear
+                currentYear: currentYear,
+                startWeekOnMonday: true
             }));
         });
     });
@@ -111,7 +112,8 @@ describe('DefaultCalendarViewModel', () => {
                         })
                     ])
                 }),
-                currentYear: currentYear
+                currentYear: currentYear,
+                startWeekOnMonday: true
             }));
         });
     });
@@ -137,7 +139,8 @@ describe('DefaultCalendarViewModel', () => {
                     })
                 ])
             }),
-            currentYear: currentYear
+            currentYear: currentYear,
+            startWeekOnMonday: true
         }));
     });
 
@@ -172,7 +175,8 @@ describe('DefaultCalendarViewModel', () => {
                 currentMonth: expect.objectContaining({
                     month: previousMonth
                 }),
-                currentYear: currentYear
+                currentYear: currentYear,
+                startWeekOnMonday: true
             }));
         });
     });
@@ -199,13 +203,14 @@ describe('DefaultCalendarViewModel', () => {
                 currentMonth: expect.objectContaining({
                     month: currentMonth
                 }),
-                currentYear: currentYear
+                currentYear: currentYear,
+                startWeekOnMonday: true
             }));
         });
     });
 
     it('calls getCurrentMonth and getYear with the correct arguments', async () => {
-        mockDateManager.getCurrentMonth.mockReturnValue(currentMonth);
+        mockDateManager.getCurrentMonth.mockResolvedValue(currentMonth);
 
         const viewModel = createViewModel();
         await viewModel.initialize();
@@ -228,7 +233,8 @@ describe('DefaultCalendarViewModel', () => {
                 currentMonth: expect.objectContaining({
                     month: nextMonth
                 }),
-                currentYear: currentYear
+                currentYear: currentYear,
+                startWeekOnMonday: true
             }));
         });
     });
