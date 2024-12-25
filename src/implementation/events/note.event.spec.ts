@@ -1,5 +1,6 @@
-import {NoteEvent} from 'src/implementation/events/note.event';
-import {Note} from 'src/domain/models/note';
+import { NoteEvent } from 'src/implementation/events/note.event';
+import { Note } from 'src/domain/models/note';
+import { ModifierKey } from 'src/domain/models/modifier-key';
 
 describe('NoteEvent', () => {
     let event: NoteEvent;
@@ -39,6 +40,35 @@ describe('NoteEvent', () => {
         event.onEvent('NoteEvent', listener);
 
         event.emitEvent(undefined);
+
+        expect(listener).not.toHaveBeenCalled();
+    });
+
+    it('should trigger event listeners with modifier key when an event is emitted', () => {
+        const listener = jest.fn();
+        event.onEventWithModifier('NoteEvent', listener);
+
+        event.emitEvent(note, ModifierKey.Shift);
+
+        expect(listener).toHaveBeenCalledWith(note, ModifierKey.Shift);
+    });
+
+    it('should trigger event listeners with modifier key only once when an event is emitted', () => {
+        const listener = jest.fn();
+        event.onEventWithModifier('NoteEvent', listener);
+        event.onEventWithModifier('NoteEvent', listener);
+
+        event.emitEvent(note, ModifierKey.Shift);
+
+        expect(listener).toHaveBeenCalledTimes(1);
+        expect(listener).toHaveBeenCalledWith(note, ModifierKey.Shift);
+    });
+
+    it('should not trigger event listeners with modifier key when an undefined event is emitted', () => {
+        const listener = jest.fn();
+        event.onEventWithModifier('NoteEvent', listener);
+
+        event.emitEvent(undefined, ModifierKey.Shift);
 
         expect(listener).not.toHaveBeenCalled();
     });

@@ -22,12 +22,16 @@ export class GeneralSettingItems extends SettingItems {
             settings.displayNotesCreatedOnDate = value;
             await this.settingsRepository.storeSettings(settings);
         });
-        this.addDisplayNoteIndicator(settings.displayNoteIndicator, async value => {
+        this.addDisplayNoteIndicatorSetting(settings.displayNoteIndicator, async value => {
             settings.displayNoteIndicator = value;
             await this.settingsRepository.storeSettings(settings);
         });
         this.addStartDayOfWeekSetting(settings.firstDayOfWeek, async value => {
             settings.firstDayOfWeek = value;
+            await this.settingsRepository.storeSettings(settings);
+        });
+        this.addUseModifierKeyToCreateNoteSetting(settings.useModifierKeyToCreateNote, async value => {
+            settings.useModifierKeyToCreateNote = value;
             await this.settingsRepository.storeSettings(settings);
         });
     }
@@ -42,7 +46,7 @@ export class GeneralSettingItems extends SettingItems {
             );
     }
 
-    private addDisplayNoteIndicator(value: boolean, onValueChange: (value: boolean) => void): void {
+    private addDisplayNoteIndicatorSetting(value: boolean, onValueChange: (value: boolean) => void): void {
         new Setting(this.settingsTab.containerEl)
             .setName('Display an indicator on each date that has a note')
             .setDesc('Display an indicator below the date or week number if the date has a note.')
@@ -69,6 +73,16 @@ export class GeneralSettingItems extends SettingItems {
                         onValueChange(DayOfWeek.Monday);
                     }
                 })
+            );
+    }
+
+    private addUseModifierKeyToCreateNoteSetting(value: boolean, onValueChange: (value: boolean) => void): void {
+        new Setting(this.settingsTab.containerEl)
+            .setName('Use the CTRL or CMD key to create note')
+            .setDesc('When this setting is enabled, when clicking on a date in the calendar will only create a new note when either the CTRL or CMD key is pressed. Otherwise it will only open periodic notes.')
+            .addToggle(component => component
+                .setValue(value)
+                .onChange(onValueChange)
             );
     }
 }

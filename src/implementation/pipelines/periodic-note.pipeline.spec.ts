@@ -1,20 +1,23 @@
-import {PeriodicNotePipeline} from 'src/implementation/pipelines/periodic-note.pipeline';
-import {Event} from 'src/domain/events/event';
-import {SettingsRepository} from 'src/domain/repositories/settings.repository';
-import {NameBuilder} from 'src/domain/builders/name.builder';
-import {FileService} from 'src/domain/services/file.service';
-import {PeriodicNoteSettings} from 'src/domain/models/settings/periodic-note.settings';
+import { PeriodicNotePipeline } from 'src/implementation/pipelines/periodic-note.pipeline';
+import { Event } from 'src/domain/events/event';
+import { FileService } from 'src/domain/services/file.service';
+import { SettingsRepository } from 'src/domain/repositories/settings.repository';
+import { PeriodicNoteSettings } from 'src/domain/models/settings/periodic-note.settings';
+import { NameBuilder } from 'src/domain/builders/name.builder';
+import {DEFAULT_GENERAL_SETTINGS, GeneralSettings} from 'src/domain/models/settings/general.settings';
+import { Period } from 'src/domain/models/period';
+import { ModifierKey } from 'src/domain/models/modifier-key';
 import {Day, DayOfWeek} from 'src/domain/models/day';
-import {DailyNotesPeriodicNoteSettings} from 'src/domain/models/settings/daily-notes.periodic-note-settings';
 import {PeriodicNoteEvent} from 'src/implementation/events/periodic-note.event';
 
 describe('PeriodicNotePipeline', () => {
     let event: Event<Day>;
     let day: Day;
-    let fileService: FileService;
-    let settingsRepository: SettingsRepository<DailyNotesPeriodicNoteSettings>;
-    let nameBuilder: NameBuilder<Day>;
-    let pipeline: PeriodicNotePipeline<DailyNotesPeriodicNoteSettings>;
+    let fileService: jest.Mocked<FileService>;
+    let generalSettingsRepository: jest.Mocked<SettingsRepository<GeneralSettings>>;
+    let settingsRepository: jest.Mocked<SettingsRepository<PeriodicNoteSettings>>;
+    let nameBuilder: jest.Mocked<NameBuilder<Period>>;
+    let pipeline: PeriodicNotePipeline<PeriodicNoteSettings>;
 
     beforeEach(() => {
         event = new PeriodicNoteEvent<Day>();
@@ -24,45 +27,89 @@ describe('PeriodicNotePipeline', () => {
             name: '05'
         };
         fileService = {
+            doesFileExist: jest.fn(),
             createFileWithTemplate: jest.fn(),
-            doesFileExist: jest.fn().mockResolvedValue(false),
             tryOpenFile: jest.fn()
-        } as FileService;
+        } as unknown as jest.Mocked<FileService>;
+        generalSettingsRepository = {
+            getSettings: jest.fn()
+        } as unknown as jest.Mocked<SettingsRepository<GeneralSettings>>;
         settingsRepository = {
-            storeSettings: jest.fn(),
-            getSettings: jest.fn().mockResolvedValue({
-                nameTemplate: 'template',
-                folder: 'folder',
-                templateFile: 'templateFile'
-            })
-        } as SettingsRepository<PeriodicNoteSettings>;
+            getSettings: jest.fn()
+        } as unknown as jest.Mocked<SettingsRepository<PeriodicNoteSettings>>;
         nameBuilder = {
             withNameTemplate: jest.fn().mockReturnThis(),
             withValue: jest.fn().mockReturnThis(),
             withPath: jest.fn().mockReturnThis(),
-            build: jest.fn().mockReturnValue('filePath')
-        } as NameBuilder<Day>;
+            build: jest.fn()
+        } as unknown as jest.Mocked<NameBuilder<Period>>;
 
-        pipeline = new PeriodicNotePipeline(event, fileService, settingsRepository, nameBuilder);
+        pipeline = new PeriodicNotePipeline<PeriodicNoteSettings>(
+            event,
+            fileService,
+            generalSettingsRepository,
+            settingsRepository,
+            nameBuilder
+        );
     });
 
-    it('should process event and create file if it does not exist', async () => {
-        await pipeline.process(day);
+    it('should create a new file if it does not exist and the modifier key is used', async () => {
+        const generalSettings: GeneralSettings = {...DEFAULT_GENERAL_SETTINGS, useModifierKeyToCreateNote: true };
+        const settings: PeriodicNoteSettings = { nameTemplate: 'template', folder: '/folder', templateFile: 'template.md' };
 
-        expect(nameBuilder.withNameTemplate).toHaveBeenCalledWith('template');
-        expect(nameBuilder.withValue).toHaveBeenCalledWith(day);
-        expect(nameBuilder.withPath).toHaveBeenCalledWith('folder');
-        expect(nameBuilder.build).toHaveBeenCalled();
-        expect(fileService.doesFileExist).toHaveBeenCalledWith('filePath');
-        expect(fileService.createFileWithTemplate).toHaveBeenCalledWith('filePath', 'templateFile');
-        expect(fileService.tryOpenFile).toHaveBeenCalledWith('filePath');
+        generalSettingsRepository.getSettings.mockResolvedValue(generalSettings);
+        settingsRepository.getSettings.mockResolvedValue(settings);
+        fileService.doesFileExist.mockResolvedValue(false);
+        nameBuilder.build.mockReturnValue('/folder/test.md');
+
+        await pipeline.process(day, ModifierKey.Meta);
+
+        expect(fileService.createFileWithTemplate).toHaveBeenCalledWith('/folder/test.md', 'template.md');
+        expect(fileService.tryOpenFile).toHaveBeenCalledWith('/folder/test.md');
     });
 
-    it('should not create file if it already exists', async () => {
-        (fileService.doesFileExist as jest.Mock).mockResolvedValue(true);
-        await pipeline.process(day);
+    it('should not create a new file if it does not exist and the modifier key is not used', async () => {
+        const generalSettings: GeneralSettings = { ...DEFAULT_GENERAL_SETTINGS, useModifierKeyToCreateNote: true };
+        const settings: PeriodicNoteSettings = { nameTemplate: 'template', folder: '/folder', templateFile: 'template.md' };
+
+        generalSettingsRepository.getSettings.mockResolvedValue(generalSettings);
+        settingsRepository.getSettings.mockResolvedValue(settings);
+        fileService.doesFileExist.mockResolvedValue(false);
+        nameBuilder.build.mockReturnValue('/folder/test.md');
+
+        await pipeline.process(day, ModifierKey.None);
 
         expect(fileService.createFileWithTemplate).not.toHaveBeenCalled();
-        expect(fileService.tryOpenFile).toHaveBeenCalledWith('filePath');
+        expect(fileService.tryOpenFile).not.toHaveBeenCalled();
+    });
+
+    it('should create a new file if it does not exist and the modifier key setting is disabled', async () => {
+        const generalSettings: GeneralSettings = { ...DEFAULT_GENERAL_SETTINGS, useModifierKeyToCreateNote: false };
+        const settings: PeriodicNoteSettings = { nameTemplate: 'template', folder: '/folder', templateFile: 'template.md' };
+
+        generalSettingsRepository.getSettings.mockResolvedValue(generalSettings);
+        settingsRepository.getSettings.mockResolvedValue(settings);
+        fileService.doesFileExist.mockResolvedValue(false);
+        nameBuilder.build.mockReturnValue('/folder/test.md');
+
+        await pipeline.process(day, ModifierKey.None);
+
+        expect(fileService.createFileWithTemplate).toHaveBeenCalledWith('/folder/test.md', 'template.md');
+        expect(fileService.tryOpenFile).toHaveBeenCalledWith('/folder/test.md');
+    });
+
+    it('should open the file if it exists', async () => {
+        const generalSettings: GeneralSettings = { ...DEFAULT_GENERAL_SETTINGS, useModifierKeyToCreateNote: true };
+        const settings: PeriodicNoteSettings = { nameTemplate: 'template', folder: '/folder', templateFile: 'template.md' };
+
+        generalSettingsRepository.getSettings.mockResolvedValue(generalSettings);
+        settingsRepository.getSettings.mockResolvedValue(settings);
+        fileService.doesFileExist.mockResolvedValue(true);
+        nameBuilder.build.mockReturnValue('/folder/test.md');
+
+        await pipeline.process(day, ModifierKey.None);
+
+        expect(fileService.createFileWithTemplate).not.toHaveBeenCalled();
+        expect(fileService.tryOpenFile).toHaveBeenCalledWith('/folder/test.md');
     });
 });
