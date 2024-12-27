@@ -68,7 +68,7 @@ Inside your template-file you can use the following variables:
 For the `{{date:<template>}}` and `{{today:<template>}}` variables, you can add or subtract _days_, _weeks_, _months_
 and _years_.
 
-You can use the subtract or add a period using the `+` or `-` sign followed by the period and the amount of that period
+You can subtract or add a period using the `+` or `-` sign followed by the period and the amount of that period
 you want to add or subtract.
 
 | Period | Variable       | Template example                |
