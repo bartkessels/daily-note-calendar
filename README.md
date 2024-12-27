@@ -86,15 +86,15 @@ date. You can change the amount or the period in the above example to any period
 ## 1.3 Notes created on a specific day
 
 For each day you select, you can enable the feature to display all the notes created on that specific day below the
-calendar.
-This allows you to easily navigate your vault using the calendar view and quickly find the notes you've created on any
+calendar. This allows you to easily navigate your vault using the calendar view and quickly find the notes you've created on any
 day.
 
 In the settings, you can specify how you want the plugin to find the notes created on a date. Either use the default
-created date of the actual file or use a specific property in the frontmatter of the note.
+created date of the actual file or use a specific property in the front matter of the note.
 
-The created on time that is displayed below each note can be customized using the date formatting rules of [
-`date-fns`](https://date-fns.org/docs/format).
+The _created on_ time displayed below each note can be customized using the date formatting rules of [`date-fns`](https://date-fns.org/docs/format).
+
+You can always navigate to created notes by pressing the `shift` key and clicking on the date. This will only list the notes created on that date and not open or create the daily note.
 
 # 2. External dependencies
 
