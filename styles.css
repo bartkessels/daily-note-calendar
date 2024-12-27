@@ -25,7 +25,7 @@
     padding: 0.2em;
 }
 
-.dnc td:hover:not(:empty), .dnc .weekNumber:hover {
+.dnc td:hover:not(:empty), .dnc th:hover:not(:empty) {
     background-color: var(--background-modifier-active-hover);
     border-radius: 10%;
 }

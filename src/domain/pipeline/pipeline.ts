@@ -1,5 +1,8 @@
 import {Event} from 'src/domain/events/event';
 import {FileService} from 'src/domain/services/file.service';
+import {isCreateFileModifierKey, ModifierKey} from 'src/domain/models/modifier-key';
+import {SettingsRepository} from 'src/domain/repositories/settings.repository';
+import {GeneralSettings} from 'src/domain/models/settings/general.settings';
 
 export abstract class Pipeline<T> {
     private readonly preCreateSteps: PreCreateStep<T>[] = [];
@@ -7,9 +10,10 @@ export abstract class Pipeline<T> {
 
     protected constructor(
         event: Event<T>,
-        protected readonly fileService: FileService
+        protected readonly fileService: FileService,
+        private readonly generalSettingsSettingsRepository: SettingsRepository<GeneralSettings>
     ) {
-        event.onEvent('pipeline', (value) => this.process(value).then());
+        event.onEventWithModifier('pipeline', this.process.bind(this));
     }
 
     public registerPreCreateStep(step: PreCreateStep<T>): Pipeline<T> {
@@ -25,17 +29,21 @@ export abstract class Pipeline<T> {
     protected abstract getFilePath(value: T): Promise<string>;
     protected abstract createFile(filePath: string): Promise<void>;
 
-    public async process(value: T): Promise<void> {
+    public async process(value: T, modifierKey: ModifierKey): Promise<void> {
+        const settings = await this.generalSettingsSettingsRepository.getSettings();
         const filePath = await this.getFilePath(value);
         const doesFileExist = await this.fileService.doesFileExist(filePath);
+        const createNewFile = (settings.useModifierKeyToCreateNote && isCreateFileModifierKey(modifierKey)) || !settings.useModifierKeyToCreateNote;
 
-        if (!doesFileExist) {
+        if (!doesFileExist && createNewFile) {
             await this.executePreCreateSteps(value);
             await this.createFile(filePath);
             await this.executePostCreateSteps(filePath, value);
         }
 
-        await this.fileService.tryOpenFile(filePath);
+        if (doesFileExist || createNewFile) {
+            await this.fileService.tryOpenFile(filePath);
+        }
     }
 
     private async executePreCreateSteps(value: T): Promise<void> {

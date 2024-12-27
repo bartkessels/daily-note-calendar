@@ -1,5 +1,6 @@
 import {PeriodicNoteEvent} from 'src/implementation/events/periodic-note.event';
 import {Day, DayOfWeek} from 'src/domain/models/day';
+import {ModifierKey} from 'src/domain/models/modifier-key';
 
 describe('PeriodicNoteEvent', () => {
     let event: PeriodicNoteEvent<Day>;
@@ -39,6 +40,35 @@ describe('PeriodicNoteEvent', () => {
         event.onEvent('PeriodicNoteEvent', listener);
 
         event.emitEvent(undefined);
+
+        expect(listener).not.toHaveBeenCalled();
+    });
+
+    it('should trigger event listeners with modifier key when an event is emitted', () => {
+        const listener = jest.fn();
+        event.onEventWithModifier('PeriodicNoteEvent', listener);
+
+        event.emitEvent(day, ModifierKey.Shift);
+
+        expect(listener).toHaveBeenCalledWith(day, ModifierKey.Shift);
+    });
+
+    it('should trigger event listeners with modifier key only once when an event is emitted', () => {
+        const listener = jest.fn();
+        event.onEventWithModifier('PeriodicNoteEvent', listener);
+        event.onEventWithModifier('PeriodicNoteEvent', listener);
+
+        event.emitEvent(day, ModifierKey.Shift);
+
+        expect(listener).toHaveBeenCalledTimes(1);
+        expect(listener).toHaveBeenCalledWith(day, ModifierKey.Shift);
+    });
+
+    it('should not trigger event listeners with modifier key when an undefined event is emitted', () => {
+        const listener = jest.fn();
+        event.onEventWithModifier('PeriodicNoteEvent', listener);
+
+        event.emitEvent(undefined, ModifierKey.Shift);
 
         expect(listener).not.toHaveBeenCalled();
     });
