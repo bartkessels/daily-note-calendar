@@ -78,8 +78,8 @@ export class GeneralSettingItems extends SettingItems {
 
     private addUseModifierKeyToCreateNoteSetting(value: boolean, onValueChange: (value: boolean) => void): void {
         new Setting(this.settingsTab.containerEl)
-            .setName('Use the CTRL or CMD key to create note')
-            .setDesc('When this setting is enabled, when clicking on a date in the calendar will only create a new note when either the CTRL or CMD key is pressed. Otherwise it will only open periodic notes.')
+            .setName('Use the ALT or CMD key to create a new note')
+            .setDesc('When this setting is enabled, when clicking on a date in the calendar will only create a new note when either the ALT or CMD key is pressed. Otherwise it will only open existing periodic notes.')
             .addToggle(component => component
                 .setValue(value)
                 .onChange(onValueChange)
