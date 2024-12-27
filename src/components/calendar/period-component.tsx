@@ -19,6 +19,10 @@ export const PeriodComponent = ({ value, onClick }: PeriodProps): ReactElement =
         }
     }
 
+    if (!value) {
+        return <></>;
+    }
+
     return (
         <div onClick={(e: React.MouseEvent) => onClick(modifierKey(e))}>
             {value}

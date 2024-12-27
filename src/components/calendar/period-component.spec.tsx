@@ -16,6 +16,11 @@ describe('PeriodComponent', () => {
         expect(screen.getByText('17')).toBeInTheDocument();
     });
 
+    it('renders nothing when the value is undefined', () => {
+        const { container } = render(<PeriodComponent onClick={mockOnClick} />);
+        expect(container).toBeEmptyDOMElement();
+    });
+
     it('calls onClick with ModifierKey.None when clicked without modifier keys', () => {
         render(<PeriodComponent value="17" onClick={mockOnClick} />);
         fireEvent.click(screen.getByText('17'));
