@@ -1,6 +1,6 @@
 import React from 'react';
 import {renderHook} from '@testing-library/react';
-import {DateManagerContext, useDateManager} from 'src/components/providers/date-manager.context';
+import {DateManagerContext, useDateManager} from 'src/components/context/date-manager.context';
 import {DateManager} from 'src/domain/managers/date.manager';
 
 describe('DateManagerContext', () => {

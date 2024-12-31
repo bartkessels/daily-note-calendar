@@ -1,9 +1,9 @@
-import {getRefreshNotesEvent} from 'src/components/providers/refresh-notes-event.context';
+import {getRefreshNotesEvent} from 'src/components/context/refresh-notes-event.context';
 import {DefaultNotesViewModel, NotesViewModel} from 'src/components/viewmodels/notes.view-model';
 import { NoteUiModel } from '../models/note.ui-model';
 import React from 'react';
 import {NotesViewState} from 'src/components/viewmodels/notes.view-state';
-import {useNotesEnhancer} from 'src/components/providers/notes-enhancer.context';
+import {useNotesEnhancer} from 'src/components/context/notes-enhancer.context';
 
 export const useNotesViewModel = (): NotesViewModel | undefined => {
     const refreshNotesEvent = getRefreshNotesEvent();

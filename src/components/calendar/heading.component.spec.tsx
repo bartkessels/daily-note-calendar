@@ -6,8 +6,8 @@ import {MonthUiModel} from 'src/components/models/month.ui-model';
 import {Year} from 'src/domain/models/year';
 import {Event} from 'src/domain/events/event';
 import {Month} from 'src/domain/models/month';
-import {YearlyNoteEventContext} from 'src/components/providers/yearly-note-event.context';
-import {MonthlyNoteEventContext} from 'src/components/providers/monthly-note-event.context';
+import {YearlyNoteEventContext} from 'src/components/context/yearly-note-event.context';
+import {MonthlyNoteEventContext} from 'src/components/context/monthly-note-event.context';
 
 describe('HeadingComponent', () => {
     let month: Month;

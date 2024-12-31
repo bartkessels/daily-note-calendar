@@ -1,7 +1,7 @@
-import {DateManagerContext} from 'src/components/providers/date-manager.context';
-import {CalendarEnhancerContext} from 'src/components/providers/calendar-enhancer.context';
-import {SelectDayEventContext} from 'src/components/providers/select-day-event.context';
-import {DailyNoteEventContext} from 'src/components/providers/daily-note-event.context';
+import {DateManagerContext} from 'src/components/context/date-manager.context';
+import {CalendarEnhancerContext} from 'src/components/context/calendar-enhancer.context';
+import {SelectDayEventContext} from 'src/components/context/select-day-event.context';
+import {DailyNoteEventContext} from 'src/components/context/daily-note-event.context';
 import {Day, DayOfWeek} from 'src/domain/models/day';
 import {Week} from 'src/domain/models/week';
 import {Month} from 'src/domain/models/month';

@@ -1,7 +1,7 @@
-import {useDateManager} from 'src/components/providers/date-manager.context';
-import {useCalenderEnhancer} from 'src/components/providers/calendar-enhancer.context';
-import {getSelectDayEvent} from 'src/components/providers/select-day-event.context';
-import {getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
+import {useDateManager} from 'src/components/context/date-manager.context';
+import {useCalenderEnhancer} from 'src/components/context/calendar-enhancer.context';
+import {getSelectDayEvent} from 'src/components/context/select-day-event.context';
+import {getDailyNoteEvent} from 'src/components/context/daily-note-event.context';
 import React from 'react';
 import {CalendarUiModel} from 'src/components/models/calendar.ui-model';
 import {CalendarViewModel, DefaultCalendarViewModel} from 'src/components/viewmodels/calendar.view-model';

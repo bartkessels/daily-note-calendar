@@ -14,6 +14,7 @@ export class GenericNotesManager implements NotesManager {
         noteEvent: Event<Note>,
         dailyNoteEvent: Event<Day>,
         selectDayEvent: Event<Day>,
+        deleteNoteEvent: Event<Note>,
         private readonly refreshNotesEvent: Event<Note[]>,
         private readonly fileService: FileService,
         private readonly noteRepository: NoteRepository<Day>,
@@ -22,6 +23,7 @@ export class GenericNotesManager implements NotesManager {
         noteEvent.onEvent('GenericNotesManager', (note) => this.tryOpenNote(note));
         dailyNoteEvent.onEvent('GenericNotesManager', (day) => this.refreshNotesCreatedOn(day));
         selectDayEvent.onEvent('GenericNotesManager', (day) => this.refreshNotesCreatedOn(day));
+        deleteNoteEvent.onEvent('GenericNotesManager', (note) => this.deleteNote(note));
     }
 
     public async tryOpenNote(note: Note) : Promise<void> {
@@ -36,6 +38,11 @@ export class GenericNotesManager implements NotesManager {
 
         const notes = await this.noteRepository.getNotesCreatedOn(this.selectedDay);
         this.refreshNotesEvent.emitEvent(notes);
+    }
+
+    private async deleteNote(note: Note): Promise<void> {
+        await this.fileService.tryDeleteFile(note.path);
+        await this.refreshNotes();
     }
 
     private async refreshNotesCreatedOn(date: Day): Promise<void> {

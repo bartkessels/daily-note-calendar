@@ -5,8 +5,8 @@ import { DayComponent } from './day.component';
 import { Day, DayOfWeek } from 'src/domain/models/day';
 import { DayUiModel } from 'src/components/models/day.ui-model';
 import { Event } from 'src/domain/events/event';
-import { DailyNoteEventContext } from 'src/components/providers/daily-note-event.context';
-import { SelectDayEventContext } from 'src/components/providers/select-day-event.context';
+import { DailyNoteEventContext } from 'src/components/context/daily-note-event.context';
+import { SelectDayEventContext } from 'src/components/context/select-day-event.context';
 import { ModifierKey } from 'src/domain/models/modifier-key';
 
 describe('DayComponent', () => {

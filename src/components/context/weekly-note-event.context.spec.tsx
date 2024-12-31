@@ -1,29 +1,29 @@
 import React from 'react';
 import {renderHook} from '@testing-library/react';
 import {Event} from 'src/domain/events/event';
-import {getSelectDayEvent, SelectDayEventContext} from 'src/components/providers/select-day-event.context';
-import {Day} from 'src/domain/models/day';
+import {Week} from 'src/domain/models/week';
+import {getWeeklyNoteEvent, WeeklyNoteEventContext} from 'src/components/context/weekly-note-event.context';
 
-describe('SelectDayEventContext', () => {
+describe('WeeklyNoteEventContext', () => {
     const mockEvent = {
         emitEvent: jest.fn(),
         onEvent: jest.fn()
-    } as unknown as Event<Day>;
+    } as unknown as Event<Week>;
 
     it('provides the WeeklyNoteEvent instance', () => {
         const wrapper = ({ children }: { children: React.ReactNode }) => (
-            <SelectDayEventContext.Provider value={mockEvent}>
+            <WeeklyNoteEventContext.Provider value={mockEvent}>
                 {children}
-            </SelectDayEventContext.Provider>
+            </WeeklyNoteEventContext.Provider>
         );
 
-        const { result } = renderHook(() => getSelectDayEvent(), { wrapper });
+        const { result } = renderHook(() => getWeeklyNoteEvent(), { wrapper });
 
         expect(result.current).toBe(mockEvent);
     });
 
     it('returns null when no WeeklyNoteEvent is provided', () => {
-        const { result } = renderHook(() => getSelectDayEvent());
+        const { result } = renderHook(() => getWeeklyNoteEvent());
 
         expect(result.current).toBeNull();
     });

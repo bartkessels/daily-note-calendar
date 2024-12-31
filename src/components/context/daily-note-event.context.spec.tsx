@@ -1,6 +1,6 @@
 import React from 'react';
 import {renderHook} from '@testing-library/react';
-import {DailyNoteEventContext, getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
+import {DailyNoteEventContext, getDailyNoteEvent} from 'src/components/context/daily-note-event.context';
 import {Event} from 'src/domain/events/event';
 import {Day} from 'src/domain/models/day';
 

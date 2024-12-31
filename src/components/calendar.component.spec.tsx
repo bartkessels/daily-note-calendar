@@ -2,7 +2,7 @@ import React from 'react';
 import {screen, fireEvent, render} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { CalendarComponent } from './calendar.component';
-import { QuarterlyNoteEventContext } from 'src/components/providers/quarterly-note-event.context';
+import { QuarterlyNoteEventContext } from 'src/components/context/quarterly-note-event.context';
 import {Event} from 'src/domain/events/event';
 import {Month} from 'src/domain/models/month';
 import {Year} from 'src/domain/models/year';

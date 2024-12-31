@@ -51,16 +51,22 @@ import {NotesDisplayDateEnhancerStep} from 'src/implementation/enhancers/steps/n
 import {NotesSettingsRepository} from 'src/implementation/repositories/notes.settings-repository';
 import {NoteUiModel} from 'src/components/models/note.ui-model';
 import {NotesSettings} from 'src/domain/models/settings/notes.settings';
+import {NoteContextMenuAdapter} from 'src/plugin/adapters/note.context-menu-adapter';
+import {DeleteNoteEvent} from 'src/implementation/events/delete-note.event';
+import {DeleteNoteEventContext} from 'src/components/context/delete-note-event.context';
 
 export interface Dependencies {
     readonly dateManager: DateManager;
     readonly dateParser: DateParser;
     readonly selectDayEvent: Event<Day>;
 
+    readonly noteContextMenuAdapter: NoteContextMenuAdapter;
+
     readonly generalSettingsRepository: SettingsRepository<GeneralSettings>,
     
     readonly noteEvent: Event<Note>,
     readonly refreshNotesEvent: Event<Note[]>,
+    readonly deleteNoteEvent: Event<Note>;
     readonly notesManager: NotesManager;
     readonly notesSettingsRepository: SettingsRepository<NotesSettings>;
 
@@ -84,16 +90,19 @@ export interface Dependencies {
 }
 
 export function createDependencies(plugin: Plugin): Dependencies {
+    // Adapters
     const settingsAdapter = new PluginSettingsAdapter(plugin);
-    const generalSettingsRepository = new GeneralSettingsRepository(settingsAdapter);
-    const dateRepository = new DateFnsDateRepository(generalSettingsRepository);
-    const dateManager = new RepositoryDateManager(dateRepository);
-    const dateParser = new DateFnsDateParser();
-    const fileAdapter = new ObsidianFileAdapter(plugin.app.vault, plugin.app.workspace);
+    const fileAdapter = new ObsidianFileAdapter(plugin.app, plugin.app.workspace);
     const noteAdapter = new ObsidianNoteAdapter(plugin.app);
     const noticeAdapter = new ObsidianNoticeAdapter();
     const logger = new NotifyLogger(noticeAdapter);
     const fileService = new AdapterFileService(fileAdapter, logger);
+    const noteContextMenuAdapter = new NoteContextMenuAdapter();
+
+    const generalSettingsRepository = new GeneralSettingsRepository(settingsAdapter);
+    const dateRepository = new DateFnsDateRepository(generalSettingsRepository);
+    const dateManager = new RepositoryDateManager(dateRepository);
+    const dateParser = new DateFnsDateParser();
     const variableBuilder = new DefaultVariableBuilder(logger);
 
     const selectDayEvent = new SelectDayEvent();
@@ -150,14 +159,17 @@ export function createDependencies(plugin: Plugin): Dependencies {
         .registerPostCreateStep(periodVariableParserStep)
         .registerPostCreateStep(todayVariableParserStep);
 
+    // Notes
     const notesSettingsRepository = new NotesSettingsRepository(settingsAdapter);
     const notesRepository = new DayNoteRepository(notesSettingsRepository, noteAdapter, logger);
     const noteEvent = new NoteEvent();
     const refreshNotesEvent = new RefreshNotesEvent();
+    const deleteNoteEvent = new DeleteNoteEvent();
     const notesManager = new GenericNotesManager(
         noteEvent,
-        selectDayEvent,
         dailyNoteEvent,
+        selectDayEvent,
+        deleteNoteEvent,
         refreshNotesEvent,
         fileService,
         notesRepository,
@@ -179,10 +191,13 @@ export function createDependencies(plugin: Plugin): Dependencies {
         dateParser: dateParser,
         selectDayEvent: selectDayEvent,
 
+        noteContextMenuAdapter: noteContextMenuAdapter,
+
         generalSettingsRepository: generalSettingsRepository,
 
         noteEvent: noteEvent,
         refreshNotesEvent: refreshNotesEvent,
+        deleteNoteEvent: deleteNoteEvent,
         notesManager: notesManager,
         notesSettingsRepository: notesSettingsRepository,
 

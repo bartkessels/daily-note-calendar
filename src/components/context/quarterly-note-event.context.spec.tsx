@@ -2,7 +2,7 @@ import React from 'react';
 import {renderHook} from '@testing-library/react';
 import {Event} from 'src/domain/events/event';
 import {Month} from 'src/domain/models/month';
-import {getQuarterlyNoteEvent, QuarterlyNoteEventContext} from 'src/components/providers/quarterly-note-event.context';
+import {getQuarterlyNoteEvent, QuarterlyNoteEventContext} from 'src/components/context/quarterly-note-event.context';
 
 describe('QuarterlyNoteEventContext', () => {
     const mockEvent = {

@@ -2,8 +2,8 @@ import React, {ReactElement} from 'react';
 import {Year} from 'src/domain/models/year';
 import {CalendarHeart, ChevronLeft, ChevronRight} from 'lucide-react';
 import {MonthUiModel} from 'src/components/models/month.ui-model';
-import {getYearlyNoteEvent} from 'src/components/providers/yearly-note-event.context';
-import {getMonthlyNoteEvent} from 'src/components/providers/monthly-note-event.context';
+import {getYearlyNoteEvent} from 'src/components/context/yearly-note-event.context';
+import {getMonthlyNoteEvent} from 'src/components/context/monthly-note-event.context';
 
 export interface HeadingProps {
     month?: MonthUiModel;

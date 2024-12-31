@@ -1,7 +1,7 @@
 import {DayComponent} from 'src/components/calendar/day.component';
 import * as React from 'react';
 import {WeekUiModel} from 'src/components/models/week.ui-model';
-import {getWeeklyNoteEvent} from 'src/components/providers/weekly-note-event.context';
+import {getWeeklyNoteEvent} from 'src/components/context/weekly-note-event.context';
 import {ReactElement} from 'react';
 
 export interface WeekProps {

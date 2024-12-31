@@ -5,7 +5,7 @@ import {Week} from 'src/domain/models/week';
 import {createWeekUiModel, WeekUiModel} from 'src/components/models/week.ui-model';
 import {WeekComponent} from 'src/components/calendar/week.component';
 import {Event} from 'src/domain/events/event';
-import {WeeklyNoteEventContext} from 'src/components/providers/weekly-note-event.context';
+import {WeeklyNoteEventContext} from 'src/components/context/weekly-note-event.context';
 import 'src/extensions/extensions';
 
 describe('WeekComponent', () => {

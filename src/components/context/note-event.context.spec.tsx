@@ -1,7 +1,7 @@
 import React from 'react';
 import {renderHook} from '@testing-library/react';
 import {Event} from 'src/domain/events/event';
-import {getNoteEvent, NoteEventContext} from 'src/components/providers/note-event.context';
+import {getNoteEvent, NoteEventContext} from 'src/components/context/note-event.context';
 import {Note} from 'src/domain/models/note';
 
 describe('NoteEventContext', () => {

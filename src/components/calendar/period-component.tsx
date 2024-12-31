@@ -1,5 +1,6 @@
 import {ModifierKey} from 'src/domain/models/modifier-key';
 import React, {ReactElement} from 'react';
+import {getNoteContextMenu} from 'src/components/context/note-context-menu.context';
 
 interface PeriodProps {
     value?: string;
@@ -7,6 +8,8 @@ interface PeriodProps {
 }
 
 export const PeriodComponent = ({ value, onClick }: PeriodProps): ReactElement => {
+    const noteContextMenu = getNoteContextMenu();
+
     const modifierKey = (event: React.MouseEvent): ModifierKey => {
         if (event.metaKey) {
             return ModifierKey.Meta;
@@ -24,8 +27,11 @@ export const PeriodComponent = ({ value, onClick }: PeriodProps): ReactElement =
     }
 
     return (
-        <div onClick={(e: React.MouseEvent) => onClick(modifierKey(e))}>
-            {value}
-        </div>
+        <div
+            onClick={(e: React.MouseEvent) => onClick(modifierKey(e))}
+            onContextMenu={(e: React.MouseEvent) => {
+                noteContextMenu?.show(e.clientX, e.clientY);
+                e.preventDefault();
+            }}>{value}</div>
     )
 }
