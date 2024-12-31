@@ -48,8 +48,15 @@ describe('CalendarWeekEnhancerStep', () => {
         expect(result).toBe(calendar);
     });
 
-    it('should return the calendar unchanged if the setting to display a note indicator is disabled', async () => {
-        generalSettingsRepository.getSettings.mockResolvedValue({...DEFAULT_GENERAL_SETTINGS, displayNoteIndicator: false });
+    it('should not enhance the weeks with note existence information if the setting is disabled but the file exists', async () => {
+        generalSettingsRepository.getSettings.mockResolvedValue({ ...DEFAULT_GENERAL_SETTINGS, displayNoteIndicator: false });
+        const settings: WeeklyNotesPeriodicNoteSettings = {
+            folder: '/notes',
+            nameTemplate: 'yyyy-ww',
+            templateFile: 'template.md'
+        };
+        settingsRepository.getSettings.mockResolvedValue(settings);
+
         const week: WeekUiModel = {
             week: { date: new Date(2023, 9, 2), weekNumber: '40', days: [] },
             days: [],
@@ -57,12 +64,49 @@ describe('CalendarWeekEnhancerStep', () => {
         };
         const calendar: CalendarUiModel = { currentMonth: { weeks: [week] }, startWeekOnMonday: true };
 
+        nameBuilder.build.mockReturnValue('/notes/2023-40.md');
+        fileAdapter.doesFileExist.mockResolvedValue(true);
+
         const result = await enhancerStep.execute(calendar);
 
-        expect(result).toBe(calendar);
+        expect(result?.currentMonth?.weeks[0].hasNote).toBe(false);
+        expect(nameBuilder.withPath).toHaveBeenCalledWith('/notes');
+        expect(nameBuilder.withNameTemplate).toHaveBeenCalledWith('yyyy-ww');
+        expect(nameBuilder.withValue).toHaveBeenCalledWith(week.week);
+        expect(nameBuilder.build).toHaveBeenCalled();
+        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('/notes/2023-40.md');
     });
 
-    it('should enhance the weeks with note existence information', async () => {
+    it('should not enhance the weeks with note existence information if the setting is enabled but the file does not exists', async () => {
+        generalSettingsRepository.getSettings.mockResolvedValue({ ...DEFAULT_GENERAL_SETTINGS, displayNoteIndicator: true });
+        const settings: WeeklyNotesPeriodicNoteSettings = {
+            folder: '/notes',
+            nameTemplate: 'yyyy-ww',
+            templateFile: 'template.md'
+        };
+        settingsRepository.getSettings.mockResolvedValue(settings);
+
+        const week: WeekUiModel = {
+            week: { date: new Date(2023, 9, 2), weekNumber: '40', days: [] },
+            days: [],
+            hasNote: false
+        };
+        const calendar: CalendarUiModel = { currentMonth: { weeks: [week] }, startWeekOnMonday: true };
+
+        nameBuilder.build.mockReturnValue('/notes/2023-40.md');
+        fileAdapter.doesFileExist.mockResolvedValue(false);
+
+        const result = await enhancerStep.execute(calendar);
+
+        expect(result?.currentMonth?.weeks[0].hasNote).toBe(false);
+        expect(nameBuilder.withPath).toHaveBeenCalledWith('/notes');
+        expect(nameBuilder.withNameTemplate).toHaveBeenCalledWith('yyyy-ww');
+        expect(nameBuilder.withValue).toHaveBeenCalledWith(week.week);
+        expect(nameBuilder.build).toHaveBeenCalled();
+        expect(fileAdapter.doesFileExist).toHaveBeenCalledWith('/notes/2023-40.md');
+    });
+
+    it('should enhance the weeks with note existence information if the setting is enabled and the file exists', async () => {
         generalSettingsRepository.getSettings.mockResolvedValue({ ...DEFAULT_GENERAL_SETTINGS, displayNoteIndicator: true });
         const settings: WeeklyNotesPeriodicNoteSettings = {
             folder: '/notes',
