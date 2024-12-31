@@ -41,13 +41,12 @@ export class CalendarWeekEnhancerStep implements EnhancerStep<CalendarUiModel> {
     }
 
     public async execute(calendar?: CalendarUiModel): Promise<CalendarUiModel | undefined> {
-        const generalSettings = await this.generalSettingsRepository.getSettings();
-
-        if (!calendar?.currentMonth?.weeks || !generalSettings.displayNoteIndicator) {
+        if (!calendar?.currentMonth?.weeks) {
             return calendar;
         }
 
         const settings = await this.settingsRepository.getSettings();
+        const generalSettings = await this.generalSettingsRepository.getSettings();
         const enhancedWeeks = await this.enhanceWeeks(calendar.currentMonth.weeks, settings, generalSettings);
 
         return {
@@ -86,7 +85,7 @@ export class CalendarWeekEnhancerStep implements EnhancerStep<CalendarUiModel> {
             .withNameTemplate(settings.nameTemplate)
             .withValue(week.week)
             .build();
-        const hasNote = await this.fileAdapter.doesFileExist(filePath);
+        const hasNote = await this.fileAdapter.doesFileExist(filePath) && generalSettings.displayNoteIndicator;
 
         return {
             ...week,
