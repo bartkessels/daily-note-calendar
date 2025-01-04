@@ -1,5 +1,5 @@
 import {DateParser} from 'src/domain/parsers/date.parser';
-import {format} from 'date-fns';
+import {format, parse} from 'date-fns';
 
 export class DateFnsDateParser implements DateParser {
 
@@ -15,6 +15,21 @@ export class DateFnsDateParser implements DateParser {
             return format(date, template);
         } catch(e) {
             return template;
+        }
+    }
+
+    /**
+     * Parse the date string using the template or returns null if the date could not be parsed.
+     *
+     * @param date
+     * @param template
+     */
+    public parseString(date: string, template: string): Date | null {
+        try {
+            return parse(date, template, new Date());
+        } catch (e) {
+            console.log(e);
+            return null;
         }
     }
 }

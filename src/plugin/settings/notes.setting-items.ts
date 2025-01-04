@@ -29,6 +29,10 @@ export class NotesSettingItems extends SettingItems {
             settings.createdOnDatePropertyName = value;
             await this.settingsRepository.storeSettings(settings);
         });
+        this.addCreatedDateFormatSetting(settings.createdOnPropertyFormat, async value => {
+            settings.createdOnPropertyFormat = value;
+            await this.settingsRepository.storeSettings(settings);
+        });
     }
 
     private addDisplayDateTemplateSetting(value: string, onValueChange: (value: string) => void) {
@@ -41,7 +45,7 @@ export class NotesSettingItems extends SettingItems {
         );
     }
 
-    private addUsePropertyForCreatedDateSetting(value: boolean, onValueChange: (value: boolean) => void) {
+    private addUsePropertyForCreatedDateSetting(value: boolean, onValueChange: (value: boolean) => void): void {
         new Setting(this.settingsTab.containerEl)
             .setName('Use property for created date')
             .setDesc('Use the property to determine the created date of the note.')
@@ -51,13 +55,23 @@ export class NotesSettingItems extends SettingItems {
             );
     }
 
-    private addPropertyForCreatedDateSetting(value: string, onValueChange: (value: string) => void): Setting {
-        return new Setting(this.settingsTab.containerEl)
+    private addPropertyForCreatedDateSetting(value: string, onValueChange: (value: string) => void): void {
+        new Setting(this.settingsTab.containerEl)
             .setName('Property for created date')
             .setDesc('The property to use to determine the created date of the note. This is only applicable if the "Use property for created date" setting is enabled.')
             .addText(component => component
                 .setValue(value)
                 .onChange(onValueChange)
             );
+    }
+
+    private addCreatedDateFormatSetting(value: string, onValueChange: (value: string) => void): void {
+        this.addDateParseSetting(
+            'Created date format',
+            'The format to use when parsing the created date from the property.',
+            'yyyy/MM/dd HH:mm',
+            value,
+            onValueChange
+        );
     }
 }

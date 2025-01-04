@@ -1,7 +1,6 @@
 import {Note} from 'src/domain/models/note';
 
 export interface NoteAdapter {
-    getNotesCreatedOn(date: Date): Promise<Note[]>;
-    getNotesWithCreatedOnProperty(date: Date, propertyName: string): Promise<Note[]>;
+    getNotes(filter: (note: Note) => boolean): Promise<Note[]>;
     getActiveNote(): Promise<Note | null>;
 }
