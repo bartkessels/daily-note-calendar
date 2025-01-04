@@ -11,7 +11,8 @@ describe('PeriodNameBuilder', () => {
 
     beforeEach(() => {
         dateParser = {
-            parse: jest.fn((_: Date, template: string) => template)
+            parse: jest.fn((_: Date, template: string) => template),
+            parseString: jest.fn()
         } as jest.Mocked<DateParser>;
 
         logger = {

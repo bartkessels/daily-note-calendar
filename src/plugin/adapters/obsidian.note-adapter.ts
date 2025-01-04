@@ -17,46 +17,27 @@ export class ObsidianNoteAdapter implements NoteAdapter {
             return null;
         }
 
-        return <Note> {
-            path: activeFile.path,
-            name: activeFile.name.removeMarkdownExtension(),
-            createdOn: new Date(activeFile.stat.ctime)
-        };
+        return this.asNote(activeFile);
     }
 
-    public async getNotesCreatedOn(date: Date): Promise<Note[]> {
-        const files = this.app.vault.getMarkdownFiles()
-            .filter((file) => {
-                const createdDate = new Date(file.stat.ctime);
-                return createdDate.toLocaleDateString() === date.toLocaleDateString();
-            });
+    public async getNotes(filter: (note: Note) => boolean): Promise<Note[]> {
+        const notes = await Promise.all(this.app.vault.getMarkdownFiles().map((file: TFile) =>
+            this.asNote(file)
+        ));
+        return notes.filter(note => filter(note));
+    }
 
-        return files.map((file) => <Note>{
-           path: file.path,
-           name: file.name.removeMarkdownExtension(),
-           createdOn: new Date(file.stat.ctime)
+    private async asNote(file: TFile): Promise<Note> {
+        let frontMatter: Map<string, string> = new Map<string, string>();
+        await this.app.fileManager.processFrontMatter(file, (data): void => {
+            frontMatter = new Map<string, string>(Object.entries(data));
         });
-    }
 
-    public async getNotesWithCreatedOnProperty(date: Date, propertyName: string): Promise<Note[]> {
-        const files = this.app.vault.getMarkdownFiles();
-        let filteredFiles: TFile[] = [];
-
-        for (const file of files) {
-            await this.app.fileManager.processFrontMatter(file, (frontMatter) => {
-                if (frontMatter[propertyName]) {
-                    const createdDate = new Date(frontMatter[propertyName]);
-                    if (createdDate.toLocaleDateString() === date.toLocaleDateString()) {
-                        filteredFiles.push(file);
-                    }
-                }
-            });
-        }
-
-        return filteredFiles.map((file) => <Note>{
+        return <Note>{
             path: file.path,
             name: file.name.removeMarkdownExtension(),
-            createdOn: new Date(file.stat.ctime)
-        });
+            createdOn: new Date(file.stat.ctime),
+            properties: frontMatter
+        };
     }
 }

@@ -23,7 +23,8 @@ describe('TitleVariableParserStep', () => {
         activeNote = {
             createdOn: new Date(),
             name: 'Active Note Title',
-            path: 'active-note.md'
+            path: 'active-note.md',
+            properties: new Map()
         };
 
         step = new TitleVariableParserStep(fileAdapter, noteAdapter);

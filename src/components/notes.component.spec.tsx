@@ -27,8 +27,8 @@ describe('NotesComponent', () => {
 
     it('should render notes when the view state has uiModels', async () => {
         const notes: Note[] = [
-            {name: 'Note 1', createdOn: new Date(2023, 9, 2, 10, 10), path: 'path/to/note1'},
-            {name: 'Note 2', createdOn: new Date(2023, 9, 2, 11, 59), path: 'path/to/note2'},
+            {name: 'Note 1', createdOn: new Date(2023, 9, 2, 10, 10), path: 'path/to/note1', properties: new Map()},
+            {name: 'Note 2', createdOn: new Date(2023, 9, 2, 11, 59), path: 'path/to/note2', properties: new Map()},
         ];
         const viewModel: NotesViewModel = {
             viewState: {
@@ -66,7 +66,8 @@ describe('NotesComponent', () => {
         const note: Note = {
             name: 'Note 1',
             createdOn: new Date(2023, 9, 2, 10, 10),
-            path: 'path/to/note1'
+            path: 'path/to/note1',
+            properties: new Map()
         };
         const viewModel: NotesViewModel = {
             viewState: {
@@ -88,7 +89,8 @@ describe('NotesComponent', () => {
         const note: Note = {
             name: 'Note 1',
             createdOn: new Date(2023, 9, 2, 10, 10),
-            path: 'path/to/note1'
+            path: 'path/to/note1',
+            properties: new Map()
         };
         const viewModel: NotesViewModel = {
             viewState: {
@@ -110,7 +112,8 @@ describe('NotesComponent', () => {
         const note: Note = {
             name: 'Note 1',
             createdOn: new Date(2023, 9, 2, 10, 10),
-            path: 'path/to/note1'
+            path: 'path/to/note1',
+            properties: new Map()
         };
         const viewModel: NotesViewModel = {
             viewState: {
