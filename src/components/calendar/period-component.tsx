@@ -48,7 +48,7 @@ export const PeriodComponent = ({
             }}
             onContextMenu={(e: React.MouseEvent) => {
                 noteContextMenu?.show(e.clientX, e.clientY, {
-                    onDelete: () => manageEvent?.emitEvent(ManageAction.Delete, value)
+                    onDelete: (): void => manageEvent?.emitEvent(ManageAction.Delete, value)
                 });
                 e.preventDefault();
             }}>{displayValue}</div>

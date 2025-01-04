@@ -3,6 +3,7 @@ import {CalendarView} from 'src/plugin/views/calendar.view';
 import {CalendarSettingsTab} from 'src/plugin/settings/calendar.settings-tab';
 import {createDependencies, Dependencies} from 'src/dependencies';
 import 'src/extensions/extensions';
+import {ManageAction} from 'src/domain/events/manage.event';
 
 export default class DailyNoteCalendarPlugin extends Plugin {
     private readonly dependencies: Dependencies = createDependencies(this);
@@ -18,9 +19,8 @@ export default class DailyNoteCalendarPlugin extends Plugin {
                 this.dependencies.manageMonthEvent,
                 this.dependencies.manageQuarterEvent,
                 this.dependencies.manageYearEvent,
-                this.dependencies.noteEvent,
+                this.dependencies.manageNoteEvent,
                 this.dependencies.refreshNotesEvent,
-                this.dependencies.deleteNoteEvent,
                 this.dependencies.calendarEnhancer,
                 this.dependencies.notesEnhancer
             )
@@ -46,7 +46,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
 
     private initializePlugin(): void {
         const today = this.dependencies.dateManager.getCurrentDay();
-        this.dependencies.selectDayEvent.emitEvent(today);
+        this.dependencies.manageDayEvent.emitEvent(ManageAction.Preview, today);
 
         if (this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE).length > 0) {
             return;

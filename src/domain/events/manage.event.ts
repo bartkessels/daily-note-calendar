@@ -3,7 +3,7 @@ import {ModifierKey} from 'src/domain/models/modifier-key';
 type EventListener<T> = (value: T, action: ManageAction) => void;
 type EventListenerWithModifier<T> = (value: T, action: ManageAction, modifierKey: ModifierKey) => void;
 
-export class ManageEvent<T> {
+export abstract class ManageEvent<T> {
     private readonly listeners = new Map<string, EventListener<T>>();
     private readonly listenersWithModifierKey = new Map<string, EventListenerWithModifier<T>>();
 

@@ -28,13 +28,10 @@ import {QuarterlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/qua
 import {YearlyNotesPeriodicNoteSettings} from 'src/domain/models/settings/yearly-notes.periodic-note-settings';
 import { Note } from 'src/domain/models/note';
 import {NotesManager} from 'src/domain/managers/notes.manager';
-import {NoteEvent} from 'src/implementation/events/note.event';
 import {GenericNotesManager} from 'src/implementation/managers/generic.notes-manager';
 import {GeneralSettings} from 'src/domain/models/settings/general.settings';
 import {GeneralSettingsRepository} from 'src/implementation/repositories/general.settings-repository';
 import {RefreshNotesEvent} from 'src/implementation/events/refresh-notes.event';
-import {PeriodicNoteEvent} from 'src/implementation/events/periodic-note.event';
-import {SelectDayEvent} from 'src/implementation/events/select-day.event';
 import {DefaultVariableBuilder} from 'src/implementation/builders/default.variable-builder';
 import {PeriodicNotePipeline} from 'src/implementation/pipelines/periodic-note.pipeline';
 import {TodayVariableParserStep} from 'src/implementation/pipelines/steps/today-variable-parser.step';
@@ -52,24 +49,21 @@ import {NotesSettingsRepository} from 'src/implementation/repositories/notes.set
 import {NoteUiModel} from 'src/components/models/note.ui-model';
 import {NotesSettings} from 'src/domain/models/settings/notes.settings';
 import {NoteContextMenuAdapter} from 'src/plugin/adapters/note.context-menu-adapter';
-import {DeleteNoteEvent} from 'src/implementation/events/delete-note.event';
-import {DeleteNoteEventContext} from 'src/components/context/delete-note-event.context';
 import {ManageEvent} from 'src/domain/events/manage.event';
 import {PeriodicManageEvent} from 'src/implementation/events/periodic.manage-event';
 import {Quarter} from 'src/domain/models/quarter';
+import {NoteManageEvent} from 'src/implementation/events/note.manage-event';
 
 export interface Dependencies {
     readonly dateManager: DateManager;
     readonly dateParser: DateParser;
-    readonly selectDayEvent: Event<Day>;
 
     readonly noteContextMenuAdapter: NoteContextMenuAdapter;
 
     readonly generalSettingsRepository: SettingsRepository<GeneralSettings>,
     
-    readonly noteEvent: Event<Note>,
+    readonly manageNoteEvent: ManageEvent<Note>,
     readonly refreshNotesEvent: Event<Note[]>,
-    readonly deleteNoteEvent: Event<Note>;
     readonly notesManager: NotesManager;
     readonly notesSettingsRepository: SettingsRepository<NotesSettings>;
 
@@ -108,7 +102,6 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const dateParser = new DateFnsDateParser();
     const variableBuilder = new DefaultVariableBuilder(logger);
 
-    const selectDayEvent = new SelectDayEvent();
     const periodVariableParserStep = new PeriodVariableParserStep(fileAdapter, variableBuilder, dateParser);
     const todayVariableParserStep = new TodayVariableParserStep(fileAdapter, variableBuilder, dateParser);
     const titleVariableParserStep = new TitleVariableParserStep(fileAdapter, noteAdapter);
@@ -166,13 +159,11 @@ export function createDependencies(plugin: Plugin): Dependencies {
     // Notes
     const notesSettingsRepository = new NotesSettingsRepository(settingsAdapter);
     const notesRepository = new DayNoteRepository(notesSettingsRepository, noteAdapter, dateParser, logger);
-    const noteEvent = new NoteEvent();
+    const manageNoteEvent = new NoteManageEvent();
     const refreshNotesEvent = new RefreshNotesEvent();
-    const deleteNoteEvent = new DeleteNoteEvent();
     const notesManager = new GenericNotesManager(
-        noteEvent,
+        manageNoteEvent,
         manageDayEvent,
-        deleteNoteEvent,
         refreshNotesEvent,
         fileService,
         notesRepository,
@@ -192,15 +183,13 @@ export function createDependencies(plugin: Plugin): Dependencies {
     return <Dependencies>{
         dateManager: dateManager,
         dateParser: dateParser,
-        selectDayEvent: selectDayEvent,
 
         noteContextMenuAdapter: noteContextMenuAdapter,
 
         generalSettingsRepository: generalSettingsRepository,
 
-        noteEvent: noteEvent,
+        manageNoteEvent: manageNoteEvent,
         refreshNotesEvent: refreshNotesEvent,
-        deleteNoteEvent: deleteNoteEvent,
         notesManager: notesManager,
         notesSettingsRepository: notesSettingsRepository,
 

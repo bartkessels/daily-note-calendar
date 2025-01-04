@@ -86,20 +86,16 @@ describe('PeriodComponent', () => {
         expect(mockOnClick).toHaveBeenCalledWith(ModifierKey.Alt);
     });
 
-    it('calls the context menu with the correct values when right clicked', () => {
+    it('calls manageEvent.emitEvent with ManageAction.Delete when onDelete is triggered from the context menu', () => {
         render(
             <NoteContextMenuContext value={contextMenuAdapter}>
                 <PeriodComponent value={day} displayValue="17" manageEvent={manageDayEventMock} />
             </NoteContextMenuContext>
         );
-        fireEvent.contextMenu(screen.getByText('17'));
 
-        expect(contextMenuAdapter.show).toHaveBeenCalledWith(
-            expect.any(Number),
-            expect.any(Number),
-            {
-                onDelete: expect.any(Function) //() => manageDayEventMock.emitEvent(ManageAction.Delete, day)
-            }
-        );
+        fireEvent.contextMenu(screen.getByText('17'));
+        (contextMenuAdapter.show as jest.Mock).mock.calls[0][2].onDelete();
+
+        expect(manageDayEventMock.emitEvent).toHaveBeenCalledWith(ManageAction.Delete, day);
     });
 });

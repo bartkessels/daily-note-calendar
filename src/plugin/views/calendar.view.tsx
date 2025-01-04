@@ -10,7 +10,7 @@ import {Week} from 'src/domain/models/week';
 import {Month} from 'src/domain/models/month';
 import {Year} from 'src/domain/models/year';
 import {NotesComponent} from 'src/components/notes.component';
-import {NoteEventContext} from 'src/components/context/note-event.context';
+import {ManageNoteEventContext} from 'src/components/context/manage-note-event.context';
 import {Note} from 'src/domain/models/note';
 import {RefreshNotesEventContext} from 'src/components/context/refresh-notes-event.context';
 import {CalendarEnhancerContext} from 'src/components/context/calendar-enhancer.context';
@@ -20,7 +20,6 @@ import {NoteUiModel} from 'src/components/models/note.ui-model';
 import {NotesEnhancerContext} from 'src/components/context/notes-enhancer.context';
 import {ContextMenuAdapter} from 'src/domain/adapters/context-menu.adapter';
 import {NoteContextMenuContext} from 'src/components/context/note-context-menu.context';
-import {DeleteNoteEventContext} from 'src/components/context/delete-note-event.context';
 import {ManageEvent} from 'src/domain/events/manage.event';
 import {Quarter} from 'src/domain/models/quarter';
 import {PeriodicNoteEventContext} from 'src/components/context/periodic-note-event.context';
@@ -39,9 +38,8 @@ export class CalendarView extends ItemView {
         private readonly manageMonthEvent: ManageEvent<Month>,
         private readonly manageQuarterEvent: ManageEvent<Quarter>,
         private readonly manageYearEvent: ManageEvent<Year>,
-        private readonly noteEvent: Event<Note>,
+        private readonly manageNoteEvent: ManageEvent<Note>,
         private readonly refreshNotesEvent: Event<Note[]>,
-        private readonly deleteNoteEvent: Event<Note>,
         private readonly calendarEnhancer: Enhancer<CalendarUiModel>,
         private readonly notesEnhancer: Enhancer<NoteUiModel[]>
     ) {
@@ -78,15 +76,13 @@ export class CalendarView extends ItemView {
                         </DateManagerContext.Provider>
                     </PeriodicNoteEventContext>
 
-                    <NoteEventContext.Provider value={this.noteEvent}>
+                    <ManageNoteEventContext.Provider value={this.manageNoteEvent}>
                         <RefreshNotesEventContext.Provider value={this.refreshNotesEvent}>
                             <NotesEnhancerContext.Provider value={this.notesEnhancer}>
-                                <DeleteNoteEventContext value={this.deleteNoteEvent}>
-                                    <NotesComponent/>
-                                </DeleteNoteEventContext>
+                                <NotesComponent/>
                             </NotesEnhancerContext.Provider>
                         </RefreshNotesEventContext.Provider>
-                    </NoteEventContext.Provider>
+                    </ManageNoteEventContext.Provider>
                 </NoteContextMenuContext>
             </StrictMode>
         );

@@ -8,11 +8,12 @@ import { SettingsRepository } from 'src/domain/repositories/settings.repository'
 import {DEFAULT_GENERAL_SETTINGS, GeneralSettings} from 'src/domain/models/settings/general.settings';
 import { jest } from '@jest/globals';
 import {RefreshNotesEvent} from 'src/implementation/events/refresh-notes.event';
-import {ManageAction, ManageEvent} from 'src/domain/events/manage.event';
+import {ManageAction} from 'src/domain/events/manage.event';
 import {PeriodicManageEvent} from 'src/implementation/events/periodic.manage-event';
+import {NoteManageEvent} from 'src/implementation/events/note.manage-event';
 
 describe('GenericNotesManager', () => {
-    let manageNoteEvent = new ManageEvent<Note>();
+    let manageNoteEvent = new NoteManageEvent();
     let manageDayEvent = new PeriodicManageEvent<Day>();
     let refreshNotesEvent: Event<Note[]>;
     let fileService: jest.Mocked<FileService>;
