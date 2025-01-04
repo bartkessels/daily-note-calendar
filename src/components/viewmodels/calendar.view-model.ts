@@ -2,10 +2,10 @@ import {Day} from 'src/domain/models/day';
 import {Month} from 'src/domain/models/month';
 import {Year} from 'src/domain/models/year';
 import {CalendarUiModel, createCalendarUiModel} from 'src/components/models/calendar.ui-model';
-import {Event} from 'src/domain/events/event';
 import {DateManager} from 'src/domain/managers/date.manager';
 import {Enhancer} from 'src/domain/enhancers/enhancer';
 import {CalendarViewState} from 'src/components/viewmodels/calendar.view-state';
+import {ManageAction, ManageEvent} from 'src/domain/events/manage.event';
 
 export interface CalendarViewModel {
     viewState: CalendarViewState;
@@ -23,13 +23,11 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
 
     constructor(
         private readonly setUiModel: (uiModel?: CalendarUiModel) => void,
-        private readonly selectDayEvent: Event<Day> | null,
-        private readonly dailyNoteEvent: Event<Day> | null,
+        private readonly manageDayEvent: ManageEvent<Day> | null,
         private readonly dateManager: DateManager | null,
         private readonly calendarEnhancer: Enhancer<CalendarUiModel> | null
     ) {
-        this.selectDayEvent?.onEvent('CalendarViewModel', (day: Day) => this.selectDay(day).then());
-        this.dailyNoteEvent?.onEvent('CalendarViewModel', (day: Day) => this.selectDay(day).then());
+        this.manageDayEvent?.onEvent('CalendarViewModel', (day: Day, action: ManageAction) => this.selectDay(day).then());
     }
 
     public async initialize(): Promise<void> {

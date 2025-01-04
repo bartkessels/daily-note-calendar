@@ -6,24 +6,21 @@ import {NotesManager} from 'src/domain/managers/notes.manager';
 import {Day} from 'src/domain/models/day';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {GeneralSettings} from 'src/domain/models/settings/general.settings';
+import {ManageAction, ManageEvent} from 'src/domain/events/manage.event';
 
 export class GenericNotesManager implements NotesManager {
     private selectedDay: Day | undefined;
 
     constructor(
-        noteEvent: Event<Note>,
-        dailyNoteEvent: Event<Day>,
-        selectDayEvent: Event<Day>,
-        deleteNoteEvent: Event<Note>,
+        manageNoteEvent: ManageEvent<Note>,
+        manageDayEvent: ManageEvent<Day>,
         private readonly refreshNotesEvent: Event<Note[]>,
         private readonly fileService: FileService,
         private readonly noteRepository: NoteRepository<Day>,
         private readonly settingsRepository: SettingsRepository<GeneralSettings>
     ) {
-        noteEvent.onEvent('GenericNotesManager', (note) => this.tryOpenNote(note));
-        dailyNoteEvent.onEvent('GenericNotesManager', (day) => this.refreshNotesCreatedOn(day));
-        selectDayEvent.onEvent('GenericNotesManager', (day) => this.refreshNotesCreatedOn(day));
-        deleteNoteEvent.onEvent('GenericNotesManager', (note) => this.deleteNote(note));
+        manageNoteEvent.onEvent('GenericNotesManager', async (note, action) => await this.manageNoteEvent(note, action).then());
+        manageDayEvent.onEvent('GenericNotesManager', async (day) => await this.refreshNotesCreatedOn(day));
     }
 
     public async tryOpenNote(note: Note) : Promise<void> {
@@ -40,7 +37,15 @@ export class GenericNotesManager implements NotesManager {
         this.refreshNotesEvent.emitEvent(notes);
     }
 
-    private async deleteNote(note: Note): Promise<void> {
+    private async manageNoteEvent(note: Note, action: ManageAction): Promise<void> {
+        if (action === ManageAction.Delete) {
+            await this.tryDeleteNote(note);
+        }
+
+        await this.tryOpenNote(note);
+    }
+
+    private async tryDeleteNote(note: Note): Promise<void> {
         await this.fileService.tryDeleteFile(note.path);
         await this.refreshNotes();
     }

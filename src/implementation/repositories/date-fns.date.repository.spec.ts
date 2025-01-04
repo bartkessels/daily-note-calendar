@@ -43,7 +43,10 @@ describe('DateFnsDateRepository', () => {
 
         expect(month.name).toBe('October');
         expect(month.weeks.length).toBeGreaterThan(0);
-        expect(month.quarter).toBe(4);
+        expect(month.date.getMonth()).toBe(monthIndex);
+        expect(month.date.getFullYear()).toBe(year);
+        expect(month.quarter.quarter).toBe(4);
+        expect(month.quarter.year).toBe(year);
     });
 
     it('should return the correct week number', async () => {
@@ -103,22 +106,34 @@ describe('DateFnsDateRepository', () => {
 
         // First quarter
         for (let index = 0; index <= 2; index++) {
-            expect(months[index].quarter).toBe(1);
+            expect(months[index].quarter.date.getFullYear()).toBe(year);
+            expect(months[index].quarter.date.getMonth()).toBe(index);
+            expect(months[index].quarter.year).toBe(year);
+            expect(months[index].quarter.quarter).toBe(1);
         }
 
         // Second quarter
         for (let index = 3; index <= 5; index++) {
-            expect(months[index].quarter).toBe(2);
+            expect(months[index].quarter.date.getFullYear()).toBe(year);
+            expect(months[index].quarter.date.getMonth()).toBe(index);
+            expect(months[index].quarter.year).toBe(year);
+            expect(months[index].quarter.quarter).toBe(2);
         }
 
         // Third quarter
         for (let index = 6; index <= 8; index++) {
-            expect(months[index].quarter).toBe(3);
+            expect(months[index].quarter.date.getFullYear()).toBe(year);
+            expect(months[index].quarter.date.getMonth()).toBe(index);
+            expect(months[index].quarter.year).toBe(year);
+            expect(months[index].quarter.quarter).toBe(3);
         }
 
         // Fourth quarter
         for (let index = 9; index <= 11; index++) {
-            expect(months[index].quarter).toBe(4);
+            expect(months[index].quarter.date.getFullYear()).toBe(year);
+            expect(months[index].quarter.date.getMonth()).toBe(index);
+            expect(months[index].quarter.year).toBe(year);
+            expect(months[index].quarter.quarter).toBe(4);
         }
     });
 

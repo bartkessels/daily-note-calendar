@@ -5,12 +5,12 @@ import {Year} from 'src/domain/models/year';
 import {CalendarUiModel} from 'src/components/models/calendar.ui-model';
 import {DateManager} from 'src/domain/managers/date.manager';
 import {Enhancer} from 'src/domain/enhancers/enhancer';
-import {PeriodicNoteEvent} from 'src/implementation/events/periodic-note.event';
-import {EnhancerStep} from 'src/domain/enhancers/enhancer-step';
 import {Week} from 'src/domain/models/week';
 import {waitFor} from '@testing-library/react';
 import {CalendarViewState} from 'src/components/viewmodels/calendar.view-state';
 import 'src/extensions/extensions';
+import {PeriodicManageEvent} from 'src/implementation/events/periodic.manage-event';
+import {ManageAction} from 'src/domain/events/manage.event';
 
 describe('DefaultCalendarViewModel', () => {
     const mockDateManager = {
@@ -22,8 +22,7 @@ describe('DefaultCalendarViewModel', () => {
         getYear: jest.fn()
     } as jest.Mocked<DateManager>;
     let mockEnhancer: Enhancer<CalendarUiModel>;
-    const selectedDayEvent = new PeriodicNoteEvent<Day>();
-    const dailyNoteEvent = new PeriodicNoteEvent<Day>();
+    const manageDayEvent = new PeriodicManageEvent<Day>();
     const setUiModel: jest.Mock = jest.fn();
 
     let currentDay: Day;
@@ -39,9 +38,9 @@ describe('DefaultCalendarViewModel', () => {
         currentDay = {date: new Date(2023, 9, 1), dayOfWeek: DayOfWeek.Tuesday, name: '1'};
         nextDay = {date: new Date(2023, 9, 2), dayOfWeek: DayOfWeek.Wednesday, name: '2'};
         currentWeek = {date: new Date(2023, 9, 1), weekNumber: '40', days: [currentDay, nextDay]};
-        previousMonth = {date: new Date(2023, 8), name: 'September', quarter: 3, weeks: []};
-        currentMonth = {date: new Date(2023, 9), name: 'October', quarter: 4, weeks: [currentWeek]};
-        nextMonth = {date: new Date(2023, 9), name: 'November', quarter: 4, weeks: []};
+        previousMonth = {date: new Date(2023, 8), name: 'September', quarter: { date: new Date(2023), quarter: 3, year: 2023 }, weeks: []};
+        currentMonth = {date: new Date(2023, 9), name: 'October', quarter: { date: new Date(2023), quarter: 4, year: 2023 }, weeks: [currentWeek]};
+        nextMonth = {date: new Date(2023, 9), name: 'November', quarter: { date: new Date(2023), quarter: 4, year: 2023 }, weeks: []};
         currentYear = {date: new Date(2024, 0), name: '2024', months: [currentMonth]};
 
         mockDateManager.getCurrentDay.mockReturnValue(currentDay);
@@ -59,18 +58,17 @@ describe('DefaultCalendarViewModel', () => {
     function createViewModel(): DefaultCalendarViewModel {
         return new DefaultCalendarViewModel(
             setUiModel,
-            selectedDayEvent,
-            dailyNoteEvent,
+            manageDayEvent,
             mockDateManager,
             mockEnhancer
         );
     }
 
-    it('should update the selected day when the selectDayEvent has been emitted', async () => {
+    it('should update the selected day when the manageEvent has been emitted with the preview action', async () => {
         const viewModel = createViewModel();
         await viewModel.initialize();
 
-        selectedDayEvent.emitEvent(nextDay);
+        manageDayEvent.emitEvent(ManageAction.Preview, nextDay);
 
         await waitFor(() => {
             expect(setUiModel).toHaveBeenCalledWith(expect.objectContaining<CalendarUiModel>({
@@ -92,11 +90,11 @@ describe('DefaultCalendarViewModel', () => {
         });
     });
 
-    it('should update the selected day when the dailyNoteEvent has been emitted', async () => {
+    it('should update the selected day when the manageDayEvent has been emitted with the open', async () => {
         const viewModel = createViewModel();
         await viewModel.initialize();
 
-        dailyNoteEvent.emitEvent(nextDay);
+        manageDayEvent.emitEvent(ManageAction.Open, nextDay);
 
         await waitFor(() => {
             expect(setUiModel).toHaveBeenCalledWith(expect.objectContaining<CalendarUiModel>({
@@ -255,10 +253,6 @@ class EnhancerDouble implements Enhancer<CalendarUiModel> {
 
     withValue(value: CalendarUiModel): Enhancer<CalendarUiModel> {
         this.value = value;
-        return this;
-    }
-
-    withStep(_: EnhancerStep<CalendarUiModel>): Enhancer<CalendarUiModel> {
         return this;
     }
 

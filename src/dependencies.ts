@@ -54,6 +54,9 @@ import {NotesSettings} from 'src/domain/models/settings/notes.settings';
 import {NoteContextMenuAdapter} from 'src/plugin/adapters/note.context-menu-adapter';
 import {DeleteNoteEvent} from 'src/implementation/events/delete-note.event';
 import {DeleteNoteEventContext} from 'src/components/context/delete-note-event.context';
+import {ManageEvent} from 'src/domain/events/manage.event';
+import {PeriodicManageEvent} from 'src/implementation/events/periodic.manage-event';
+import {Quarter} from 'src/domain/models/quarter';
 
 export interface Dependencies {
     readonly dateManager: DateManager;
@@ -70,19 +73,19 @@ export interface Dependencies {
     readonly notesManager: NotesManager;
     readonly notesSettingsRepository: SettingsRepository<NotesSettings>;
 
-    readonly dailyNoteEvent: Event<Day>;
+    readonly manageDayEvent: ManageEvent<Day>;
     readonly dailyNoteSettingsRepository: SettingsRepository<DailyNotesPeriodicNoteSettings>;
 
-    readonly weeklyNoteEvent: Event<Week>;
+    readonly manageWeekEvent: ManageEvent<Week>;
     readonly weeklyNoteSettingsRepository: SettingsRepository<WeeklyNotesPeriodicNoteSettings>;
 
-    readonly monthlyNoteEvent: Event<Month>;
+    readonly manageMonthEvent: ManageEvent<Month>;
     readonly monthlyNoteSettingsRepository: SettingsRepository<MonthlyNotesPeriodicNoteSettings>;
 
-    readonly quarterlyNoteEvent: Event<Month>;
+    readonly manageQuarterEvent: ManageEvent<Quarter>;
     readonly quarterlyNoteSettingsRepository: SettingsRepository<QuarterlyNotesPeriodicNoteSettings>;
 
-    readonly yearlyNoteEvent: Event<Year>;
+    readonly manageYearEvent: ManageEvent<Year>;
     readonly yearlyNoteSettingsRepository: SettingsRepository<YearlyNotesPeriodicNoteSettings>;
 
     readonly calendarEnhancer: Enhancer<CalendarUiModel>;
@@ -111,49 +114,50 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const titleVariableParserStep = new TitleVariableParserStep(fileAdapter, noteAdapter);
 
     // Daily note dependencies
+    const manageDayEvent = new PeriodicManageEvent<Day>();
     const dailyNoteSettingsRepository = new DailyNoteSettingsRepository(settingsAdapter);
-    const dailyNoteEvent = new PeriodicNoteEvent<Day>();
     const dayNameBuilder = new PeriodNameBuilder<Day>(dateParser, logger);
-    new PeriodicNotePipeline(dailyNoteEvent, fileService, generalSettingsRepository, dailyNoteSettingsRepository, dayNameBuilder)
+    new PeriodicNotePipeline(manageDayEvent, fileService, generalSettingsRepository, dailyNoteSettingsRepository, dayNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
         .registerPostCreateStep(titleVariableParserStep)
         .registerPostCreateStep(periodVariableParserStep)
         .registerPostCreateStep(todayVariableParserStep);
 
     // Weekly note dependencies
+    const manageWeekEvent = new PeriodicManageEvent<Week>();
     const weeklyNoteSettingsRepository = new WeeklyNoteSettingsRepository(settingsAdapter);
-    const weeklyNoteEvent = new PeriodicNoteEvent<Week>();
     const weekNameBuilder = new PeriodNameBuilder<Week>(dateParser, logger);
-    new PeriodicNotePipeline(weeklyNoteEvent, fileService, generalSettingsRepository, weeklyNoteSettingsRepository, weekNameBuilder)
+    new PeriodicNotePipeline(manageWeekEvent, fileService, generalSettingsRepository, weeklyNoteSettingsRepository, weekNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
         .registerPostCreateStep(titleVariableParserStep)
         .registerPostCreateStep(periodVariableParserStep)
         .registerPostCreateStep(todayVariableParserStep);
 
     // Monthly note dependencies
+    const manageMonthEvent = new PeriodicManageEvent<Month>();
     const monthlyNoteSettingsRepository = new MonthlyNoteSettingsRepository(settingsAdapter);
-    const monthlyNoteEvent = new PeriodicNoteEvent<Month>();
     const monthNameBuilder = new PeriodNameBuilder<Month>(dateParser, logger);
-    new PeriodicNotePipeline(monthlyNoteEvent, fileService, generalSettingsRepository, monthlyNoteSettingsRepository, monthNameBuilder)
+    new PeriodicNotePipeline(manageMonthEvent, fileService, generalSettingsRepository, monthlyNoteSettingsRepository, monthNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
         .registerPostCreateStep(titleVariableParserStep)
         .registerPostCreateStep(periodVariableParserStep)
         .registerPostCreateStep(todayVariableParserStep);
 
     // Quarterly note dependencies
+    const manageQuarterEvent = new PeriodicManageEvent<Quarter>();
     const quarterlyNoteSettingsRepository = new QuarterlyNoteSettingsRepository(settingsAdapter);
-    const quarterlyNoteEvent = new PeriodicNoteEvent<Month>();
-    new PeriodicNotePipeline(quarterlyNoteEvent, fileService, generalSettingsRepository, quarterlyNoteSettingsRepository, monthNameBuilder)
+    const quarterNameBuilder = new PeriodNameBuilder<Quarter>(dateParser, logger);
+    new PeriodicNotePipeline(manageQuarterEvent, fileService, generalSettingsRepository, quarterlyNoteSettingsRepository, quarterNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
         .registerPostCreateStep(titleVariableParserStep)
         .registerPostCreateStep(periodVariableParserStep)
         .registerPostCreateStep(todayVariableParserStep);
 
     // Yearly note dependencies
+    const manageYearEvent = new PeriodicManageEvent<Year>();
     const yearlyNoteSettingsRepository = new YearlyNoteSettingsRepository(settingsAdapter);
-    const yearlyNoteEvent = new PeriodicNoteEvent<Year>();
     const yearNameBuilder = new PeriodNameBuilder<Year>(dateParser, logger);
-    new PeriodicNotePipeline(yearlyNoteEvent, fileService, generalSettingsRepository, yearlyNoteSettingsRepository, yearNameBuilder)
+    new PeriodicNotePipeline(manageYearEvent, fileService, generalSettingsRepository, yearlyNoteSettingsRepository, yearNameBuilder)
         .registerPreCreateStep(titleVariableParserStep)
         .registerPostCreateStep(titleVariableParserStep)
         .registerPostCreateStep(periodVariableParserStep)
@@ -167,8 +171,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const deleteNoteEvent = new DeleteNoteEvent();
     const notesManager = new GenericNotesManager(
         noteEvent,
-        dailyNoteEvent,
-        selectDayEvent,
+        manageDayEvent,
         deleteNoteEvent,
         refreshNotesEvent,
         fileService,
@@ -201,19 +204,19 @@ export function createDependencies(plugin: Plugin): Dependencies {
         notesManager: notesManager,
         notesSettingsRepository: notesSettingsRepository,
 
-        dailyNoteEvent: dailyNoteEvent,
+        manageDayEvent: manageDayEvent,
         dailyNoteSettingsRepository: dailyNoteSettingsRepository,
 
-        weeklyNoteEvent: weeklyNoteEvent,
+        manageWeekEvent: manageWeekEvent,
         weeklyNoteSettingsRepository: weeklyNoteSettingsRepository,
 
-        monthlyNoteEvent: monthlyNoteEvent,
+        manageMonthEvent: manageMonthEvent,
         monthlyNoteSettingsRepository: monthlyNoteSettingsRepository,
 
-        quarterlyNoteEvent: quarterlyNoteEvent,
+        manageQuarterEvent: manageQuarterEvent,
         quarterlyNoteSettingsRepository: quarterlyNoteSettingsRepository,
 
-        yearlyNoteEvent: yearlyNoteEvent,
+        manageYearEvent: manageYearEvent,
         yearlyNoteSettingsRepository: yearlyNoteSettingsRepository,
 
         calendarEnhancer: calendarEnhancer,

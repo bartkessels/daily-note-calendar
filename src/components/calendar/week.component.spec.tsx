@@ -4,9 +4,10 @@ import '@testing-library/jest-dom';
 import {Week} from 'src/domain/models/week';
 import {createWeekUiModel, WeekUiModel} from 'src/components/models/week.ui-model';
 import {WeekComponent} from 'src/components/calendar/week.component';
-import {Event} from 'src/domain/events/event';
-import {WeeklyNoteEventContext} from 'src/components/context/weekly-note-event.context';
 import 'src/extensions/extensions';
+import {ManageAction, ManageEvent} from 'src/domain/events/manage.event';
+import {PeriodicNoteEventContext} from 'src/components/context/periodic-note-event.context';
+import {ModifierKey} from 'src/domain/models/modifier-key';
 
 describe('WeekComponent', () => {
     let week: Week;
@@ -14,7 +15,7 @@ describe('WeekComponent', () => {
     const mockWeeklyNoteEvent = {
         onEvent: jest.fn(),
         emitEvent: jest.fn()
-    } as unknown as Event<Week>;
+    } as unknown as ManageEvent<Week>;
 
     beforeEach(() => {
         week = {
@@ -48,7 +49,7 @@ describe('WeekComponent', () => {
         render(setupContent(uiModel, mockWeeklyNoteEvent));
 
         fireEvent.click(screen.getByText('40'));
-        expect(mockWeeklyNoteEvent.emitEvent).toHaveBeenCalledWith(week);
+        expect(mockWeeklyNoteEvent.emitEvent).toHaveBeenCalledWith(ManageAction.Open, week, ModifierKey.None);
     });
 
     it('should display an indicator if the week has a note', () => {
@@ -56,26 +57,26 @@ describe('WeekComponent', () => {
 
         render(setupContent(noteUiModel, mockWeeklyNoteEvent));
 
-        expect(screen.getByText('40')).toHaveClass('has-note');
+        expect(screen.getByText('40').parentElement).toHaveClass('has-note');
     });
 
     it('should not display an indicator if the day does not have a note', () => {
         render(setupContent(uiModel, mockWeeklyNoteEvent));
 
-        expect(screen.getByText('40')).not.toHaveClass('has-note');
+        expect(screen.getByText('40').parentElement).not.toHaveClass('has-note');
     });
 });
 
 function setupContent(
     week: WeekUiModel,
-    mockWeeklyNoteEvent: Event<Week>
+    mockWeeklyNoteEvent: ManageEvent<Week>
 ): ReactElement {
     return (
         <table>
             <tbody>
-                <WeeklyNoteEventContext.Provider value={mockWeeklyNoteEvent}>
-                    <WeekComponent week={week}/>
-                </WeeklyNoteEventContext.Provider>
+                <PeriodicNoteEventContext value={{manageWeekEvent: mockWeeklyNoteEvent}}>
+                    <WeekComponent week={week} />
+                </PeriodicNoteEventContext>
             </tbody>
         </table>
     );

@@ -6,6 +6,7 @@ import {Year} from 'src/domain/models/year';
 import {getISOWeek} from 'date-fns';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {GeneralSettings} from 'src/domain/models/settings/general.settings';
+import {Quarter} from 'src/domain/models/quarter';
 
 export class DateFnsDateRepository implements DateRepository {
     private readonly monthFormat = 'long';
@@ -60,7 +61,11 @@ export class DateFnsDateRepository implements DateRepository {
         const quarter = Math.floor(monthIndex / 3) + 1;
 
         return <Month>{
-            quarter: quarter,
+            quarter: <Quarter> {
+                date: new Date(year, monthIndex),
+                quarter: quarter,
+                year: year
+            },
             name: formatter.format(date),
             weeks: weeks,
             date: date

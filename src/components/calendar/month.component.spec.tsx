@@ -14,7 +14,11 @@ describe('MonthComponent', () => {
         month = {
             date: new Date(2023, 9),
             name: 'October',
-            quarter: 4,
+            quarter: {
+                date: new Date(2023),
+                quarter: 3,
+                year: 2023
+            },
             weeks: [
                 {
                     date: new Date(2023, 9, 1),

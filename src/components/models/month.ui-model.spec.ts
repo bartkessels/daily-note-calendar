@@ -10,7 +10,11 @@ describe('createMonthUiModel', () => {
     beforeEach(() => {
         month = {
             date: new Date(2023, 9),
-            quarter: 4,
+            quarter: {
+                date: new Date(2023, 9),
+                quarter: 4,
+                year: 2023
+            },
             name: 'October',
             weeks: [
                 {
@@ -46,7 +50,7 @@ describe('createMonthUiModel', () => {
     });
 
     it('creates a MonthUiModel with empty weeks if month has no weeks', () => {
-        const emptyMonth: Month = { date: new Date(2023, 9), quarter: 4, name: 'October', weeks: [] };
+        const emptyMonth: Month = { date: new Date(2023, 9), quarter: { date: new Date(2023, 9), quarter: 4, year: 2023 }, name: 'October', weeks: [] };
         const result: MonthUiModel = createMonthUiModel(emptyMonth);
 
         expect(result.month).toBe(emptyMonth);

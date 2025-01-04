@@ -1,15 +1,15 @@
 import {Pipeline} from 'src/domain/pipeline/pipeline';
-import {Event} from 'src/domain/events/event';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {PeriodicNoteSettings} from 'src/domain/models/settings/periodic-note.settings';
 import {NameBuilder} from 'src/domain/builders/name.builder';
 import {FileService} from 'src/domain/services/file.service';
 import {Period} from 'src/domain/models/period';
 import {GeneralSettings} from 'src/domain/models/settings/general.settings';
+import {ManageEvent} from 'src/domain/events/manage.event';
 
 export class PeriodicNotePipeline<S extends PeriodicNoteSettings> extends Pipeline<Period> {
     constructor(
-        event: Event<Period>,
+        event: ManageEvent<Period>,
         fileService: FileService,
         generalSettingsRepository: SettingsRepository<GeneralSettings>,
         private readonly settingsRepository: SettingsRepository<S>,
