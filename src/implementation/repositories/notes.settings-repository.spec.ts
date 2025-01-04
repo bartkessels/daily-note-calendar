@@ -20,7 +20,8 @@ describe('NotesSettingsRepository', () => {
         const mockSettings = { ...DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS, notesSettings: {
             displayDateTemplate: 'HH:mm',
             useCreatedOnDateFromProperties: false,
-            createdOnDatePropertyName: ''
+            createdOnDatePropertyName: '',
+            createdOnPropertyFormat: ''
         } };
         settingsAdapter.getSettings.mockResolvedValueOnce(mockSettings);
 
@@ -34,12 +35,14 @@ describe('NotesSettingsRepository', () => {
         const newSettings: NotesSettings = {
             displayDateTemplate: 'HH:mm',
             useCreatedOnDateFromProperties: false,
-            createdOnDatePropertyName: ''
+            createdOnDatePropertyName: '',
+            createdOnPropertyFormat: ''
         };
         const mockSettings = { ...DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS, notesSettings: {
                 displayDateTemplate: 'HH:mm',
                 useCreatedOnDateFromProperties: true,
-                createdOnDatePropertyName: 'created_on'
+                createdOnDatePropertyName: 'created_on',
+                createdOnPropertyFormat: 'yyyyMMdd'
         } };
         settingsAdapter.getSettings.mockResolvedValueOnce(mockSettings);
 

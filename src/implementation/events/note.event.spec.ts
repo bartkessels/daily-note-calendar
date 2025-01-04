@@ -11,7 +11,8 @@ describe('NoteEvent', () => {
         note = {
             createdOn: new Date('2024-11-12'),
             name: 'My first note',
-            path: 'Journaling/2024/My first note.md'
+            path: 'Journaling/2024/My first note.md',
+            properties: new Map(),
         };
     });
 

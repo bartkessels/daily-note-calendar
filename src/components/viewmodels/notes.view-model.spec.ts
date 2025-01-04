@@ -28,8 +28,8 @@ describe('DefaultNotesViewModel', () => {
 
     it('should update the UI model with the provided notes when the refresh event is emitted', async () => {
         const notes: Note[] = [
-            { name: 'Note 1', createdOn: new Date(2023, 9, 2, 10, 10), path: 'path/to/note1' },
-            { name: 'Note 2', createdOn: new Date(2023, 9, 2, 11, 59), path: 'path/to/note2' }
+            { name: 'Note 1', createdOn: new Date(2023, 9, 2, 10, 10), path: 'path/to/note1', properties: new Map() },
+            { name: 'Note 2', createdOn: new Date(2023, 9, 2, 11, 59), path: 'path/to/note2', properties: new Map() }
         ];
         const noteUiModels: NoteUiModel[] = notes.map(note => createNoteUiModel(note));
 
@@ -43,8 +43,8 @@ describe('DefaultNotesViewModel', () => {
 
     it('sets the view state to the provided value', () => {
         const notes: Note[] = [
-            { name: 'Note 1', createdOn: new Date(2023, 9, 2, 10, 10), path: 'path/to/note1' },
-            { name: 'Note 2', createdOn: new Date(2023, 9, 2, 11, 59), path: 'path/to/note2' }
+            { name: 'Note 1', createdOn: new Date(2023, 9, 2, 10, 10), path: 'path/to/note1', properties: new Map() },
+            { name: 'Note 2', createdOn: new Date(2023, 9, 2, 11, 59), path: 'path/to/note2', properties: new Map() }
         ];
         const noteUiModels: NoteUiModel[] = notes.map(note => createNoteUiModel(note));
         const viewState: NotesViewState = {
