@@ -165,7 +165,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
 
     // Notes
     const notesSettingsRepository = new NotesSettingsRepository(settingsAdapter);
-    const notesRepository = new DayNoteRepository(notesSettingsRepository, noteAdapter, logger);
+    const notesRepository = new DayNoteRepository(notesSettingsRepository, noteAdapter, dateParser, logger);
     const noteEvent = new NoteEvent();
     const refreshNotesEvent = new RefreshNotesEvent();
     const deleteNoteEvent = new DeleteNoteEvent();

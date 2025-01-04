@@ -25,7 +25,8 @@ describe('TodayVariableParserStep', () => {
             build: jest.fn().mockReturnValue({ template: 'yyyy-MM-dd' })
         };
         dateParser = {
-            parse: jest.fn().mockReturnValue('2024-12-31')
+            parse: jest.fn().mockReturnValue('2024-12-31'),
+            parseString: jest.fn()
         } as DateParser;
 
         step = new TodayVariableParserStep(fileAdapter, variableBuilder, dateParser);

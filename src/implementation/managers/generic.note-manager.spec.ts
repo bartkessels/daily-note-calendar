@@ -50,6 +50,7 @@ describe('GenericNotesManager', () => {
             createdOn: new Date('2024-11-12'),
             name: 'My first note',
             path: 'Journaling/2024/My first note.md',
+            properties: new Map(),
         };
         day = {
             dayOfWeek: 2,
@@ -99,8 +100,8 @@ describe('GenericNotesManager', () => {
     it('should call the refresh notes event with a specific day if displayNotesCreatedOnDate is true and a date has been selected previously', async () => {
         const refreshNotesEventSpy = jest.spyOn(refreshNotesEvent, 'emitEvent');
         const notes: Note[] = [
-            { name: 'Note 1', createdOn: new Date('2024-11-12'), path: 'path/to/note1' },
-            { name: 'Note 2', createdOn: new Date('2024-11-12'), path: 'path/to/note2' },
+            { name: 'Note 1', createdOn: new Date('2024-11-12'), path: 'path/to/note1', properties: new Map() },
+            { name: 'Note 2', createdOn: new Date('2024-11-12'), path: 'path/to/note2', properties: new Map() },
         ];
         noteRepository.getNotesCreatedOn.mockResolvedValue(notes);
 

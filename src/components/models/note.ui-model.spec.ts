@@ -7,7 +7,8 @@ describe('createNoteUiModel', () => {
         const note: Note = {
             path: 'path/to/note.md',
             name: 'note.md',
-            createdOn: new Date('2023-10-01T00:00:00Z')
+            createdOn: new Date('2023-10-01T00:00:00Z'),
+            properties: new Map()
         };
 
         const noteUiModel: NoteUiModel = createNoteUiModel(note);
@@ -22,7 +23,8 @@ describe('createNoteUiModel', () => {
         const note: Note = {
             path: 'path/to/note.md',
             name: 'note.md',
-            createdOn: new Date('2023-10-01T00:00:00Z')
+            createdOn: new Date('2023-10-01T00:00:00Z'),
+            properties: new Map()
         };
 
         const noteUiModel: NoteUiModel = createNoteUiModel(note);
@@ -34,7 +36,8 @@ describe('createNoteUiModel', () => {
         const note: Note = {
             path: 'path/to/note.md',
             name: 'note.md',
-            createdOn: new Date(2023, 9, 2, 12, 23)
+            createdOn: new Date(2023, 9, 2, 12, 23),
+            properties: new Map()
         };
 
         const noteUiModel: NoteUiModel = createNoteUiModel(note);

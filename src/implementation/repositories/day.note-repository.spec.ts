@@ -5,17 +5,18 @@ import { Logger } from 'src/domain/loggers/logger';
 import { Day } from 'src/domain/models/day';
 import { Note } from 'src/domain/models/note';
 import { NotesSettings } from 'src/domain/models/settings/notes.settings';
+import { DateParser } from 'src/domain/parsers/date.parser';
 
 describe('DayNoteRepository', () => {
     let mockNoteAdapter: NoteAdapter;
     let mockSettingsRepository: SettingsRepository<NotesSettings>;
     let mockLogger: Logger;
+    let mockDateParser: DateParser;
     let repository: DayNoteRepository;
 
     beforeEach(() => {
         mockNoteAdapter = {
-            getNotesCreatedOn: jest.fn(),
-            getNotesWithCreatedOnProperty: jest.fn()
+            getNotes: jest.fn()
         } as unknown as NoteAdapter;
         mockSettingsRepository = {
             getSettings: jest.fn()
@@ -25,43 +26,48 @@ describe('DayNoteRepository', () => {
                 throw new Error(message);
             })
         } as unknown as Logger;
-        repository = new DayNoteRepository(mockSettingsRepository, mockNoteAdapter, mockLogger);
+        mockDateParser = {
+            parseString: jest.fn()
+        } as unknown as DateParser;
+        repository = new DayNoteRepository(mockSettingsRepository, mockNoteAdapter, mockDateParser, mockLogger);
     });
 
-    it('should call getNotesCreatedOn on the note adapter when useCreatedOnDateFromProperties is false', async () => {
+    it('should call getNotes with the correct filter when useCreatedOnDateFromProperties is false', async () => {
         const day: Day = { dayOfWeek: 1, date: new Date(2023, 9, 2), name: '2' };
         const notes: Note[] = [
-            { name: 'Note 1', createdOn: new Date(2023, 9, 2, 10), path: 'path/to/note1' },
-            { name: 'Note 2', createdOn: new Date(2023, 9, 2, 11), path: 'path/to/note2' },
+            { name: 'Note 1', createdOn: new Date(2023, 9, 2, 10), path: 'path/to/note1', properties: new Map() },
+            { name: 'Note 2', createdOn: new Date(2023, 9, 2, 11), path: 'path/to/note2', properties: new Map() },
         ];
 
         (mockSettingsRepository.getSettings as jest.Mock).mockResolvedValueOnce({
             useCreatedOnDateFromProperties: false
         } as NotesSettings);
-        (mockNoteAdapter.getNotesCreatedOn as jest.Mock).mockResolvedValueOnce(notes);
+        (mockNoteAdapter.getNotes as jest.Mock).mockImplementationOnce((filter) => notes.filter(filter));
 
         const result = await repository.getNotesCreatedOn(day);
 
-        expect(mockNoteAdapter.getNotesCreatedOn).toHaveBeenCalledWith(day.date);
+        expect(mockNoteAdapter.getNotes).toHaveBeenCalledWith(expect.any(Function));
         expect(result).toEqual(notes);
     });
 
-    it('should call getNotesWithCreatedOnProperty on the note adapter when useCreatedOnDateFromProperties is true', async () => {
+    it('should call getNotes with the correct filter when useCreatedOnDateFromProperties is true', async () => {
         const day: Day = { dayOfWeek: 1, date: new Date(2023, 9, 2), name: '2' };
         const notes: Note[] = [
-            { name: 'Note 1', createdOn: new Date(2023, 9, 2, 10), path: 'path/to/note1' },
-            { name: 'Note 2', createdOn: new Date(2023, 9, 2, 11), path: 'path/to/note2' },
+            { name: 'Note 1', createdOn: new Date(2023, 9, 2, 10), path: 'path/to/note1', properties: new Map([['createdOn', '2023-10-02']]) },
+            { name: 'Note 2', createdOn: new Date(2023, 9, 2, 11), path: 'path/to/note2', properties: new Map([['createdOn', '2023-10-02']]) },
         ];
 
         (mockSettingsRepository.getSettings as jest.Mock).mockResolvedValueOnce({
             useCreatedOnDateFromProperties: true,
-            createdOnDatePropertyName: 'createdOn'
+            createdOnDatePropertyName: 'createdOn',
+            createdOnPropertyFormat: 'yyyy-MM-dd'
         } as NotesSettings);
-        (mockNoteAdapter.getNotesWithCreatedOnProperty as jest.Mock).mockResolvedValueOnce(notes);
+        (mockDateParser.parseString as jest.Mock).mockReturnValue(new Date(2023, 9, 2));
+        (mockNoteAdapter.getNotes as jest.Mock).mockImplementationOnce((filter) => notes.filter(filter));
 
         const result = await repository.getNotesCreatedOn(day);
 
-        expect(mockNoteAdapter.getNotesWithCreatedOnProperty).toHaveBeenCalledWith(day.date, 'createdOn');
+        expect(mockNoteAdapter.getNotes).toHaveBeenCalledWith(expect.any(Function));
         expect(result).toEqual(notes);
     });
 
@@ -83,11 +89,11 @@ describe('DayNoteRepository', () => {
         (mockSettingsRepository.getSettings as jest.Mock).mockResolvedValueOnce({
             useCreatedOnDateFromProperties: false
         } as NotesSettings);
-        (mockNoteAdapter.getNotesCreatedOn as jest.Mock).mockResolvedValueOnce([]);
+        (mockNoteAdapter.getNotes as jest.Mock).mockImplementationOnce((filter) => []);
 
         const result = await repository.getNotesCreatedOn(day);
 
-        expect(mockNoteAdapter.getNotesCreatedOn).toHaveBeenCalledWith(day.date);
+        expect(mockNoteAdapter.getNotes).toHaveBeenCalledWith(expect.any(Function));
         expect(result).toEqual([]);
     });
 });

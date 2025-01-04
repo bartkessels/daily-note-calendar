@@ -1,5 +1,5 @@
 import { SettingsRepository } from 'src/domain/repositories/settings.repository';
-import {NotesSettings} from 'src/domain/models/settings/notes.settings';
+import {DEFAULT_NOTES_SETTINGS, NotesSettings} from 'src/domain/models/settings/notes.settings';
 import {NotesDisplayDateEnhancerStep} from 'src/implementation/enhancers/steps/notes-display-date.enhancer-step';
 import {DateParser} from 'src/domain/parsers/date.parser';
 import {createNoteUiModel} from 'src/components/models/note.ui-model';
@@ -12,7 +12,8 @@ describe('CalendarWeekEnhancerStep', () => {
         getSettings: jest.fn()
     } as jest.Mocked<SettingsRepository<NotesSettings>>;
     const dateParser = {
-        parse: jest.fn()
+        parse: jest.fn(),
+        parseString: jest.fn()
     } as jest.Mocked<DateParser>;
     let enhancerStep: NotesDisplayDateEnhancerStep;
 
@@ -22,6 +23,7 @@ describe('CalendarWeekEnhancerStep', () => {
 
     it('should enhance the notes with the correct date setting', async () => {
         settingsRepository.getSettings.mockResolvedValue({
+            ...DEFAULT_NOTES_SETTINGS,
             displayDateTemplate: 'HH:mm',
             useCreatedOnDateFromProperties: false,
             createdOnDatePropertyName: ''

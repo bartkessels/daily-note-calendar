@@ -31,7 +31,8 @@ describe('PeriodVariableParserStep', () => {
             build: jest.fn().mockReturnValue({template: 'yyyy-MM-dd'})
         };
         dateParser = {
-            parse: jest.fn().mockReturnValue('2024-12-31')
+            parse: jest.fn().mockReturnValue('2024-12-31'),
+            parseString: jest.fn()
         };
 
         step = new PeriodVariableParserStep(fileAdapter, variableBuilder, dateParser);
