@@ -76,12 +76,15 @@ describe('GenericNotesManager', () => {
         manageNoteEvent.emitEvent(ManageAction.Open, note);
 
         expect(fileService.tryOpenFile).toHaveBeenCalledWith(note.path);
+        expect(fileService.tryDeleteFile).not.toHaveBeenCalled();
     });
 
     it('should try to delete a note when a delete note event is emitted', async () => {
+        const openNoteEventSpy = jest.spyOn(manager, 'tryOpenNote');
         manageNoteEvent.emitEvent(ManageAction.Delete, note);
 
         expect(fileService.tryDeleteFile).toHaveBeenCalledWith(note.path);
+        expect(openNoteEventSpy).not.toHaveBeenCalled();
     });
 
     it('should call the refresh notes event with the notes when an open day event has been sent', async () => {

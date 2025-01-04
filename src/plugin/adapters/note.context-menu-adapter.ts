@@ -12,14 +12,14 @@ export class NoteContextMenuAdapter implements ContextMenuAdapter {
 
     public hide(): void {
         this.contextMenu?.hide();
+        delete this.contextMenu;
     }
 
     private addDeleteNoteMenuItem(menu: Menu, deleteCallback: () => void): Menu {
-        return menu.addItem((menuItem: MenuItem) => {
-            menuItem
-                .setIcon('copy-slash')
-                .setTitle('Delete')
-                .onClick(deleteCallback);
-        });
+        return menu.addItem((menuItem: MenuItem) => menuItem
+            .setIcon('trash')
+            .setTitle('Delete')
+            .onClick(deleteCallback)
+        );
     }
 }

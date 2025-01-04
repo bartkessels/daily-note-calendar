@@ -19,12 +19,12 @@ export class GenericNotesManager implements NotesManager {
         private readonly noteRepository: NoteRepository<Day>,
         private readonly settingsRepository: SettingsRepository<GeneralSettings>
     ) {
-        manageNoteEvent.onEvent('GenericNotesManager', async (note, action) => await this.manageNoteEvent(note, action).then());
-        manageDayEvent.onEvent('GenericNotesManager', async (day) => await this.refreshNotesCreatedOn(day));
+        manageNoteEvent.onEvent('GenericNotesManager', (note, action) => this.manageNoteEvent(note, action).then());
+        manageDayEvent.onEvent('GenericNotesManager', (day) => this.refreshNotesCreatedOn(day));
     }
 
     public async tryOpenNote(note: Note) : Promise<void> {
-        return this.fileService.tryOpenFile(note.path);
+        await this.fileService.tryOpenFile(note.path);
     }
 
     public async refreshNotes(): Promise<void> {
@@ -40,9 +40,9 @@ export class GenericNotesManager implements NotesManager {
     private async manageNoteEvent(note: Note, action: ManageAction): Promise<void> {
         if (action === ManageAction.Delete) {
             await this.tryDeleteNote(note);
+        } else {
+            await this.tryOpenNote(note);
         }
-
-        await this.tryOpenNote(note);
     }
 
     private async tryDeleteNote(note: Note): Promise<void> {
