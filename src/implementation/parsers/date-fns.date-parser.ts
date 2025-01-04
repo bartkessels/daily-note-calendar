@@ -28,7 +28,6 @@ export class DateFnsDateParser implements DateParser {
         try {
             return parse(date, template, new Date());
         } catch (e) {
-            console.log(e);
             return null;
         }
     }
