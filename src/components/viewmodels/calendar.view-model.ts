@@ -28,8 +28,8 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         private readonly dateManager: DateManager | null,
         private readonly calendarEnhancer: Enhancer<CalendarUiModel> | null
     ) {
-        this.selectDayEvent?.onEvent('CalendarViewModel', (day: Day) => this.selectDay(day).then());
-        this.dailyNoteEvent?.onEvent('CalendarViewModel', (day: Day) => this.selectDay(day).then());
+        this.selectDayEvent?.onEvent('CalendarViewModel', (day: Day) => this.selectDay(day));
+        this.dailyNoteEvent?.onEvent('CalendarViewModel', (day: Day) => this.selectDay(day));
     }
 
     public async initialize(): Promise<void> {
