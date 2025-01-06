@@ -1,6 +1,6 @@
 {
 	"name": "daily-note-calendar",
-	"version": "1.11.2",
+	"version": "1.11.3",
 	"description": "Navigate your Obsidian vault using a calendar view.",
 	"main": "main.js",
 	"scripts": {
