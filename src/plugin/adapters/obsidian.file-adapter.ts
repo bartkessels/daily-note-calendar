@@ -76,7 +76,8 @@ export class ObsidianFileAdapter implements FileAdapter {
             throw new Error(`Path is a folder: ${normalizedPath}.`);
         }
 
-        await this.app.fileManager.trashFile(file);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (<any>this.app).fileManager.promptForFileDeletion(file);
     }
 
     private async createFolder(filePath: string): Promise<void> {

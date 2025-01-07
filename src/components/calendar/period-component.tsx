@@ -3,6 +3,7 @@ import React, {ReactElement} from 'react';
 import {getNoteContextMenu} from 'src/components/context/note-context-menu.context';
 import {Period} from 'src/domain/models/period';
 import {ManageAction, ManageEvent} from 'src/domain/events/manage.event';
+import {ContextMenuCallbacks} from 'src/domain/adapters/context-menu.adapter';
 
 interface PeriodProps {
     displayValue?: string;
@@ -17,7 +18,14 @@ export const PeriodComponent = ({
     manageEvent,
     onClick
 }: PeriodProps): ReactElement => {
-    const noteContextMenu = getNoteContextMenu();
+    if (!value) {
+        return <></>;
+    }
+
+    const contextMenu = getNoteContextMenu();
+    const contextMenuCallbacks: ContextMenuCallbacks = {
+        onDelete: () => manageEvent?.emitEvent(ManageAction.Delete, value)
+    }
 
     const modifierKey = (event: React.MouseEvent): ModifierKey => {
         if (event.metaKey) {
@@ -29,10 +37,6 @@ export const PeriodComponent = ({
         }
 
         return ModifierKey.None;
-    }
-
-    if (!value) {
-        return <></>;
     }
 
     return (
@@ -47,9 +51,7 @@ export const PeriodComponent = ({
                 e.preventDefault();
             }}
             onContextMenu={(e: React.MouseEvent) => {
-                noteContextMenu?.show(e.clientX, e.clientY, {
-                    onDelete: (): void => manageEvent?.emitEvent(ManageAction.Delete, value)
-                });
+                contextMenu?.show(e.clientX, e.clientY, contextMenuCallbacks);
                 e.preventDefault();
             }}>{displayValue}</div>
     )
