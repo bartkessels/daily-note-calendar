@@ -18,7 +18,7 @@ export class DefaultNotesViewModel implements NotesViewModel {
         private readonly refreshNotesEvent: Event<Note[]> | null,
         private readonly enhancer: Enhancer<NoteUiModel[]> | null
     ) {
-        this.refreshNotesEvent?.onEvent('NotesViewModel', (notes: Note[]) => this.refreshNotes(notes).then());
+        this.refreshNotesEvent?.onEvent('NotesViewModel', (notes: Note[]) => this.refreshNotes(notes));
     }
 
     public withViewState(viewState: NotesViewState): NotesViewModel {

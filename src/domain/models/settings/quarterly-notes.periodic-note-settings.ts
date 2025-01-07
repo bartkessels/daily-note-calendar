@@ -7,7 +7,7 @@ export interface QuarterlyNotesPeriodicNoteSettings extends PeriodicNoteSettings
 }
 
 export const DEFAULT_QUARTERLY_NOTES_PERIODIC_NOTE_SETTINGS: QuarterlyNotesPeriodicNoteSettings = {
-    nameTemplate: 'yyyy-Qq',
+    nameTemplate: 'yyyy-qqq',
     folder: 'Quarterly notes',
     templateFile: 'Templates/Quarterly note'
 }

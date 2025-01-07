@@ -29,9 +29,14 @@ export class ObsidianNoteAdapter implements NoteAdapter {
 
     private async asNote(file: TFile): Promise<Note> {
         let frontMatter: Map<string, string> = new Map<string, string>();
-        await this.app.fileManager.processFrontMatter(file, (data): void => {
-            frontMatter = new Map<string, string>(Object.entries(data));
-        });
+
+        try {
+            await this.app.fileManager.processFrontMatter(file, (data): void => {
+                frontMatter = new Map<string, string>(Object.entries(data));
+            });
+        } catch (e) {
+            console.error(`Error processing front matter for file: ${file.path}. Error: ${e}`);
+        }
 
         return <Note>{
             path: file.path,

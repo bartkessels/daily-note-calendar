@@ -5,7 +5,7 @@ import {CalendarUiModel, createCalendarUiModel} from 'src/components/models/cale
 import {DateManager} from 'src/domain/managers/date.manager';
 import {Enhancer} from 'src/domain/enhancers/enhancer';
 import {CalendarViewState} from 'src/components/viewmodels/calendar.view-state';
-import {ManageAction, ManageEvent} from 'src/domain/events/manage.event';
+import {ManageEvent} from 'src/domain/events/manage.event';
 
 export interface CalendarViewModel {
     viewState: CalendarViewState;
@@ -27,7 +27,7 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         private readonly dateManager: DateManager | null,
         private readonly calendarEnhancer: Enhancer<CalendarUiModel> | null
     ) {
-        this.manageDayEvent?.onEvent('CalendarViewModel', (day: Day, action: ManageAction) => this.selectDay(day).then());
+        this.manageDayEvent?.onEvent('CalendarViewModel', (day: Day, _) => this.selectDay(day));
     }
 
     public async initialize(): Promise<void> {
