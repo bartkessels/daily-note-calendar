@@ -5,7 +5,7 @@ import {Month} from 'src/domain/models/month';
 
 describe('createCalendarUiModel', () => {
     it('creates a CalendarUiModel with the provided year and month', () => {
-        const month: Month = { date: new Date(2023, 9), quarter: 4, name: 'October', weeks: [] };
+        const month: Month = { date: new Date(2023, 9), quarter: { date: new Date(2023), quarter: 3, year: 2023 }, name: 'October', weeks: [] };
         const year: Year = { date: new Date(2023, 0), name: '2023', months: [month] };
         const uiModel: MonthUiModel = { month: month, weeks: [] };
 

@@ -52,7 +52,11 @@ describe('RepositoryDateManager', () => {
     it('should return the year of the provided month', async () => {
         const month: Month = {
             date: new Date(2023, 9),
-            quarter: 4,
+            quarter: {
+                date: new Date(2023, 9),
+                quarter: 4,
+                year: 2023
+            },
             name: 'October',
             weeks: []
         };
@@ -90,7 +94,11 @@ describe('RepositoryDateManager', () => {
         const today = new Date();
         const currentMonth: Month = {
             date: today,
-            quarter: Math.floor(today.getMonth() / 3) + 1,
+            quarter: {
+                date: today,
+                quarter: Math.floor(today.getMonth() / 3) + 1,
+                year: today.getFullYear()
+            },
             name: 'October',
             weeks: []
         };
@@ -106,13 +114,21 @@ describe('RepositoryDateManager', () => {
     it('should return the next month', async () => {
         const currentMonth: Month = {
             date: new Date(2023, 9),
-            quarter: 4,
+            quarter: {
+                date: new Date(2023, 9),
+                quarter: 4,
+                year: 2023
+            },
             name: 'October',
             weeks: []
         };
         const nextMonth: Month = {
             date: new Date(2023, 10),
-            quarter: 4,
+            quarter: {
+                date: new Date(2023, 10),
+                quarter: 4,
+                year: 2023
+            },
             name: 'November',
             weeks: []
         };
@@ -128,7 +144,11 @@ describe('RepositoryDateManager', () => {
     it('should recalculate the current month and return it if no current month is provided when retrieving the next month', async () => {
         const currentMonth: Month = {
             date: new Date(2023, 9),
-            quarter: 4,
+            quarter: {
+                date: new Date(2023, 9),
+                quarter: 4,
+                year: 2023
+            },
             name: 'October',
             weeks: []
         };
@@ -145,13 +165,21 @@ describe('RepositoryDateManager', () => {
     it('should return the previous month', async () => {
         const currentMonth: Month = {
             date: new Date(2023, 9),
-            quarter: 4,
+            quarter: {
+                date: new Date(2023, 9),
+                quarter: 4,
+                year: 2023
+            },
             name: 'October',
             weeks: []
         };
         const previousMonth: Month = {
             date: new Date(2023, 8),
-            quarter: 4,
+            quarter: {
+                date: new Date(2023, 8),
+                quarter: 3,
+                year: 2023
+            },
             name: 'September',
             weeks: []
         };
@@ -167,7 +195,11 @@ describe('RepositoryDateManager', () => {
     it('should recalculate the current month and return it if no current month is provided when retrieving the previous month', async () => {
         const currentMonth: Month = {
             date: new Date(2023, 9),
-            quarter: 4,
+            quarter: {
+                date: new Date(2023, 9),
+                quarter: 4,
+                year: 2023
+            },
             name: 'October',
             weeks: []
         };
@@ -184,13 +216,21 @@ describe('RepositoryDateManager', () => {
     it('should return January as the next month when current month is December', async () => {
         const currentMonth: Month = {
             date: new Date(2023, 11),
-            quarter: 4,
+            quarter: {
+                date: new Date(2023, 11),
+                quarter: 4,
+                year: 2023
+            },
             name: 'December',
             weeks: []
         };
         const nextMonth: Month = {
             date: new Date(2024, 0),
-            quarter: 1,
+            quarter: {
+                date: new Date(2024, 0),
+                quarter: 1,
+                year: 2024
+            },
             name: 'January',
             weeks: []
         };
@@ -206,13 +246,21 @@ describe('RepositoryDateManager', () => {
     it('should return December as the previous month when current month is January', async () => {
         const currentMonth: Month = {
             date: new Date(2023, 0),
-            quarter: 1,
+            quarter: {
+                date: new Date(2023, 0),
+                quarter: 1,
+                year: 2023
+            },
             name: 'January',
             weeks: []
         };
         const previousMonth: Month = {
             date: new Date(2022, 11),
-            quarter: 4,
+            quarter: {
+                date: new Date(2022, 11),
+                quarter: 4,
+                year: 2022
+            },
             name: 'December',
             weeks: []
         };

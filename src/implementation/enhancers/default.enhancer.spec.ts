@@ -35,7 +35,7 @@ describe('DefaultEnhancer', () => {
 
     it('should return the initial value if no steps are added', async () => {
         const week: Week = { date: new Date(2023, 0, 1), weekNumber: '1', days: [] };
-        const month: Month = { date: new Date(2023, 0), name: 'January', quarter: 1, weeks: [week] };
+        const month: Month = { date: new Date(2023, 0), name: 'January', quarter: { date: new Date(2023, 0), quarter: 1, year: 2023 }, weeks: [week] };
 
         const initialWeekUiModel: WeekUiModel = { week: week, days: [], hasNote: false };
         const initialMonthUiModel: MonthUiModel = { month: month, weeks: [initialWeekUiModel] };
@@ -50,7 +50,7 @@ describe('DefaultEnhancer', () => {
 
     it('should execute steps in order and return the final value', async () => {
         const week: Week = { date: new Date(2023, 0, 1), weekNumber: '1', days: [] };
-        const month: Month = { date: new Date(2023, 0), name: 'January', quarter: 1, weeks: [week] };
+        const month: Month = { date: new Date(2023, 0), name: 'January', quarter: { date: new Date(2023, 0), quarter: 1, year: 2023 }, weeks: [week] };
 
         const initialWeekUiModel: WeekUiModel = { week: week, days: [], hasNote: false };
         const initialMonthUiModel: MonthUiModel = { month: month, weeks: [initialWeekUiModel] };

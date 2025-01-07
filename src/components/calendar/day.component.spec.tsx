@@ -4,22 +4,18 @@ import '@testing-library/jest-dom';
 import { DayComponent } from './day.component';
 import { Day, DayOfWeek } from 'src/domain/models/day';
 import { DayUiModel } from 'src/components/models/day.ui-model';
-import { Event } from 'src/domain/events/event';
-import { DailyNoteEventContext } from 'src/components/providers/daily-note-event.context';
-import { SelectDayEventContext } from 'src/components/providers/select-day-event.context';
 import { ModifierKey } from 'src/domain/models/modifier-key';
+import {PeriodicNoteEventContext} from 'src/components/context/periodic-note-event.context';
+import {ManageAction, ManageEvent} from 'src/domain/events/manage.event';
 
 describe('DayComponent', () => {
     let day: Day;
     let uiModel: DayUiModel;
-    const mockDailyNoteEvent = {
+    const mockManageDayEvent = {
         onEvent: jest.fn(),
+        onEventWithModifier: jest.fn(),
         emitEvent: jest.fn()
-    } as unknown as Event<Day>;
-    const mockSelectDayEvent = {
-        onEvent: jest.fn(),
-        emitEvent: jest.fn()
-    } as unknown as Event<Day>;
+    } as unknown as ManageEvent<Day>;
 
     beforeEach(() => {
         day = {
@@ -36,88 +32,87 @@ describe('DayComponent', () => {
     });
 
     it('emits the daily note event when the day is clicked without modifier key', () => {
-        render(setupContent(uiModel, mockDailyNoteEvent, mockSelectDayEvent));
+        render(setupContent(uiModel, mockManageDayEvent));
 
         fireEvent.click(screen.getByText('17'));
 
-        expect(mockDailyNoteEvent.emitEvent).toHaveBeenCalledWith(day, ModifierKey.None);
+        expect(mockManageDayEvent.emitEvent).toHaveBeenCalledWith(ManageAction.Open, day, ModifierKey.None);
     });
 
     it('emits the select day event when the day is clicked with shift key', () => {
-        render(setupContent(uiModel, mockDailyNoteEvent, mockSelectDayEvent));
+        render(setupContent(uiModel, mockManageDayEvent));
 
         fireEvent.click(screen.getByText('17'), { shiftKey: true });
 
-        expect(mockSelectDayEvent.emitEvent).toHaveBeenCalledWith(day);
+        expect(mockManageDayEvent.emitEvent).toHaveBeenCalledWith(ManageAction.Preview, day);
     });
 
     it('emits the daily note event with modifier key when the day is clicked with meta key', () => {
-        render(setupContent(uiModel, mockDailyNoteEvent, mockSelectDayEvent));
+        render(setupContent(uiModel, mockManageDayEvent));
 
         fireEvent.click(screen.getByText('17'), { metaKey: true });
 
-        expect(mockDailyNoteEvent.emitEvent).toHaveBeenCalledWith(day, ModifierKey.Meta);
+        expect(mockManageDayEvent.emitEvent).toHaveBeenCalledWith(ManageAction.Open, day, ModifierKey.Meta);
     });
 
     it('should set today is on the day if it is today', () => {
         const todayUiModel = { ...uiModel, isToday: true };
 
-        render(setupContent(todayUiModel, mockDailyNoteEvent, mockSelectDayEvent));
+        render(setupContent(todayUiModel, mockManageDayEvent));
 
         expect(screen.getByText('17').parentElement).toHaveAttribute('id', 'today');
     });
 
     it('should not set today is on the day if it is not today', () => {
-        render(setupContent(uiModel, mockDailyNoteEvent, mockSelectDayEvent));
+        render(setupContent(uiModel, mockManageDayEvent));
 
-        expect(screen.getByText('17')).not.toHaveAttribute('id', 'today');
+        expect(screen.getByText('17').parentElement).not.toHaveAttribute('id', 'today');
     });
 
     it('should set the selected class if the day is selected', () => {
         const selectedUiModel = { ...uiModel, isSelected: true };
 
-        render(setupContent(selectedUiModel, mockDailyNoteEvent, mockSelectDayEvent));
+        render(setupContent(selectedUiModel, mockManageDayEvent));
 
         expect(screen.getByText('17').parentElement).toHaveClass('selected-day');
     });
 
     it('should not set the selected class if the day is not selected', () => {
-        render(setupContent(uiModel, mockDailyNoteEvent, mockSelectDayEvent));
+        render(setupContent(uiModel, mockManageDayEvent));
 
-        expect(screen.getByText('17')).not.toHaveClass('selected-day');
+        expect(screen.getByText('17').parentElement).not.toHaveClass('selected-day');
     });
 
     it('should display an indicator if the day has a note', () => {
         const noteUiModel = { ...uiModel, hasNote: true };
 
-        render(setupContent(noteUiModel, mockDailyNoteEvent, mockSelectDayEvent));
+        render(setupContent(noteUiModel, mockManageDayEvent));
 
         expect(screen.getByText('17').parentElement).toHaveClass('has-note');
     });
 
     it('should not display an indicator if the day does not have a note', () => {
-        render(setupContent(uiModel, mockDailyNoteEvent, mockSelectDayEvent));
+        render(setupContent(uiModel, mockManageDayEvent));
 
-        expect(screen.getByText('17')).not.toHaveClass('has-note');
+        expect(screen.getByText('17').parentElement).not.toHaveClass('has-note');
     });
 });
 
 function setupContent(
     uiModel: DayUiModel,
-    mockDailyNoteEvent: Event<Day>,
-    mockSelectDayEvent: Event<Day>
+    mockDailyNoteEvent: ManageEvent<Day>
 ): ReactElement {
     return (
-        <DailyNoteEventContext.Provider value={mockDailyNoteEvent}>
-            <SelectDayEventContext.Provider value={mockSelectDayEvent}>
-                <table>
-                    <tbody>
-                    <tr>
-                        <DayComponent day={uiModel} />
-                    </tr>
-                    </tbody>
-                </table>
-            </SelectDayEventContext.Provider>
-        </DailyNoteEventContext.Provider>
+        <PeriodicNoteEventContext value={{
+            manageDayEvent: mockDailyNoteEvent
+        }}>
+            <table>
+                <tbody>
+                <tr>
+                    <DayComponent day={uiModel} />
+                </tr>
+                </tbody>
+            </table>
+        </PeriodicNoteEventContext>
     );
 }

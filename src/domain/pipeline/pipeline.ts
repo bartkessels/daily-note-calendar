@@ -1,15 +1,15 @@
-import {Event} from 'src/domain/events/event';
 import {FileService} from 'src/domain/services/file.service';
 import {isCreateFileModifierKey, ModifierKey} from 'src/domain/models/modifier-key';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {GeneralSettings} from 'src/domain/models/settings/general.settings';
+import {ManageAction, ManageEvent} from 'src/domain/events/manage.event';
 
 export abstract class Pipeline<T> {
     private readonly preCreateSteps: PreCreateStep<T>[] = [];
     private readonly postCreateSteps: PostCreateStep<T>[] = [];
 
     protected constructor(
-        event: Event<T>,
+        event: ManageEvent<T>,
         protected readonly fileService: FileService,
         private readonly generalSettingsSettingsRepository: SettingsRepository<GeneralSettings>
     ) {
@@ -29,7 +29,11 @@ export abstract class Pipeline<T> {
     protected abstract getFilePath(value: T): Promise<string>;
     protected abstract createFile(filePath: string): Promise<void>;
 
-    public async process(value: T, modifierKey: ModifierKey): Promise<void> {
+    public async process(value: T, action: ManageAction, modifierKey: ModifierKey): Promise<void> {
+        if (action !== ManageAction.Open) {
+            return;
+        }
+
         const settings = await this.generalSettingsSettingsRepository.getSettings();
         const filePath = await this.getFilePath(value);
         const doesFileExist = await this.fileService.doesFileExist(filePath);

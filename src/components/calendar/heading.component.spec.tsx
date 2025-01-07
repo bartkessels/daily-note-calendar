@@ -4,10 +4,9 @@ import '@testing-library/jest-dom';
 import {HeadingComponent} from './heading.component';
 import {MonthUiModel} from 'src/components/models/month.ui-model';
 import {Year} from 'src/domain/models/year';
-import {Event} from 'src/domain/events/event';
 import {Month} from 'src/domain/models/month';
-import {YearlyNoteEventContext} from 'src/components/providers/yearly-note-event.context';
-import {MonthlyNoteEventContext} from 'src/components/providers/monthly-note-event.context';
+import {PeriodicNoteEventContext} from 'src/components/context/periodic-note-event.context';
+import {ManageAction, ManageEvent} from 'src/domain/events/manage.event';
 
 describe('HeadingComponent', () => {
     let month: Month;
@@ -16,17 +15,21 @@ describe('HeadingComponent', () => {
     const mockYearlyNoteEvent = {
         onEvent: jest.fn(),
         emitEvent: jest.fn()
-    } as unknown as Event<Year>;
+    } as unknown as ManageEvent<Year>;
     const mockMonthlyNoteEvent = {
         onEvent: jest.fn(),
         emitEvent: jest.fn()
-    } as unknown as Event<Month>;
+    } as unknown as ManageEvent<Month>;
 
     beforeEach(() => {
         month = {
             date: new Date(2024, 11),
             name: 'December',
-            quarter: 4,
+            quarter: {
+                date: new Date(2024, 11),
+                quarter: 4,
+                year: 2024
+            },
             weeks: []
         };
         year = {
@@ -113,7 +116,7 @@ describe('HeadingComponent', () => {
 
         fireEvent.click(screen.getByText('December'));
 
-        expect(mockMonthlyNoteEvent.emitEvent).toHaveBeenCalledWith(month);
+        expect(mockMonthlyNoteEvent.emitEvent).toHaveBeenCalledWith(ManageAction.Open, month);
     });
 
     it('emits the yearly note event when the year is clicked', () => {
@@ -126,30 +129,28 @@ describe('HeadingComponent', () => {
 
         fireEvent.click(screen.getByText('2024'));
 
-        expect(mockYearlyNoteEvent.emitEvent).toHaveBeenCalledWith(year);
+        expect(mockYearlyNoteEvent.emitEvent).toHaveBeenCalledWith(ManageAction.Open, year);
     });
 });
 
 function setupContent(
     month: MonthUiModel,
     year: Year,
-    mockYearlyNoteEvent: Event<Year>,
-    mockMonthlyNoteEvent: Event<Month>,
+    mockYearlyNoteEvent: ManageEvent<Year>,
+    mockMonthlyNoteEvent: ManageEvent<Month>,
     navigateToPreviousMonth: () => void = jest.fn(),
     navigateToNextMonth: () => void = jest.fn(),
     navigateToCurrentMonth: () => void = jest.fn()
 ): ReactElement {
     return (
-        <YearlyNoteEventContext.Provider value={mockYearlyNoteEvent}>
-            <MonthlyNoteEventContext.Provider value={mockMonthlyNoteEvent}>
-                <HeadingComponent
-                    month={month}
-                    year={year}
-                    navigateToPreviousMonth={navigateToPreviousMonth}
-                    navigateToNextMonth={navigateToNextMonth}
-                    navigateToCurrentMonth={navigateToCurrentMonth}
-                />
-            </MonthlyNoteEventContext.Provider>
-        </YearlyNoteEventContext.Provider>
+        <PeriodicNoteEventContext value={{manageYearEvent: mockYearlyNoteEvent, manageMonthEvent: mockMonthlyNoteEvent}}>
+            <HeadingComponent
+                month={month}
+                year={year}
+                navigateToPreviousMonth={navigateToPreviousMonth}
+                navigateToNextMonth={navigateToNextMonth}
+                navigateToCurrentMonth={navigateToCurrentMonth}
+            />
+        </PeriodicNoteEventContext>
     );
 }

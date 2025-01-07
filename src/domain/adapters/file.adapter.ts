@@ -4,4 +4,5 @@ export interface FileAdapter {
     openFile(filePath: string): Promise<void>;
     readFileContents(filePath: string): Promise<string>;
     writeFileContents(filePath: string, contents: string): Promise<void>;
+    deleteFile(filePath: string): Promise<void>;
 }

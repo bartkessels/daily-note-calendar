@@ -4,13 +4,14 @@ import {NotesComponent} from './notes.component';
 import {Note} from 'src/domain/models/note';
 import {Event} from 'src/domain/events/event';
 import {RefreshNotesEvent} from 'src/implementation/events/refresh-notes.event';
-import {RefreshNotesEventContext} from 'src/components/providers/refresh-notes-event.context';
+import {RefreshNotesEventContext} from 'src/components/context/refresh-notes-event.context';
 import {NotesViewModel} from 'src/components/viewmodels/notes.view-model';
-import {NoteEventContext} from 'src/components/providers/note-event.context';
+import {ManageNoteEventContext} from 'src/components/context/manage-note-event.context';
 import 'src/extensions/extensions';
 import {createNoteUiModel} from 'src/components/models/note.ui-model';
 import {NotesViewState} from 'src/components/viewmodels/notes.view-state';
 import {useNotesViewModel} from 'src/components/viewmodels/notes.view-model.provider';
+import {ManageAction, ManageEvent } from 'src/domain/events/manage.event';
 
 jest.mock('src/components/viewmodels/notes.view-model.provider');
 
@@ -18,7 +19,7 @@ describe('NotesComponent', () => {
     const mockNoteEvent = {
         onEvent: jest.fn(),
         emitEvent: jest.fn()
-    } as unknown as Event<Note>;
+    } as unknown as ManageEvent<Note>;
     let refreshNotesEvent: Event<Note[]>;
 
     beforeEach(() => {
@@ -82,7 +83,7 @@ describe('NotesComponent', () => {
         await waitFor(() => expect(screen.findAllByRole('listitem')).not.toBeNull());
         act(() => screen.getByText(note.name).click());
 
-        expect(mockNoteEvent.emitEvent).toBeCalledWith(note);
+        expect(mockNoteEvent.emitEvent).toBeCalledWith(ManageAction.Open, note);
     });
 
     it('should emit the note event when the created time of a note is clicked', async () => {
@@ -105,7 +106,7 @@ describe('NotesComponent', () => {
         await waitFor(() => expect(screen.findAllByRole('listitem')).not.toBeNull());
         act(() => screen.getByText(`Created at ${note.createdOn.toLocaleTimeString()}`).click());
 
-        expect(mockNoteEvent.emitEvent).toBeCalledWith(note);
+        expect(mockNoteEvent.emitEvent).toBeCalledWith(ManageAction.Open, note);
     });
 
     it('should emit the note event when the path of a note is clicked', async () => {
@@ -128,19 +129,19 @@ describe('NotesComponent', () => {
         await waitFor(() => expect(screen.findAllByRole('listitem')).not.toBeNull());
         act(() => screen.getByText(note.path).click());
 
-        expect(mockNoteEvent.emitEvent).toBeCalledWith(note);
+        expect(mockNoteEvent.emitEvent).toBeCalledWith(ManageAction.Open, note);
     });
 });
 
 function setupContent(
-    noteEvent: Event<Note>,
+    noteEvent: ManageEvent<Note>,
     refreshNotesEvent: Event<Note[]>
 ): React.ReactElement {
     return (
-        <NoteEventContext.Provider value={noteEvent}>
+        <ManageNoteEventContext.Provider value={noteEvent}>
             <RefreshNotesEventContext.Provider value={refreshNotesEvent}>
                 <NotesComponent/>
             </RefreshNotesEventContext.Provider>
-        </NoteEventContext.Provider>
+        </ManageNoteEventContext.Provider>
     );
 }

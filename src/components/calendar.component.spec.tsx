@@ -2,8 +2,6 @@ import React from 'react';
 import {screen, fireEvent, render} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { CalendarComponent } from './calendar.component';
-import { QuarterlyNoteEventContext } from 'src/components/providers/quarterly-note-event.context';
-import {Event} from 'src/domain/events/event';
 import {Month} from 'src/domain/models/month';
 import {Year} from 'src/domain/models/year';
 import {Week} from 'src/domain/models/week';
@@ -11,6 +9,9 @@ import { CalendarViewModel } from './viewmodels/calendar.view-model';
 import {useCalendarViewModel} from 'src/components/viewmodels/calendar.view-model.provider';
 import {createCalendarUiModel} from 'src/components/models/calendar.ui-model';
 import 'src/extensions/extensions';
+import {ManageAction, ManageEvent} from 'src/domain/events/manage.event';
+import {PeriodicNoteEventContext} from 'src/components/context/periodic-note-event.context';
+import {Quarter} from 'src/domain/models/quarter';
 
 jest.mock('src/components/viewmodels/calendar.view-model.provider');
 
@@ -19,7 +20,7 @@ describe('CalendarComponent', () => {
     const mockQuarterlyNoteEvent = {
         onEvent: jest.fn(),
         emitEvent: jest.fn()
-    } as unknown as Event<Month>;
+    } as unknown as ManageEvent<Quarter>;
 
     beforeEach(() => {
         const week: Week = {
@@ -37,7 +38,11 @@ describe('CalendarComponent', () => {
         const month: Month = {
             date: new Date(2024, 11),
             name: 'December',
-            quarter: 4,
+            quarter: {
+                date: new Date(2024),
+                quarter: 4,
+                year: 2024
+            },
             weeks: [week]
         };
         const year: Year = {
@@ -125,7 +130,7 @@ describe('CalendarComponent', () => {
         render(setupContent(mockQuarterlyNoteEvent));
 
         fireEvent.click(screen.getByText('Q4'));
-        expect(mockQuarterlyNoteEvent.emitEvent).toHaveBeenCalledWith(mockViewModel.viewState.uiModel?.currentMonth?.month);
+        expect(mockQuarterlyNoteEvent.emitEvent).toHaveBeenCalledWith(ManageAction.Open, mockViewModel.viewState.uiModel?.currentMonth?.month?.quarter);
     });
 
     it('displays all days and week numbers of the current month grouped into weeks', () => {
@@ -142,11 +147,11 @@ describe('CalendarComponent', () => {
 });
 
 function setupContent(
-    quarterlyNoteEvent: Event<Month>
+    quarterlyNoteEvent: ManageEvent<Quarter>
 ): React.ReactElement {
     return (
-        <QuarterlyNoteEventContext.Provider value={quarterlyNoteEvent}>
+        <PeriodicNoteEventContext value={{manageQuarterEvent: quarterlyNoteEvent}}>
             <CalendarComponent />
-        </QuarterlyNoteEventContext.Provider>
+        </PeriodicNoteEventContext>
     );
 }

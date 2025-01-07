@@ -1,17 +1,16 @@
 import React, {ReactElement} from 'react';
 import {DayUiModel} from 'src/components/models/day.ui-model';
-import {getDailyNoteEvent} from 'src/components/providers/daily-note-event.context';
-import {getSelectDayEvent} from 'src/components/providers/select-day-event.context';
 import {ModifierKey} from 'src/domain/models/modifier-key';
 import {PeriodComponent} from 'src/components/calendar/period-component';
+import {ManageAction} from 'src/domain/events/manage.event';
+import {getManageDayEvent} from 'src/components/context/periodic-note-event.context';
 
 interface DayProps {
     day?: DayUiModel;
 }
 
-export const DayComponent = ({ day }: DayProps): ReactElement => {
-    const dailyNoteEvent = getDailyNoteEvent();
-    const selectDayEvent = getSelectDayEvent();
+export const DayComponent = ({day}: DayProps): ReactElement => {
+    const manageDayEvent = getManageDayEvent();
     const classes: string[] = [];
 
     if (day?.isSelected) {
@@ -27,13 +26,17 @@ export const DayComponent = ({ day }: DayProps): ReactElement => {
             id={day?.isToday ? 'today' : ''}
             height="30"
             className={classes.join(' ')}>
-                <PeriodComponent value={day?.currentDay?.name} onClick={(modifierKey) => {
+            <PeriodComponent
+                value={day?.currentDay}
+                manageEvent={manageDayEvent}
+                displayValue={day?.currentDay?.name}
+                onClick={(modifierKey) => {
                     if (modifierKey === ModifierKey.Shift) {
-                        selectDayEvent?.emitEvent(day?.currentDay);
+                        manageDayEvent?.emitEvent(ManageAction.Preview, day?.currentDay);
                     } else {
-                        dailyNoteEvent?.emitEvent(day?.currentDay, modifierKey);
+                        manageDayEvent?.emitEvent(ManageAction.Open, day?.currentDay, modifierKey);
                     }
-                }} />
+                }}/>
         </td>
     )
 };

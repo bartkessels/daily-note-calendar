@@ -48,4 +48,19 @@ export class AdapterFileService implements FileService {
             this.logger.logAndThrow(`Error opening file: ${completeFilePath}`);
         }
     }
+
+    public async tryDeleteFile(filePath: string): Promise<void> {
+        const completeFilePath = filePath.appendMarkdownExtension()
+        const fileExists = await this.doesFileExist(completeFilePath);
+
+        if (!fileExists) {
+            this.logger.logAndThrow(`File does not exist: ${completeFilePath}`);
+        }
+
+        try {
+            await this.fileAdapter.deleteFile(completeFilePath);
+        } catch (_) {
+            this.logger.logAndThrow(`Error deleting file: ${completeFilePath}`);
+        }
+    }
 }

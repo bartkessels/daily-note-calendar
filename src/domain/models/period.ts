@@ -1,3 +1,3 @@
 export interface Period {
-    date: Date
+    date: Date;
 }

@@ -10,7 +10,7 @@ export class DefaultEnhancer<T> implements Enhancer<T> {
         return this;
     }
 
-    public withStep(step: EnhancerStep<T>): Enhancer<T> {
+    public withStep(step: EnhancerStep<T>): DefaultEnhancer<T> {
         this.steps.push(step);
         return this;
     }

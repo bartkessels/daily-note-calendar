@@ -17,7 +17,8 @@ describe('TodayVariableParserStep', () => {
             createFileFromTemplate: jest.fn(),
             openFile: jest.fn(),
             readFileContents: jest.fn(),
-            writeFileContents: jest.fn()
+            writeFileContents: jest.fn(),
+            deleteFile: jest.fn()
         } as FileAdapter;
         variableBuilder = {
             fromString: jest.fn().mockReturnThis(),

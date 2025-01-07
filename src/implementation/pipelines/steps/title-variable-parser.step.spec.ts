@@ -15,7 +15,8 @@ describe('TitleVariableParserStep', () => {
             createFileFromTemplate: jest.fn(),
             openFile: jest.fn(),
             readFileContents: jest.fn(),
-            writeFileContents: jest.fn()
+            writeFileContents: jest.fn(),
+            deleteFile: jest.fn()
         } as FileAdapter;
         noteAdapter = {
             getActiveNote: jest.fn()

@@ -14,7 +14,8 @@ describe('AdapterFileService', () => {
             createFileFromTemplate: jest.fn(),
             openFile: jest.fn(),
             readFileContents: jest.fn(),
-            writeFileContents: jest.fn()
+            writeFileContents: jest.fn(),
+            deleteFile: jest.fn()
         } as jest.Mocked<FileAdapter>;
         logger = {
             logAndThrow: jest.fn((message: string) => {

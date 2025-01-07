@@ -1,12 +1,32 @@
 import {ModifierKey} from 'src/domain/models/modifier-key';
 import React, {ReactElement} from 'react';
+import {getNoteContextMenu} from 'src/components/context/note-context-menu.context';
+import {Period} from 'src/domain/models/period';
+import {ManageAction, ManageEvent} from 'src/domain/events/manage.event';
+import {ContextMenuCallbacks} from 'src/domain/adapters/context-menu.adapter';
 
 interface PeriodProps {
-    value?: string;
-    onClick: (modifierKey: ModifierKey) => void;
+    displayValue?: string;
+    manageEvent?: ManageEvent<Period> | null,
+    value?: Period;
+    onClick?: (modifierKey: ModifierKey) => void;
 }
 
-export const PeriodComponent = ({ value, onClick }: PeriodProps): ReactElement => {
+export const PeriodComponent = ({
+    displayValue,
+    value,
+    manageEvent,
+    onClick
+}: PeriodProps): ReactElement => {
+    if (!value) {
+        return <></>;
+    }
+
+    const contextMenu = getNoteContextMenu();
+    const contextMenuCallbacks: ContextMenuCallbacks = {
+        onDelete: () => manageEvent?.emitEvent(ManageAction.Delete, value)
+    }
+
     const modifierKey = (event: React.MouseEvent): ModifierKey => {
         if (event.metaKey) {
             return ModifierKey.Meta;
@@ -14,18 +34,25 @@ export const PeriodComponent = ({ value, onClick }: PeriodProps): ReactElement =
             return ModifierKey.Alt;
         } else if (event.shiftKey) {
             return ModifierKey.Shift;
-        } else {
-            return ModifierKey.None;
         }
-    }
 
-    if (!value) {
-        return <></>;
+        return ModifierKey.None;
     }
 
     return (
-        <div onClick={(e: React.MouseEvent) => onClick(modifierKey(e))}>
-            {value}
-        </div>
+        <div
+            onClick={(e: React.MouseEvent) => {
+                if (onClick) {
+                    onClick(modifierKey(e));
+                } else {
+                    manageEvent?.emitEvent(ManageAction.Open, value, modifierKey(e))
+                }
+
+                e.preventDefault();
+            }}
+            onContextMenu={(e: React.MouseEvent) => {
+                contextMenu?.show(e.clientX, e.clientY, contextMenuCallbacks);
+                e.preventDefault();
+            }}>{displayValue}</div>
     )
 }

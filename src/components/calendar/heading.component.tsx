@@ -2,8 +2,9 @@ import React, {ReactElement} from 'react';
 import {Year} from 'src/domain/models/year';
 import {CalendarHeart, ChevronLeft, ChevronRight} from 'lucide-react';
 import {MonthUiModel} from 'src/components/models/month.ui-model';
-import {getYearlyNoteEvent} from 'src/components/providers/yearly-note-event.context';
-import {getMonthlyNoteEvent} from 'src/components/providers/monthly-note-event.context';
+import {Month} from 'src/domain/models/month';
+import { ManageAction } from 'src/domain/events/manage.event';
+import {getManageMonthEvent, getManageYearEvent} from 'src/components/context/periodic-note-event.context';
 
 export interface HeadingProps {
     month?: MonthUiModel;
@@ -20,14 +21,14 @@ export const HeadingComponent = ({
     navigateToNextMonth,
     navigateToCurrentMonth
 }: HeadingProps): ReactElement => {
-    const monthlyNoteEvent = getMonthlyNoteEvent();
-    const yearlyNoteEvent = getYearlyNoteEvent();
+    const manageMonthEvent = getManageMonthEvent();
+    const manageYearEvent = getManageYearEvent();
 
     return (
         <div className="header">
             <span className="title">
-                <h1 onClick={() => monthlyNoteEvent?.emitEvent(month?.month)}>{month?.month?.name}</h1>&nbsp;
-                <h1 onClick={() => yearlyNoteEvent?.emitEvent(year)}>{year?.name}</h1>&nbsp;
+                <h1 onClick={() => manageMonthEvent?.emitEvent(ManageAction.Open, month?.month)}>{month?.month?.name}</h1>&nbsp;
+                <h1 onClick={() => manageYearEvent?.emitEvent(ManageAction.Open, year)}>{year?.name}</h1>&nbsp;
             </span>
 
             <div className="buttons">

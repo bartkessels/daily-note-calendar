@@ -1,12 +1,13 @@
 import * as React from 'react';
 import {MonthComponent} from 'src/components/calendar/month.component';
 import {HeadingComponent} from 'src/components/calendar/heading.component';
-import {getQuarterlyNoteEvent} from 'src/components/providers/quarterly-note-event.context';
 import {useCalendarViewModel} from 'src/components/viewmodels/calendar.view-model.provider';
+import {ManageAction} from 'src/domain/events/manage.event';
+import {getManageQuarterEvent} from 'src/components/context/periodic-note-event.context';
 
 export const CalendarComponent = () => {
     const viewModel = useCalendarViewModel();
-    const quarterlyNoteEvent = getQuarterlyNoteEvent();
+    const manageQuarterEvent = getManageQuarterEvent();
     const uiModel = viewModel?.viewState?.uiModel;
 
     return (
@@ -22,8 +23,8 @@ export const CalendarComponent = () => {
                 <thead>
                 <tr>
                     <th className="quarter"
-                        onClick={() => quarterlyNoteEvent?.emitEvent(uiModel?.currentMonth?.month)}>
-                        Q{uiModel?.currentMonth?.month?.quarter}
+                        onClick={() => manageQuarterEvent?.emitEvent(ManageAction.Open, uiModel?.currentMonth?.month?.quarter)}>
+                        Q{uiModel?.currentMonth?.month?.quarter?.quarter}
                     </th>
                     {!uiModel?.startWeekOnMonday && <th>Sun</th>}
                     <th>Mon</th>

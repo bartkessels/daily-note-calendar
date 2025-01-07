@@ -1,4 +1,4 @@
-import {DateManagerContext} from 'src/components/providers/date-manager.context';
+import {DateManagerContext} from 'src/components/context/date-manager.context';
 import {Event} from 'src/domain/events/event';
 import {DateManager} from 'src/domain/managers/date.manager';
 import {Enhancer} from 'src/domain/enhancers/enhancer';
@@ -8,8 +8,8 @@ import {useCalendarViewModel} from 'src/components/viewmodels/calendar.view-mode
 import {Note} from 'src/domain/models/note';
 import {NoteUiModel} from 'src/components/models/note.ui-model';
 import {RefreshNotesEvent} from 'src/implementation/events/refresh-notes.event';
-import {NotesEnhancerContext} from 'src/components/providers/notes-enhancer.context';
-import {RefreshNotesEventContext} from 'src/components/providers/refresh-notes-event.context';
+import {NotesEnhancerContext} from 'src/components/context/notes-enhancer.context';
+import {RefreshNotesEventContext} from 'src/components/context/refresh-notes-event.context';
 
 describe('useNotesViewModel', () => {
     const mockDateManager = {
@@ -30,7 +30,6 @@ describe('useNotesViewModel', () => {
     let refreshNotesEvent: Event<Note[]>;
 
     beforeEach(() => {
-        mockEnhancer.withStep.mockReturnValue(mockEnhancer);
         mockEnhancer.withValue.mockReturnValue(mockEnhancer);
 
         refreshNotesEvent = new RefreshNotesEvent();
