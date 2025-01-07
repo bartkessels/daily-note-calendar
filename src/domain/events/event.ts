@@ -1,7 +1,7 @@
 import {ModifierKey} from 'src/domain/models/modifier-key';
 
-export type EventListenerWithModifierKey<T> = (value: T, modifierKey: ModifierKey) => void;
-export type EventListener<T> = (value: T) => void;
+export type EventListenerWithModifierKey<T> = (value: T, modifierKey: ModifierKey) => Promise<void>;
+export type EventListener<T> = (value: T) => Promise<void>;
 
 export abstract class Event<T> {
     private readonly listeners = new Map<string, EventListener<T>>();
@@ -17,8 +17,9 @@ export abstract class Event<T> {
 
     public emitEvent(value?: T, modifierKey: ModifierKey = ModifierKey.None): void {
         if (value) {
-            this.listeners.forEach((listener) => listener(value));
-            this.listenersWithModifierKey.forEach((listener) => listener(value, modifierKey));
+            const listenerPromises = Array.from(this.listeners.values()).map(listener => listener(value));
+            const listenerWithModifierPromises = Array.from(this.listenersWithModifierKey.values()).map(listener => listener(value, modifierKey));
+            Promise.all([...listenerPromises, ...listenerWithModifierPromises]).catch();
         }
     }
 }
