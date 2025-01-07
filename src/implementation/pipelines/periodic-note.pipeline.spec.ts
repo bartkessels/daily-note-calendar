@@ -9,6 +9,7 @@ import {ModifierKey} from 'src/domain/models/modifier-key';
 import {Day, DayOfWeek} from 'src/domain/models/day';
 import {ManageAction, ManageEvent} from 'src/domain/events/manage.event';
 import {PeriodicManageEvent} from 'src/implementation/events/periodic.manage-event';
+import {waitFor} from '@testing-library/react';
 
 describe('PeriodicNotePipeline', () => {
     let manageEvent: ManageEvent<Day>;
@@ -29,7 +30,8 @@ describe('PeriodicNotePipeline', () => {
         fileService = {
             doesFileExist: jest.fn(),
             createFileWithTemplate: jest.fn(),
-            tryOpenFile: jest.fn()
+            tryOpenFile: jest.fn(),
+            tryDeleteFile: jest.fn()
         } as unknown as jest.Mocked<FileService>;
         generalSettingsRepository = {
             getSettings: jest.fn()
@@ -133,5 +135,18 @@ describe('PeriodicNotePipeline', () => {
 
         expect(fileService.createFileWithTemplate).not.toHaveBeenCalled();
         expect(fileService.tryOpenFile).toHaveBeenCalledWith('/folder/test.md');
+    });
+
+    it('should call tryDeleteFile on the fileService with the file name from the NameBuilder', async () => {
+        const generalSettings: GeneralSettings = { ...DEFAULT_GENERAL_SETTINGS, useModifierKeyToCreateNote: true };
+        const settings: PeriodicNoteSettings = { nameTemplate: 'template', folder: '/folder', templateFile: 'template.md' };
+
+        generalSettingsRepository.getSettings.mockResolvedValue(generalSettings);
+        settingsRepository.getSettings.mockResolvedValue(settings);
+        nameBuilder.build.mockReturnValue('/folder/test.md');
+
+        manageEvent.emitEvent(ManageAction.Delete, day);
+
+        await waitFor(() => expect(fileService.tryDeleteFile).toHaveBeenCalledWith('/folder/test.md'));
     });
 });
