@@ -6,7 +6,7 @@ import {Month} from 'src/domain/models/month';
 import {Year} from 'src/domain/models/year';
 import {CalendarUiModel} from 'src/components/models/calendar.ui-model';
 import {DateManager} from 'src/domain/managers/date.manager';
-import {Enhancer} from 'src/domain/enhancers/enhancer';
+import {Enhancerold} from 'src/domain/enhancers/enhancerold';
 import React from 'react';
 import {renderHook, waitFor} from '@testing-library/react';
 import {useCalendarViewModel} from 'src/components/viewmodels/calendar.view-model.provider';
@@ -35,7 +35,7 @@ describe('useCalendarViewModel', () => {
         withValue: jest.fn(),
         withStep: jest.fn(),
         build: jest.fn()
-    } as unknown as jest.Mocked<Enhancer<CalendarUiModel>>;
+    } as unknown as jest.Mocked<Enhancerold<CalendarUiModel>>;
 
     let dailyNoteEvent: ManageEvent<Day>;
 

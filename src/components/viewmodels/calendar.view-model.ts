@@ -3,7 +3,7 @@ import {Month} from 'src/domain/models/month';
 import {Year} from 'src/domain/models/year';
 import {CalendarUiModel, createCalendarUiModel} from 'src/components/models/calendar.ui-model';
 import {DateManager} from 'src/domain/managers/date.manager';
-import {Enhancer} from 'src/domain/enhancers/enhancer';
+import {Enhancerold} from 'src/domain/enhancers/enhancerold';
 import {CalendarViewState} from 'src/components/viewmodels/calendar.view-state';
 import {ManageEvent} from 'src/domain/events/manage.event';
 
@@ -25,7 +25,7 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         private readonly setUiModel: (uiModel?: CalendarUiModel) => void,
         private readonly manageDayEvent: ManageEvent<Day> | null,
         private readonly dateManager: DateManager | null,
-        private readonly calendarEnhancer: Enhancer<CalendarUiModel> | null
+        private readonly calendarEnhancer: Enhancerold<CalendarUiModel> | null
     ) {
         this.manageDayEvent?.onEvent('CalendarViewModel', (day: Day, _) => this.selectDay(day));
     }

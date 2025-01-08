@@ -1,11 +1,11 @@
 import {EnhancerStep} from 'src/domain/enhancers/enhancer-step';
-import {Enhancer} from 'src/domain/enhancers/enhancer';
+import {Enhancerold} from 'src/domain/enhancers/enhancerold';
 
-export class DefaultEnhancer<T> implements Enhancer<T> {
+export class DefaultEnhancer<T> implements Enhancerold<T> {
     protected readonly steps: EnhancerStep<T>[] = [];
     protected value?: T;
 
-    public withValue(value: T): Enhancer<T> {
+    public withValue(value: T): Enhancerold<T> {
         this.value = value;
         return this;
     }

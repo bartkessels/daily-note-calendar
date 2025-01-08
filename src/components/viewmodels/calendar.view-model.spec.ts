@@ -4,7 +4,7 @@ import {Month} from 'src/domain/models/month';
 import {Year} from 'src/domain/models/year';
 import {CalendarUiModel} from 'src/components/models/calendar.ui-model';
 import {DateManager} from 'src/domain/managers/date.manager';
-import {Enhancer} from 'src/domain/enhancers/enhancer';
+import {Enhancerold} from 'src/domain/enhancers/enhancerold';
 import {Week} from 'src/domain/models/week';
 import {waitFor} from '@testing-library/react';
 import {CalendarViewState} from 'src/components/viewmodels/calendar.view-state';
@@ -21,7 +21,7 @@ describe('DefaultCalendarViewModel', () => {
         getNextMonth: jest.fn(),
         getYear: jest.fn()
     } as jest.Mocked<DateManager>;
-    let mockEnhancer: Enhancer<CalendarUiModel>;
+    let mockEnhancer: Enhancerold<CalendarUiModel>;
     const manageDayEvent = new PeriodicManageEvent<Day>();
     const setUiModel: jest.Mock = jest.fn();
 
@@ -248,10 +248,10 @@ describe('DefaultCalendarViewModel', () => {
     });
 });
 
-class EnhancerDouble implements Enhancer<CalendarUiModel> {
+class EnhancerDouble implements Enhancerold<CalendarUiModel> {
     private value?: CalendarUiModel;
 
-    withValue(value: CalendarUiModel): Enhancer<CalendarUiModel> {
+    withValue(value: CalendarUiModel): Enhancerold<CalendarUiModel> {
         this.value = value;
         return this;
     }

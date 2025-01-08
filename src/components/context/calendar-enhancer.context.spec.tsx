@@ -1,13 +1,13 @@
 import React from 'react';
 import {renderHook} from '@testing-library/react';
-import {Enhancer} from 'src/domain/enhancers/enhancer';
+import {Enhancerold} from 'src/domain/enhancers/enhancerold';
 import {CalendarUiModel} from 'src/components/models/calendar.ui-model';
 import {CalendarEnhancerContext, useCalenderEnhancer} from 'src/components/context/calendar-enhancer.context';
 
 describe('CalendarEnhancerContext', () => {
     const mockEnhancer = {
         enhance: jest.fn()
-    } as unknown as Enhancer<CalendarUiModel>;
+    } as unknown as Enhancerold<CalendarUiModel>;
 
     it('provides the enhancer instance', () => {
         const wrapper = ({ children }: { children: React.ReactNode }) => (

@@ -1,7 +1,7 @@
 import {DateManagerContext} from 'src/components/context/date-manager.context';
 import {Event} from 'src/domain/events/event';
 import {DateManager} from 'src/domain/managers/date.manager';
-import {Enhancer} from 'src/domain/enhancers/enhancer';
+import {Enhancerold} from 'src/domain/enhancers/enhancerold';
 import React from 'react';
 import {renderHook, waitFor} from '@testing-library/react';
 import {useCalendarViewModel} from 'src/components/viewmodels/calendar.view-model.provider';
@@ -25,7 +25,7 @@ describe('useNotesViewModel', () => {
         withValue: jest.fn(),
         withStep: jest.fn(),
         build: jest.fn()
-    } as unknown as jest.Mocked<Enhancer<NoteUiModel[]>>;
+    } as unknown as jest.Mocked<Enhancerold<NoteUiModel[]>>;
 
     let refreshNotesEvent: Event<Note[]>;
 

@@ -1,13 +1,13 @@
 import React from 'react';
 import {renderHook} from '@testing-library/react';
-import {Enhancer} from 'src/domain/enhancers/enhancer';
+import {Enhancerold} from 'src/domain/enhancers/enhancerold';
 import {NoteUiModel} from 'src/components/models/note.ui-model';
 import {NotesEnhancerContext, useNotesEnhancer} from './notes-enhancer.context';
 
 describe('NotesEnhancerContext', () => {
     const mockEnhancer = {
         enhance: jest.fn()
-    } as unknown as Enhancer<NoteUiModel[]>;
+    } as unknown as Enhancerold<NoteUiModel[]>;
 
     it('provides the enhancer instance', () => {
         const wrapper = ({children}: { children: React.ReactNode }) => (

@@ -1,7 +1,15 @@
-import {EnhancerStep} from 'src/domain/enhancers/enhancer-step';
+import {Event} from 'src/domain/events/event';
 
-export interface Enhancer<T> {
-    withValue(value: T): Enhancer<T>;
-    // withStep(step: EnhancerStep<T>): Enhancer<T>;
-    build(): Promise<T | undefined>;
+export abstract class Enhancer<T> {
+    protected constructor(
+        private readonly event: Event<T>
+    ) {
+
+    }
+
+    public async execute(value: T): Promise<void> {
+        this.enhance(value).then(this.event.emitEvent);
+    }
+
+    protected abstract enhance(value: T): Promise<T>;
 }

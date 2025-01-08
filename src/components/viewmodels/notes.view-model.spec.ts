@@ -1,7 +1,7 @@
 import { DefaultNotesViewModel } from 'src/components/viewmodels/notes.view-model';
 import { Note } from 'src/domain/models/note';
 import { createNoteUiModel, NoteUiModel } from 'src/components/models/note.ui-model';
-import { Enhancer } from 'src/domain/enhancers/enhancer';
+import { Enhancerold } from 'src/domain/enhancers/enhancerold';
 import { Event } from 'src/domain/events/event';
 import {EnhancerStep} from 'src/domain/enhancers/enhancer-step';
 import {waitFor} from '@testing-library/react';
@@ -11,7 +11,7 @@ import {NotesViewState} from 'src/components/viewmodels/notes.view-state';
 describe('DefaultNotesViewModel', () => {
     let setUiModel: jest.Mock;
     let refreshNotesEvent: Event<Note[]>;
-    let enhancer: Enhancer<NoteUiModel[]>;
+    let enhancer: Enhancerold<NoteUiModel[]>;
 
     beforeEach(() => {
         setUiModel = jest.fn();
@@ -59,15 +59,15 @@ describe('DefaultNotesViewModel', () => {
     });
 });
 
-class EnhancerDouble implements Enhancer<NoteUiModel[]> {
+class EnhancerDouble implements Enhancerold<NoteUiModel[]> {
     private value?: NoteUiModel[];
 
-    withValue(value: NoteUiModel[]): Enhancer<NoteUiModel[]> {
+    withValue(value: NoteUiModel[]): Enhancerold<NoteUiModel[]> {
         this.value = value;
         return this;
     }
 
-    withStep(_: EnhancerStep<NoteUiModel[]>): Enhancer<NoteUiModel[]> {
+    withStep(_: EnhancerStep<NoteUiModel[]>): Enhancerold<NoteUiModel[]> {
         return this;
     }
 

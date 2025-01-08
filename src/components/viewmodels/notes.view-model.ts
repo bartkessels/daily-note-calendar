@@ -2,7 +2,7 @@ import {NotesViewState} from 'src/components/viewmodels/notes.view-state';
 import {Note} from 'src/domain/models/note';
 import {createNoteUiModel, NoteUiModel} from 'src/components/models/note.ui-model';
 import {Event} from 'src/domain/events/event';
-import {Enhancer} from 'src/domain/enhancers/enhancer';
+import {Enhancerold} from 'src/domain/enhancers/enhancerold';
 
 export interface NotesViewModel {
     viewState: NotesViewState;
@@ -16,7 +16,7 @@ export class DefaultNotesViewModel implements NotesViewModel {
     constructor(
         private readonly setUiModel: (uiModels?: NoteUiModel[]) => void,
         private readonly refreshNotesEvent: Event<Note[]> | null,
-        private readonly enhancer: Enhancer<NoteUiModel[]> | null
+        private readonly enhancer: Enhancerold<NoteUiModel[]> | null
     ) {
         this.refreshNotesEvent?.onEvent('NotesViewModel', (notes: Note[]) => this.refreshNotes(notes));
     }

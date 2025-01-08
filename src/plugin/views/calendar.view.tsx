@@ -14,7 +14,7 @@ import {ManageNoteEventContext} from 'src/components/context/manage-note-event.c
 import {Note} from 'src/domain/models/note';
 import {RefreshNotesEventContext} from 'src/components/context/refresh-notes-event.context';
 import {CalendarEnhancerContext} from 'src/components/context/calendar-enhancer.context';
-import {Enhancer} from 'src/domain/enhancers/enhancer';
+import {Enhancerold} from 'src/domain/enhancers/enhancerold';
 import {CalendarUiModel} from 'src/components/models/calendar.ui-model';
 import {NoteUiModel} from 'src/components/models/note.ui-model';
 import {NotesEnhancerContext} from 'src/components/context/notes-enhancer.context';
@@ -40,8 +40,8 @@ export class CalendarView extends ItemView {
         private readonly manageYearEvent: ManageEvent<Year>,
         private readonly manageNoteEvent: ManageEvent<Note>,
         private readonly refreshNotesEvent: Event<Note[]>,
-        private readonly calendarEnhancer: Enhancer<CalendarUiModel>,
-        private readonly notesEnhancer: Enhancer<NoteUiModel[]>
+        private readonly calendarEnhancer: Enhancerold<CalendarUiModel>,
+        private readonly notesEnhancer: Enhancerold<NoteUiModel[]>
     ) {
         super(leaf);
     }
