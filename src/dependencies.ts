@@ -18,7 +18,7 @@ import {ObsidianNoticeAdapter} from 'src/plugin/adapters/obsidian.notice-adapter
 import {NotifyLogger} from 'src/implementation/loggers/notify.logger';
 import {QuarterlyNoteSettingsRepository} from 'src/implementation/repositories/quarterly-note.settings-repository';
 import {ObsidianNoteAdapter} from 'src/plugin/adapters/obsidian.note-adapter';
-import {DayNoteRepository} from 'src/implementation/repositories/day.note-repository';
+import {NotesRepository} from 'src/implementation/repositories/notes.repository';
 import {DateParser} from 'src/domain/parsers/date.parser';
 import {DateFnsDateParser} from 'src/implementation/parsers/date-fns.date-parser';
 import {DailyNotesPeriodicNoteSettings} from 'src/domain/models/settings/daily-notes.periodic-note-settings';
@@ -158,7 +158,7 @@ export function createDependencies(plugin: Plugin): Dependencies {
 
     // Notes
     const notesSettingsRepository = new NotesSettingsRepository(settingsAdapter);
-    const notesRepository = new DayNoteRepository(notesSettingsRepository, noteAdapter, dateParser, logger);
+    const notesRepository = new NotesRepository(notesSettingsRepository, noteAdapter, dateParser, logger);
     const manageNoteEvent = new NoteManageEvent();
     const refreshNotesEvent = new RefreshNotesEvent();
     const notesManager = new GenericNotesManager(

@@ -7,7 +7,7 @@ import {NotesSettings} from 'src/domain/models/settings/notes.settings';
 import {Logger} from 'src/domain/loggers/logger';
 import {DateParser} from 'src/domain/parsers/date.parser';
 
-export class DayNoteRepository implements NoteRepository<Day> {
+export class NotesRepository implements NoteRepository<Day> {
     constructor(
         private readonly settingsRepository: SettingsRepository<NotesSettings>,
         private readonly noteRepository: NoteAdapter,

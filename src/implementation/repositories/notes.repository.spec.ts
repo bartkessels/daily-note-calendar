@@ -1,4 +1,4 @@
-import { DayNoteRepository } from './day.note-repository';
+import { NotesRepository } from 'src/implementation/repositories/notes.repository';
 import { NoteAdapter } from 'src/domain/adapters/note.adapter';
 import { SettingsRepository } from 'src/domain/repositories/settings.repository';
 import { Logger } from 'src/domain/loggers/logger';
@@ -12,7 +12,7 @@ describe('DayNoteRepository', () => {
     let mockSettingsRepository: SettingsRepository<NotesSettings>;
     let mockLogger: Logger;
     let mockDateParser: DateParser;
-    let repository: DayNoteRepository;
+    let repository: NotesRepository;
 
     beforeEach(() => {
         mockNoteAdapter = {
@@ -29,7 +29,7 @@ describe('DayNoteRepository', () => {
         mockDateParser = {
             parseString: jest.fn()
         } as unknown as DateParser;
-        repository = new DayNoteRepository(mockSettingsRepository, mockNoteAdapter, mockDateParser, mockLogger);
+        repository = new NotesRepository(mockSettingsRepository, mockNoteAdapter, mockDateParser, mockLogger);
     });
 
     it('should call getNotes with the correct filter when useCreatedOnDateFromProperties is false', async () => {
