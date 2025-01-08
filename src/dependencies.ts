@@ -53,10 +53,13 @@ import {ManageEvent} from 'src/domain/events/manage.event';
 import {PeriodicManageEvent} from 'src/implementation/events/periodic.manage-event';
 import {Quarter} from 'src/domain/models/quarter';
 import {NoteManageEvent} from 'src/implementation/events/note.manage-event';
+import {DisplayInCalendarCommand} from 'src/plugin/commands/display-in-calendar.command';
 
 export interface Dependencies {
     readonly dateManager: DateManager;
     readonly dateParser: DateParser;
+
+    readonly displayInCalendarCommand: DisplayInCalendarCommand;
 
     readonly noteContextMenuAdapter: NoteContextMenuAdapter;
 
@@ -180,9 +183,14 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const notesEnhancer = new DefaultEnhancer<NoteUiModel[]>()
         .withStep(notesDisplayDateEnhancerStep);
 
+    // Commands
+    const displayInCalendarCommand = new DisplayInCalendarCommand(noteAdapter, dateRepository, manageDayEvent);
+
     return <Dependencies>{
         dateManager: dateManager,
         dateParser: dateParser,
+
+        displayInCalendarCommand: displayInCalendarCommand,
 
         noteContextMenuAdapter: noteContextMenuAdapter,
 
