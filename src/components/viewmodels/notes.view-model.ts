@@ -2,23 +2,33 @@ import {NotesViewState} from 'src/components/viewmodels/notes.view-state';
 import {Note} from 'src/domain/models/note';
 import {createNoteUiModel, NoteUiModel} from 'src/components/models/note.ui-model';
 import {Event} from 'src/domain/events/event';
-import {Enhancerold} from 'src/domain/enhancers/enhancerold';
+import {Enhancer} from 'src/domain/enhancers/enhancer';
 
 export interface NotesViewModel {
     viewState: NotesViewState;
 
-    refreshNotes: (notes?: Note[]) => Promise<void>;
+    refreshNotes: (notes?: Note[]) => void;
 }
 
 export class DefaultNotesViewModel implements NotesViewModel {
+    private readonly enhancers: Enhancer<NoteUiModel[]>[] = [];
     public viewState: NotesViewState;
 
     constructor(
         private readonly setUiModel: (uiModels?: NoteUiModel[]) => void,
         private readonly refreshNotesEvent: Event<Note[]> | null,
-        private readonly enhancer: Enhancerold<NoteUiModel[]> | null
+        private readonly enhancedNotesEvent: Event<NoteUiModel[]> | null
     ) {
         this.refreshNotesEvent?.onEvent('NotesViewModel', (notes: Note[]) => this.refreshNotes(notes));
+        this.enhancedNotesEvent?.onEvent('NotesViewModel', this.setUiModel);
+    }
+
+    public withEnhancer(enhancer?: Enhancer<NoteUiModel[]> | null): DefaultNotesViewModel {
+        if (enhancer) {
+            this.enhancers.push(enhancer);
+        }
+
+        return this;
     }
 
     public withViewState(viewState: NotesViewState): NotesViewModel {
@@ -28,10 +38,8 @@ export class DefaultNotesViewModel implements NotesViewModel {
         };
     }
 
-    public refreshNotes = async (notes?: Note[]): Promise<void> => {
+    public refreshNotes = (notes?: Note[]): void => {
         const uiModel = notes?.map((note) => createNoteUiModel(note)) ?? [];
-        const enhancedUiModel = await this.enhancer?.withValue(uiModel).build();
-
-        this.setUiModel(enhancedUiModel);
+        this.enhancers.forEach((enhancer: Enhancer<NoteUiModel[]>): void => enhancer.execute(uiModel));
     }
 }

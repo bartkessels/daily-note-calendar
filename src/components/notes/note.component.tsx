@@ -1,9 +1,9 @@
 import {NoteUiModel} from 'src/components/models/note.ui-model';
 import React, {ReactElement} from 'react';
-import {getManageNoteEvent} from 'src/components/context/manage-note-event.context';
 import {getNoteContextMenu} from 'src/components/context/note-context-menu.context';
 import {ContextMenuCallbacks} from 'src/domain/adapters/context-menu.adapter';
 import { ManageAction } from 'src/domain/events/manage.event';
+import {getManageNoteEvent} from 'src/components/context/notes-event.context';
 
 export interface NoteProps {
     note?: NoteUiModel;

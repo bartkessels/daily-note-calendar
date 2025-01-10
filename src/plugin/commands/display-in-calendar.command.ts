@@ -1,5 +1,4 @@
-import {Command, Editor, Hotkey, MarkdownFileInfo, MarkdownView} from 'obsidian';
-import {DateParser} from 'src/domain/parsers/date.parser';
+import {Command} from 'obsidian';
 import {ManageAction, ManageEvent} from 'src/domain/events/manage.event';
 import {Day} from 'src/domain/models/day';
 import {NoteAdapter} from 'src/domain/adapters/note.adapter';
@@ -19,6 +18,8 @@ export class DisplayInCalendarCommand implements Command {
 
     public callback: (() => any) = (): void => {
         this.noteAdapter.getActiveNote().then((note) => {
+            // TODO: Check if we want the date from the file properties or from the frontmatter
+
             if (note) {
                 const day = this.dateRepository.getDay(note?.createdOn);
                 this.manageDayEvent.emitEvent(ManageAction.Preview, day);

@@ -44,7 +44,6 @@ import { Enhancerold } from 'src/domain/enhancers/enhancerold';
 import {CalendarDayEnhancerStep} from 'src/implementation/enhancers/steps/calendar-day.enhancer-step';
 import {CalendarWeekEnhancerStep} from 'src/implementation/enhancers/steps/calendar-week.enhancer-step';
 import {DefaultEnhancer} from 'src/implementation/enhancers/default.enhancer';
-import {NotesDisplayDateEnhancerStep} from 'src/implementation/enhancers/steps/notes-display-date.enhancer-step';
 import {NotesSettingsRepository} from 'src/implementation/repositories/notes.settings-repository';
 import {NoteUiModel} from 'src/components/models/note.ui-model';
 import {NotesSettings} from 'src/domain/models/settings/notes.settings';
@@ -54,6 +53,12 @@ import {PeriodicManageEvent} from 'src/implementation/events/periodic.manage-eve
 import {Quarter} from 'src/domain/models/quarter';
 import {NoteManageEvent} from 'src/implementation/events/note.manage-event';
 import {DisplayInCalendarCommand} from 'src/plugin/commands/display-in-calendar.command';
+import {DailyNoteCalendarEnhancer} from 'src/implementation/enhancers/calendar/daily-note.calendar.enhancer';
+import {CalendarUiModelEvent} from 'src/implementation/events/calendar-ui-model.event';
+import {WeeklyNoteCalendarEnhancer} from 'src/implementation/enhancers/calendar/weekly-note.calendar.enhancer';
+import {NoteUiModelEvent} from 'src/implementation/events/note-ui-model.event';
+import {Enhancer} from 'src/domain/enhancers/enhancer';
+import {DisplayDateNotesEnhancerStep} from 'src/implementation/enhancers/notes/display-date.notes.enhancer-step';
 
 export interface Dependencies {
     readonly dateManager: DateManager;
@@ -85,8 +90,14 @@ export interface Dependencies {
     readonly manageYearEvent: ManageEvent<Year>;
     readonly yearlyNoteSettingsRepository: SettingsRepository<YearlyNotesPeriodicNoteSettings>;
 
+    // readonly dailyNoteEnhancer: Enhancer<CalendarUiModel>;
+    // readonly weeklyNoteEnhancer: Enhancer<CalendarUiModel>;
+
     readonly calendarEnhancer: Enhancerold<CalendarUiModel>;
-    readonly notesEnhancer :Enhancerold<NoteUiModel[]>;
+    readonly notesEnhancer :Enhancer<NoteUiModel[]>;
+
+    readonly noteUiModelEvent: Event<NoteUiModel[]>;
+    readonly calendarUiModelEvent: Event<CalendarUiModel>;
 }
 
 export function createDependencies(plugin: Plugin): Dependencies {
@@ -108,6 +119,10 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const periodVariableParserStep = new PeriodVariableParserStep(fileAdapter, variableBuilder, dateParser);
     const todayVariableParserStep = new TodayVariableParserStep(fileAdapter, variableBuilder, dateParser);
     const titleVariableParserStep = new TitleVariableParserStep(fileAdapter, noteAdapter);
+
+    // General events
+    const calendarUiModelEvent = new CalendarUiModelEvent();
+    const noteUiModelEvent = new NoteUiModelEvent();
 
     // Daily note dependencies
     const manageDayEvent = new PeriodicManageEvent<Day>();
@@ -173,14 +188,18 @@ export function createDependencies(plugin: Plugin): Dependencies {
         generalSettingsRepository
     );
 
+    // Enhancers
+    // const dailyNoteEnhancer = new DailyNoteCalendarEnhancer(calendarUiModelEvent, generalSettingsRepository, dailyNoteSettingsRepository, dayNameBuilder, fileAdapter);
+    // const weeklyNoteEnhancer = new WeeklyNoteCalendarEnhancer(calendarUiModelEvent, generalSettingsRepository, weeklyNoteSettingsRepository, weekNameBuilder, fileAdapter);
+
     const dayEnhancerStep = new CalendarDayEnhancerStep(generalSettingsRepository, dailyNoteSettingsRepository, dayNameBuilder, fileAdapter);
     const weekEnhancerStep = new CalendarWeekEnhancerStep(generalSettingsRepository, weeklyNoteSettingsRepository, weekNameBuilder, fileAdapter);
     const calendarEnhancer = new DefaultEnhancer<CalendarUiModel>()
         .withStep(dayEnhancerStep)
         .withStep(weekEnhancerStep);
 
-    const notesDisplayDateEnhancerStep = new NotesDisplayDateEnhancerStep(notesSettingsRepository, dateParser);
-    const notesEnhancer = new DefaultEnhancer<NoteUiModel[]>()
+    const notesDisplayDateEnhancerStep = new DisplayDateNotesEnhancerStep(notesSettingsRepository, dateParser);
+    const notesEnhancer = new Enhancer<NoteUiModel[]>(noteUiModelEvent)
         .withStep(notesDisplayDateEnhancerStep);
 
     // Commands
@@ -216,7 +235,13 @@ export function createDependencies(plugin: Plugin): Dependencies {
         manageYearEvent: manageYearEvent,
         yearlyNoteSettingsRepository: yearlyNoteSettingsRepository,
 
+        // dailyNoteEnhancer: dailyNoteEnhancer,
+        // weeklyNoteEnhancer: weeklyNoteEnhancer,
+
         calendarEnhancer: calendarEnhancer,
-        notesEnhancer: notesEnhancer
+        notesEnhancer: notesEnhancer,
+
+        noteUiModelEvent: noteUiModelEvent,
+        calendarUiModelEvent: calendarUiModelEvent
     };
 }
