@@ -53,6 +53,8 @@ import {ManageEvent} from 'src/domain/events/manage.event';
 import {PeriodicManageEvent} from 'src/implementation/events/periodic.manage-event';
 import {Quarter} from 'src/domain/models/quarter';
 import {NoteManageEvent} from 'src/implementation/events/note.manage-event';
+import {CommandHandler} from 'src/domain/command-handlers/command-handler';
+import {DisplayInCalendarCommandHandler} from 'src/implementation/command-handlers/display-in-calendar.command-handler';
 
 export interface Dependencies {
     readonly dateManager: DateManager;
@@ -84,6 +86,8 @@ export interface Dependencies {
 
     readonly calendarEnhancer: Enhancer<CalendarUiModel>;
     readonly notesEnhancer :Enhancer<NoteUiModel[]>;
+
+    readonly displayInCalendarCommandHandler: CommandHandler;
 }
 
 export function createDependencies(plugin: Plugin): Dependencies {
@@ -180,6 +184,10 @@ export function createDependencies(plugin: Plugin): Dependencies {
     const notesEnhancer = new DefaultEnhancer<NoteUiModel[]>()
         .withStep(notesDisplayDateEnhancerStep);
 
+    const displayInCalendarCommandHandler = new DisplayInCalendarCommandHandler(
+        notesSettingsRepository, noteAdapter, dateRepository, manageDayEvent, dateParser
+    );
+
     return <Dependencies>{
         dateManager: dateManager,
         dateParser: dateParser,
@@ -209,6 +217,8 @@ export function createDependencies(plugin: Plugin): Dependencies {
         yearlyNoteSettingsRepository: yearlyNoteSettingsRepository,
 
         calendarEnhancer: calendarEnhancer,
-        notesEnhancer: notesEnhancer
+        notesEnhancer: notesEnhancer,
+
+        displayInCalendarCommandHandler: displayInCalendarCommandHandler
     };
 }

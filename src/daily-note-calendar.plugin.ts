@@ -4,6 +4,7 @@ import {CalendarSettingsTab} from 'src/plugin/settings/calendar.settings-tab';
 import {createDependencies, Dependencies} from 'src/dependencies';
 import 'src/extensions/extensions';
 import {ManageAction} from 'src/domain/events/manage.event';
+import {DisplayInCalendarCommand} from 'src/plugin/commands/display-in-calendar.command';
 
 export default class DailyNoteCalendarPlugin extends Plugin {
     private readonly dependencies: Dependencies = createDependencies(this);
@@ -41,6 +42,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         this.app.vault.on('create', this.dependencies.notesManager.refreshNotes.bind(this.dependencies.notesManager));
         this.app.vault.on('rename', this.dependencies.notesManager.refreshNotes.bind(this.dependencies.notesManager));
         this.app.vault.on('delete', this.dependencies.notesManager.refreshNotes.bind(this.dependencies.notesManager));
+        this.registerCommands();
         this.app.workspace.onLayoutReady(this.initializePlugin.bind(this));
     }
 
@@ -55,5 +57,9 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         this.app.workspace.getRightLeaf(false)?.setViewState({
             type: CalendarView.VIEW_TYPE
         });
+    }
+
+    private registerCommands(): void {
+        this.addCommand(new DisplayInCalendarCommand(this.dependencies.displayInCalendarCommandHandler));
     }
 }
