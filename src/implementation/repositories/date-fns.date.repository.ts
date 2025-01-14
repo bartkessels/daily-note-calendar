@@ -32,19 +32,12 @@ export class DateFnsDateRepository implements DateRepository {
 
     public async getYear(year: number): Promise<Year> {
         const date = new Date(year, 0);
-        const months: Month[] = [];
         const formatter = new Intl.DateTimeFormat(undefined, {
             year: this.yearFormat
         });
 
-        for (let monthIndex = 0; monthIndex <= 11; monthIndex++) {
-            const month = await this.getMonth(year, monthIndex);
-            months.push(month);
-        }
-
         return <Year>{
             name: formatter.format(date),
-            months: months,
             date: date
         };
     }

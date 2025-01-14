@@ -17,6 +17,7 @@ describe('DefaultCalendarViewModel', () => {
         getCurrentMonth: jest.fn(),
         getCurrentYear: jest.fn(),
         getCurrentDay: jest.fn(),
+        getMonth: jest.fn(),
         getPreviousMonth: jest.fn(),
         getNextMonth: jest.fn(),
         getYear: jest.fn()
@@ -41,7 +42,7 @@ describe('DefaultCalendarViewModel', () => {
         previousMonth = {date: new Date(2023, 8), name: 'September', quarter: { date: new Date(2023), quarter: 3, year: 2023 }, weeks: []};
         currentMonth = {date: new Date(2023, 9), name: 'October', quarter: { date: new Date(2023), quarter: 4, year: 2023 }, weeks: [currentWeek]};
         nextMonth = {date: new Date(2023, 9), name: 'November', quarter: { date: new Date(2023), quarter: 4, year: 2023 }, weeks: []};
-        currentYear = {date: new Date(2024, 0), name: '2024', months: [currentMonth]};
+        currentYear = {date: new Date(2023, 0), name: '2023'};
 
         mockDateManager.getCurrentDay.mockReturnValue(currentDay);
         mockDateManager.getPreviousMonth.mockResolvedValue(previousMonth);
@@ -64,7 +65,7 @@ describe('DefaultCalendarViewModel', () => {
         );
     }
 
-    it('should update the selected day when the manageEvent has been emitted with the preview action', async () => {
+    it('should update the selected day with the current month when the manageEvent has been emitted with the preview action', async () => {
         const viewModel = createViewModel();
         await viewModel.initialize();
 
@@ -73,6 +74,7 @@ describe('DefaultCalendarViewModel', () => {
         await waitFor(() => {
             expect(setUiModel).toHaveBeenCalledWith(expect.objectContaining<CalendarUiModel>({
                 currentMonth: expect.objectContaining({
+                    month: currentMonth,
                     weeks: expect.arrayContaining([
                         expect.objectContaining({
                             days: expect.arrayContaining([
@@ -85,6 +87,46 @@ describe('DefaultCalendarViewModel', () => {
                     ])
                 }),
                 currentYear: currentYear,
+                startWeekOnMonday: true
+            }));
+        });
+    });
+
+    it('should update the selected day with the next month when the manageEvent has been emitted with the preview action', async () => {
+        const viewModel = createViewModel();
+        await viewModel.initialize();
+
+        const day = {date: new Date(2024, 1, 1), dayOfWeek: DayOfWeek.Monday, name: '1'};
+        const week = {date: new Date(2024, 1, 1), weekNumber: '1', days: [day]};
+        const expectedMonth = {
+            date: new Date(2024, 1),
+            name: 'January',
+            quarter: {date: new Date(2024), quarter: 1, year: 2024},
+            weeks: [week]
+        };
+        const expectedYear = {date: new Date(2024, 0), name: '2024', months: [expectedMonth]};
+
+        mockDateManager.getMonth.mockResolvedValue(expectedMonth);
+        mockDateManager.getYear.mockResolvedValue(expectedYear);
+
+        manageDayEvent.emitEvent(ManageAction.Preview, day);
+
+        await waitFor(() => {
+            expect(setUiModel).toHaveBeenCalledWith(expect.objectContaining<CalendarUiModel>({
+                currentMonth: expect.objectContaining({
+                    month: expectedMonth,
+                    weeks: expect.arrayContaining([
+                        expect.objectContaining({
+                            days: expect.arrayContaining([
+                                expect.objectContaining({
+                                    currentDay: day,
+                                    isSelected: true
+                                })
+                            ])
+                        })
+                    ])
+                }),
+                currentYear: expectedYear,
                 startWeekOnMonday: true
             }));
         });
@@ -111,6 +153,46 @@ describe('DefaultCalendarViewModel', () => {
                     ])
                 }),
                 currentYear: currentYear,
+                startWeekOnMonday: true
+            }));
+        });
+    });
+
+    it('should update the selected day with the next month when the manageEvent has been emitted with the open action', async () => {
+        const viewModel = createViewModel();
+        await viewModel.initialize();
+
+        const day = {date: new Date(2024, 1, 1), dayOfWeek: DayOfWeek.Monday, name: '1'};
+        const week = {date: new Date(2024, 1, 1), weekNumber: '1', days: [day]};
+        const expectedMonth = {
+            date: new Date(2024, 1),
+            name: 'January',
+            quarter: {date: new Date(2024), quarter: 1, year: 2024},
+            weeks: [week]
+        };
+        const expectedYear = {date: new Date(2024, 0), name: '2024', months: [expectedMonth]};
+
+        mockDateManager.getMonth.mockResolvedValue(expectedMonth);
+        mockDateManager.getYear.mockResolvedValue(expectedYear);
+
+        manageDayEvent.emitEvent(ManageAction.Open, day);
+
+        await waitFor(() => {
+            expect(setUiModel).toHaveBeenCalledWith(expect.objectContaining<CalendarUiModel>({
+                currentMonth: expect.objectContaining({
+                    month: expectedMonth,
+                    weeks: expect.arrayContaining([
+                        expect.objectContaining({
+                            days: expect.arrayContaining([
+                                expect.objectContaining({
+                                    currentDay: day,
+                                    isSelected: true
+                                })
+                            ])
+                        })
+                    ])
+                }),
+                currentYear: expectedYear,
                 startWeekOnMonday: true
             }));
         });

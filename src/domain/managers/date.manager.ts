@@ -6,6 +6,7 @@ export interface DateManager {
     getCurrentDay(): Day;
     getCurrentYear(): Promise<Year>;
     getYear(month?: Month): Promise<Year>;
+    getMonth(day?: Day): Promise<Month>;
     getCurrentMonth(): Promise<Month>;
     getNextMonth(currentMonth?: Month): Promise<Month>;
     getPreviousMonth(currentMonth?: Month): Promise<Month>;

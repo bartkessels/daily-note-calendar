@@ -16,6 +16,7 @@ describe('useNotesViewModel', () => {
         getCurrentMonth: jest.fn(),
         getCurrentYear: jest.fn(),
         getCurrentDay: jest.fn(),
+        getMonth: jest.fn(),
         getPreviousMonth: jest.fn(),
         getNextMonth: jest.fn(),
         getYear: jest.fn()
