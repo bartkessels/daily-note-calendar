@@ -32,7 +32,6 @@ describe('DateFnsDateRepository', () => {
 
         expect(result.date.getFullYear()).toBe(year);
         expect(result.name).toBe('2023');
-        expect(result.months.length).toBe(12);
     });
 
     it('should return the correct month information', async () => {

@@ -35,6 +35,14 @@ export class RepositoryDateManager implements DateManager {
         return await this.dateRepository.getYear(month.date.getFullYear());
     }
 
+    public async getMonth(day?: Day): Promise<Month> {
+        if (!day) {
+            return await this.getCurrentMonth();
+        }
+
+        return await this.dateRepository.getMonth(day.date.getFullYear(), day.date.getMonth());
+    }
+
     public async getCurrentMonth(): Promise<Month> {
         const currentMonthIndex = this.today.getMonth();
         const currentYear = this.today.getFullYear();
