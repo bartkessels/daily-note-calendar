@@ -69,6 +69,9 @@ describe('DefaultCalendarViewModel', () => {
         const viewModel = createViewModel();
         await viewModel.initialize();
 
+        mockDateManager.getMonth.mockResolvedValue(currentMonth);
+        mockDateManager.getYear.mockResolvedValue(currentYear);
+
         manageDayEvent.emitEvent(ManageAction.Preview, nextDay);
 
         await waitFor(() => {
@@ -135,6 +138,9 @@ describe('DefaultCalendarViewModel', () => {
     it('should update the selected day when the manageDayEvent has been emitted with the open', async () => {
         const viewModel = createViewModel();
         await viewModel.initialize();
+
+        mockDateManager.getMonth.mockResolvedValue(currentMonth);
+        mockDateManager.getYear.mockResolvedValue(currentYear);
 
         manageDayEvent.emitEvent(ManageAction.Open, nextDay);
 
