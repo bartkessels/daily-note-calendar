@@ -17,7 +17,7 @@ describe('RepositoryDateManager', () => {
         dateManager = new RepositoryDateManager(dateRepository);
     });
 
-    it('should return the current day', async () => {
+    it('should return the current day', () => {
         const today = new Date(2024, 12, 31, 12, 11, 19, 100);
         const currentDay: Day = {
             date: today,
@@ -27,7 +27,7 @@ describe('RepositoryDateManager', () => {
 
         (dateRepository.getDay as jest.Mock).mockReturnValue(currentDay);
 
-        const result = await dateManager.getCurrentDay();
+        const result = dateManager.getCurrentDay();
 
         expect(result).toBe(currentDay);
         expect(dateRepository.getDay).toHaveBeenCalled();
@@ -37,8 +37,7 @@ describe('RepositoryDateManager', () => {
         const today = new Date();
         const currentYear: Year = {
             date: today,
-            name: today.getFullYear().toString(),
-            months: []
+            name: today.getFullYear().toString()
         };
 
         (dateRepository.getYear as jest.Mock).mockReturnValue(currentYear);
@@ -62,8 +61,7 @@ describe('RepositoryDateManager', () => {
         };
         const year: Year = {
             date: new Date(2023, 0),
-            name: '2023',
-            months: []
+            name: '2023'
         };
 
         (dateRepository.getYear as jest.Mock).mockReturnValue(year);
@@ -78,8 +76,7 @@ describe('RepositoryDateManager', () => {
         const today = new Date();
         const currentYear: Year = {
             date: today,
-            name: today.getFullYear().toString(),
-            months: []
+            name: today.getFullYear().toString()
         };
 
         (dateRepository.getYear as jest.Mock).mockReturnValue(currentYear);
@@ -88,6 +85,52 @@ describe('RepositoryDateManager', () => {
 
         expect(result).toBe(currentYear);
         expect(dateRepository.getYear).toHaveBeenCalledWith(today.getFullYear());
+    });
+
+    it('should return the current month if no day is provided', async () => {
+        const today = new Date();
+        const currentMonth: Month = {
+            date: today,
+            quarter: {
+                date: today,
+                quarter: Math.floor(today.getMonth() / 3) + 1,
+                year: today.getFullYear()
+            },
+            name: 'October',
+            weeks: []
+        };
+
+        (dateRepository.getMonth as jest.Mock).mockReturnValue(currentMonth);
+
+        const result = await dateManager.getMonth();
+
+        expect(result).toBe(currentMonth);
+        expect(dateRepository.getMonth).toHaveBeenCalledWith(today.getFullYear(), today.getMonth());
+    });
+
+    it('should return the month of the provided day', async () => {
+        const day: Day = {
+            date: new Date(2023, 9, 2),
+            dayOfWeek: 1,
+            name: '2'
+        };
+        const month: Month = {
+            date: new Date(2023, 9),
+            quarter: {
+                date: new Date(2023, 9),
+                quarter: 4,
+                year: 2023
+            },
+            name: 'October',
+            weeks: []
+        };
+
+        (dateRepository.getMonth as jest.Mock).mockReturnValue(month);
+
+        const result = await dateManager.getMonth(day);
+
+        expect(result).toBe(month);
+        expect(dateRepository.getMonth).toHaveBeenCalledWith(2023, 9);
     });
 
     it('should return the current month', async () => {

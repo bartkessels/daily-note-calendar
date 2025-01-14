@@ -47,8 +47,7 @@ describe('CalendarComponent', () => {
         };
         const year: Year = {
             date: new Date(2024, 0),
-            name: '2024',
-            months: [month]
+            name: '2024'
         };
         const uiModel = createCalendarUiModel(year, month);
 

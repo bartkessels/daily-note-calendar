@@ -34,8 +34,7 @@ describe('HeadingComponent', () => {
         };
         year = {
             date: new Date(2024, 0),
-            name: '2024',
-            months: [month]
+            name: '2024'
         };
         monthUiModel = {
             month: month,

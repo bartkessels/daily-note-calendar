@@ -62,7 +62,8 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
 
     private selectDay = async (day?: Day): Promise<void> => {
         this.selectedDay = day;
-        await this.updateViewState();
+        const month = await this.dateManager?.getMonth(day);
+        await this.selectMonth(month);
     }
 
     private selectMonth = async (month?: Month): Promise<void> => {

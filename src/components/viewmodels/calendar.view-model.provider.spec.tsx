@@ -26,6 +26,7 @@ describe('useCalendarViewModel', () => {
         getCurrentMonth: jest.fn(),
         getCurrentYear: jest.fn(),
         getCurrentDay: jest.fn(),
+        getMonth: jest.fn(),
         getPreviousMonth: jest.fn(),
         getNextMonth: jest.fn(),
         getYear: jest.fn()
@@ -66,8 +67,7 @@ describe('useCalendarViewModel', () => {
         };
         currentYear = {
             date: new Date(2024, 0),
-            name: '2024',
-            months: [currentMonth]
+            name: '2024'
         };
 
         mockDateManager.getCurrentDay.mockReturnValue(currentDay);

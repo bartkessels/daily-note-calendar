@@ -52,10 +52,9 @@ import {ManageEvent} from 'src/domain/events/manage.event';
 import {PeriodicManageEvent} from 'src/implementation/events/periodic.manage-event';
 import {Quarter} from 'src/domain/models/quarter';
 import {NoteManageEvent} from 'src/implementation/events/note.manage-event';
-import {DisplayInCalendarCommand} from 'src/plugin/commands/display-in-calendar.command';
-import {DailyNoteCalendarEnhancer} from 'src/implementation/enhancers/calendar/daily-note.calendar.enhancer';
+import {CommandHandler} from 'src/domain/command-handlers/command-handler';
+import {DisplayInCalendarCommandHandler} from 'src/implementation/command-handlers/display-in-calendar.command-handler';
 import {CalendarUiModelEvent} from 'src/implementation/events/calendar-ui-model.event';
-import {WeeklyNoteCalendarEnhancer} from 'src/implementation/enhancers/calendar/weekly-note.calendar.enhancer';
 import {NoteUiModelEvent} from 'src/implementation/events/note-ui-model.event';
 import {Enhancer} from 'src/domain/enhancers/enhancer';
 import {DisplayDateNotesEnhancerStep} from 'src/implementation/enhancers/notes/display-date.notes.enhancer-step';
@@ -63,8 +62,6 @@ import {DisplayDateNotesEnhancerStep} from 'src/implementation/enhancers/notes/d
 export interface Dependencies {
     readonly dateManager: DateManager;
     readonly dateParser: DateParser;
-
-    readonly displayInCalendarCommand: DisplayInCalendarCommand;
 
     readonly noteContextMenuAdapter: NoteContextMenuAdapter;
 
@@ -95,6 +92,8 @@ export interface Dependencies {
 
     readonly calendarEnhancer: Enhancerold<CalendarUiModel>;
     readonly notesEnhancer :Enhancer<NoteUiModel[]>;
+
+    readonly displayInCalendarCommandHandler: CommandHandler;
 
     readonly noteUiModelEvent: Event<NoteUiModel[]>;
     readonly calendarUiModelEvent: Event<CalendarUiModel>;
@@ -203,13 +202,13 @@ export function createDependencies(plugin: Plugin): Dependencies {
         .withStep(notesDisplayDateEnhancerStep);
 
     // Commands
-    const displayInCalendarCommand = new DisplayInCalendarCommand(noteAdapter, dateRepository, manageDayEvent);
+    const displayInCalendarCommandHandler = new DisplayInCalendarCommandHandler(
+        notesSettingsRepository, noteAdapter, dateRepository, manageDayEvent, dateParser
+    );
 
     return <Dependencies>{
         dateManager: dateManager,
         dateParser: dateParser,
-
-        displayInCalendarCommand: displayInCalendarCommand,
 
         noteContextMenuAdapter: noteContextMenuAdapter,
 
@@ -235,13 +234,12 @@ export function createDependencies(plugin: Plugin): Dependencies {
         manageYearEvent: manageYearEvent,
         yearlyNoteSettingsRepository: yearlyNoteSettingsRepository,
 
-        // dailyNoteEnhancer: dailyNoteEnhancer,
-        // weeklyNoteEnhancer: weeklyNoteEnhancer,
-
         calendarEnhancer: calendarEnhancer,
         notesEnhancer: notesEnhancer,
 
         noteUiModelEvent: noteUiModelEvent,
-        calendarUiModelEvent: calendarUiModelEvent
+        calendarUiModelEvent: calendarUiModelEvent,
+
+        displayInCalendarCommandHandler: displayInCalendarCommandHandler
     };
 }
