@@ -7,6 +7,7 @@ import {Day} from 'src/domain/models/day';
 import {SettingsRepository} from 'src/domain/repositories/settings.repository';
 import {GeneralSettings} from 'src/domain/models/settings/general.settings';
 import {ManageAction, ManageEvent} from 'src/domain/events/manage.event';
+import {Enhancer} from 'src/domain/enhancers/enhancer';
 
 export class GenericNotesManager implements NotesManager {
     private selectedDay: Day | undefined;

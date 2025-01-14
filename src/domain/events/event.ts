@@ -16,6 +16,8 @@ export abstract class Event<T> {
     }
 
     public emitEvent(value?: T, modifierKey: ModifierKey = ModifierKey.None): void {
+        console.log(this);
+
         if (value) {
             this.listeners.forEach((listener) => listener(value));
             this.listenersWithModifierKey.forEach((listener) => listener(value, modifierKey));

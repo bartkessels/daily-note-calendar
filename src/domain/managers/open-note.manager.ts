@@ -1,3 +1,3 @@
-export interface NoteManager<T> {
+export interface OpenNoteManager<T> {
     tryOpenNote(note: T): Promise<void>;
 }

@@ -87,10 +87,7 @@ export interface Dependencies {
     readonly manageYearEvent: ManageEvent<Year>;
     readonly yearlyNoteSettingsRepository: SettingsRepository<YearlyNotesPeriodicNoteSettings>;
 
-    // readonly dailyNoteEnhancer: Enhancer<CalendarUiModel>;
-    // readonly weeklyNoteEnhancer: Enhancer<CalendarUiModel>;
-
-    readonly calendarEnhancer: Enhancerold<CalendarUiModel>;
+    readonly calendarEnhancer: Enhancer<CalendarUiModel>;
     readonly notesEnhancer :Enhancer<NoteUiModel[]>;
 
     readonly displayInCalendarCommandHandler: CommandHandler;
@@ -188,12 +185,9 @@ export function createDependencies(plugin: Plugin): Dependencies {
     );
 
     // Enhancers
-    // const dailyNoteEnhancer = new DailyNoteCalendarEnhancer(calendarUiModelEvent, generalSettingsRepository, dailyNoteSettingsRepository, dayNameBuilder, fileAdapter);
-    // const weeklyNoteEnhancer = new WeeklyNoteCalendarEnhancer(calendarUiModelEvent, generalSettingsRepository, weeklyNoteSettingsRepository, weekNameBuilder, fileAdapter);
-
     const dayEnhancerStep = new CalendarDayEnhancerStep(generalSettingsRepository, dailyNoteSettingsRepository, dayNameBuilder, fileAdapter);
     const weekEnhancerStep = new CalendarWeekEnhancerStep(generalSettingsRepository, weeklyNoteSettingsRepository, weekNameBuilder, fileAdapter);
-    const calendarEnhancer = new DefaultEnhancer<CalendarUiModel>()
+    const calendarEnhancer = new Enhancer<CalendarUiModel>(calendarUiModelEvent)
         .withStep(dayEnhancerStep)
         .withStep(weekEnhancerStep);
 

@@ -11,7 +11,7 @@ export interface NotesViewModel {
 }
 
 export class DefaultNotesViewModel implements NotesViewModel {
-    private readonly enhancers: Enhancer<NoteUiModel[]>[] = [];
+    private enhancer?: Enhancer<NoteUiModel[]> | null;
     public viewState: NotesViewState;
 
     constructor(
@@ -24,22 +24,17 @@ export class DefaultNotesViewModel implements NotesViewModel {
     }
 
     public withEnhancer(enhancer?: Enhancer<NoteUiModel[]> | null): DefaultNotesViewModel {
-        if (enhancer) {
-            this.enhancers.push(enhancer);
-        }
-
+        this.enhancer = enhancer;
         return this;
     }
 
     public withViewState(viewState: NotesViewState): NotesViewModel {
-        return {
-            ...this,
-            viewState: viewState
-        };
+        this.viewState = viewState;
+        return this;
     }
 
     public refreshNotes = (notes?: Note[]): void => {
         const uiModel = notes?.map((note) => createNoteUiModel(note)) ?? [];
-        this.enhancers.forEach((enhancer: Enhancer<NoteUiModel[]>): void => enhancer.execute(uiModel));
+        this.enhancer?.execute(uiModel);
     }
 }

@@ -26,11 +26,8 @@ export class DateFnsDateParser implements DateParser {
      */
     public parseString(date: string, template: string): Date | null {
         try {
-            const res= parse(date, template, new Date());
-            console.log(res);
-            return res;
+            return parse(date, template, new Date());
         } catch (e) {
-            console.log(e);
             return null;
         }
     }

@@ -16,7 +16,7 @@ export class Enhancer<T> {
     }
 
     public execute(value: T): void {
-        this.enhance(value).then(this.event.emitEvent);
+        this.enhance(value).then(v => this.event.emitEvent(v));
     }
 
     private async enhance(value: T): Promise<T | undefined> {

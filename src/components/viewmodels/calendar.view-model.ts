@@ -3,12 +3,13 @@ import {Month} from 'src/domain/models/month';
 import {Year} from 'src/domain/models/year';
 import {CalendarUiModel, createCalendarUiModel} from 'src/components/models/calendar.ui-model';
 import {DateManager} from 'src/domain/managers/date.manager';
-import {Enhancerold} from 'src/domain/enhancers/enhancerold';
 import {CalendarViewState} from 'src/components/viewmodels/calendar.view-state';
 import {ManageEvent} from 'src/domain/events/manage.event';
+import {Event} from 'src/domain/events/event';
+import {Enhancer} from 'src/domain/enhancers/enhancer';
 
 export interface CalendarViewModel {
-    viewState: CalendarViewState;
+    viewState?: CalendarViewState;
 
     navigateToPreviousMonth: () => Promise<void>;
     navigateToNextMonth: () => Promise<void>;
@@ -16,18 +17,25 @@ export interface CalendarViewModel {
 }
 
 export class DefaultCalendarViewModel implements CalendarViewModel {
-    public viewState: CalendarViewState;
+    private enhancer?: Enhancer<CalendarUiModel> | null;
     private selectedDay?: Day;
     private selectedMonth?: Month;
     private selectedYear?: Year;
+    public viewState?: CalendarViewState;
 
     constructor(
         private readonly setUiModel: (uiModel?: CalendarUiModel) => void,
         private readonly manageDayEvent: ManageEvent<Day> | null,
-        private readonly dateManager: DateManager | null,
-        private readonly calendarEnhancer: Enhancerold<CalendarUiModel> | null
+        private readonly enhancedNotesEvent: Event<CalendarUiModel> | null,
+        private readonly dateManager: DateManager | null
     ) {
         this.manageDayEvent?.onEvent('CalendarViewModel', (day: Day, _) => this.selectDay(day));
+        this.enhancedNotesEvent?.onEvent('CalendarViewModel', this.setUiModel);
+    }
+
+    public withEnhancer(enhancer?: Enhancer<CalendarUiModel> | null): DefaultCalendarViewModel {
+        this.enhancer = enhancer;
+        return this;
     }
 
     public async initialize(): Promise<void> {
@@ -39,10 +47,8 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
     }
 
     public withViewState(viewState?: CalendarViewState): CalendarViewModel {
-        return {
-            ...this,
-            viewState: viewState
-        };
+        this.viewState = viewState;
+        return this;
     }
 
     public navigateToPreviousMonth = async (): Promise<void> => {
@@ -79,7 +85,6 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         }
 
         const uiModel = createCalendarUiModel(this.selectedYear, this.selectedMonth, this.selectedDay);
-        const enhancedModel = await this.calendarEnhancer?.withValue(uiModel).build();
-        this.setUiModel(enhancedModel);
+        this.enhancer?.execute(uiModel);
     };
 }

@@ -23,6 +23,7 @@ import {Quarter} from 'src/domain/models/quarter';
 import {PeriodicNoteEventContext} from 'src/components/context/periodic-note-event.context';
 import {NoteEventContext} from 'src/components/context/notes-event.context';
 import {Enhancer} from 'src/domain/enhancers/enhancer';
+import {CalendarEventContext} from 'src/components/context/calendar-event.context';
 
 export class CalendarView extends ItemView {
     public static VIEW_TYPE = 'daily-note-calendar';
@@ -40,9 +41,10 @@ export class CalendarView extends ItemView {
         private readonly manageYearEvent: ManageEvent<Year>,
         private readonly manageNoteEvent: ManageEvent<Note>,
         private readonly refreshNotesEvent: Event<Note[]>,
-        private readonly calendarEnhancer: Enhancerold<CalendarUiModel>,
+        private readonly calendarEnhancer: Enhancer<CalendarUiModel>,
         private readonly notesEnhancer: Enhancer<NoteUiModel[]>,
-        private readonly enhancedNotesEvent: Event<NoteUiModel[]>
+        private readonly enhancedNotesEvent: Event<NoteUiModel[]>,
+        private readonly enhancedCalendarEvent: Event<CalendarUiModel>
     ) {
         super(leaf);
     }
@@ -70,11 +72,15 @@ export class CalendarView extends ItemView {
                         manageQuarterEvent: this.manageQuarterEvent,
                         manageYearEvent: this.manageYearEvent
                     }}>
-                        <DateManagerContext.Provider value={this.dateManager}>
-                            <CalendarEnhancerContext.Provider value={this.calendarEnhancer}>
-                                <CalendarComponent/>
-                            </CalendarEnhancerContext.Provider>
-                        </DateManagerContext.Provider>
+                        <CalendarEventContext.Provider value={{
+                            enhancedCalendarEvent: this.enhancedCalendarEvent
+                        }}>
+                            <DateManagerContext.Provider value={this.dateManager}>
+                                <CalendarEnhancerContext.Provider value={this.calendarEnhancer}>
+                                    <CalendarComponent/>
+                                </CalendarEnhancerContext.Provider>
+                            </DateManagerContext.Provider>
+                        </CalendarEventContext.Provider>
                     </PeriodicNoteEventContext>
 
                     <NoteEventContext.Provider value={{
