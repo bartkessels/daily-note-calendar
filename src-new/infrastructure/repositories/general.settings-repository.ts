@@ -1,6 +1,6 @@
 import {GeneralSettings} from 'src/domain/models/settings/general.settings';
 import {SettingsRepository} from 'src-new/infrastructure/contracts/settings-repository';
-import {SettingsAdapter} from 'src-new/infrastructure/adapters/settings-adapter';
+import {SettingsAdapter} from 'src-new/infrastructure/adapters/settings.adapter';
 import {DEFAULT_DAILY_NOTE_CALENDAR_SETTINGS} from 'src/domain/models/settings/daily-note-calendar.settings';
 import {DEFAULT_GENERAL_SETTINGS} from 'src-new/domain/settings/general.settings';
 

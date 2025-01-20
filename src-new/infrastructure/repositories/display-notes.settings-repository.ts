@@ -1,6 +1,6 @@
 import {SettingsRepository} from 'src-new/infrastructure/contracts/settings-repository';
 import {DEFAULT_DISPLAY_NOTES_SETTINGS, DisplayNotesSettings} from 'src-new/domain/settings/display-notes.settings';
-import {SettingsAdapter} from 'src-new/infrastructure/adapters/settings-adapter';
+import {SettingsAdapter} from 'src-new/infrastructure/adapters/settings.adapter';
 import {DEFAULT_PLUGIN_SETTINGS} from 'src-new/domain/settings/plugin.settings';
 
 export class DisplayNotesSettingsRepository implements SettingsRepository<DisplayNotesSettings> {

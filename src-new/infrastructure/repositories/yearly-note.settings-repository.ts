@@ -1,5 +1,5 @@
 import {SettingsRepository} from 'src-new/infrastructure/contracts/settings-repository';
-import {SettingsAdapter} from 'src-new/infrastructure/adapters/settings-adapter';
+import {SettingsAdapter} from 'src-new/infrastructure/adapters/settings.adapter';
 import {DEFAULT_PLUGIN_SETTINGS} from 'src-new/domain/settings/plugin.settings';
 import {DEFAULT_YEARLY_NOTE_SETTINGS, YearlyNoteSettings} from 'src-new/domain/settings/yearly-note.settings';
 

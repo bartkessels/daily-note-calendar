@@ -1,20 +1,22 @@
 import {DEFAULT_DISPLAY_NOTES_SETTINGS, DisplayNotesSettings} from 'src-new/domain/settings/display-notes.settings';
-import {DailyNoteSettings, DEFAULT_DAILY_NOTE_SETTINGS} from 'src-new/domain/settings/daily-note.settings';
-import {DEFAULT_WEEKLY_NOTE_SETTINGS, WeeklyNoteSettings} from 'src-new/domain/settings/weekly-note.settings';
-import {DEFAULT_MONTHLY_NOTE_SETTINGS, MonthlyNoteSettings} from 'src-new/domain/settings/monthly-note.settings';
-import {DEFAULT_QUARTERLY_NOTE_SETTINGS, QuarterlyNoteSettings} from 'src-new/domain/settings/quarterly-note.settings';
-import {DEFAULT_YEARLY_NOTE_SETTINGS, YearlyNoteSettings} from 'src-new/domain/settings/yearly-note.settings';
 import {DEFAULT_GENERAL_SETTINGS, GeneralSettings} from 'src-new/domain/settings/general.settings';
 import {Settings} from 'src-new/domain/settings/settings';
+import {
+    DEFAULT_DAILY_NOTE_SETTINGS,
+    DEFAULT_MONTHLY_NOTE_SETTINGS, DEFAULT_QUARTERLY_NOTE_SETTINGS,
+    DEFAULT_WEEKLY_NOTE_SETTINGS,
+    DEFAULT_YEARLY_NOTE_SETTINGS,
+    PeriodNoteSettings
+} from 'src-new/domain/settings/period-note.settings';
 
 export interface PluginSettings extends Settings {
     generalSettings: GeneralSettings,
     notesSettings: DisplayNotesSettings,
-    dailyNotes: DailyNoteSettings,
-    weeklyNotes: WeeklyNoteSettings,
-    monthlyNotes: MonthlyNoteSettings,
-    quarterlyNotes: QuarterlyNoteSettings,
-    yearlyNotes: YearlyNoteSettings
+    dailyNotes: PeriodNoteSettings,
+    weeklyNotes: PeriodNoteSettings,
+    monthlyNotes: PeriodNoteSettings,
+    quarterlyNotes: PeriodNoteSettings,
+    yearlyNotes: PeriodNoteSettings
 }
 
 export const DEFAULT_PLUGIN_SETTINGS: PluginSettings = {

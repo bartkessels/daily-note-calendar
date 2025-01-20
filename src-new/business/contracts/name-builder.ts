@@ -1,5 +1,6 @@
 export interface NameBuilder<T> {
-    withPath(path: string, template: string | undefined): NameBuilder<T>;
-    withValue(value: T, template: string | undefined): NameBuilder<T>;
+    withPath(template: string): NameBuilder<T>;
+    withName(template: string): NameBuilder<T>;
+    withValue(value: T): NameBuilder<T>;
     build(): string;
 }

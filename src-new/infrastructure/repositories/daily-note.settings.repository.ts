@@ -1,6 +1,6 @@
 import {SettingsRepository} from 'src-new/infrastructure/contracts/settings-repository';
 import {DailyNoteSettings, DEFAULT_DAILY_NOTE_SETTINGS} from 'src-new/domain/settings/daily-note.settings';
-import {SettingsAdapter} from 'src-new/infrastructure/adapters/settings-adapter';
+import {SettingsAdapter} from 'src-new/infrastructure/adapters/settings.adapter';
 import {DEFAULT_PLUGIN_SETTINGS} from 'src-new/domain/settings/plugin.settings';
 
 export class DailyNoteSettingsRepository implements SettingsRepository<DailyNoteSettings> {

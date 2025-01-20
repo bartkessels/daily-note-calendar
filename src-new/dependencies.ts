@@ -1,6 +1,6 @@
 import {ObsidianSettingsAdapter} from 'src-new/infrastructure/obsidian/obsidian.settings-adapter';
 import {Plugin} from 'obsidian';
-import {SettingsAdapter} from 'src-new/infrastructure/adapters/settings-adapter';
+import {SettingsAdapter} from 'src-new/infrastructure/adapters/settings.adapter';
 import {SettingsRepositoryFactory, SettingsType} from 'src-new/infrastructure/contracts/settings-repository-factory';
 import {GeneralSettingsRepository} from 'src-new/infrastructure/repositories/general.settings-repository';
 import {DefaultSettingsRepositoryFactory} from 'src-new/infrastructure/factories/default-settings-repository.factory';
