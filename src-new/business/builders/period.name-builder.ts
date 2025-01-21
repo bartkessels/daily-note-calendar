@@ -44,5 +44,4 @@ export class PeriodNameBuilder<T extends Period> implements NameBuilder<T> {
 
         return [path, name].join('/');
     }
-
 }

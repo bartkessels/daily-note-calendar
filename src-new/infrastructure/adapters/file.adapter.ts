@@ -1,4 +1,5 @@
 export interface FileAdapter {
+    getActiveFile(): Promise<string | undefined>;
     exists(path: string): Promise<boolean>;
     create(path: string, templateFile?: string | undefined): Promise<string>;
     readContents(path: string): Promise<string>;
