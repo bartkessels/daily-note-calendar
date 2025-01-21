@@ -16,8 +16,6 @@ export const useCalendarViewModel = (): CalendarViewModel | undefined => {
     const [viewState, setViewState] = React.useState<CalendarViewState>();
     const [viewModel, setViewModel] = React.useState<DefaultCalendarViewModel>();
 
-    console.log(enhancedCalendarEvent);
-
     React.useEffect(() => {
         const viewModel = new DefaultCalendarViewModel(
             (uiModel: CalendarUiModel): void => setViewState({...viewState, uiModel: uiModel}),

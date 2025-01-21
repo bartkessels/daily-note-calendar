@@ -40,10 +40,8 @@ import {PeriodNameBuilder} from 'src/implementation/builders/period.name-builder
 import {PeriodVariableParserStep} from 'src/implementation/pipelines/steps/period-variable-parser.step';
 import {DateManager} from 'src/domain/managers/date.manager';
 import {CalendarUiModel} from 'src/components/models/calendar.ui-model';
-import { Enhancerold } from 'src/domain/enhancers/enhancerold';
 import {CalendarDayEnhancerStep} from 'src/implementation/enhancers/steps/calendar-day.enhancer-step';
 import {CalendarWeekEnhancerStep} from 'src/implementation/enhancers/steps/calendar-week.enhancer-step';
-import {DefaultEnhancer} from 'src/implementation/enhancers/default.enhancer';
 import {NotesSettingsRepository} from 'src/implementation/repositories/notes.settings-repository';
 import {NoteUiModel} from 'src/components/models/note.ui-model';
 import {NotesSettings} from 'src/domain/models/settings/notes.settings';

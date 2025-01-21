@@ -1,7 +1,6 @@
 import {DateManagerContext} from 'src/components/context/date-manager.context';
 import {Event} from 'src/domain/events/event';
 import {DateManager} from 'src/domain/managers/date.manager';
-import {Enhancerold} from 'src/domain/enhancers/enhancerold';
 import React from 'react';
 import {renderHook, waitFor} from '@testing-library/react';
 import {useCalendarViewModel} from 'src/components/viewmodels/calendar.view-model.provider';
@@ -9,7 +8,8 @@ import {Note} from 'src/domain/models/note';
 import {NoteUiModel} from 'src/components/models/note.ui-model';
 import {RefreshNotesEvent} from 'src/implementation/events/refresh-notes.event';
 import {NotesEnhancerContext} from 'src/components/context/notes-enhancer.context';
-import {RefreshNotesEventContext} from 'src/components/context/refresh-notes-event.context';
+import {NoteEventContext} from 'src/components/context/notes-event.context';
+import {Enhancer} from 'src/domain/enhancers/enhancer';
 
 describe('useNotesViewModel', () => {
     const mockDateManager = {
@@ -26,12 +26,12 @@ describe('useNotesViewModel', () => {
         withValue: jest.fn(),
         withStep: jest.fn(),
         build: jest.fn()
-    } as unknown as jest.Mocked<Enhancerold<NoteUiModel[]>>;
+    } as unknown as jest.Mocked<Enhancer<NoteUiModel[]>>;
 
     let refreshNotesEvent: Event<Note[]>;
 
     beforeEach(() => {
-        mockEnhancer.withValue.mockReturnValue(mockEnhancer);
+        mockEnhancer.withStep.mockReturnValue(mockEnhancer);
 
         refreshNotesEvent = new RefreshNotesEvent();
     });
@@ -41,9 +41,9 @@ describe('useNotesViewModel', () => {
             wrapper: ({children}: { children: React.ReactNode }) => (
                 <DateManagerContext.Provider value={mockDateManager}>
                     <NotesEnhancerContext.Provider value={mockEnhancer}>
-                        <RefreshNotesEventContext.Provider value={refreshNotesEvent}>
+                        <NoteEventContext.Provider value={{refreshNotesEvent: refreshNotesEvent}}>
                             {children}
-                        </RefreshNotesEventContext.Provider>
+                        </NoteEventContext.Provider>
                     </NotesEnhancerContext.Provider>
                 </DateManagerContext.Provider>
             )
