@@ -4,7 +4,6 @@ import {OpenManager} from 'src-new/business/contracts/open-manager';
 import {CreateManager} from 'src-new/business/contracts/create-manager';
 import {NameBuilderFactory, NameBuilderType} from 'src-new/business/contracts/name-builder-factory';
 import {NameBuilder} from 'src-new/business/contracts/name-builder';
-import {VariableFactory} from 'src-new/business/contracts/variable-factory';
 import {SettingsRepository} from 'src-new/infrastructure/contracts/settings-repository';
 import {PeriodNoteSettings} from 'src-new/domain/settings/period-note.settings';
 import {FileAdapter} from 'src-new/infrastructure/adapters/file.adapter';
@@ -42,22 +41,18 @@ export class PeriodicNoteManager<T extends Period> implements CreateManager<T>, 
     }
 
     public async delete(value: T): Promise<void> {
-
+        const settings = await this.settingsRepository.get();
+        const filePath = await this.getFilePath(value, settings);
+        await this.fileAdapter.delete(filePath);
     }
 
     private async createFile(filePath: string, value: T, templateFilePath?: string | undefined): Promise<string> {
-        const activeFile = await this.fileAdapter.getActiveFile();
-        const titleVariableParser = this.variableParserFactory.getVariableParser<string>(VariableType.Title);
-        const periodVariableParser = this.variableParserFactory.getVariableParser<Period>(VariableType.Date);
-        const todayVariableParser = this.variableParserFactory.getVariableParser<Date>(VariableType.Today);
-
         const createdFilePath = await this.fileAdapter.create(filePath, templateFilePath);
         const contents = await this.fileAdapter.readContents(createdFilePath);
-
-        let parsedContent = titleVariableParser.parseVariables(contents, activeFile ?? '');
-        parsedContent = periodVariableParser.parseVariables(parsedContent, value);
+        const parsedContent = await this.parseVariables(contents, value);
 
         await this.fileAdapter.writeContents(createdFilePath, parsedContent);
+        return createdFilePath;
     }
 
     private async getFilePath(value: T, settings: PeriodNoteSettings): Promise<string> {
@@ -66,5 +61,18 @@ export class PeriodicNoteManager<T extends Period> implements CreateManager<T>, 
             .withName(settings.nameTemplate)
             .withValue(value)
             .build();
+    }
+
+    private async parseVariables(content: string, period: T): Promise<string> {
+        const activeFile = await this.fileAdapter.getActiveFile();
+        const titleVariableParser = this.variableParserFactory.getVariableParser<string | undefined>(VariableType.Title);
+        const periodVariableParser = this.variableParserFactory.getVariableParser<Period>(VariableType.Date);
+        const todayVariableParser = this.variableParserFactory.getVariableParser<Date>(VariableType.Today);
+
+        let parsedContent = content;
+        parsedContent = titleVariableParser.parseVariables(parsedContent, activeFile);
+        parsedContent = periodVariableParser.parseVariables(parsedContent, period);
+        parsedContent = todayVariableParser.parseVariables(parsedContent, new Date());
+        return parsedContent;
     }
 }

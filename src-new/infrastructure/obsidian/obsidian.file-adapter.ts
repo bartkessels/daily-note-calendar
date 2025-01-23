@@ -8,6 +8,11 @@ export class ObsidianFileAdapter implements FileAdapter {
 
     }
 
+    public async getActiveFile(): Promise<string | undefined> {
+        const activeFile = this.plugin.app.workspace.getActiveFile();
+        return activeFile?.path;
+    }
+
     public async exists(path: string): Promise<boolean> {
         const normalizedPath = this.normalizePath(path);
         return await this.plugin.app.vault.adapter.exists(normalizedPath, true);
