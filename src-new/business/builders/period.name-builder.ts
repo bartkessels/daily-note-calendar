@@ -2,8 +2,8 @@ import {NameBuilder} from 'src-new/business/contracts/name-builder';
 import {DateParser} from 'src-new/infrastructure/contracts/date-parser';
 import {Period} from 'src-new/domain/models/date.model';
 
-export class PeriodNameBuilder<T extends Period> implements NameBuilder<T> {
-    private period?: T;
+export class PeriodNameBuilder implements NameBuilder<Period> {
+    private period?: Period;
     private pathTemplate?: string;
     private nameTemplate?: string;
 
@@ -13,17 +13,17 @@ export class PeriodNameBuilder<T extends Period> implements NameBuilder<T> {
 
     }
 
-    public withPath(template: string): NameBuilder<T> {
+    public withPath(template: string): NameBuilder<Period> {
         this.pathTemplate = template;
         return this;
     }
 
-    public withName(template: string): NameBuilder<T> {
+    public withName(template: string): NameBuilder<Period> {
         this.nameTemplate = template;
         return this
     }
 
-    public withValue(value: T): NameBuilder<T> {
+    public withValue(value: Period): NameBuilder<Period> {
         this.period = value;
         return this;
     }

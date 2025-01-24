@@ -1,9 +1,19 @@
-import {DayModel} from 'src-new/domain/models/day.model';
-import {MonthModel} from 'src-new/domain/models/month.model';
+import {Period} from 'src-new/domain/models/date.model';
 
-export interface WeekModel {
+export interface WeekModel extends Period {
     date: Date;
-    name: string;
-    month: MonthModel;
-    days: DayModel[]
+    weekNumber: number;
+    year: Period;
+    month: Period;
+    days: Period[]
+}
+
+export enum DayOfWeek {
+    Sunday = 0,
+    Monday = 1,
+    Tuesday = 2,
+    Wednesday = 3,
+    Thursday = 4,
+    Friday = 5,
+    Saturday = 6
 }

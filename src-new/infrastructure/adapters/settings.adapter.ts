@@ -1,6 +1,6 @@
-import {DailyNoteCalendarSettings} from 'src/domain/models/settings/daily-note-calendar.settings';
+import {PluginSettings} from 'src-new/domain/settings/plugin.settings';
 
 export interface SettingsAdapter {
-    getSettings(defaultSettings: DailyNoteCalendarSettings): Promise<DailyNoteCalendarSettings>
-    storeSettings(settings: DailyNoteCalendarSettings): Promise<void>;
+    getSettings(defaultSettings: PluginSettings): Promise<PluginSettings>
+    storeSettings(settings: PluginSettings): Promise<void>;
 }

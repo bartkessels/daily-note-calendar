@@ -5,8 +5,9 @@ import {VariableType} from 'src-new/domain/models/variable.model';
 export class DefaultVariableParserFactory implements VariableParserFactory {
     private readonly parsers: Map<VariableType, VariableParser<any>> = new Map();
 
-    public register<T>(type: VariableType, parser: VariableParser<T>): void {
+    public register<T>(type: VariableType, parser: VariableParser<T>): DefaultVariableParserFactory {
         this.parsers.set(type, parser);
+        return this;
     }
 
     public getVariableParser<T>(type: VariableType): VariableParser<T> {

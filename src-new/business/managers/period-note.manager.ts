@@ -10,8 +10,8 @@ import {FileAdapter} from 'src-new/infrastructure/adapters/file.adapter';
 import {VariableParserFactory} from 'src-new/business/contracts/variable-parser-factory';
 import {VariableType} from 'src-new/domain/models/variable.model';
 
-export class PeriodicNoteManager<T extends Period> implements CreateManager<T>, OpenManager<T>, DeleteManager<T> {
-    private readonly nameBuilder: NameBuilder<T>;
+export class PeriodNoteManager implements CreateManager<Period>, OpenManager<Period>, DeleteManager<Period> {
+    private readonly nameBuilder: NameBuilder<Period>;
 
     constructor(
         nameBuilderFactory: NameBuilderFactory,
@@ -19,10 +19,10 @@ export class PeriodicNoteManager<T extends Period> implements CreateManager<T>, 
         private readonly settingsRepository: SettingsRepository<PeriodNoteSettings>,
         private readonly variableParserFactory: VariableParserFactory
     ) {
-        this.nameBuilder = nameBuilderFactory.getNameBuilder(NameBuilderType.PeriodicNote);
+        this.nameBuilder = nameBuilderFactory.getNameBuilder<Period>(NameBuilderType.PeriodicNote);
     }
 
-    public async create(value: T): Promise<void> {
+    public async create(value: Period): Promise<void> {
         const settings = await this.settingsRepository.get();
         let filePath = await this.getFilePath(value, settings);
         const doesFileExist = await this.fileAdapter.exists(filePath);
@@ -34,19 +34,19 @@ export class PeriodicNoteManager<T extends Period> implements CreateManager<T>, 
         await this.fileAdapter.open(filePath);
     }
 
-    public async open(value: T): Promise<void> {
+    public async open(value: Period): Promise<void> {
         const settings = await this.settingsRepository.get();
         const filePath = await this.getFilePath(value, settings);
         await this.fileAdapter.open(filePath);
     }
 
-    public async delete(value: T): Promise<void> {
+    public async delete(value: Period): Promise<void> {
         const settings = await this.settingsRepository.get();
         const filePath = await this.getFilePath(value, settings);
         await this.fileAdapter.delete(filePath);
     }
 
-    private async createFile(filePath: string, value: T, templateFilePath?: string | undefined): Promise<string> {
+    private async createFile(filePath: string, value: Period, templateFilePath?: string | undefined): Promise<string> {
         const createdFilePath = await this.fileAdapter.create(filePath, templateFilePath);
         const contents = await this.fileAdapter.readContents(createdFilePath);
         const parsedContent = await this.parseVariables(contents, value);
@@ -55,7 +55,7 @@ export class PeriodicNoteManager<T extends Period> implements CreateManager<T>, 
         return createdFilePath;
     }
 
-    private async getFilePath(value: T, settings: PeriodNoteSettings): Promise<string> {
+    private async getFilePath(value: Period, settings: PeriodNoteSettings): Promise<string> {
         return this.nameBuilder
             .withPath(settings.folderTemplate)
             .withName(settings.nameTemplate)
@@ -63,7 +63,7 @@ export class PeriodicNoteManager<T extends Period> implements CreateManager<T>, 
             .build();
     }
 
-    private async parseVariables(content: string, period: T): Promise<string> {
+    private async parseVariables(content: string, period: Period): Promise<string> {
         const activeFile = await this.fileAdapter.getActiveFile();
         const titleVariableParser = this.variableParserFactory.getVariableParser<string | undefined>(VariableType.Title);
         const periodVariableParser = this.variableParserFactory.getVariableParser<Period>(VariableType.Date);
