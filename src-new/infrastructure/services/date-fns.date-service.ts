@@ -1,7 +1,7 @@
 import { WeekModel } from 'src-new/domain/models/week.model';
 import {DateService} from 'src-new/infrastructure/contracts/date-service';
 import {addWeeks, eachDayOfInterval, endOfISOWeek, getISOWeek, setISOWeek, startOfISOWeek, subWeeks} from 'date-fns';
-import {Period} from 'src-new/domain/models/date.model';
+import {Period} from 'src-new/domain/models/period.model';
 
 export class DateFnsDateService implements DateService {
     private readonly monthFormat = 'long';

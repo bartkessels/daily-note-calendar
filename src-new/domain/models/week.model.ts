@@ -1,4 +1,4 @@
-import {Period} from 'src-new/domain/models/date.model';
+import {Period} from 'src-new/domain/models/period.model';
 
 export interface WeekModel extends Period {
     date: Date;

@@ -19,7 +19,7 @@ import {NameBuilderFactory, NameBuilderType} from 'src-new/business/contracts/na
 import {DefaultVariableParserFactory} from 'src-new/business/factories/default.variable-parser-factory';
 import {PeriodNameBuilder} from 'src-new/business/builders/period.name-builder';
 import {DateParser} from 'src-new/infrastructure/contracts/date-parser';
-import {Period} from 'src-new/domain/models/date.model';
+import {Period} from 'src-new/domain/models/period.model';
 import {DateParserFactory} from 'src-new/infrastructure/contracts/date-parser-factory';
 import {DateFnsDateParser} from 'src-new/infrastructure/parsers/date-fns.date-parser';
 import {DefaultDateParserFactory} from 'src-new/infrastructure/factories/default.date-parser-factory';

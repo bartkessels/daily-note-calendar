@@ -1,67 +1,119 @@
-import {CalendarModel, CalendarViewState, createEmptyCalendarModel} from 'src-new/presentation/models/calendar.model';
+import {CalendarModel, createEmptyCalendarModel} from 'src-new/presentation/models/calendar.model';
 import {DateManager} from 'src-new/business/contracts/date.manager';
-import {DayOfWeek} from 'src-new/domain/models/week.model';
+import {WeekModel} from 'src-new/domain/models/week.model';
+import {DEFAULT_PLUGIN_SETTINGS, PluginSettings} from 'src-new/domain/settings/plugin.settings';
+import {Period} from 'src-new/domain/models/period.model';
+import {isCreateFileModifierKey, ModifierKey} from 'src/domain/models/modifier-key';
+import {PeriodNoteSettings} from 'src-new/domain/settings/period-note.settings';
+import {PeriodicNoteManager} from 'src-new/business/contracts/periodic-note.manager';
 
 export interface CalendarViewModel {
     setUpdateViewState(callback: (model: CalendarModel) => void): void;
-    initialize(): void;
+    initialize(settings: PluginSettings): void;
+    openDailyNote(key: ModifierKey, period: Period): Promise<void>;
+    openWeeklyNote(key: ModifierKey, period: Period): Promise<void>;
+    openMonthlyNote(key: ModifierKey, period: Period): Promise<void>;
+    openQuarterlyNote(key: ModifierKey, period: Period): Promise<void>;
+    openYearlyNote(key: ModifierKey, period: Period): Promise<void>;
+
     loadPreviousWeek(): void;
     loadNextWeek(): void;
 }
 
 export class DefaultCalendarViewModel implements CalendarViewModel {
+    private settings: PluginSettings = DEFAULT_PLUGIN_SETTINGS;
+    private model: CalendarModel = createEmptyCalendarModel(this.settings.generalSettings.firstDayOfWeek);
     private updateModel: (uiModel: CalendarModel) => void;
-    private model: CalendarModel = createEmptyCalendarModel();
 
     constructor(
-        private readonly dateManager: DateManager
+        private readonly dateManager: DateManager,
+        private readonly periodManager: PeriodicNoteManager
     ) {
 
-    }
-
-    public setStartDayOfWeek(dayOfWeek: DayOfWeek): void {
-        this.updateModel({ ...this.model, firstDayOfWeek: dayOfWeek });
-
-        // TODO: Communicate this change to the date manager as well
     }
 
     public setUpdateViewState(callback: (model: CalendarModel) => void): void {
         this.updateModel = callback;
     }
 
-    public initialize(): void {
-        this.setLoadingState();
+    public initialize(settings: PluginSettings): void {
+        this.settings = settings;
+        const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
 
-        const currentWeek = this.dateManager.getCurrentWeek();
-        const previousWeeks = this.dateManager.getPreviousWeeks(currentWeek, 2);
-        const nextWeeks = this.dateManager.getNextWeeks(currentWeek, 2);
+        const currentDay = this.dateManager.getCurrentDay();
+        const currentWeek = this.dateManager.getCurrentWeek(firstDayOfWeek);
+        const previousWeeks = this.dateManager.getPreviousWeeks(firstDayOfWeek, currentWeek, 2);
+        const nextWeeks = this.dateManager.getNextWeeks(firstDayOfWeek, currentWeek, 2);
 
-        this.setLoadedState([...previousWeeks, ...nextWeeks].unique());
+        const weeks = [...previousWeeks, currentWeek, ...nextWeeks].unique();
+        this.updateModel({
+            ...this.model,
+            selectedPeriod: currentDay,
+            weeks: weeks,
+            firstDayOfWeek: firstDayOfWeek
+        });
     }
 
     public loadPreviousWeek(): void {
-        this.setLoadingState();
-
         const oldestWeek = this.model.weeks.shift();
-        const previousWeek = this.dateManager.getPreviousWeeks(oldestWeek, 1);
+        const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
 
-        this.setLoadedState([...previousWeek, ...this.model.weeks]);
+        if (oldestWeek) {
+            const previousWeek = this.dateManager.getPreviousWeeks(firstDayOfWeek, oldestWeek, 1);
+            this.updateWeeks([...previousWeek, ...this.model.weeks]);
+        }
     }
 
     public loadNextWeek(): void {
-        this.setLoadingState();
-
         const latestWeek = this.model.weeks.pop();
-        const nextWeeks = this.dateManager.getPreviousWeeks(latestWeek, 1);
+        const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
 
-        this.setLoadedState([...nextWeeks, ...this.model.weeks]);
+        if (latestWeek) {
+            const nextWeeks = this.dateManager.getPreviousWeeks(firstDayOfWeek, latestWeek, 1);
+            this.updateWeeks([...this.model.weeks, ...nextWeeks]);
+        }
     }
 
-    private setLoadingState(): void {
-        this.updateModel({ ...this.model, viewState: CalendarViewState.Loading });
+    public async openDailyNote(key: ModifierKey, period: Period): Promise<void> {
+        await this.openPeriodicNote(key, period, this.settings.dailyNotes).then(() => {
+            // TODO: Send event to display notes created on this day
+        });
     }
 
-    private setLoadedState(weeks: WeekModel[]): void {
-        this.updateModel({ ...this.model, viewState: CalendarViewState.Loaded, weeks: weeks });
+    public async openWeeklyNote(key: ModifierKey, period: Period): Promise<void> {
+        await this.openPeriodicNote(key, period, this.settings.weeklyNotes).then(() => {
+            // TODO: Send event to display notes created in this week
+        });
+    }
+
+    public async openMonthlyNote(key: ModifierKey, period: Period): Promise<void> {
+        await this.openPeriodicNote(key, period, this.settings.monthlyNotes).then(() => {
+            // TODO: Send event to display notes created in this month
+        });
+    }
+
+    public async openQuarterlyNote(key: ModifierKey, period: Period): Promise<void> {
+        await this.openPeriodicNote(key, period, this.settings.quarterlyNotes).then(() => {
+            // TODO: Send event to display notes created in this quarter
+        });
+    }
+
+    public async openYearlyNote(key: ModifierKey, period: Period): Promise<void> {
+        await this.openPeriodicNote(key, period, this.settings.yearlyNotes);
+    }
+
+    private async openPeriodicNote(key: ModifierKey, period: Period, settings: PeriodNoteSettings): Promise<void> {
+        const requireModifierKeyForCreatingNote = this.settings.generalSettings.useModifierKeyToCreateNote;
+
+        if (!requireModifierKeyForCreatingNote || (requireModifierKeyForCreatingNote && isCreateFileModifierKey(key))) {
+            await this.periodManager.createNote(settings, period);
+        }
+
+        await this.periodManager.openNote(settings, period);
+        this.updateModel({ ...this.model, selectedPeriod: period });
+    }
+
+    private updateWeeks(weeks: WeekModel[]): void {
+        this.updateModel({ ...this.model, weeks: weeks });
     }
 }

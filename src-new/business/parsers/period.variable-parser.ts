@@ -1,6 +1,6 @@
 import {VariableParser} from 'src-new/business/contracts/variable-parser';
 import {VariableFactory} from 'src-new/business/contracts/variable-factory';
-import {Period} from 'src-new/domain/models/date.model';
+import {Period} from 'src-new/domain/models/period.model';
 import {DateParser} from 'src-new/infrastructure/contracts/date-parser';
 
 export class PeriodVariableParser implements VariableParser<Period> {

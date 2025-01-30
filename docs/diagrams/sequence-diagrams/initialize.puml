@@ -1,0 +1,48 @@
+@startuml
+actor User
+
+activate User
+User -> Obsidian: Open Obsidian
+activate Obsidian
+
+    Obsidian -> SettingsManager: getSettings()
+    activate SettingsManager
+    return settings
+    deactivate SettingsManager
+
+    Obsidian -> Calendar : initialize(settings)
+    activate Calendar
+        Calendar -> DateManager : getCurrentWeek()
+        activate DateManager
+            DateManager -> DateRepository : getWeek(settings.startOfWeek, today: Date)
+            activate DateRepository
+            return week: Week
+        return currentWeek: Week
+
+        Calendar -> DateManager : getPreviousWeeks(currentWeek, 2)
+        activate DateManager
+            DateManager -> DateRepository : getWeek(settings.startOfWeek, currentWeek.number - 1)
+            activate DateRepository
+            return week: Week
+
+            DateManager -> DateRepository : getWeek(settings.startOfWeek, currentWeek.number - 2)
+            activate DateRepository
+            return week: Week
+
+        return previousWeeks: Week[]
+
+        Calendar -> DateManager : getNextWeeks(currentWeek, 2)
+        activate DateManager
+            DateManager -> DateRepository : getWeek(settings.startOfWeek, currentWeek.number + 1)
+            activate DateRepository
+            return week: Week
+
+            DateManager -> DateRepository : getWeek(settings.startOfWeek, currentWeek.number + 2)
+            activate DateRepository
+            return week: Week
+        return nextWeeks: Week[]
+
+    return view
+deactivate Obsidian
+
+@enduml

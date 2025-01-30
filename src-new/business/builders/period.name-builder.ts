@@ -1,6 +1,6 @@
 import {NameBuilder} from 'src-new/business/contracts/name-builder';
 import {DateParser} from 'src-new/infrastructure/contracts/date-parser';
-import {Period} from 'src-new/domain/models/date.model';
+import {Period} from 'src-new/domain/models/period.model';
 
 export class PeriodNameBuilder implements NameBuilder<Period> {
     private period?: Period;
