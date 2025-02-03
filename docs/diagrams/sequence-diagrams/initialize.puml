@@ -42,7 +42,62 @@ activate Obsidian
             return week: Week
         return nextWeeks: Week[]
 
-    return view
+        Calendar -> PeriodEnhancer: setWeeklyNoteSettings(settings.weeklyNoteSettings)
+        activate PeriodEnhancer
+        return
+
+        Calendar -> PeriodEnhancer: setDailyNoteSettings(settings.dailyNotes)
+        activate PeriodEnhancer
+        return
+
+        Calendar -> PeriodEnhancer: enhance(weeks)
+        activate PeriodEnhancer
+            loop through weeks as week
+                PeriodEnhancer -> NameBuilder: withNameTemplate(weeklyNoteSettings.nameTemplate)
+                activate NameBuilder
+                return
+
+                PeriodEnhancer -> NameBuilder: withPathTemplate(weeklyNoteSettings.pathTemplate)
+                activate NameBuilder
+                return
+
+                PeriodEnhancer -> NameBuilder: withValue(week)
+                activate NameBuilder
+                return
+
+                PeriodEnhancer -> NameBuilder: build()
+                activate NameBuilder
+                return filePath
+
+                PeriodEnhancer -> FileAdapter: noteExists(filePath)
+                activate FileAdapter
+                return weeklyNoteExists
+
+                loop through week.days as day
+                    PeriodEnhancer -> NameBuilder: withNameTemplate(dailyNoteSettings.nameTemplate)
+                    activate NameBuilder
+                    return
+
+                    PeriodEnhancer -> NameBuilder: withPathTemplate(dailyNoteSettings.pathTemplate)
+                    activate NameBuilder
+                    return
+
+                    PeriodEnhancer -> NameBuilder: withValue(day)
+                    activate NameBuilder
+                    return
+
+                    PeriodEnhancer -> NameBuilder: build()
+                    activate NameBuilder
+                    return filePath
+
+                    PeriodEnhancer -> FileAdapter: noteExists(filePath)
+                    activate FileAdapter
+                    return dailyNoteExists
+                end
+            end
+        return enhancedWeeks
+
+    return view(enhancedWeeks)
 deactivate Obsidian
 
 @enduml

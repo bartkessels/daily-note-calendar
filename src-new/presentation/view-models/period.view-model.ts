@@ -1,7 +1,4 @@
 import {Period} from 'src-new/domain/models/period.model';
-import {OpenManager} from 'src-new/business/contracts/open-manager';
-import {DeleteManager} from 'src-new/business/contracts/delete-manager';
-import {CreateManager} from 'src-new/business/contracts/create-manager';
 import {GeneralSettings} from 'src-new/domain/settings/general.settings';
 import {ModifierKey} from 'src/domain/models/modifier-key';
 
