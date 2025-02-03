@@ -33,7 +33,7 @@ export class ObsidianNoteAdapter implements NoteAdapter {
         try {
             await this.app.fileManager.processFrontMatter(file, (data): void => {
                 frontMatter = new Map<string, string>(Object.entries(data));
-            });
+            }, { ctime: file.stat.ctime, mtime: file.stat.mtime });
         } catch (e) {
             console.error(`Error processing front matter for file: ${file.path}. Error: ${e}`);
         }
