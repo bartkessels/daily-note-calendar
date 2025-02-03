@@ -61,8 +61,8 @@ export class CalendarView extends ItemView {
     protected override async onOpen(): Promise<void> {
         createRoot(this.containerEl.children[1]).render(
             <StrictMode>
-                <NoteContextMenuContext value={this.noteContextMenu}>
-                    <PeriodicNoteEventContext value={{
+                <NoteContextMenuContext.Provider value={this.noteContextMenu}>
+                    <PeriodicNoteEventContext.Provider value={{
                         manageDayEvent: this.manageDayEvent,
                         manageWeekEvent: this.manageWeekEvent,
                         manageMonthEvent: this.manageMonthEvent,
@@ -74,7 +74,7 @@ export class CalendarView extends ItemView {
                                 <CalendarComponent/>
                             </CalendarEnhancerContext.Provider>
                         </DateManagerContext.Provider>
-                    </PeriodicNoteEventContext>
+                    </PeriodicNoteEventContext.Provider>
 
                     <ManageNoteEventContext.Provider value={this.manageNoteEvent}>
                         <RefreshNotesEventContext.Provider value={this.refreshNotesEvent}>
@@ -83,7 +83,7 @@ export class CalendarView extends ItemView {
                             </NotesEnhancerContext.Provider>
                         </RefreshNotesEventContext.Provider>
                     </ManageNoteEventContext.Provider>
-                </NoteContextMenuContext>
+                </NoteContextMenuContext.Provider>
             </StrictMode>
         );
     }
