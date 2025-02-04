@@ -1,4 +1,4 @@
-import { Note } from 'src-new/domain/models/note.model';
+import {Note} from 'src-new/domain/models/note.model';
 import {NoteAdapter} from 'src-new/infrastructure/adapters/note.adapter';
 import {Plugin, TFile} from 'obsidian';
 
@@ -22,6 +22,11 @@ export class ObsidianNoteAdapter implements NoteAdapter {
         try {
             await this.plugin.app.fileManager.processFrontMatter(file, (data): void => {
                 frontMatter = new Map<string, string>(Object.entries(data));
+            }, {
+                // The ctime property is otherwise changed to the current datetime when the front matter is processed.
+                // Because of this, we need to set it back to the original value.
+                ctime: file.stat.ctime,
+                mtime: file.stat.mtime
             });
         } catch (e) {
             console.error(`Error processing front matter for file: ${file.path}. Error: ${e}`);
