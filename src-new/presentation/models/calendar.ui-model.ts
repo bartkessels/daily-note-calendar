@@ -4,8 +4,10 @@ import {weekUiModel, WeekUiModel} from 'src-new/presentation/models/week.ui-mode
 import {Period} from 'src-new/domain/models/period.model';
 
 export interface CalendarUiModel {
-    firstDayOfWeek: DayOfWeek;
+    startWeekOnMonday: boolean;
     selectedPeriod?: PeriodUiModel;
+    month?: PeriodUiModel;
+    year?: PeriodUiModel;
     weeks: WeekUiModel[];
 }
 
@@ -13,7 +15,7 @@ export function calendarUiModel(firstDayOfWeek: DayOfWeek, weeks: WeekModel[], s
     let selectedPeriodUiModel = selectedPeriod ? periodUiModel(selectedPeriod) : undefined;
 
     return {
-        firstDayOfWeek: firstDayOfWeek,
+        startWeekOnMonday: firstDayOfWeek === DayOfWeek.Monday,
         selectedPeriod: selectedPeriodUiModel,
         weeks: weeks.map(weekUiModel)
     };
