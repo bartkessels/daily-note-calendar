@@ -1,16 +1,12 @@
-import {
-    calendarUiModel,
-    CalendarUiModel,
-    createEmptyCalendarModel
-} from 'src-new/presentation/models/calendar.ui-model';
+import {calendarUiModel, CalendarUiModel} from 'src-new/presentation/models/calendar.ui-model';
 import {DateManager} from 'src-new/business/contracts/date.manager';
-import {WeekModel} from 'src-new/domain/models/week.model';
 import {DEFAULT_PLUGIN_SETTINGS, PluginSettings} from 'src-new/domain/settings/plugin.settings';
 import {Period} from 'src-new/domain/models/period.model';
 import {isCreateFileModifierKey, ModifierKey} from 'src/domain/models/modifier-key';
 import {PeriodNoteSettings} from 'src-new/domain/settings/period-note.settings';
 import {PeriodicNoteManager} from 'src-new/business/contracts/periodic-note.manager';
-import {WeekUiModel} from 'src-new/presentation/models/week.ui-model';
+import {weekUiModel, WeekUiModel} from 'src-new/presentation/models/week.ui-model';
+import {periodUiModel} from 'src-new/presentation/models/period.ui-model';
 
 export interface CalendarViewModel {
     setUpdateViewState(callback: (model: CalendarUiModel) => void): void;
@@ -27,7 +23,7 @@ export interface CalendarViewModel {
 
 export class DefaultCalendarViewModel implements CalendarViewModel {
     private settings: PluginSettings = DEFAULT_PLUGIN_SETTINGS;
-    private model: CalendarUiModel = createEmptyCalendarModel(this.settings.generalSettings.firstDayOfWeek);
+    private model: CalendarUiModel = calendarUiModel(this.settings.generalSettings.firstDayOfWeek, []);
     private updateModel: (uiModel: CalendarUiModel) => void;
 
     constructor(
@@ -63,8 +59,9 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
 
         if (oldestWeek) {
-            const previousWeek = this.dateManager.getPreviousWeeks(firstDayOfWeek, oldestWeek.period, 1);
-            this.updateWeeks([...previousWeek, ...this.model.weeks]);
+            const previousWeeks = this.dateManager.getPreviousWeeks(firstDayOfWeek, oldestWeek.period, 1);
+            const previousWeeksUiModel = previousWeeks.map(weekUiModel);
+            this.updateWeeks([...previousWeeksUiModel, ...this.model.weeks]);
         }
     }
 
@@ -74,7 +71,8 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
 
         if (latestWeek) {
             const nextWeeks = this.dateManager.getPreviousWeeks(firstDayOfWeek, latestWeek.period, 1);
-            this.updateWeeks([...this.model.weeks, ...nextWeeks]);
+            const nextWeeksUiModel = nextWeeks.map(weekUiModel);
+            this.updateWeeks([...this.model.weeks, ...nextWeeksUiModel]);
         }
     }
 
@@ -114,10 +112,11 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         }
 
         await this.periodManager.openNote(settings, period);
-        this.updateModel({ ...this.model, selectedPeriod: period });
+        const selectedPeriod = periodUiModel(period);
+        this.updateModel({ ...this.model, selectedPeriod: selectedPeriod });
     }
 
     private updateWeeks(weeks: WeekUiModel[]): void {
-        this.updateModel({ ...this.model, weeks: weeks });
+        this.updateModel({ ...this.model, weeks: weeks.unique() });
     }
 }
