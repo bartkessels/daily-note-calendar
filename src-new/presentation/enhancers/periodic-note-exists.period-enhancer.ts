@@ -15,21 +15,22 @@ export class PeriodicNoteExistsPeriodEnhancer implements PeriodEnhancer {
 
     }
 
-    public withSettings(settings: PeriodNoteSettings): void {
+    public withSettings(settings: PeriodNoteSettings): PeriodEnhancer {
         this.settings = settings;
+        return this;
     }
 
-    public async enhance(period: PeriodUiModel[]): Promise<PeriodUiModel[]> {
+    public async enhance<T extends PeriodUiModel>(period: PeriodUiModel[]): Promise<T[]> {
         const settings = this.settings;
 
         if (!settings) {
             throw new Error('Settings not set.');
         }
 
-        return Promise.all(period.map(p => this.enhancePeriod(settings, p)));
+        return Promise.all(period.map(p => this.enhancePeriod<T>(settings, p)));
     }
 
-    private async enhancePeriod(settings: PeriodNoteSettings, period: PeriodUiModel): Promise<PeriodUiModel> {
+    private async enhancePeriod<T extends PeriodUiModel>(settings: PeriodNoteSettings, period: PeriodUiModel): Promise<T> {
         const filePath = this.nameBuilder
             .withPath(settings.folderTemplate)
             .withName(settings.nameTemplate)
@@ -38,7 +39,7 @@ export class PeriodicNoteExistsPeriodEnhancer implements PeriodEnhancer {
 
         const fileExists = await this.fileAdapter.exists(filePath);
 
-        return {
+        return <T>{
             ...period,
             hasPeriodNote: fileExists
         };

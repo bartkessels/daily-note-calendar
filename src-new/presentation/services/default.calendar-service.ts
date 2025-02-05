@@ -8,13 +8,15 @@ import {WeekUiModel, weekUiModel} from 'src-new/presentation/models/week.ui-mode
 import {isCreateFileModifierKey, ModifierKey} from 'src-new/presentation/models/modifier-key';
 import {PeriodNoteSettings} from 'src-new/domain/settings/period-note.settings';
 import {periodUiModel, PeriodUiModel} from 'src-new/presentation/models/period.ui-model';
+import {CalendarEnhancer} from 'src-new/presentation/contracts/calendar.enhancer';
 
 export class DefaultCalendarService implements CalendarService {
     private settings: PluginSettings = DEFAULT_PLUGIN_SETTINGS;
 
     constructor(
         private readonly dateManager: DateManager,
-        private readonly periodicNoteManager: PeriodicNoteManager
+        private readonly periodicNoteManager: PeriodicNoteManager,
+        private readonly enhancer: CalendarEnhancer
     ) {
 
     }
@@ -34,6 +36,7 @@ export class DefaultCalendarService implements CalendarService {
         const weeksUiModel = weeks.map(weekUiModel);
 
         callback(this.getModel(uiModel, weeksUiModel));
+        this.enhance(uiModel, callback);
     }
 
     public loadPreviousWeek(model: CalendarUiModel, callback: (model: CalendarUiModel) => void): void {
@@ -46,6 +49,7 @@ export class DefaultCalendarService implements CalendarService {
             const weeks = [...previousWeeksUiModel, ...model.weeks].unique();
 
             callback(this.getModel(model, weeks));
+            this.enhance(model, callback);
         }
     }
 
@@ -59,6 +63,7 @@ export class DefaultCalendarService implements CalendarService {
             const weeks = [...nextWeeksUiModel, ...model.weeks].unique();
 
             callback(this.getModel(model, weeks));
+            this.enhance(model, callback);
         }
     }
 
@@ -105,5 +110,9 @@ export class DefaultCalendarService implements CalendarService {
             month: this.getMonth(weeks),
             weeks: weeks
         };
+    }
+
+    private enhance(model: CalendarUiModel, callback: (model: CalendarUiModel) => void): void {
+        this.enhancer.enhance(model).then(callback);
     }
 }

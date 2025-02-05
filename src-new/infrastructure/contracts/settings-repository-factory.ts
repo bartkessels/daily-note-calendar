@@ -12,5 +12,6 @@ export enum SettingsType {
     MonthlyNote = 'monthlyNote',
     QuarterlyNote = 'quarterlyNote',
     WeeklyNote = 'weeklyNote',
-    YearlyNote = 'yearlyNote'
+    YearlyNote = 'yearlyNote',
+    Plugin = 'plugin'
 }

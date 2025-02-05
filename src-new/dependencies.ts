@@ -13,7 +13,6 @@ import {YearlyNoteSettingsRepository} from 'src-new/infrastructure/repositories/
 import {DisplayNotesSettings} from 'src-new/domain/settings/display-notes.settings';
 import {GeneralSettings} from 'src-new/domain/settings/general.settings';
 import {PeriodNoteSettings} from 'src-new/domain/settings/period-note.settings';
-import {PeriodNoteManager} from 'src-new/business/managers/period-note.manager';
 import {DefaultNameBuilderFactory} from 'src-new/business/factories/default.name-builder-factory';
 import {NameBuilderFactory, NameBuilderType} from 'src-new/business/contracts/name-builder-factory';
 import {DefaultVariableParserFactory} from 'src-new/business/factories/default.variable-parser-factory';
@@ -32,24 +31,31 @@ import {TodayVariableParser} from 'src-new/business/parsers/today.variable-parse
 import {VariableFactory} from 'src-new/business/contracts/variable-factory';
 import {VariableType} from 'src-new/domain/models/variable.model';
 import {DefaultVariableFactory} from 'src-new/business/factories/default.variable-factory';
+import {NumberOfNotesPeriodEnhancer} from 'src-new/presentation/enhancers/number-of-notes.period-enhancer';
+import {NoteAdapter} from 'src-new/infrastructure/adapters/note.adapter';
+import {PeriodicNoteExistsPeriodEnhancer} from 'src-new/presentation/enhancers/periodic-note-exists.period-enhancer';
+import {CalendarEnhancer} from 'src-new/presentation/contracts/calendar.enhancer';
+import {PeriodCalendarEnhancer} from 'src-new/presentation/enhancers/period.calendar-enhancer';
+import {PluginSettings} from 'src-new/domain/settings/plugin.settings';
+import {ObsidianNoteAdapter} from 'src-new/infrastructure/obsidian/obsidian.note-adapter';
+import {PluginSettingsRepository} from 'src-new/infrastructure/repositories/plugin.settings-repository';
 
-export function hoi(plugin: Plugin) {
+export async function hoi(plugin: Plugin) {
     // Adapters
-    const settingsAdapter = new ObsidianSettingsAdapter(plugin);
-    const fileAdapter = new ObsidianFileAdapter(plugin);
 
     // Infrastructure
+    const settingsAdapter = new ObsidianSettingsAdapter(plugin);
+    const fileAdapter = new ObsidianFileAdapter(plugin);
+    const noteAdapter = new ObsidianNoteAdapter(plugin);
     const dateParserFactory = buildDateParserFactory();
     const settingsRepositoryFactory = buildSettingsRepositoryFactory(settingsAdapter);
 
     // Business
     const nameBuilderFactory = buildNameBuilderFactory(dateParserFactory.getParser());
     const variableParserFactory = buildVariableParserFactory(dateParserFactory.getParser(), new DefaultVariableFactory());
-    const dayManager = buildPeriodManager(SettingsType.DailyNote, nameBuilderFactory, fileAdapter, settingsRepositoryFactory, variableParserFactory);
-    const weekManager = buildPeriodManager(SettingsType.WeeklyNote, nameBuilderFactory, fileAdapter, settingsRepositoryFactory, variableParserFactory);
-    const monthManager = buildPeriodManager(SettingsType.MonthlyNote, nameBuilderFactory, fileAdapter, settingsRepositoryFactory, variableParserFactory);
-    const quarterManager = buildPeriodManager(SettingsType.QuarterlyNote, nameBuilderFactory, fileAdapter, settingsRepositoryFactory, variableParserFactory);
-    const yearManager = buildPeriodManager(SettingsType.YearlyNote, nameBuilderFactory, fileAdapter, settingsRepositoryFactory, variableParserFactory);
+
+    // Presentation
+    const calendarEnhancer = await buildCalendarEnhancer(nameBuilderFactory, settingsRepositoryFactory, noteAdapter, fileAdapter);
 }
 
 function buildSettingsRepositoryFactory(adapter: SettingsAdapter): SettingsRepositoryFactory {
@@ -60,6 +66,7 @@ function buildSettingsRepositoryFactory(adapter: SettingsAdapter): SettingsRepos
     const quarterlyNoteSettingsRepository = new QuarterlyNoteSettingsRepository(adapter);
     const weeklyNoteSettingsRepository = new WeeklyNoteSettingsRepository(adapter);
     const yearlyNoteSettingsRepository = new YearlyNoteSettingsRepository(adapter);
+    const pluginSettingsRepository = new PluginSettingsRepository(adapter);
 
     return new DefaultSettingsRepositoryFactory()
         .register<PeriodNoteSettings>(SettingsType.DailyNote, dailyNoteSettingsRepository)
@@ -68,7 +75,8 @@ function buildSettingsRepositoryFactory(adapter: SettingsAdapter): SettingsRepos
         .register<PeriodNoteSettings>(SettingsType.MonthlyNote, monthlyNoteSettingsRepository)
         .register<PeriodNoteSettings>(SettingsType.QuarterlyNote, quarterlyNoteSettingsRepository)
         .register<PeriodNoteSettings>(SettingsType.WeeklyNote, weeklyNoteSettingsRepository)
-        .register<PeriodNoteSettings>(SettingsType.YearlyNote, yearlyNoteSettingsRepository);
+        .register<PeriodNoteSettings>(SettingsType.YearlyNote, yearlyNoteSettingsRepository)
+        .register<PluginSettings>(SettingsType.Plugin, pluginSettingsRepository);
 }
 
 function buildVariableParserFactory(dateParser: DateParser, variableFactory: VariableFactory): VariableParserFactory {
@@ -96,17 +104,18 @@ function buildDateParserFactory(): DateParserFactory {
         .register(dateFnsParser);
 }
 
-function buildPeriodManager(
-    settingsType: SettingsType,
+async function buildCalendarEnhancer(
     nameBuilderFactory: NameBuilderFactory,
-    fileAdapter: FileAdapter,
     settingsRepositoryFactory: SettingsRepositoryFactory,
-    variableParserFactory: VariableParserFactory
-): PeriodNoteManager {
-    return new PeriodNoteManager(
-        nameBuilderFactory,
-        fileAdapter,
-        settingsRepositoryFactory.getRepository<PeriodNoteSettings>(settingsType),
-        variableParserFactory
-    );
+    noteAdapter: NoteAdapter,
+    fileAdapter: FileAdapter
+): Promise<CalendarEnhancer> {
+    const settings = await settingsRepositoryFactory.getRepository<PluginSettings>(SettingsType.Plugin).get();
+    const numberOfNotesPeriodEnhancer = new NumberOfNotesPeriodEnhancer(noteAdapter);
+    const periodicNoteExistsEnhancer = new PeriodicNoteExistsPeriodEnhancer(nameBuilderFactory.getNameBuilder<Period>(NameBuilderType.PeriodicNote), fileAdapter);
+
+    return new PeriodCalendarEnhancer()
+        .withPeriodEnhancer(numberOfNotesPeriodEnhancer)
+        .withPeriodEnhancer(periodicNoteExistsEnhancer)
+        .withSettings(settings);
 }
