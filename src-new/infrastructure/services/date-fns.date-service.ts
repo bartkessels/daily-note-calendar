@@ -1,7 +1,17 @@
-import { WeekModel } from 'src-new/domain/models/week.model';
+import {WeekModel} from 'src-new/domain/models/week.model';
 import {DateService} from 'src-new/infrastructure/contracts/date-service';
-import {addWeeks, eachDayOfInterval, endOfISOWeek, getISOWeek, setISOWeek, startOfISOWeek, subWeeks} from 'date-fns';
-import {Period} from 'src-new/domain/models/period.model';
+import {
+    addWeeks,
+    eachDayOfInterval,
+    endOfISOWeek,
+    getISOWeek,
+    getQuarter,
+    setISOWeek,
+    startOfISOWeek,
+    startOfQuarter,
+    subWeeks
+} from 'date-fns';
+import {Period, PeriodType} from 'src-new/domain/models/period.model';
 
 export class DateFnsDateService implements DateService {
     private readonly monthFormat = 'long';
@@ -22,7 +32,8 @@ export class DateFnsDateService implements DateService {
             weekNumber: weekNumber,
             year: this.getYear(year),
             month: this.getMonth(year, date.getMonth()),
-            days: this.getDaysOfWeek(weekNumber)
+            days: this.getDaysOfWeek(weekNumber),
+            type: PeriodType.Week
         };
     }
 
@@ -36,6 +47,17 @@ export class DateFnsDateService implements DateService {
         return this.getWeekFromDate(previousWeekDate);
     }
 
+    public getQuarter(month: Period): Period {
+        const firstDateOfQuarter = startOfQuarter(month.date);
+        const quarter = getQuarter(firstDateOfQuarter);
+
+        return <Period>{
+            name: `Q${quarter}`,
+            date: firstDateOfQuarter,
+            type: PeriodType.Quarter
+        };
+    }
+
     private getYear(year: number): Period {
         const formatter = new Intl.DateTimeFormat(undefined, {
             year: this.yearFormat
@@ -45,7 +67,8 @@ export class DateFnsDateService implements DateService {
 
         return <Period>{
             name: formatter.format(date),
-            date: date
+            date: date,
+            type: PeriodType.Year
         };
     }
 
@@ -58,7 +81,8 @@ export class DateFnsDateService implements DateService {
 
         return <Period> {
             name: formatter.format(date),
-            date: date
+            date: date,
+            type: PeriodType.Month
         };
     }
 
@@ -74,6 +98,7 @@ export class DateFnsDateService implements DateService {
         return days.map(day => <Period> {
             date: day,
             name: formatter.format(day),
+            type: PeriodType.Day
         });
     }
 }

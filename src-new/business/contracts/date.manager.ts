@@ -6,4 +6,5 @@ export interface DateManager {
     getCurrentWeek(startOfWeek: DayOfWeek): WeekModel;
     getPreviousWeeks(startOfWeek: DayOfWeek, currentWeek: WeekModel, noWeeks: number): WeekModel[];
     getNextWeeks(startOfWeek: DayOfWeek, currentWeek: WeekModel, noWeeks: number): WeekModel[];
+    getQuarter(month: Period): Period;
 }

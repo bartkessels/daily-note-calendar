@@ -7,7 +7,7 @@ import {PeriodicNoteManager} from 'src-new/business/contracts/periodic-note.mana
 import {WeekUiModel, weekUiModel} from 'src-new/presentation/models/week.ui-model';
 import {isCreateFileModifierKey, ModifierKey} from 'src-new/presentation/models/modifier-key';
 import {PeriodNoteSettings} from 'src-new/domain/settings/period-note.settings';
-import {PeriodUiModel} from 'src-new/presentation/models/period.ui-model';
+import {periodUiModel, PeriodUiModel} from 'src-new/presentation/models/period.ui-model';
 
 export class DefaultCalendarService implements CalendarService {
     private settings: PluginSettings = DEFAULT_PLUGIN_SETTINGS;
@@ -33,12 +33,7 @@ export class DefaultCalendarService implements CalendarService {
         const uiModel = calendarUiModel(firstDayOfWeek, weeks, currentDay);
         const weeksUiModel = weeks.map(weekUiModel);
 
-        callback({
-            ...uiModel,
-            year: this.getYear(weeksUiModel),
-            month: this.getMonth(weeksUiModel),
-            weeks: weeksUiModel
-        });
+        callback(this.getModel(uiModel, weeksUiModel));
     }
 
     public loadPreviousWeek(model: CalendarUiModel, callback: (model: CalendarUiModel) => void): void {
@@ -50,12 +45,7 @@ export class DefaultCalendarService implements CalendarService {
             const previousWeeksUiModel = previousWeeks.map(weekUiModel);
             const weeks = [...previousWeeksUiModel, ...model.weeks].unique();
 
-            callback({
-                ...model,
-                year: this.getYear(weeks),
-                month: this.getMonth(weeks),
-                weeks: weeks
-            });
+            callback(this.getModel(model, weeks));
         }
     }
 
@@ -68,12 +58,7 @@ export class DefaultCalendarService implements CalendarService {
             const nextWeeksUiModel = nextWeeks.map(weekUiModel);
             const weeks = [...nextWeeksUiModel, ...model.weeks].unique();
 
-            callback({
-                ...model,
-                year: this.getYear(weeks),
-                month: this.getMonth(weeks),
-                weeks: weeks
-            });
+            callback(this.getModel(model, weeks));
         }
     }
 
@@ -101,8 +86,24 @@ export class DefaultCalendarService implements CalendarService {
         return middleWeek.year;
     }
 
+    private getQuarter(weeks: WeekUiModel[]): PeriodUiModel {
+        const middleWeek = this.getMiddleWeek(weeks);
+        const quarter = this.dateManager.getQuarter(middleWeek.month.period);
+        return periodUiModel(quarter);
+    }
+
     private getMiddleWeek(weeks: WeekUiModel[]): WeekUiModel {
         const middleWeekIndex = Math.ceil(weeks.length / 2);
         return weeks[middleWeekIndex];
+    }
+
+    private getModel(model: CalendarUiModel, weeks: WeekUiModel[]): CalendarUiModel {
+        return {
+            ...model,
+            year: this.getYear(weeks),
+            quarter: this.getQuarter(weeks),
+            month: this.getMonth(weeks),
+            weeks: weeks
+        };
     }
 }

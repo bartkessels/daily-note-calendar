@@ -8,6 +8,7 @@ export interface CalendarUiModel {
     selectedPeriod?: PeriodUiModel;
     month?: PeriodUiModel;
     year?: PeriodUiModel;
+    quarter?: PeriodUiModel;
     weeks: WeekUiModel[];
 }
 

@@ -23,8 +23,7 @@ export const CalendarView = (): ReactElement => {
                 <thead>
                     <tr>
                         <th className="quarter">
-                            {/* TODO: Use the actual quarter model */}
-                            <PeriodView onClick={viewModel?.openQuarterlyNote} model={uiModel?.month}/>
+                            <PeriodView onClick={viewModel?.openQuarterlyNote} model={uiModel?.quarter}/>
                         </th>
                         {!uiModel?.startWeekOnMonday && <th>Sun</th>}
                         <th>Mon</th>

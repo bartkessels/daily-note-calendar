@@ -8,5 +8,6 @@ export enum PeriodType {
     Day,
     Week,
     Month,
+    Quarter,
     Year
 }
