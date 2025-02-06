@@ -1,18 +1,21 @@
 import {PeriodicNoteManager} from 'src-new/business/contracts/periodic-note.manager';
-import { Period } from 'src-new/domain/models/period.model';
-import { PeriodNoteSettings } from 'src-new/domain/settings/period-note.settings';
+import {Period} from 'src-new/domain/models/period.model';
+import {PeriodNoteSettings} from 'src-new/domain/settings/period-note.settings';
 import {NameBuilder} from 'src-new/business/contracts/name-builder';
 import {FileAdapter} from 'src-new/infrastructure/adapters/file.adapter';
 import {VariableParserFactory} from 'src-new/business/contracts/variable-parser-factory';
 import {VariableType} from 'src-new/domain/models/variable.model';
+import {NameBuilderFactory, NameBuilderType} from 'src-new/business/contracts/name-builder-factory';
 
 export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
+    private readonly nameBuilder: NameBuilder<Period>;
+
     constructor(
-        private readonly nameBuilder: NameBuilder<Period>,
+        private readonly nameBuilderFactory: NameBuilderFactory,
         private readonly variableParserFactory: VariableParserFactory,
         private readonly fileAdapter: FileAdapter
     ) {
-
+        this.nameBuilder = this.nameBuilderFactory.getNameBuilder<Period>(NameBuilderType.PeriodicNote);
     }
 
     public async createNote(settings: PeriodNoteSettings, period: Period): Promise<void> {

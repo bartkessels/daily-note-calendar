@@ -3,7 +3,7 @@ import {Plugin} from 'obsidian';
 import {SettingsAdapter} from 'src-new/infrastructure/adapters/settings.adapter';
 import {SettingsRepositoryFactory, SettingsType} from 'src-new/infrastructure/contracts/settings-repository-factory';
 import {GeneralSettingsRepository} from 'src-new/infrastructure/repositories/general.settings-repository';
-import {DefaultSettingsRepositoryFactory} from 'src-new/infrastructure/factories/default-settings-repository.factory';
+import {DefaultSettingsRepositoryFactory} from 'src-new/infrastructure/factories/default.settings-repository.factory';
 import {DisplayNotesSettingsRepository} from 'src-new/infrastructure/repositories/display-notes.settings-repository';
 import {DailyNoteSettingsRepository} from 'src-new/infrastructure/repositories/daily-note.settings.repository';
 import {MonthlyNoteSettingsRepository} from 'src-new/infrastructure/repositories/monthly-note.settings-repository';
@@ -39,45 +39,39 @@ import {PeriodCalendarEnhancer} from 'src-new/presentation/enhancers/period.cale
 import {PluginSettings} from 'src-new/domain/settings/plugin.settings';
 import {ObsidianNoteAdapter} from 'src-new/infrastructure/obsidian/obsidian.note-adapter';
 import {PluginSettingsRepository} from 'src-new/infrastructure/repositories/plugin.settings-repository';
+import {DefaultCalendarViewModel} from 'src-new/presentation/view-models/calendar.view-model';
+import {DefaultCalendarService} from 'src-new/presentation/services/default.calendar-service';
+import {RepositoryDateManager} from 'src-new/business/managers/repository.date-manager';
+import {DefaultPeriodicNoteManager} from 'src-new/business/managers/default.periodic-note-manager';
+import {DateFnsDateRepository} from 'src-new/infrastructure/repositories/date-fns.date-repository';
+import {DefaultDateRepositoryFactory} from 'src-new/infrastructure/factories/default.date-repository-factory';
 
 export async function hoi(plugin: Plugin) {
-    // Adapters
-
     // Infrastructure
     const settingsAdapter = new ObsidianSettingsAdapter(plugin);
     const fileAdapter = new ObsidianFileAdapter(plugin);
     const noteAdapter = new ObsidianNoteAdapter(plugin);
-    const dateParserFactory = buildDateParserFactory();
-    const settingsRepositoryFactory = buildSettingsRepositoryFactory(settingsAdapter);
+
+    const dateParserFactory = new DefaultDateParserFactory();
+    const dateRepositoryFactory = new DefaultDateRepositoryFactory();
+    const settingsRepositoryFactory = new DefaultSettingsRepositoryFactory(settingsAdapter);
+
+    // Business
+
+
 
     // Business
     const nameBuilderFactory = buildNameBuilderFactory(dateParserFactory.getParser());
     const variableParserFactory = buildVariableParserFactory(dateParserFactory.getParser(), new DefaultVariableFactory());
+    const dateManager = new RepositoryDateManager(dateRepositoryFactory);
+    const periodicNoteManager = new DefaultPeriodicNoteManager(nameBuilderFactory, variableParserFactory, fileAdapter);
 
     // Presentation
     const calendarEnhancer = await buildCalendarEnhancer(nameBuilderFactory, settingsRepositoryFactory, noteAdapter, fileAdapter);
+    const calendarService = new DefaultCalendarService(dateManager, periodicNoteManager, calendarEnhancer);
+    const viewModel = new DefaultCalendarViewModel(calendarService);
 }
 
-function buildSettingsRepositoryFactory(adapter: SettingsAdapter): SettingsRepositoryFactory {
-    const dailyNoteSettingsRepository = new DailyNoteSettingsRepository(adapter);
-    const displayNotesSettingsRepository = new DisplayNotesSettingsRepository(adapter);
-    const generalSettingsRepository = new GeneralSettingsRepository(adapter);
-    const monthlyNoteSettingsRepository = new MonthlyNoteSettingsRepository(adapter);
-    const quarterlyNoteSettingsRepository = new QuarterlyNoteSettingsRepository(adapter);
-    const weeklyNoteSettingsRepository = new WeeklyNoteSettingsRepository(adapter);
-    const yearlyNoteSettingsRepository = new YearlyNoteSettingsRepository(adapter);
-    const pluginSettingsRepository = new PluginSettingsRepository(adapter);
-
-    return new DefaultSettingsRepositoryFactory()
-        .register<PeriodNoteSettings>(SettingsType.DailyNote, dailyNoteSettingsRepository)
-        .register<DisplayNotesSettings>(SettingsType.DisplayNotes, displayNotesSettingsRepository)
-        .register<GeneralSettings>(SettingsType.General, generalSettingsRepository)
-        .register<PeriodNoteSettings>(SettingsType.MonthlyNote, monthlyNoteSettingsRepository)
-        .register<PeriodNoteSettings>(SettingsType.QuarterlyNote, quarterlyNoteSettingsRepository)
-        .register<PeriodNoteSettings>(SettingsType.WeeklyNote, weeklyNoteSettingsRepository)
-        .register<PeriodNoteSettings>(SettingsType.YearlyNote, yearlyNoteSettingsRepository)
-        .register<PluginSettings>(SettingsType.Plugin, pluginSettingsRepository);
-}
 
 function buildVariableParserFactory(dateParser: DateParser, variableFactory: VariableFactory): VariableParserFactory {
     const activeFileVariableParser = new ActiveFileVariableParser();
@@ -95,13 +89,6 @@ function buildNameBuilderFactory(dateParser: DateParser): NameBuilderFactory {
 
     return new DefaultNameBuilderFactory()
         .register<Period>(NameBuilderType.PeriodicNote, periodNameBuilder);
-}
-
-function buildDateParserFactory(): DateParserFactory {
-    const dateFnsParser = new DateFnsDateParser();
-
-    return new DefaultDateParserFactory()
-        .register(dateFnsParser);
 }
 
 async function buildCalendarEnhancer(

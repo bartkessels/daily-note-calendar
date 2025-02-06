@@ -23,7 +23,6 @@ export class DefaultCalendarService implements CalendarService {
 
     public initialize(settings: PluginSettings, callback: (model: CalendarUiModel) => void): void {
         this.settings = settings;
-
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
 
         const currentDay = this.dateManager.getCurrentDay();
