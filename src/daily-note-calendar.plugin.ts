@@ -1,69 +1,30 @@
 import {Plugin} from 'obsidian';
-import {CalendarView} from 'src/plugin/views/calendar.view';
-import {CalendarSettingsTab} from 'src/plugin/settings/calendar.settings-tab';
-import {createDependencies, Dependencies} from 'src/dependencies';
+import {Dependencies, hoi} from 'src/dependencies';
+import {SettingsType} from 'src/infrastructure/contracts/settings-repository-factory';
+import {PluginSettings} from 'src/domain/settings/plugin.settings';
+import {CalendarView} from 'src/presentation/views/calendar.view';
+import {DisplayInCalendarCommand} from 'src/presentation/commands/display-in-calendar.command';
 import 'src/extensions/extensions';
-import {ManageAction} from 'src/domain/events/manage.event';
-import {DisplayInCalendarCommand} from 'src/plugin/commands/display-in-calendar.command';
-import {hoi} from 'src-new/dependencies';
 
 export default class DailyNoteCalendarPlugin extends Plugin {
-    private readonly dependencies: Dependencies = createDependencies(this);
+    private readonly dependencies: Dependencies = hoi(this);
 
     override async onload(): Promise<void> {
-        hoi(this);
+        this.registerView(CalendarView.VIEW_TYPE, (leaf) => new CalendarView(leaf, this.dependencies.viewModel));
 
-
-        this.registerView(CalendarView.VIEW_TYPE, (leaf) =>
-            new CalendarView(
-                leaf,
-                this.dependencies.noteContextMenuAdapter,
-                this.dependencies.dateManager,
-                this.dependencies.manageDayEvent,
-                this.dependencies.manageWeekEvent,
-                this.dependencies.manageMonthEvent,
-                this.dependencies.manageQuarterEvent,
-                this.dependencies.manageYearEvent,
-                this.dependencies.manageNoteEvent,
-                this.dependencies.refreshNotesEvent,
-                this.dependencies.calendarEnhancer,
-                this.dependencies.notesEnhancer
-            )
-        );
-
-        this.addSettingTab(new CalendarSettingsTab(
-            this,
-            this.dependencies.dateParser,
-            this.dependencies.generalSettingsRepository,
-            this.dependencies.notesSettingsRepository,
-            this.dependencies.dailyNoteSettingsRepository,
-            this.dependencies.weeklyNoteSettingsRepository,
-            this.dependencies.monthlyNoteSettingsRepository,
-            this.dependencies.quarterlyNoteSettingsRepository,
-            this.dependencies.yearlyNoteSettingsRepository
-        ));
-
-        this.app.vault.on('create', this.dependencies.notesManager.refreshNotes.bind(this.dependencies.notesManager));
-        this.app.vault.on('rename', this.dependencies.notesManager.refreshNotes.bind(this.dependencies.notesManager));
-        this.app.vault.on('delete', this.dependencies.notesManager.refreshNotes.bind(this.dependencies.notesManager));
-        this.registerCommands();
         this.app.workspace.onLayoutReady(this.initializePlugin.bind(this));
+        this.addCommand(new DisplayInCalendarCommand(this.dependencies.noteManager, this.dependencies.viewModel));
     }
 
-    private initializePlugin(): void {
-        const today = this.dependencies.dateManager.getCurrentDay();
-        this.dependencies.manageDayEvent.emitEvent(ManageAction.Preview, today);
+    private async initializePlugin(): Promise<void> {
+        const settings = await this.dependencies.settingsRepositoryFactory
+            .getRepository<PluginSettings>(SettingsType.Plugin)
+            .get();
 
-        if (this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE).length > 0) {
-            return;
+        this.dependencies.viewModel.initialize(settings);
+
+        if (this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE).length <= 0) {
+            this.app.workspace.getRightLeaf(false)?.setViewState({type: CalendarView.VIEW_TYPE});
         }
-
-        this.app.workspace.getRightLeaf(false)?.setViewState({
-            type: CalendarView.VIEW_TYPE
-        });
-    }
-
-    private registerCommands(): void {
-        this.addCommand(new DisplayInCalendarCommand(this.dependencies.displayInCalendarCommandHandler));
     }
 }

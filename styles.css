@@ -40,6 +40,10 @@
     color: var(--text-accent);
 }
 
+.dnc .other-month {
+    opacity: 45%;
+}
+
 .dnc .has-note:after {
     content: "";
     display: block;

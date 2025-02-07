@@ -1,4 +1,5 @@
-import {Calculus, CalculusOperator} from 'src/domain/models/variable';
+import {Calculus, CalculusOperator} from 'src-old/domain/models/variable';
+import {Period} from 'src/domain/models/period.model';
 
 declare global {
     interface String {
@@ -7,6 +8,7 @@ declare global {
     }
     interface Date {
         isToday(): boolean;
+        isSameMonth(other: Period | undefined): boolean;
         calculate(calculus?: Calculus | null): Date;
     }
 }
@@ -34,6 +36,14 @@ String.prototype.removeMarkdownExtension = function(): string {
 Date.prototype.isToday = function() {
     const today = new Date();
     return this.toDateString() === today.toDateString();
+}
+
+Date.prototype.isSameMonth = function(other: Period | undefined) {
+    if (!other) {
+        return false;
+    }
+
+    return this.getMonth() === other.date.getMonth() && this.getFullYear() === other.date.getFullYear();
 }
 
 Date.prototype.calculate = function (calculus?: Calculus): Date {

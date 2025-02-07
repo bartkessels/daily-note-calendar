@@ -1,0 +1,8 @@
+import {createContext, useContext} from 'react';
+import {CalendarUiModel} from 'src-old/components/models/calendar.ui-model';
+import {Enhancer} from 'src-old/domain/enhancers/enhancer';
+
+export const CalendarEnhancerContext = createContext<Enhancer<CalendarUiModel> | null>(null);
+export const useCalenderEnhancer = (): Enhancer<CalendarUiModel> | null => {
+    return useContext(CalendarEnhancerContext);
+}
