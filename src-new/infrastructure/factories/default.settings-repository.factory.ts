@@ -9,6 +9,7 @@ import {WeeklyNoteSettingsRepository} from 'src-new/infrastructure/repositories/
 import {MonthlyNoteSettingsRepository} from 'src-new/infrastructure/repositories/monthly-note.settings-repository';
 import {QuarterlyNoteSettingsRepository} from 'src-new/infrastructure/repositories/quarterly-note.settings-repository';
 import {YearlyNoteSettingsRepository} from 'src-new/infrastructure/repositories/yearly-note.settings-repository';
+import {DisplayNotesSettingsRepository} from 'src-new/infrastructure/repositories/display-notes.settings-repository';
 
 export class DefaultSettingsRepositoryFactory implements SettingsRepositoryFactory {
     constructor(
@@ -21,6 +22,8 @@ export class DefaultSettingsRepositoryFactory implements SettingsRepositoryFacto
         switch (key) {
             case SettingsType.Plugin:
                 return new PluginSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
+            case SettingsType.DisplayNotes:
+                return new DisplayNotesSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
             case SettingsType.General:
                 return new GeneralSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
             case SettingsType.DailyNote:
@@ -34,7 +37,5 @@ export class DefaultSettingsRepositoryFactory implements SettingsRepositoryFacto
             case SettingsType.YearlyNote:
                 return new YearlyNoteSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
         }
-
-        throw new Error(`Unknown settings type: ${key}.`);
     }
 }

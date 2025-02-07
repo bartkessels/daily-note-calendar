@@ -8,7 +8,7 @@ interface PeriodViewProperties {
     onClick?: (key: ModifierKey, model: Period) => void;
 }
 
-export const PeriodView = ({model, onClick}: PeriodViewProperties): ReactElement => {
+export const PeriodComponent = ({model, onClick}: PeriodViewProperties): ReactElement => {
     if (!model) {
         return <></>;
     }

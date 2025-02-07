@@ -18,15 +18,29 @@ export class ObsidianFileAdapter implements FileAdapter {
         return await this.plugin.app.vault.adapter.exists(normalizedPath, true);
     }
 
-    public async create(path: string, templateFilePath?: string | undefined): Promise<string> {
+    public async createFileFromTemplate(path: string, templateFilePath: string): Promise<string> {
         const normalizedFilePath = this.normalizePath(path);
         const normalizedTemplateFilePath = this.normalizePath(templateFilePath ?? '');
         const templateFileContents = await this.readContents(normalizedTemplateFilePath);
 
-        await this.createFolder(normalizedFilePath);
         await this.plugin.app.vault.create(normalizedFilePath, templateFileContents);
 
         return normalizedFilePath;
+    }
+
+    public async createFile(path: string): Promise<string> {
+        const normalizedPath = this.normalizePath(path);
+        await this.plugin.app.vault.create(normalizedPath, '');
+
+        return normalizedPath;
+    }
+
+    public async createFolder(folder: string): Promise<void> {
+        const file = this.plugin.app.vault.getAbstractFileByPath(folder);
+
+        if (!file && file !instanceof TFolder) {
+            await this.plugin.app.vault.createFolder(folder);
+        }
     }
 
     public async readContents(path: string): Promise<string> {
@@ -67,15 +81,6 @@ export class ObsidianFileAdapter implements FileAdapter {
         if (file instanceof TFile) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (<any>this.plugin.app).fileManager.promptForFileDeletion(file);
-        }
-    }
-
-    private async createFolder(filePath: string): Promise<void> {
-        const folder = filePath.split('/').slice(0, -1).join('/');
-        const file = this.plugin.app.vault.getAbstractFileByPath(folder);
-
-        if (!file && file !instanceof TFolder) {
-            await this.plugin.app.vault.createFolder(folder);
         }
     }
 

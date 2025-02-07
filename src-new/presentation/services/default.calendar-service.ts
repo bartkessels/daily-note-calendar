@@ -35,6 +35,7 @@ export class DefaultCalendarService implements CalendarService {
         const weeksUiModel = weeks.map(weekUiModel);
 
         callback(this.getModel(uiModel, weeksUiModel));
+        this.enhancer.withSettings(settings);
         this.enhance(uiModel, callback);
     }
 

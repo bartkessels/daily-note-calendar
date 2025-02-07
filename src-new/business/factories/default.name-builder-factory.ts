@@ -1,21 +1,19 @@
 import {NameBuilderFactory, NameBuilderType} from 'src-new/business/contracts/name-builder-factory';
 import {NameBuilder} from 'src-new/business/contracts/name-builder';
+import {PeriodNameBuilder} from 'src-new/business/builders/period.name-builder';
+import {DateParserFactory} from 'src-new/infrastructure/contracts/date-parser-factory';
 
 export class DefaultNameBuilderFactory implements NameBuilderFactory {
-    private readonly builders: Map<NameBuilderType, NameBuilder<any>> = new Map();
+    constructor(
+        private readonly dateParserFactory: DateParserFactory
+    ) {
 
-    public register<T>(type: NameBuilderType, builder: NameBuilder<T>): DefaultNameBuilderFactory {
-        this.builders.set(type, builder);
-        return this;
     }
 
     public getNameBuilder<T>(type: NameBuilderType): NameBuilder<T> {
-        const builder = this.builders.get(type);
-
-        if (!builder) {
-            throw new Error('No builder found for name type');
+        switch (type) {
+            case NameBuilderType.PeriodicNote:
+                return new PeriodNameBuilder(this.dateParserFactory.getParser()) as unknown as NameBuilder<T>;
         }
-
-        return builder as NameBuilder<T>;
     }
 }

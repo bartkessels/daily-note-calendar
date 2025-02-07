@@ -1,7 +1,9 @@
 export interface FileAdapter {
     getActiveFile(): Promise<string | undefined>;
     exists(path: string): Promise<boolean>;
-    create(path: string, templateFile?: string | undefined): Promise<string>;
+    createFileFromTemplate(path: string, templatePath: string): Promise<string>;
+    createFile(path: string): Promise<string>;
+    createFolder(folder: string): Promise<void>;
     readContents(path: string): Promise<string>;
     writeContents(path: string, contents: string): Promise<void>;
     open(path: string): Promise<void>;
