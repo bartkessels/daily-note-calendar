@@ -1,4 +1,4 @@
-import 'src-old/extensions/extensions';
+import 'src/extensions/extensions';
 import {Calculus, CalculusOperator} from 'src-old/domain/models/variable';
 
 describe('String.prototype.appendMarkdownExtension', () => {

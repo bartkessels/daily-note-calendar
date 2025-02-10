@@ -33,6 +33,7 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
     }
 
     public initialize(settings: PluginSettings, today: Period): void {
+        this.settings = settings;
         this.calendarService.initialize(settings, today, (model) => {
             this.updateModel(model);
         });

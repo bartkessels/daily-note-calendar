@@ -1,7 +1,6 @@
-import {GeneralSettings} from 'src-old/domain/models/settings/general.settings';
 import {SettingsRepository} from 'src/infrastructure/contracts/settings-repository';
 import {SettingsAdapter} from 'src/infrastructure/adapters/settings.adapter';
-import {DEFAULT_GENERAL_SETTINGS} from 'src/domain/settings/general.settings';
+import {DEFAULT_GENERAL_SETTINGS, GeneralSettings} from 'src/domain/settings/general.settings';
 import {DEFAULT_PLUGIN_SETTINGS} from 'src/domain/settings/plugin.settings';
 
 export class GeneralSettingsRepository implements SettingsRepository<GeneralSettings> {

@@ -22,6 +22,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             .getRepository<PluginSettings>(SettingsType.Plugin)
             .get();
 
+        console.log(settings);
         this.dependencies.viewModel.initialize(settings, today);
 
         if (this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE).length <= 0) {

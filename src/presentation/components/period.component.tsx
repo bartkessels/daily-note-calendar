@@ -45,6 +45,7 @@ export const PeriodComponent = (
         <div
             id={isToday ? 'today' : ''}
             className={classes.join(' ')}
+            title={"Number of notes: " + model?.noNotes}
             onClick={(e: React.MouseEvent) => {
                 onClick(modifierKey(e), model);
                 e.preventDefault();

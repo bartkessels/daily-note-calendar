@@ -14,11 +14,13 @@ export class AdapterFileRepository implements FileRepository {
 
     public async create(path: string, templateFilePath?: string | null): Promise<string> {
         const folder = path.split('/').slice(0, -1).join('/');
+        const doesTemplateFileExist = templateFilePath ? await this.adapter.exists(templateFilePath) : false;
 
         await this.adapter.createFolder(folder);
         let filePath = '';
 
-        if (templateFilePath) {
+        if (doesTemplateFileExist && templateFilePath) {
+            console.log('templateFilePath', templateFilePath);
             filePath = await this.adapter.createFileFromTemplate(path, templateFilePath);
         } else {
             filePath = await this.adapter.createFile(path);
