@@ -63,7 +63,7 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
 
     private getFilePath(value: Period, settings: PeriodNoteSettings): string {
         return this.nameBuilder
-            .withPath(settings.folderTemplate)
+            .withPath(settings.folder)
             .withName(settings.nameTemplate)
             .withValue(value)
             .build();

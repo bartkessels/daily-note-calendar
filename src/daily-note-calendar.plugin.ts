@@ -17,11 +17,12 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     }
 
     private async initializePlugin(): Promise<void> {
+        const today = this.dependencies.dateManagerFactory.getManager().getCurrentDay();
         const settings = await this.dependencies.settingsRepositoryFactory
             .getRepository<PluginSettings>(SettingsType.Plugin)
             .get();
 
-        this.dependencies.viewModel.initialize(settings);
+        this.dependencies.viewModel.initialize(settings, today);
 
         if (this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE).length <= 0) {
             this.app.workspace.getRightLeaf(false)?.setViewState({type: CalendarView.VIEW_TYPE});

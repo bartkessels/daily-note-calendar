@@ -21,13 +21,15 @@ export class PeriodCalendarEnhancer implements CalendarEnhancer {
     }
 
     public async enhance(calendar: CalendarUiModel): Promise<CalendarUiModel> {
-        if (!this.settings) {
+        const settings = this.settings;
+
+        if (!settings) {
             return calendar;
         }
 
         return {
             ...calendar,
-            weeks: await this.enhanceWeeks(calendar.weeks, this.settings!!)
+            weeks: await this.enhanceWeeks(calendar.weeks, settings)
         };
     }
 

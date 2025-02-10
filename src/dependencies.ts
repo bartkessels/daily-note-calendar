@@ -25,9 +25,13 @@ import {SettingsRepositoryFactory} from 'src/infrastructure/contracts/settings-r
 import {NoteManager} from 'src/business/contracts/note.manager';
 import {DefaultNoteManager} from 'src/business/managers/default.note-manager';
 import {DefaultNoteRepositoryFactory} from 'src/infrastructure/factories/default.note-repository-factory';
+import {DateRepositoryFactory} from 'src/infrastructure/contracts/date-repository-factory';
+import {DateManagerFactory} from 'src/business/contracts/date-manager-factory';
+import {DefaultDateManagerFactory} from 'src/business/factories/default.date-manager-factory';
 
 export interface Dependencies {
     viewModel: CalendarViewModel;
+    dateManagerFactory: DateManagerFactory;
     settingsRepositoryFactory: SettingsRepositoryFactory;
     noteManager: NoteManager;
 }
@@ -48,17 +52,19 @@ export function hoi(plugin: Plugin): Dependencies {
     const nameBuilderFactory = new DefaultNameBuilderFactory(dateParserFactory);
     const variableFactory = new DefaultVariableFactory();
     const variableParserFactory = new DefaultVariableParserFactory(variableFactory, dateParserFactory);
-    const dateManager = new RepositoryDateManager(dateRepositoryFactory);
+    const dateManagerFactory = new DefaultDateManagerFactory(dateRepositoryFactory);
+    // const dateManager = new RepositoryDateManager(dateRepositoryFactory);
     const noteManager = new DefaultNoteManager(fileRepositoryFactory, noteRepositoryFactory);
     const periodicNoteManager = new DefaultPeriodicNoteManager(nameBuilderFactory, variableParserFactory, fileRepositoryFactory, noteRepositoryFactory);
 
     // Presentation
     const calendarEnhancer = buildCalendarEnhancer(nameBuilderFactory, noteAdapter, fileAdapter);
-    const calendarService = new DefaultCalendarService(dateManager, periodicNoteManager, calendarEnhancer);
+    const calendarService = new DefaultCalendarService(dateManagerFactory, periodicNoteManager, calendarEnhancer);
     const viewModel = new DefaultCalendarViewModel(calendarService);
 
     return {
         viewModel,
+        dateManagerFactory,
         settingsRepositoryFactory,
         noteManager
     };

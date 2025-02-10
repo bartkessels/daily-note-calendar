@@ -2,7 +2,6 @@ import { PeriodNoteSettings } from 'src/domain/settings/period-note.settings';
 import {PeriodEnhancer} from 'src/presentation/contracts/period.enhancer';
 import {PeriodUiModel} from '../models/period.ui-model';
 import {NoteAdapter} from 'src/infrastructure/adapters/note.adapter';
-import {PeriodType} from 'src/domain/models/period.model';
 
 export class NumberOfNotesPeriodEnhancer implements PeriodEnhancer {
     constructor(
@@ -21,10 +20,6 @@ export class NumberOfNotesPeriodEnhancer implements PeriodEnhancer {
     }
 
     private async enhancePeriod<T extends PeriodUiModel>(period: PeriodUiModel): Promise<T> {
-        if (period.period.type !== PeriodType.Day && period.period.type !== PeriodType.Week) {
-            return period as T;
-        }
-
         const notes = await this.noteAdapter.getNotes(note =>
             note.createdOn.toDateString() === period.period.date.toDateString()
         );

@@ -1,4 +1,4 @@
-import {Period, PeriodType} from 'src/domain/models/period.model';
+import {Period} from 'src/domain/models/period.model';
 import { PeriodNoteSettings } from 'src/domain/settings/period-note.settings';
 import {PeriodEnhancer} from 'src/presentation/contracts/period.enhancer';
 import {PeriodUiModel} from '../models/period.ui-model';
@@ -31,16 +31,11 @@ export class PeriodicNoteExistsPeriodEnhancer implements PeriodEnhancer {
     }
 
     private async enhancePeriod<T extends PeriodUiModel>(settings: PeriodNoteSettings, period: PeriodUiModel): Promise<T> {
-        if (period.period.type !== PeriodType.Day && period.period.type !== PeriodType.Week) {
-            return period as T;
-        }
-
         const filePath = this.nameBuilder
-            .withPath(settings.folderTemplate)
+            .withPath(settings.folder)
             .withName(settings.nameTemplate)
             .withValue(period.period)
             .build();
-
         const fileExists = await this.fileAdapter.exists(filePath);
 
         return <T>{

@@ -13,3 +13,14 @@ export function periodUiModel(period: Period): PeriodUiModel {
         noNotes: 0
     };
 }
+
+export function arePeriodsEqual(periodA?: PeriodUiModel, periodB?: PeriodUiModel): boolean {
+    if (!periodA || !periodB) {
+        return false;
+    }
+
+    const areSameDate = periodA?.period.date.toDateString() === periodB?.period.date.toDateString();
+    const areSameType = periodA?.period.type === periodB?.period.type;
+
+    return areSameDate && areSameType;
+}

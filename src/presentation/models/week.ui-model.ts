@@ -15,8 +15,8 @@ export function weekUiModel(week: WeekModel): WeekUiModel {
         hasPeriodNote: false,
         noNotes: 0,
         weekNumber: week.weekNumber,
-        year: periodUiModel(week),
-        month: periodUiModel(week),
+        year: periodUiModel(week.year),
+        month: periodUiModel(week.month),
         days: week.days.map(periodUiModel),
     };
 }

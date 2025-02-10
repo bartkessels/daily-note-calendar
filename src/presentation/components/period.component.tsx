@@ -4,11 +4,19 @@ import React, {ReactElement} from 'react';
 import {Period} from 'src/domain/models/period.model';
 
 interface PeriodViewProperties {
+    isSelected?: boolean;
+    isToday?: boolean;
     model?: PeriodUiModel,
-    onClick?: (key: ModifierKey, model: Period) => void;
+    onClick: (key: ModifierKey, model: PeriodUiModel) => void;
 }
 
-export const PeriodComponent = ({model, onClick}: PeriodViewProperties): ReactElement => {
+export const PeriodComponent = (
+    {
+        isSelected = false,
+        isToday = false,
+        model, onClick
+    }: PeriodViewProperties
+): ReactElement => {
     if (!model) {
         return <></>;
     }
@@ -25,10 +33,20 @@ export const PeriodComponent = ({model, onClick}: PeriodViewProperties): ReactEl
         return ModifierKey.None
     };
 
+    const classes: string[] = [];
+    if (isSelected) {
+        classes.push('selected-day');
+    }
+    if (model.hasPeriodNote) {
+        classes.push('has-note');
+    }
+
     return (
         <div
+            id={isToday ? 'today' : ''}
+            className={classes.join(' ')}
             onClick={(e: React.MouseEvent) => {
-                onClick?.call(modifierKey(e), model?.period);
+                onClick(modifierKey(e), model);
                 e.preventDefault();
             }}>{model.period.name}</div>
     );

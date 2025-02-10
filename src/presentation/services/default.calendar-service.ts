@@ -9,78 +9,75 @@ import {isCreateFileModifierKey, ModifierKey} from 'src/presentation/models/modi
 import {PeriodNoteSettings} from 'src/domain/settings/period-note.settings';
 import {periodUiModel, PeriodUiModel} from 'src/presentation/models/period.ui-model';
 import {CalendarEnhancer} from 'src/presentation/contracts/calendar.enhancer';
+import {WeekModel} from 'src/domain/models/week.model';
+import {DateManagerFactory} from 'src/business/contracts/date-manager-factory';
 
 export class DefaultCalendarService implements CalendarService {
+    private readonly dateManager: DateManager;
     private settings: PluginSettings = DEFAULT_PLUGIN_SETTINGS;
 
     constructor(
-        private readonly dateManager: DateManager,
+        private readonly dateManagerFactory: DateManagerFactory,
         private readonly periodicNoteManager: PeriodicNoteManager,
         private readonly enhancer: CalendarEnhancer
     ) {
-
+        this.dateManager = this.dateManagerFactory.getManager();
     }
 
-    public initialize(settings: PluginSettings, callback: (model: CalendarUiModel) => void): void {
+    public initialize(settings: PluginSettings, today: Period, callback: (model: CalendarUiModel) => void): void {
         this.settings = settings;
+        this.enhancer.withSettings(this.settings);
+
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
 
-        const currentDay = this.dateManager.getCurrentDay();
+        const uiModel = calendarUiModel(firstDayOfWeek, [], today, today);
+        this.loadCurrentWeek(uiModel, callback);
+    }
+
+    public loadCurrentWeek(model: CalendarUiModel | null, callback: (model: CalendarUiModel) => void): void {
+        const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
         const currentWeek = this.dateManager.getCurrentWeek(firstDayOfWeek);
-        const previousWeeks = this.dateManager.getPreviousWeeks(firstDayOfWeek, currentWeek, 2);
-        const nextWeeks = this.dateManager.getNextWeeks(firstDayOfWeek, currentWeek, 2);
+        const weeks = this.expandWeek(currentWeek, 2, 2);
 
-        const weeks = [...previousWeeks, currentWeek, ...nextWeeks];//.unique();
-
-        const uiModel = calendarUiModel(firstDayOfWeek, weeks, currentDay);
-        const weeksUiModel = weeks.map(weekUiModel);
-        const updatedModel = this.getModel(uiModel, weeksUiModel);
-
-        callback(updatedModel);
-        this.enhancer.withSettings(settings);
-        this.enhance(uiModel, callback);
+        this.buildModel(model, weeks, callback);
     }
 
-    public loadPreviousWeek(model: CalendarUiModel, callback: (model: CalendarUiModel) => void): void {
-        const oldestWeek = model.weeks.shift();
-        const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
+    public loadPreviousWeek(model: CalendarUiModel | null, callback: (model: CalendarUiModel) => void): void {
+        const weeks = this.expandWeeks(model?.weeks, 3, 1);
+        this.buildModel(model, weeks, callback);
+    }
 
-        if (oldestWeek) {
-            const previousWeeks = this.dateManager.getPreviousWeeks(firstDayOfWeek, oldestWeek.period, 1);
-            const previousWeeksUiModel = previousWeeks.map(weekUiModel);
-            const weeks = [...previousWeeksUiModel, ...model.weeks].unique();
+    public loadNextWeek(model: CalendarUiModel | null, callback: (model: CalendarUiModel) => void): void {
+        const weeks = this.expandWeeks(model?.weeks, 1, 3);
+        this.buildModel(model, weeks, callback);
+    }
 
-            callback(this.getModel(model, weeks));
-            this.enhance(model, callback);
+    public async openPeriodicNote(
+        model: CalendarUiModel | null,
+        key: ModifierKey,
+        period: PeriodUiModel,
+        settings: PeriodNoteSettings,
+        callback: (model: CalendarUiModel) => void
+    ): Promise<void> {
+        if (!model) {
+            return;
         }
-    }
 
-    public loadNextWeek(model: CalendarUiModel, callback: (model: CalendarUiModel) => void): void {
-        const latestWeek = model.weeks.pop();
-        const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
-
-        if (latestWeek) {
-            const nextWeeks = this.dateManager.getPreviousWeeks(firstDayOfWeek, latestWeek.period, 1);
-            const nextWeeksUiModel = nextWeeks.map(weekUiModel);
-            const weeks = [...nextWeeksUiModel, ...model.weeks].unique();
-
-            callback(this.getModel(model, weeks));
-            this.enhance(model, callback);
-        }
-    }
-
-    public async openPeriodicNote(key: ModifierKey, period: Period, settings: PeriodNoteSettings): Promise<void> {
         const requireModifierKeyForCreatingNote = this.settings.generalSettings.useModifierKeyToCreateNote;
         const isCreateFileModifierKeyPressed = isCreateFileModifierKey(key);
         const shouldCreateNote =
             !requireModifierKeyForCreatingNote ||
             (requireModifierKeyForCreatingNote && isCreateFileModifierKeyPressed);
 
+        const updatedModel = { ...model, selectedPeriod: period };
+        this.buildModel(updatedModel, updatedModel.weeks, callback);
+
         if (shouldCreateNote) {
-            await this.periodicNoteManager.createNote(settings, period);
+            await this.periodicNoteManager.createNote(settings, period.period);
+            this.buildModel(updatedModel, updatedModel.weeks, callback);
         }
 
-        await this.periodicNoteManager.openNote(settings, period);
+        await this.periodicNoteManager.openNote(settings, period.period);
     }
 
     private getMonth(weeks: WeekUiModel[]): PeriodUiModel {
@@ -100,18 +97,45 @@ export class DefaultCalendarService implements CalendarService {
     }
 
     private getMiddleWeek(weeks: WeekUiModel[]): WeekUiModel {
-        const middleWeekIndex = Math.ceil(weeks.length / 2);
+        const middleWeekIndex = Math.floor(weeks.length / 2);
         return weeks[middleWeekIndex];
     }
 
-    private getModel(model: CalendarUiModel, weeks: WeekUiModel[]): CalendarUiModel {
-        return {
+    private buildModel(model: CalendarUiModel | null, weeks: WeekUiModel[], callback: (model: CalendarUiModel) => void): void {
+        if (!model) {
+            return;
+        }
+
+        const updatedModel = {
             ...model,
+            lastUpdated: new Date(),
             year: this.getYear(weeks),
             quarter: this.getQuarter(weeks),
             month: this.getMonth(weeks),
             weeks: weeks
         };
+
+        callback(updatedModel);
+        this.enhance(updatedModel, callback);
+    }
+
+    private expandWeeks(weeksToExpand: WeekUiModel[] | undefined, noPreviousWeeks: number, noNextWeeks: number): WeekUiModel[] {
+        if (!weeksToExpand) {
+            return [];
+        }
+
+        const currentWeek = this.getMiddleWeek(weeksToExpand).period;
+        return this.expandWeek(currentWeek, noPreviousWeeks, noNextWeeks);
+    }
+
+    private expandWeek(weekToExpand: WeekModel, noPreviousWeeks: number, noNextWeeks: number): WeekUiModel[] {
+        const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
+
+        const previousWeeks = this.dateManager.getPreviousWeeks(firstDayOfWeek, weekToExpand, noPreviousWeeks);
+        const nextWeeks = this.dateManager.getNextWeeks(firstDayOfWeek, weekToExpand, noNextWeeks);
+        const weeks = [...previousWeeks, weekToExpand, ...nextWeeks].sort((a, b) => a.weekNumber - b.weekNumber);
+
+        return weeks.map(weekUiModel);
     }
 
     private enhance(model: CalendarUiModel, callback: (model: CalendarUiModel) => void): void {
