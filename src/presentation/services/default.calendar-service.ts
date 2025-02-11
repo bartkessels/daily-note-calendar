@@ -38,8 +38,9 @@ export class DefaultCalendarService implements CalendarService {
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
         const week = this.dateManager.getWeek(period, firstDayOfWeek);
         const weeks = this.expandWeek(week, 2, 2);
+        const updatedModel = <CalendarUiModel>{ ...model, selectedPeriod: periodUiModel(period) };
 
-        this.buildModel(null, weeks, callback);
+        this.buildModel(updatedModel, weeks, callback);
     }
 
     public loadCurrentWeek(model: CalendarUiModel | null, callback: (model: CalendarUiModel) => void): void {
