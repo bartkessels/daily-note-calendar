@@ -3,6 +3,7 @@ import {Period} from 'src/domain/models/period.model';
 
 export interface DateRepository {
     getDayFromDate(date: Date): Period;
+    getDayFromDateString(dateString: string, dateTemplate: string): Period | null;
     getWeekFromDate(startOfWeek: DayOfWeek, date: Date): WeekModel;
     getWeek(startOfWeek: DayOfWeek, weekNumber: number, year: number): WeekModel;
     getPreviousWeek(startOfWeek: DayOfWeek, week: WeekModel): WeekModel;

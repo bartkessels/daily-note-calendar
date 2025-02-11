@@ -34,6 +34,14 @@ export class DefaultCalendarService implements CalendarService {
         this.loadCurrentWeek(uiModel, callback);
     }
 
+    public selectPeriod(model: CalendarUiModel | null, period: Period, callback: (model: CalendarUiModel) => void): void {
+        const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
+        const week = this.dateManager.getWeek(period, firstDayOfWeek);
+        const weeks = this.expandWeek(week, 2, 2);
+
+        this.buildModel(null, weeks, callback);
+    }
+
     public loadCurrentWeek(model: CalendarUiModel | null, callback: (model: CalendarUiModel) => void): void {
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
         const currentWeek = this.dateManager.getCurrentWeek(firstDayOfWeek);

@@ -21,7 +21,7 @@ export class NumberOfNotesPeriodEnhancer implements PeriodEnhancer {
 
     private async enhancePeriod<T extends PeriodUiModel>(period: PeriodUiModel): Promise<T> {
         const notes = await this.noteAdapter.getNotes(note =>
-            note.createdOn.toDateString() === period.period.date.toDateString()
+            note.createdOn.date.toDateString() === period.period.date.toDateString()
         );
         const noNotesForPeriod = notes.length;
 

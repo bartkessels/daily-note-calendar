@@ -1,6 +1,8 @@
+import {Period} from 'src/domain/models/period.model';
+
 export interface Note {
-    createdOn: Date;
-    createdOnProperty?: Date | undefined;
+    createdOn: Period;
+    createdOnProperty?: Period | undefined;
     name: string;
     path: string;
     properties: Map<string, string>;

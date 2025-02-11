@@ -8,18 +8,20 @@ import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
 export interface CalendarViewModel {
     setUpdateViewState(callback: (model: CalendarUiModel) => void): void;
     initialize(settings: PluginSettings, today: Period): void;
-    openDailyNote(model: CalendarUiModel | null, key: ModifierKey, period: PeriodUiModel): Promise<void>;
-    openWeeklyNote(model: CalendarUiModel | null, key: ModifierKey, period: PeriodUiModel): Promise<void>;
-    openMonthlyNote(model: CalendarUiModel | null, key: ModifierKey, period: PeriodUiModel): Promise<void>;
-    openQuarterlyNote(model: CalendarUiModel | null, key: ModifierKey, period: PeriodUiModel): Promise<void>;
-    openYearlyNote(model: CalendarUiModel | null, key: ModifierKey, period: PeriodUiModel): Promise<void>;
-    loadCurrentWeek(model: CalendarUiModel | null): void;
-    loadPreviousWeek(model: CalendarUiModel | null): void;
-    loadNextWeek(model: CalendarUiModel | null): void;
+    selectPeriod(period: Period): void;
+    openDailyNote(key: ModifierKey, period: PeriodUiModel): Promise<void>;
+    openWeeklyNote(key: ModifierKey, period: PeriodUiModel): Promise<void>;
+    openMonthlyNote(key: ModifierKey, period: PeriodUiModel): Promise<void>;
+    openQuarterlyNote(key: ModifierKey, period: PeriodUiModel): Promise<void>;
+    openYearlyNote(key: ModifierKey, period: PeriodUiModel): Promise<void>;
+    loadCurrentWeek(): void;
+    loadPreviousWeek(): void;
+    loadNextWeek(): void;
 }
 
 export class DefaultCalendarViewModel implements CalendarViewModel {
     private settings: PluginSettings = DEFAULT_PLUGIN_SETTINGS;
+    private uiModel: CalendarUiModel | null = null;
     private updateModel: (uiModel: CalendarUiModel) => void;
 
     constructor(
@@ -32,58 +34,72 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         this.updateModel = callback;
     }
 
+    private setModel(model: CalendarUiModel): void {
+        // Only update the UI model if it's the latest version of the UI model
+        if (!this.uiModel || model.lastUpdated > this.uiModel.lastUpdated) {
+            this.uiModel = model;
+            this.updateModel(model);
+        }
+    }
+
     public initialize(settings: PluginSettings, today: Period): void {
         this.settings = settings;
         this.calendarService.initialize(settings, today, (model) => {
-            this.updateModel(model);
+            this.setModel(model);
         });
     }
 
-    public loadCurrentWeek(model: CalendarUiModel | null) {
-        this.calendarService.loadCurrentWeek(model, (model) => this.updateModel(model));
+    public selectPeriod(period: Period): void {
+        this.calendarService.selectPeriod(this.uiModel, period, (model) => {
+            this.setModel(model);
+        });
     }
 
-    public loadPreviousWeek(model: CalendarUiModel | null): void {
-        this.calendarService.loadPreviousWeek(model, (model) => this.updateModel(model));
+    public loadCurrentWeek() {
+        this.calendarService.loadCurrentWeek(this.uiModel, (model) => this.setModel(model));
     }
 
-    public loadNextWeek(model: CalendarUiModel | null): void {
-        this.calendarService.loadNextWeek(model, (model) => this.updateModel(model));
+    public loadPreviousWeek(): void {
+        this.calendarService.loadPreviousWeek(this.uiModel, (model) => this.setModel(model));
     }
 
-    public async openDailyNote(model: CalendarUiModel | null, key: ModifierKey, period: PeriodUiModel): Promise<void> {
-        await this.calendarService.openPeriodicNote(model, key, period, this.settings.dailyNotes, (model) => {
-            this.updateModel(model);
+    public loadNextWeek(): void {
+        this.calendarService.loadNextWeek(this.uiModel, (model) => this.setModel(model));
+    }
+
+    public async openDailyNote(key: ModifierKey, period: PeriodUiModel): Promise<void> {
+        await this.calendarService.openPeriodicNote(this.uiModel, key, period, this.settings.dailyNotes, (model) => {
+            this.setModel(model);
 
             // TODO: Display notes created on this day
         });
     }
 
-    public async openWeeklyNote(model: CalendarUiModel | null, key: ModifierKey, period: PeriodUiModel): Promise<void> {
-        await this.calendarService.openPeriodicNote(model, key, period, this.settings.weeklyNotes, (model) => {
-            this.updateModel(model);
+    public async openWeeklyNote(key: ModifierKey, period: PeriodUiModel): Promise<void> {
+        await this.calendarService.openPeriodicNote(this.uiModel, key, period, this.settings.weeklyNotes, (model) => {
+            this.setModel(model);
 
             // TODO: Display notes created on this week
         });
     }
 
-    public async openMonthlyNote(model: CalendarUiModel | null, key: ModifierKey, period: PeriodUiModel): Promise<void> {
-        await this.calendarService.openPeriodicNote(model, key, period, this.settings.monthlyNotes, (model) => {
-            this.updateModel(model);
+    public async openMonthlyNote(key: ModifierKey, period: PeriodUiModel): Promise<void> {
+        await this.calendarService.openPeriodicNote(this.uiModel, key, period, this.settings.monthlyNotes, (model) => {
+            this.setModel(model);
 
             // TODO: Display notes created in this month
         });
     }
 
-    public async openQuarterlyNote(model: CalendarUiModel | null, key: ModifierKey, period: PeriodUiModel): Promise<void> {
-        await this.calendarService.openPeriodicNote(model, key, period, this.settings.quarterlyNotes, (model) => {
-            this.updateModel(model);
+    public async openQuarterlyNote(key: ModifierKey, period: PeriodUiModel): Promise<void> {
+        await this.calendarService.openPeriodicNote(this.uiModel, key, period, this.settings.quarterlyNotes, (model) => {
+            this.setModel(model);
         });
     }
 
-    public async openYearlyNote(model: CalendarUiModel | null, key: ModifierKey, period: PeriodUiModel): Promise<void> {
-        await this.calendarService.openPeriodicNote(model, key, period, this.settings.yearlyNotes, (model) => {
-            this.updateModel(model);
+    public async openYearlyNote(key: ModifierKey, period: PeriodUiModel): Promise<void> {
+        await this.calendarService.openPeriodicNote(this.uiModel, key, period, this.settings.yearlyNotes, (model) => {
+            this.setModel(model);
         });
     }
 }

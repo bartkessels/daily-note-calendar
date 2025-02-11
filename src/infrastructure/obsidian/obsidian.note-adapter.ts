@@ -1,12 +1,17 @@
 import {Note} from 'src/domain/models/note.model';
 import {NoteAdapter} from 'src/infrastructure/adapters/note.adapter';
 import {Plugin, TFile} from 'obsidian';
+import {DateRepository} from 'src/infrastructure/contracts/date-repository';
+import {DateRepositoryFactory} from 'src/infrastructure/contracts/date-repository-factory';
 
 export class ObsidianNoteAdapter implements NoteAdapter {
-    constructor(
-        private readonly plugin: Plugin
-    ) {
+    private readonly dateRepository: DateRepository;
 
+    constructor(
+        private readonly plugin: Plugin,
+        dateRepositoryFactory: DateRepositoryFactory
+    ) {
+        this.dateRepository = dateRepositoryFactory.getRepository();
     }
 
     public async getActiveNote(): Promise<Note | null> {
@@ -42,10 +47,12 @@ export class ObsidianNoteAdapter implements NoteAdapter {
             console.error(`Error processing front matter for file: ${file.path}. Error: ${e}`);
         }
 
+        const createdOn = this.dateRepository.getDayFromDate(new Date(file.stat.ctime));
+
         return <Note>{
             path: file.path,
             name: file.name.removeMarkdownExtension(),
-            createdOn: new Date(file.stat.ctime),
+            createdOn: createdOn,
             properties: frontMatter
         };
     }

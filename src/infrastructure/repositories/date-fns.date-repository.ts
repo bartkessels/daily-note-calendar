@@ -13,11 +13,19 @@ import {
     subWeeks
 } from 'date-fns';
 import {Period, PeriodType} from 'src/domain/models/period.model';
+import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
+import {DateParser} from 'src/infrastructure/contracts/date-parser';
 
 export class DateFnsDateRepository implements DateRepository {
+    private readonly dateParser: DateParser;
+
     private readonly monthFormat = 'long';
     private readonly dayFormat = '2-digit';
     private readonly yearFormat = 'numeric';
+
+    constructor(dateParserFactory: DateParserFactory) {
+        this.dateParser = dateParserFactory.getParser();
+    }
 
     public getDayFromDate(date: Date): Period {
         const formatter = new Intl.DateTimeFormat(undefined, {
@@ -29,6 +37,16 @@ export class DateFnsDateRepository implements DateRepository {
             date: date,
             type: PeriodType.Day
         };
+    }
+
+    public getDayFromDateString(dateString: string, dateTemplate: string): Period | null {
+        const date = this.dateParser.fromString(dateString, dateTemplate);
+
+        if (!date) {
+            return null;
+        }
+
+        return this.getDayFromDate(date);
     }
 
     public getWeekFromDate(startOfWeek: DayOfWeek, date: Date): WeekModel {

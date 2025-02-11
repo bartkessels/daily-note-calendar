@@ -21,6 +21,10 @@ export class RepositoryDateManager implements DateManager {
         return this.dateRepository.getWeekFromDate(startOfWeek, this.today);
     }
 
+    public getWeek(period: Period, startOfWeek: DayOfWeek): WeekModel {
+        return this.dateRepository.getWeekFromDate(startOfWeek, period.date);
+    }
+
     public getPreviousWeeks(startOfWeek: DayOfWeek, currentWeek: WeekModel, noWeeks: number): WeekModel[] {
         return this.getWeeks(currentWeek, noWeeks, (week) => this.dateRepository.getPreviousWeek(startOfWeek, week));
     }

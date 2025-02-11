@@ -1,9 +1,9 @@
 import {Command} from 'obsidian';
 import {CommandHandler} from 'src/presentation/contracts/command-handler';
 
-export class DisplayInCalendarCommand implements Command {
-    public id: string = 'dnc-display-in-calendar';
-    public name: string = 'Display the current note in the calendar';
+export class NavigateToNextWeekCommand implements Command {
+    public id: string = 'dnc-navigate-to-next-week';
+    public name: string = 'Navigate to the next week';
 
     constructor(
         private readonly commandHandler: CommandHandler
@@ -13,5 +13,5 @@ export class DisplayInCalendarCommand implements Command {
 
     public callback: (() => any) = (): void => {
         this.commandHandler.execute().then();
-    }
+    };
 }

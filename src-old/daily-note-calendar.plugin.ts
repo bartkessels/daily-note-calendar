@@ -5,13 +5,13 @@ import {createDependencies, Dependencies} from 'src-old/dependencies';
 import 'src-old/extensions/extensions';
 import {ManageAction} from 'src-old/domain/events/manage.event';
 import {DisplayInCalendarCommand} from 'src-old/plugin/commands/display-in-calendar.command';
-import {hoi} from 'src/dependencies';
+import {getDependencies} from 'src/dependencies';
 
 export default class DailyNoteCalendarPlugin extends Plugin {
     private readonly dependencies: Dependencies = createDependencies(this);
 
     override async onload(): Promise<void> {
-        hoi(this);
+        getDependencies(this);
 
         this.registerView(CalendarView.VIEW_TYPE, (leaf) =>
             new CalendarView(

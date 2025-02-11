@@ -8,7 +8,8 @@ import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
 type Callback = (model: CalendarUiModel) => void;
 
 export interface CalendarService {
-    initialize(settings: PluginSettings, today: Period, callback: Callback): void;
+    initialize(settings: PluginSettings, period: Period, callback: Callback): void;
+    selectPeriod(model: CalendarUiModel | null, period: Period, callback: Callback): void;
     loadCurrentWeek(model: CalendarUiModel | null, callback: Callback): void;
     loadPreviousWeek(model: CalendarUiModel | null, callback: Callback): void;
     loadNextWeek(model: CalendarUiModel | null, callback: Callback): void;
