@@ -14,17 +14,16 @@ import {
 } from 'date-fns';
 import {Period, PeriodType} from 'src/domain/models/period.model';
 import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
-import {DateParser} from 'src/infrastructure/contracts/date-parser';
 
 export class DateFnsDateRepository implements DateRepository {
-    private readonly dateParser: DateParser;
-
     private readonly monthFormat = 'long';
     private readonly dayFormat = '2-digit';
     private readonly yearFormat = 'numeric';
 
-    constructor(dateParserFactory: DateParserFactory) {
-        this.dateParser = dateParserFactory.getParser();
+    constructor(
+        private readonly dateParserFactory: DateParserFactory
+    ) {
+
     }
 
     public getDayFromDate(date: Date): Period {
@@ -40,7 +39,8 @@ export class DateFnsDateRepository implements DateRepository {
     }
 
     public getDayFromDateString(dateString: string, dateTemplate: string): Period | null {
-        const date = this.dateParser.fromString(dateString, dateTemplate);
+        const date = this.dateParserFactory.getParser()
+            .fromString(dateString, dateTemplate);
 
         if (!date) {
             return null;
