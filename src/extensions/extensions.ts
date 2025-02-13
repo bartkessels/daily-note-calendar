@@ -1,5 +1,5 @@
-import {Calculus, CalculusOperator} from 'src-old/domain/models/variable';
 import {Period} from 'src/domain/models/period.model';
+import {Calculus, CalculusOperator} from 'src/domain/models/variable.model';
 
 declare global {
     interface String {

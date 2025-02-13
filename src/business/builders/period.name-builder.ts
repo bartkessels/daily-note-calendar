@@ -1,16 +1,18 @@
 import {NameBuilder} from 'src/business/contracts/name-builder';
 import {DateParser} from 'src/infrastructure/contracts/date-parser';
 import {Period} from 'src/domain/models/period.model';
+import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
+import 'src/extensions/extensions';
 
 export class PeriodNameBuilder implements NameBuilder<Period> {
+    private readonly dateParser: DateParser;
+
     private period?: Period;
     private pathTemplate?: string;
     private nameTemplate?: string;
 
-    constructor(
-        private readonly dateParser: DateParser
-    ) {
-
+    constructor(dateParserFactory: DateParserFactory) {
+        this.dateParser = dateParserFactory.getParser();
     }
 
     public withPath(template: string): NameBuilder<Period> {

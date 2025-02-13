@@ -13,7 +13,7 @@ export class DefaultNameBuilderFactory implements NameBuilderFactory {
     public getNameBuilder<T>(type: NameBuilderType): NameBuilder<T> {
         switch (type) {
             case NameBuilderType.PeriodicNote:
-                return new PeriodNameBuilder(this.dateParserFactory.getParser()) as unknown as NameBuilder<T>;
+                return new PeriodNameBuilder(this.dateParserFactory) as NameBuilder<T>;
         }
     }
 }
