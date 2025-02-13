@@ -21,33 +21,18 @@ import {DefaultPeriodicNoteManager} from 'src/business/managers/default.periodic
 import {DefaultDateRepositoryFactory} from 'src/infrastructure/factories/default.date-repository-factory';
 import {DefaultFileRepositoryFactory} from 'src/infrastructure/factories/default.file-repository-factory';
 import {SettingsRepositoryFactory} from 'src/infrastructure/contracts/settings-repository-factory';
-import {NoteManager} from 'src/business/contracts/note.manager';
-import {RepositoryNoteManager} from 'src/business/managers/repository.note-manager';
 import {DefaultNoteRepositoryFactory} from 'src/infrastructure/factories/default.note-repository-factory';
-import {DateRepositoryFactory} from 'src/infrastructure/contracts/date-repository-factory';
 import {DateManagerFactory} from 'src/business/contracts/date-manager-factory';
 import {DefaultDateManagerFactory} from 'src/business/factories/default.date-manager-factory';
-import {DisplayInCalendarCommandHandler} from 'src/presentation/command-handlers/display-in-calendar.command-handler';
-import {
-    NavigateToCurrentWeekCommandHandler
-} from 'src/presentation/command-handlers/navigate-to-current-week.command-handler';
-import {
-    NavigateToNextWeekCommandHandler
-} from 'src/presentation/command-handlers/navigate-to-next-week.command-handler';
-import {
-    NavigateToPreviousWeekCommandHandler
-} from 'src/presentation/command-handlers/navigate-to-previous-week.command-handler';
-import {CommandHandler} from 'src/presentation/contracts/command-handler';
+import {DefaultCommandHandlerFactory} from 'src/presentation/factories/default.command-handler-factory';
+import {DefaultNoteManagerFactory} from 'src/business/factories/default.note-manager-factory';
+import {CommandHandlerFactory} from 'src/presentation/contracts/command-handler-factory';
 
 export interface Dependencies {
     viewModel: CalendarViewModel;
     dateManagerFactory: DateManagerFactory;
     settingsRepositoryFactory: SettingsRepositoryFactory;
-    noteManager: NoteManager;
-    displayInCalendarCommandHandler: CommandHandler;
-    navigateToCurrentWeekCommandHandler: CommandHandler;
-    navigateToNextWeekCommandHandler: CommandHandler;
-    navigateToPreviousWeekCommandHandler: CommandHandler;
+    commandHandlerFactory: CommandHandlerFactory;
 }
 
 export function getDependencies(plugin: Plugin): Dependencies {
@@ -68,7 +53,7 @@ export function getDependencies(plugin: Plugin): Dependencies {
     const variableFactory = new DefaultVariableFactory();
     const variableParserFactory = new DefaultVariableParserFactory(variableFactory, dateParserFactory);
     const dateManagerFactory = new DefaultDateManagerFactory(dateRepositoryFactory);
-    const noteManager = new RepositoryNoteManager(fileRepositoryFactory, noteRepositoryFactory, settingsRepositoryFactory, dateRepositoryFactory);
+    const noteManagerFactory = new DefaultNoteManagerFactory(fileRepositoryFactory, noteRepositoryFactory, settingsRepositoryFactory, dateRepositoryFactory);
     const periodicNoteManager = new DefaultPeriodicNoteManager(nameBuilderFactory, variableParserFactory, fileRepositoryFactory, noteRepositoryFactory);
 
     // Presentation
@@ -76,20 +61,13 @@ export function getDependencies(plugin: Plugin): Dependencies {
     const calendarService = new DefaultCalendarService(dateManagerFactory, periodicNoteManager, calendarEnhancer);
     const viewModel = new DefaultCalendarViewModel(calendarService);
 
-    const displayInCalendarCommandHandler = new DisplayInCalendarCommandHandler(noteManager, viewModel, settingsRepositoryFactory);
-    const navigateToCurrentWeekCommandHandler = new NavigateToCurrentWeekCommandHandler(viewModel);
-    const navigateToNextWeekCommandHandler = new NavigateToNextWeekCommandHandler(viewModel);
-    const navigateToPreviousWeekCommandHandler = new NavigateToPreviousWeekCommandHandler(viewModel);
+    const commandHandlerFactory = new DefaultCommandHandlerFactory(noteManagerFactory, settingsRepositoryFactory, dateManagerFactory, viewModel);
 
     return {
         viewModel: viewModel,
         dateManagerFactory: dateManagerFactory,
         settingsRepositoryFactory: settingsRepositoryFactory,
-        noteManager: noteManager,
-        displayInCalendarCommandHandler: displayInCalendarCommandHandler,
-        navigateToCurrentWeekCommandHandler: navigateToCurrentWeekCommandHandler,
-        navigateToNextWeekCommandHandler: navigateToNextWeekCommandHandler,
-        navigateToPreviousWeekCommandHandler: navigateToPreviousWeekCommandHandler
+        commandHandlerFactory: commandHandlerFactory
     };
 }
 

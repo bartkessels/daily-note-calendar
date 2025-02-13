@@ -4,15 +4,18 @@ import {DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
 import {SettingsRepository} from 'src/infrastructure/contracts/settings-repository';
 import {CalendarViewModel} from 'src/presentation/view-models/calendar.view-model';
 import {CommandHandler} from 'src/presentation/contracts/command-handler';
+import {NoteManagerFactory} from 'src/business/contracts/note-manager-factory';
 
 export class DisplayInCalendarCommandHandler implements CommandHandler {
+    private readonly noteManager: NoteManager;
     private readonly settingsRepository: SettingsRepository<DisplayNotesSettings>;
 
     constructor(
-        private readonly noteManager: NoteManager,
         private readonly viewModel: CalendarViewModel,
+        noteManagerFactory: NoteManagerFactory,
         settingsRepositoryFactory: SettingsRepositoryFactory
     ) {
+        this.noteManager = noteManagerFactory.getManager();
         this.settingsRepository = settingsRepositoryFactory.getRepository<DisplayNotesSettings>(SettingsType.DisplayNotes);
     }
 

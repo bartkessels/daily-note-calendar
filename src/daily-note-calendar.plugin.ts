@@ -8,6 +8,8 @@ import 'src/extensions/extensions';
 import {NavigateToCurrentWeekCommand} from 'src/presentation/commands/navigate-to-current-week.command';
 import {NavigateToNextWeekCommand} from 'src/presentation/commands/navigate-to-next-week.command';
 import {NavigateToPreviousWeekCommand} from 'src/presentation/commands/navigate-to-previous-week.command';
+import {OpenYesterdaysNoteCommand} from 'src/presentation/commands/open-yesterdays-note.command';
+import {OpenTomorrowsNoteCommand} from 'src/presentation/commands/open-tomorrows-note.command';
 
 export default class DailyNoteCalendarPlugin extends Plugin {
     private readonly dependencies: Dependencies = getDependencies(this);
@@ -25,7 +27,6 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             .getRepository<PluginSettings>(SettingsType.Plugin)
             .get();
 
-        console.log(settings);
         this.dependencies.viewModel.initialize(settings, today);
 
         if (this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE).length <= 0) {
@@ -34,9 +35,11 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     }
 
     private registerCommands(): void {
-        this.addCommand(new DisplayInCalendarCommand(this.dependencies.displayInCalendarCommandHandler));
-        this.addCommand(new NavigateToCurrentWeekCommand(this.dependencies.navigateToCurrentWeekCommandHandler));
-        this.addCommand(new NavigateToNextWeekCommand(this.dependencies.navigateToNextWeekCommandHandler));
-        this.addCommand(new NavigateToPreviousWeekCommand(this.dependencies.navigateToPreviousWeekCommandHandler));
+        this.addCommand(new DisplayInCalendarCommand(this.dependencies.commandHandlerFactory));
+        this.addCommand(new NavigateToCurrentWeekCommand(this.dependencies.commandHandlerFactory));
+        this.addCommand(new NavigateToNextWeekCommand(this.dependencies.commandHandlerFactory));
+        this.addCommand(new NavigateToPreviousWeekCommand(this.dependencies.commandHandlerFactory));
+        this.addCommand(new OpenYesterdaysNoteCommand(this.dependencies.commandHandlerFactory));
+        this.addCommand(new OpenTomorrowsNoteCommand(this.dependencies.commandHandlerFactory));
     }
 }

@@ -17,6 +17,20 @@ export class RepositoryDateManager implements DateManager {
         return this.dateRepository.getDayFromDate(this.today);
     }
 
+    public getTomorrow(): Period {
+        const tomorrow = this.today;
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        return this.dateRepository.getDayFromDate(tomorrow);
+    }
+
+    public getYesterday(): Period {
+        const yesterday = this.today;
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        return this.dateRepository.getDayFromDate(yesterday);
+    }
+
     public getCurrentWeek(startOfWeek: DayOfWeek): WeekModel {
         return this.dateRepository.getWeekFromDate(startOfWeek, this.today);
     }
