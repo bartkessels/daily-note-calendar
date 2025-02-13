@@ -56,9 +56,7 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
     }
 
     private getFilePath(value: Period, settings: PeriodNoteSettings): string {
-        const nameBuilder = this.nameBuilderFactory.getNameBuilder<Period>(NameBuilderType.PeriodicNote);
-
-        return nameBuilder
+        return this.nameBuilderFactory.getNameBuilder<Period>(NameBuilderType.PeriodicNote)
             .withPath(settings.folder)
             .withName(settings.nameTemplate)
             .withValue(value)
