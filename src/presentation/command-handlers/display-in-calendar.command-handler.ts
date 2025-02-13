@@ -11,9 +11,9 @@ export class DisplayInCalendarCommandHandler implements CommandHandler {
     private readonly settingsRepository: SettingsRepository<DisplayNotesSettings>;
 
     constructor(
-        private readonly viewModel: CalendarViewModel,
         noteManagerFactory: NoteManagerFactory,
-        settingsRepositoryFactory: SettingsRepositoryFactory
+        settingsRepositoryFactory: SettingsRepositoryFactory,
+        private readonly viewModel: CalendarViewModel
     ) {
         this.noteManager = noteManagerFactory.getManager();
         this.settingsRepository = settingsRepositoryFactory.getRepository<DisplayNotesSettings>(SettingsType.DisplayNotes);
