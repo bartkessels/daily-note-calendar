@@ -1,5 +1,4 @@
 export interface Variable {
-    name: string;
     template: string | null;
     calculus?: Calculus | null;
     type: VariableType;

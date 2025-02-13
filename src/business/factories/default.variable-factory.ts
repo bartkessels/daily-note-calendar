@@ -21,18 +21,18 @@ export class DefaultVariableFactory implements VariableFactory {
         }
 
         return {
-            name: name,
             template: template,
             calculus: calculus,
-            type: this.types.get(name.toLowerCase()) || VariableType.Title
+            type: type
         };
     }
 
     private getCalculusFromRegex(string: string): Calculus | null {
         const regex= /([+-])([0-9]+)([a-z])/;
         const [_, operator, value, unit] = regex.exec(string) || [];
+        const parsedValue = parseInt(value);
 
-        if (!operator || !value || !unit) {
+        if (!operator || !value || !unit || isNaN(parsedValue)) {
             return null;
         }
 
@@ -44,7 +44,7 @@ export class DefaultVariableFactory implements VariableFactory {
         return {
             unit: unit,
             operator: calculusOperator,
-            value: parseInt(value)
+            value: parsedValue
         };
     }
 }
