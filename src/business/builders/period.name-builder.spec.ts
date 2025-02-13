@@ -63,15 +63,19 @@ describe('PeriodNameBuilder', () => {
         });
 
         it('should throw an error if the period is not provided', () => {
-            // Act & Assert
-            expect(() => nameBuilder.withName(nameTemplate).build())
-                .toThrow("Period is required!");
+            // Act
+            const result = () => nameBuilder.withName(nameTemplate).build();
+
+            // Assert
+            expect(result).toThrow('Period is required!');
         });
 
         it('should throw an error if the name template is not provided', () => {
-            // Act & Assert
-            expect(() => nameBuilder.withValue(period).build())
-                .toThrow("Name template is required!");
+            // Act
+            const result = () => nameBuilder.withValue(period).build();
+
+            // Assert
+            expect(result).toThrow('Name template is required!');
         });
     });
 });

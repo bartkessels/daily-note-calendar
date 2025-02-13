@@ -3,6 +3,7 @@ import {Calculus, CalculusOperator, Variable, VariableType} from 'src/domain/mod
 
 export class DefaultVariableFactory implements VariableFactory {
     private readonly typesThatRequireTemplate = [VariableType.Date, VariableType.Today];
+    private readonly typesThatSupportCalculus = [VariableType.Date, VariableType.Today];
     private readonly types = new Map<string, VariableType>()
         .set('date', VariableType.Date)
         .set('today', VariableType.Today)
@@ -12,7 +13,7 @@ export class DefaultVariableFactory implements VariableFactory {
         const regex = /{{([a-z]+)([+-][0-9].)?:?(.*)?}}/;
         const [_, name, calculusValue, template] = regex.exec(value) || [];
         const type = this.types.get(name.toLowerCase());
-        const calculus = this.getCalculusFromRegex(calculusValue);
+        let calculus: Calculus | null = null;
 
         if (type === undefined) {
             throw Error('Could not create a variable because the type is unknown');
@@ -20,9 +21,13 @@ export class DefaultVariableFactory implements VariableFactory {
             throw Error('Could not create a variable because the template is unknown');
         }
 
+        if (this.typesThatSupportCalculus.includes(type)) {
+            calculus = this.getCalculusFromRegex(calculusValue);
+        }
+
         return {
-            template: template,
-            calculus: calculus,
+            template: template ?? null,
+            calculus: calculus ?? null,
             type: type
         };
     }
