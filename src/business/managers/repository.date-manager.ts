@@ -69,6 +69,6 @@ export class RepositoryDateManager implements DateManager {
             weeks.push(lastWeek);
         }
 
-        return weeks.sort((a, b) => a.date.getDate() - b.date.getDate());
+        return weeks;
     }
 }
