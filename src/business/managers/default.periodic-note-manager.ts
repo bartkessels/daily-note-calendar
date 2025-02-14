@@ -64,8 +64,7 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
     }
 
     private async parseVariables(content: string, period: Period): Promise<string> {
-        const noteRepository = this.noteRepositoryFactory.getRepository();
-        const activeFile = await noteRepository.getActiveNote();
+        const activeFile = await this.noteRepositoryFactory.getRepository().getActiveNote();
         const titleVariableParser = this.variableParserFactory.getVariableParser<string | undefined>(VariableType.Title);
         const periodVariableParser = this.variableParserFactory.getVariableParser<Period>(VariableType.Date);
         const todayVariableParser = this.variableParserFactory.getVariableParser<Date>(VariableType.Today);
