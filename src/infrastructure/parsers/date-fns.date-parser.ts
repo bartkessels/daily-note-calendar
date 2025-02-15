@@ -26,7 +26,13 @@ export class DateFnsDateParser implements DateParser {
      */
     public fromString(date: string, template: string): Date | null {
         try {
-            return parse(date, template, new Date());
+            const parsedDate = parse(date, template, new Date());
+
+            if (isNaN(parsedDate.getDate())) {
+                return null;
+            }
+
+            return parsedDate;
         } catch (e) {
             return null;
         }
