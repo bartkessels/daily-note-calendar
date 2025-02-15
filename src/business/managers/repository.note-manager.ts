@@ -17,11 +17,21 @@ export class RepositoryNoteManager implements NoteManager {
     }
 
     public async openNote(note: Note): Promise<void> {
-        await this.fileRepositoryFactory.getRepository().open(note.path);
+        const fileRepository = this.fileRepositoryFactory.getRepository();
+        const doesNoteExist = await fileRepository.exists(note.path);
+
+        if (doesNoteExist) {
+            await this.fileRepositoryFactory.getRepository().open(note.path);
+        }
     }
 
     public async deleteNote(note: Note): Promise<void> {
-        await this.fileRepositoryFactory.getRepository().delete(note.path);
+        const fileRepository = this.fileRepositoryFactory.getRepository();
+        const doesNoteExist = await fileRepository.exists(note.path);
+
+        if (doesNoteExist) {
+            await this.fileRepositoryFactory.getRepository().delete(note.path);
+        }
     }
 
     public async getActiveNote(): Promise<Note | null> {
