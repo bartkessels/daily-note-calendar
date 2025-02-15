@@ -1,48 +1,33 @@
 import {DefaultPeriodicNoteManager} from 'src/business/managers/default.periodic-note-manager';
-import {NameBuilderFactory, NameBuilderType} from 'src/business/contracts/name-builder-factory';
-import {VariableParserFactory} from 'src/business/contracts/variable-parser-factory';
-import {FileRepositoryFactory} from 'src/infrastructure/contracts/file-repository-factory';
-import {NoteRepositoryFactory} from 'src/infrastructure/contracts/note-repository-factory';
-import {NameBuilder} from 'src/business/contracts/name-builder';
+import {NameBuilderType} from 'src/business/contracts/name-builder-factory';
 import {Period} from 'src/domain/models/period.model';
-import {VariableParser} from 'src/business/contracts/variable-parser';
-import {FileRepository} from 'src/infrastructure/contracts/file-repository';
-import {NoteRepository} from 'src/infrastructure/contracts/note-repository';
 import {when} from 'jest-when';
 import {VariableType} from 'src/domain/models/variable.model';
 import {PeriodNoteSettings} from 'src/domain/settings/period-note.settings';
 import {Note} from 'src/domain/models/note.model';
 import {afterEach} from '@jest/globals';
+import {mockPeriodNameBuilder} from 'src/test-helpers/builder.mocks';
+import {
+    mockDateVariableParser,
+    mockPeriodVariableParser,
+    mockStringVariableParser
+} from 'src/test-helpers/parser.mocks';
+import {mockFileRepository, mockNoteRepository} from 'src/test-helpers/repository.mocks';
+import {
+    mockFileRepositoryFactory,
+    mockNameBuilderFactory, mockNoteRepositoryFactory,
+    mockVariableParserFactory
+} from 'src/test-helpers/factory.mocks';
 
 describe('DefaultPeriodicNoteManager', () => {
     let manager: DefaultPeriodicNoteManager;
 
-    const nameBuilder = {
-        withPath: jest.fn((_) => nameBuilder),
-        withName: jest.fn((_) => nameBuilder),
-        withValue: jest.fn((_) => nameBuilder),
-        build: jest.fn()
-    } as jest.Mocked<NameBuilder<Period>>;
-    const periodVariableParser = {
-        parseVariables: jest.fn()
-    } as jest.Mocked<VariableParser<Period>>;
-    const todayVariableParser = {
-        parseVariables: jest.fn()
-    } as jest.Mocked<VariableParser<Date>>;
-    const titleVariableParser = {
-        parseVariables: jest.fn()
-    } as jest.Mocked<VariableParser<string>>;
-    const fileRepository = {
-        exists: jest.fn(),
-        create: jest.fn(),
-        readContents: jest.fn(),
-        writeContents: jest.fn(),
-        open: jest.fn(),
-        delete: jest.fn()
-    } as jest.Mocked<FileRepository>;
-    const noteRepository = {
-        getActiveNote: jest.fn()
-    } as jest.Mocked<NoteRepository>;
+    const nameBuilder = mockPeriodNameBuilder;
+    const periodVariableParser = mockPeriodVariableParser;
+    const todayVariableParser = mockDateVariableParser;
+    const titleVariableParser = mockStringVariableParser;
+    const fileRepository = mockFileRepository;
+    const noteRepository = mockNoteRepository;
     const period = <Period>{
         date: new Date(2023, 9, 2),
         name: '2',
@@ -56,18 +41,10 @@ describe('DefaultPeriodicNoteManager', () => {
     const completeFilePath = `${dailyNoteSettings.folder}/2023-10-02.md`;
 
     beforeEach(() => {
-        const nameBuilderFactory = {
-            getNameBuilder: jest.fn()
-        } as jest.Mocked<NameBuilderFactory>;
-        const variableParserFactory = {
-            getVariableParser: jest.fn()
-        } as jest.Mocked<VariableParserFactory>;
-        const fileRepositoryFactory = {
-            getRepository: jest.fn(() => fileRepository)
-        } as jest.Mocked<FileRepositoryFactory>;
-        const noteRepositoryFactory = {
-            getRepository: jest.fn(() => noteRepository)
-        } as jest.Mocked<NoteRepositoryFactory>;
+        const nameBuilderFactory = mockNameBuilderFactory(nameBuilder);
+        const variableParserFactory = mockVariableParserFactory();
+        const fileRepositoryFactory = mockFileRepositoryFactory(fileRepository);
+        const noteRepositoryFactory = mockNoteRepositoryFactory(noteRepository);
 
         manager = new DefaultPeriodicNoteManager(
             nameBuilderFactory,

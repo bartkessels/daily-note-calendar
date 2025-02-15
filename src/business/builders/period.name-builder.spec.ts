@@ -1,14 +1,12 @@
 import {PeriodNameBuilder} from 'src/business/builders/period.name-builder';
-import {DateParser} from 'src/infrastructure/contracts/date-parser';
-import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
 import {Period, PeriodType} from 'src/domain/models/period.model';
 import {when} from 'jest-when';
+import {mockDateParser} from 'src/test-helpers/parser.mocks';
+import {mockDateParserFactory} from 'src/test-helpers/factory.mocks';
 
 describe('PeriodNameBuilder', () => {
     let nameBuilder: PeriodNameBuilder;
-    let dateParser = {
-        fromDate: jest.fn(),
-    } as unknown as jest.Mocked<DateParser>;
+    let dateParser = mockDateParser;
 
     const nameTemplate = 'yyyy-MM-dd';
     const period = <Period> {
@@ -18,9 +16,7 @@ describe('PeriodNameBuilder', () => {
     };
 
     beforeEach(() => {
-        const dateParserFactory = {
-            getParser: jest.fn(() => dateParser)
-        } as jest.Mocked<DateParserFactory>;
+        const dateParserFactory = mockDateParserFactory(dateParser);
 
         nameBuilder = new PeriodNameBuilder(dateParserFactory);
     });

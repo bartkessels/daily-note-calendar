@@ -1,32 +1,22 @@
 import {RepositoryDateManager} from 'src/business/managers/repository.date-manager';
-import {DateRepository} from 'src/infrastructure/contracts/date-repository';
 import {afterEach} from '@jest/globals';
-import {DateRepositoryFactory} from 'src/infrastructure/contracts/date-repository-factory';
 import {Period, PeriodType} from 'src/domain/models/period.model';
 import {when} from 'jest-when';
 import {DayOfWeek, WeekModel} from 'src/domain/models/week.model';
+import {mockDateRepository} from 'src/test-helpers/repository.mocks';
+import {mockDateRepositoryFactory} from 'src/test-helpers/factory.mocks';
 
 describe('RepositoryDateManager', () => {
     let manager: RepositoryDateManager;
 
-    const dateRepository = {
-        getDayFromDate: jest.fn(),
-        getDayFromDateString: jest.fn(),
-        getWeekFromDate: jest.fn(),
-        getWeek: jest.fn(),
-        getPreviousWeek: jest.fn(),
-        getNextWeek: jest.fn(),
-        getQuarter: jest.fn()
-    } as jest.Mocked<DateRepository>;
+    const dateRepository = mockDateRepository;
     const today = new Date(2023, 9, 2);
 
     beforeEach(() => {
         jest.useFakeTimers();
         jest.setSystemTime(today);
 
-        const dateRepositoryFactory = {
-            getRepository: jest.fn(() => dateRepository)
-        } as jest.Mocked<DateRepositoryFactory>;
+        const dateRepositoryFactory = mockDateRepositoryFactory(dateRepository);
 
         manager = new RepositoryDateManager(dateRepositoryFactory);
     });

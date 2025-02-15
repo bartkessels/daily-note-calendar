@@ -1,5 +1,5 @@
 import 'src/extensions/extensions';
-import {Calculus, CalculusOperator} from 'src-old/domain/models/variable';
+import {Calculus, CalculusOperator} from 'src/domain/models/variable.model';
 
 describe('String.prototype.appendMarkdownExtension', () => {
     it('should append .md if not present', () => {

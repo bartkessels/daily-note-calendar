@@ -1,15 +1,12 @@
 import {DefaultDateManagerFactory} from 'src/business/factories/default.date-manager-factory';
-import {DateRepositoryFactory} from 'src/infrastructure/contracts/date-repository-factory';
 import {RepositoryDateManager} from 'src/business/managers/repository.date-manager';
+import {mockDateRepositoryFactory} from 'src/test-helpers/factory.mocks';
 
 describe('DefaultDateManagerFactory', () => {
-    const dateRepositoryFactory = {
-        getRepository: jest.fn()
-    } as unknown as jest.Mocked<DateRepositoryFactory>;
-
     let factory: DefaultDateManagerFactory;
 
     beforeEach(() => {
+        const dateRepositoryFactory = mockDateRepositoryFactory();
         factory = new DefaultDateManagerFactory(dateRepositoryFactory);
     });
 
