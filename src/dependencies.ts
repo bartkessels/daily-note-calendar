@@ -1,6 +1,6 @@
 import {ObsidianSettingsAdapter} from 'src/infrastructure/obsidian/obsidian.settings-adapter';
 import {Plugin} from 'obsidian';
-import {DefaultSettingsRepositoryFactory} from 'src/infrastructure/factories/default.settings-repository.factory';
+import {DefaultSettingsRepositoryFactory} from 'src/infrastructure/factories/default.settings-repository-factory';
 import {DefaultNameBuilderFactory} from 'src/business/factories/default.name-builder-factory';
 import {NameBuilderFactory, NameBuilderType} from 'src/business/contracts/name-builder-factory';
 import {DefaultVariableParserFactory} from 'src/business/factories/default.variable-parser-factory';
