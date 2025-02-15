@@ -2,6 +2,7 @@ import {VariableParser} from 'src/business/contracts/variable-parser';
 import {VariableFactory} from 'src/business/contracts/variable-factory';
 import {Period} from 'src/domain/models/period.model';
 import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
+import 'src/extensions/extensions';
 
 export class PeriodVariableParser implements VariableParser<Period> {
     private static readonly variablePattern = /{{date.*?}}/g;

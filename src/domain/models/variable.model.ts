@@ -1,6 +1,6 @@
 export interface Variable {
     template: string | null;
-    calculus?: Calculus | null;
+    calculus: Calculus | null;
     type: VariableType;
 }
 
