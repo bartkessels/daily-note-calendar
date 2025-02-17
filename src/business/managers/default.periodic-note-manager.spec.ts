@@ -1,9 +1,7 @@
 import {DefaultPeriodicNoteManager} from 'src/business/managers/default.periodic-note-manager';
 import {NameBuilderType} from 'src/business/contracts/name-builder-factory';
-import {Period} from 'src/domain/models/period.model';
 import {when} from 'jest-when';
 import {VariableType} from 'src/domain/models/variable.model';
-import {PeriodNoteSettings} from 'src/domain/settings/period-note.settings';
 import {Note} from 'src/domain/models/note.model';
 import {afterEach} from '@jest/globals';
 import {mockPeriodNameBuilder} from 'src/test-helpers/builder.mocks';
@@ -18,6 +16,7 @@ import {
     mockNameBuilderFactory, mockNoteRepositoryFactory,
     mockVariableParserFactory
 } from 'src/test-helpers/factory.mocks';
+import {mockDailyNoteSettings, mockPeriod} from 'src/test-helpers/model.mocks';
 
 describe('DefaultPeriodicNoteManager', () => {
     let manager: DefaultPeriodicNoteManager;
@@ -28,16 +27,8 @@ describe('DefaultPeriodicNoteManager', () => {
     const titleVariableParser = mockStringVariableParser;
     const fileRepository = mockFileRepository;
     const noteRepository = mockNoteRepository;
-    const period = <Period>{
-        date: new Date(2023, 9, 2),
-        name: '2',
-        type: 1
-    };
-    const dailyNoteSettings = <PeriodNoteSettings>{
-        folder: 'daily-notes',
-        nameTemplate: 'yyyy-MM-dd',
-        templateFile: 'path'
-    };
+    const period = mockPeriod;
+    const dailyNoteSettings = mockDailyNoteSettings;
     const completeFilePath = `${dailyNoteSettings.folder}/2023-10-02.md`;
 
     beforeEach(() => {

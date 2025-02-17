@@ -1,19 +1,15 @@
 import {PeriodNameBuilder} from 'src/business/builders/period.name-builder';
-import {Period, PeriodType} from 'src/domain/models/period.model';
 import {when} from 'jest-when';
 import {mockDateParser} from 'src/test-helpers/parser.mocks';
 import {mockDateParserFactory} from 'src/test-helpers/factory.mocks';
+import {mockPeriod} from 'src/test-helpers/model.mocks';
 
 describe('PeriodNameBuilder', () => {
     let nameBuilder: PeriodNameBuilder;
     let dateParser = mockDateParser;
 
     const nameTemplate = 'yyyy-MM-dd';
-    const period = <Period> {
-        date: new Date(2023, 9, 2),
-        name: '2',
-        type: PeriodType.Day
-    };
+    const period = mockPeriod;
 
     beforeEach(() => {
         const dateParserFactory = mockDateParserFactory(dateParser);
