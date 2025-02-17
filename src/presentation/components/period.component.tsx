@@ -1,7 +1,6 @@
 import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
 import {ModifierKey} from 'src/presentation/models/modifier-key';
 import React, {ReactElement} from 'react';
-import {Period} from 'src/domain/models/period.model';
 
 interface PeriodViewProperties {
     isSelected?: boolean;
