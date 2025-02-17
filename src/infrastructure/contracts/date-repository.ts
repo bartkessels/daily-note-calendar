@@ -6,6 +6,6 @@ export interface DateRepository {
     getDayFromDateString(dateString: string, dateTemplate: string): Period | null;
     getWeekFromDate(startOfWeek: DayOfWeek, date: Date): WeekModel;
     getPreviousWeek(startOfWeek: DayOfWeek, week: WeekModel): WeekModel;
-    getNextWeek(startOfWeek: DayOfWeek, week: WeekModel): WeekModel;
+    getNextWeek(startOfWeekDay: DayOfWeek, week: WeekModel): WeekModel;
     getQuarter(month: Period): Period;
 }

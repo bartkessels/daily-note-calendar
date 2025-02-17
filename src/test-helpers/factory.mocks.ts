@@ -13,6 +13,10 @@ import {DateRepositoryFactory} from 'src/infrastructure/contracts/date-repositor
 import {SettingsRepository} from 'src/infrastructure/contracts/settings-repository';
 import {SettingsRepositoryFactory} from 'src/infrastructure/contracts/settings-repository-factory';
 import {VariableFactory} from 'src/business/contracts/variable-factory';
+import {NoteManager} from 'src/business/contracts/note.manager';
+import {NoteManagerFactory} from 'src/business/contracts/note-manager-factory';
+import {DateManagerFactory} from 'src/business/contracts/date-manager-factory';
+import {DateManager} from 'src/business/contracts/date.manager';
 
 export function mockDateParserFactory(parser: DateParser | null = null): jest.Mocked<DateParserFactory> {
     return {
@@ -60,4 +64,16 @@ export function mockSettingsRepositoryFactory<T>(repository: SettingsRepository<
     return {
         getRepository: jest.fn((_) => repository)
     } as jest.Mocked<SettingsRepositoryFactory>;
+}
+
+export function mockNoteManagerFactory(manager: NoteManager | null = null): jest.Mocked<NoteManagerFactory> {
+    return {
+        getManager: jest.fn(() => manager)
+    } as jest.Mocked<NoteManagerFactory>;
+}
+
+export function mockDateManagerFactory(manager: DateManager | null = null): jest.Mocked<DateManagerFactory> {
+    return {
+        getManager: jest.fn(() => manager)
+    } as jest.Mocked<DateManagerFactory>;
 }

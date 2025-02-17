@@ -56,8 +56,7 @@ export class RepositoryDateManager implements DateManager {
     }
 
     public getQuarter(month: Period): Period {
-        return this.dateRepositoryFactory.getRepository()
-            .getQuarter(month);
+        return this.dateRepositoryFactory.getRepository().getQuarter(month);
     }
 
     private getWeeks(currentWeek: WeekModel, noWeeks: number, getWeek: (week: WeekModel) => WeekModel): WeekModel[] {

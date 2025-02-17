@@ -7,7 +7,6 @@ import {
     getISOWeek,
     getQuarter,
     startOfWeek,
-    startOfISOWeek,
     startOfQuarter,
     subWeeks
 } from 'date-fns';
@@ -48,8 +47,8 @@ export class DateFnsDateRepository implements DateRepository {
         return this.getDayFromDate(date);
     }
 
-    public getWeekFromDate(startOfWeek: DayOfWeek, date: Date): WeekModel {
-        const firstDayOfWeek = startOfISOWeek(date);
+    public getWeekFromDate(startOfWeekDay: DayOfWeek, date: Date): WeekModel {
+        const firstDayOfWeek = startOfWeek(date, { weekStartsOn: startOfWeekDay });
         const weekNumber = getISOWeek(date);
 
         return <WeekModel> {
@@ -58,7 +57,7 @@ export class DateFnsDateRepository implements DateRepository {
             weekNumber: weekNumber,
             year: this.getYear(firstDayOfWeek.getFullYear()),
             month: this.getMonth(firstDayOfWeek.getFullYear(), firstDayOfWeek.getMonth()),
-            days: this.getDaysOfWeek(startOfWeek, firstDayOfWeek),
+            days: this.getDaysOfWeek(startOfWeekDay, firstDayOfWeek),
             type: PeriodType.Week
         };
     }
