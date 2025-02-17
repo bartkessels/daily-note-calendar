@@ -1,4 +1,4 @@
-import {DailyNoteSettingsRepository} from 'src/infrastructure/repositories/daily-note.settings.repository';
+import {DailyNoteSettingsRepository} from 'src/infrastructure/repositories/daily-note.settings-repository';
 import {mockSettingsAdapter} from 'src/test-helpers/adapter.mocks';
 import {DEFAULT_PLUGIN_SETTINGS, PluginSettings} from 'src/domain/settings/plugin.settings';
 import {when} from 'jest-when';

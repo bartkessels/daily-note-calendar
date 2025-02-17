@@ -2,7 +2,7 @@ import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contra
 import {SettingsRepository} from 'src/infrastructure/contracts/settings-repository';
 import {Settings} from 'src/domain/settings/settings';
 import {SettingsAdapter} from 'src/infrastructure/adapters/settings.adapter';
-import {DailyNoteSettingsRepository} from 'src/infrastructure/repositories/daily-note.settings.repository';
+import {DailyNoteSettingsRepository} from 'src/infrastructure/repositories/daily-note.settings-repository';
 import {PluginSettingsRepository} from 'src/infrastructure/repositories/plugin.settings-repository';
 import {GeneralSettingsRepository} from 'src/infrastructure/repositories/general.settings-repository';
 import {WeeklyNoteSettingsRepository} from 'src/infrastructure/repositories/weekly-note.settings-repository';

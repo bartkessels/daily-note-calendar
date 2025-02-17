@@ -4,7 +4,7 @@ import {SettingsType} from 'src/infrastructure/contracts/settings-repository-fac
 import {PluginSettingsRepository} from 'src/infrastructure/repositories/plugin.settings-repository';
 import {DisplayNotesSettingsRepository} from 'src/infrastructure/repositories/display-notes.settings-repository';
 import {GeneralSettingsRepository} from 'src/infrastructure/repositories/general.settings-repository';
-import {DailyNoteSettingsRepository} from 'src/infrastructure/repositories/daily-note.settings.repository';
+import {DailyNoteSettingsRepository} from 'src/infrastructure/repositories/daily-note.settings-repository';
 import {WeeklyNoteSettingsRepository} from 'src/infrastructure/repositories/weekly-note.settings-repository';
 import {MonthlyNoteSettingsRepository} from 'src/infrastructure/repositories/monthly-note.settings-repository';
 import {QuarterlyNoteSettingsRepository} from 'src/infrastructure/repositories/quarterly-note.settings-repository';

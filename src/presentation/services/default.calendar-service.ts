@@ -52,12 +52,12 @@ export class DefaultCalendarService implements CalendarService {
     }
 
     public loadPreviousWeek(model: CalendarUiModel | null, callback: (model: CalendarUiModel) => void): void {
-        const weeks = this.expandWeeks(model?.weeks, 3, 1);
+        const weeks = this.expandWeeks(model?.weeks ?? [], 3, 1);
         this.buildModel(model, weeks, callback);
     }
 
     public loadNextWeek(model: CalendarUiModel | null, callback: (model: CalendarUiModel) => void): void {
-        const weeks = this.expandWeeks(model?.weeks, 1, 3);
+        const weeks = this.expandWeeks(model?.weeks ?? [], 1, 3);
         this.buildModel(model, weeks, callback);
     }
 
@@ -89,22 +89,6 @@ export class DefaultCalendarService implements CalendarService {
         await this.periodicNoteManager.openNote(settings, period.period);
     }
 
-    private getMonth(weeks: WeekUiModel[]): PeriodUiModel {
-        const middleWeek = this.getMiddleWeek(weeks);
-        return middleWeek.month;
-    }
-
-    private getYear(weeks: WeekUiModel[]): PeriodUiModel {
-        const middleWeek = this.getMiddleWeek(weeks);
-        return middleWeek.year;
-    }
-
-    private getQuarter(weeks: WeekUiModel[]): PeriodUiModel {
-        const middleWeek = this.getMiddleWeek(weeks);
-        const quarter = this.dateManager.getQuarter(middleWeek.month.period);
-        return periodUiModel(quarter);
-    }
-
     private getMiddleWeek(weeks: WeekUiModel[]): WeekUiModel {
         const middleWeekIndex = Math.floor(weeks.length / 2);
         return weeks[middleWeekIndex];
@@ -115,12 +99,15 @@ export class DefaultCalendarService implements CalendarService {
             return;
         }
 
+        const middleWeek = this.getMiddleWeek(weeks);
+        const quarter = this.dateManager.getQuarter(middleWeek.month.period);
+
         const updatedModel = {
             ...model,
             lastUpdated: new Date(),
-            year: this.getYear(weeks),
-            quarter: this.getQuarter(weeks),
-            month: this.getMonth(weeks),
+            month: middleWeek.month,
+            quarter: periodUiModel(quarter),
+            year: middleWeek.year,
             weeks: weeks
         };
 
@@ -128,11 +115,7 @@ export class DefaultCalendarService implements CalendarService {
         this.enhance(updatedModel, callback);
     }
 
-    private expandWeeks(weeksToExpand: WeekUiModel[] | undefined, noPreviousWeeks: number, noNextWeeks: number): WeekUiModel[] {
-        if (!weeksToExpand) {
-            return [];
-        }
-
+    private expandWeeks(weeksToExpand: WeekUiModel[], noPreviousWeeks: number, noNextWeeks: number): WeekUiModel[] {
         const currentWeek = this.getMiddleWeek(weeksToExpand).period;
         return this.expandWeek(currentWeek, noPreviousWeeks, noNextWeeks);
     }
@@ -142,7 +125,8 @@ export class DefaultCalendarService implements CalendarService {
 
         const previousWeeks = this.dateManager.getPreviousWeeks(firstDayOfWeek, weekToExpand, noPreviousWeeks);
         const nextWeeks = this.dateManager.getNextWeeks(firstDayOfWeek, weekToExpand, noNextWeeks);
-        const weeks = [...previousWeeks, weekToExpand, ...nextWeeks].sort((a, b) => a.weekNumber - b.weekNumber);
+        const weeks = [...previousWeeks, weekToExpand, ...nextWeeks]
+            .sort((a, b) => a.date.getTime() - b.date.getTime());
 
         return weeks.map(weekUiModel);
     }
