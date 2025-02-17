@@ -20,7 +20,6 @@ export class AdapterFileRepository implements FileRepository {
         let filePath = '';
 
         if (doesTemplateFileExist && templateFilePath) {
-            console.log('templateFilePath', templateFilePath);
             filePath = await this.adapter.createFileFromTemplate(path, templateFilePath);
         } else {
             filePath = await this.adapter.createFile(path);
@@ -30,19 +29,36 @@ export class AdapterFileRepository implements FileRepository {
     }
 
     public async readContents(path: string): Promise<string> {
+        const fileExists = await this.exists(path);
+
+        if (!fileExists) {
+            return '';
+        }
+
         return await this.adapter.readContents(path);
     }
 
     public async writeContents(path: string, contents: string): Promise<void> {
-        return await this.adapter.writeContents(path, contents);
+        const fileExists = await this.exists(path);
+
+        if (fileExists) {
+            await this.adapter.writeContents(path, contents);
+        }
     }
 
     public async open(path: string): Promise<void> {
-        return await this.adapter.open(path);
+        const fileExists = await this.exists(path);
+
+        if (fileExists) {
+            await this.adapter.open(path);
+        }
     }
 
     public async delete(path: string): Promise<void> {
-        return await this.adapter.delete(path);
-    }
+        const fileExists = await this.exists(path);
 
+        if (fileExists) {
+            await this.adapter.delete(path);
+        }
+    }
 }
