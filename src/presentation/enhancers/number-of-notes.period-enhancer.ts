@@ -1,17 +1,21 @@
-import { PeriodNoteSettings } from 'src/domain/settings/period-note.settings';
 import {PeriodEnhancer} from 'src/presentation/contracts/period.enhancer';
-import {PeriodUiModel} from '../models/period.ui-model';
+import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
 import {NoteAdapter} from 'src/infrastructure/adapters/note.adapter';
+import {arePeriodsEqual} from 'src/domain/models/period.model';
+import {DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
+import {PluginSettings} from 'src/domain/settings/plugin.settings';
 
 export class NumberOfNotesPeriodEnhancer implements PeriodEnhancer {
+    private settings: DisplayNotesSettings | undefined;
+
     constructor(
         private readonly noteAdapter: NoteAdapter
     ) {
 
     }
 
-    public withSettings(_: PeriodNoteSettings): PeriodEnhancer {
-        // We don't need any settings for this enhancer.
+    public withSettings(settings: PluginSettings): PeriodEnhancer {
+        this.settings = settings.notesSettings;
         return this;
     }
 
@@ -20,12 +24,16 @@ export class NumberOfNotesPeriodEnhancer implements PeriodEnhancer {
     }
 
     private async enhancePeriod<T extends PeriodUiModel>(period: PeriodUiModel): Promise<T> {
-        const notes = await this.noteAdapter.getNotes(note =>
-            note.createdOn.date.toDateString() === period.period.date.toDateString()
-        );
+        const notes = await this.noteAdapter.getNotes(note => {
+            if (this?.settings?.useCreatedOnDateFromProperties && note.createdOnProperty) {
+                return arePeriodsEqual(note.createdOnProperty, period.period);
+            }
+
+            return arePeriodsEqual(note.createdOn, period.period)
+        });
         const noNotesForPeriod = notes.length;
 
-        return<T> {
+        return <T>{
             ...period,
             noNotes: noNotesForPeriod
         };

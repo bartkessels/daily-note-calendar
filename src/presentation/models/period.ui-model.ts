@@ -1,4 +1,4 @@
-import {Period} from 'src/domain/models/period.model';
+import {arePeriodsEqual, Period} from 'src/domain/models/period.model';
 
 export interface PeriodUiModel {
     period: Period;
@@ -14,13 +14,6 @@ export function periodUiModel(period: Period): PeriodUiModel {
     };
 }
 
-export function arePeriodsEqual(periodA?: PeriodUiModel, periodB?: PeriodUiModel): boolean {
-    if (!periodA || !periodB) {
-        return false;
-    }
-
-    const areSameDate = periodA?.period.date.toDateString() === periodB?.period.date.toDateString();
-    const areSameType = periodA?.period.type === periodB?.period.type;
-
-    return areSameDate && areSameType;
+export function arePeriodUiModelsEqual(periodA?: PeriodUiModel, periodB?: PeriodUiModel): boolean {
+    return arePeriodsEqual(periodA?.period, periodB?.period);
 }

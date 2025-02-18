@@ -1,11 +1,12 @@
-import {Period} from 'src/domain/models/period.model';
-import { PeriodNoteSettings } from 'src/domain/settings/period-note.settings';
+import {Period, PeriodType} from 'src/domain/models/period.model';
+import {PeriodNoteSettings} from 'src/domain/settings/period-note.settings';
 import {PeriodEnhancer} from 'src/presentation/contracts/period.enhancer';
 import {PeriodUiModel} from '../models/period.ui-model';
 import {NameBuilder} from 'src/business/contracts/name-builder';
 import {FileAdapter} from 'src/infrastructure/adapters/file.adapter';
+import {PluginSettings} from 'src/domain/settings/plugin.settings';
 
-export class PeriodicNoteExistsPeriodEnhancer implements PeriodEnhancer {
+export class DailyNoteExistsPeriodEnhancer implements PeriodEnhancer {
     private settings: PeriodNoteSettings | undefined;
 
     constructor(
@@ -15,8 +16,8 @@ export class PeriodicNoteExistsPeriodEnhancer implements PeriodEnhancer {
 
     }
 
-    public withSettings(settings: PeriodNoteSettings): PeriodEnhancer {
-        this.settings = settings;
+    public withSettings(settings: PluginSettings): PeriodEnhancer {
+        this.settings = settings.dailyNotes;
         return this;
     }
 
@@ -31,6 +32,10 @@ export class PeriodicNoteExistsPeriodEnhancer implements PeriodEnhancer {
     }
 
     private async enhancePeriod<T extends PeriodUiModel>(settings: PeriodNoteSettings, period: PeriodUiModel): Promise<T> {
+        if (period.period.type !== PeriodType.Day) {
+            return period as T;
+        }
+
         const filePath = this.nameBuilder
             .withPath(settings.folder)
             .withName(settings.nameTemplate)

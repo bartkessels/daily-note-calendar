@@ -11,7 +11,6 @@ import {FileAdapter} from 'src/infrastructure/adapters/file.adapter';
 import {DefaultVariableFactory} from 'src/business/factories/default.variable-factory';
 import {NumberOfNotesPeriodEnhancer} from 'src/presentation/enhancers/number-of-notes.period-enhancer';
 import {NoteAdapter} from 'src/infrastructure/adapters/note.adapter';
-import {PeriodicNoteExistsPeriodEnhancer} from 'src/presentation/enhancers/periodic-note-exists.period-enhancer';
 import {CalendarEnhancer} from 'src/presentation/contracts/calendar.enhancer';
 import {PeriodCalendarEnhancer} from 'src/presentation/enhancers/period.calendar-enhancer';
 import {ObsidianNoteAdapter} from 'src/infrastructure/obsidian/obsidian.note-adapter';
@@ -27,6 +26,8 @@ import {DefaultDateManagerFactory} from 'src/business/factories/default.date-man
 import {DefaultCommandHandlerFactory} from 'src/presentation/factories/default.command-handler-factory';
 import {DefaultNoteManagerFactory} from 'src/business/factories/default.note-manager-factory';
 import {CommandHandlerFactory} from 'src/presentation/contracts/command-handler-factory';
+import {DailyNoteExistsPeriodEnhancer} from 'src/presentation/enhancers/daily-note-exists.period-enhancer';
+import { WeeklyNoteExistsPeriodEnhancer } from 'src/presentation/enhancers/weekly-note-exists.period-enhancer';
 
 export interface Dependencies {
     viewModel: CalendarViewModel;
@@ -77,9 +78,11 @@ function buildCalendarEnhancer(
     fileAdapter: FileAdapter
 ): CalendarEnhancer {
     const numberOfNotesPeriodEnhancer = new NumberOfNotesPeriodEnhancer(noteAdapter);
-    const periodicNoteExistsEnhancer = new PeriodicNoteExistsPeriodEnhancer(nameBuilderFactory.getNameBuilder<Period>(NameBuilderType.PeriodicNote), fileAdapter);
+    const dailyNoteExistsEnhancer = new DailyNoteExistsPeriodEnhancer(nameBuilderFactory.getNameBuilder<Period>(NameBuilderType.PeriodicNote), fileAdapter);
+    const weeklyNoteExistsEnhancer = new WeeklyNoteExistsPeriodEnhancer(nameBuilderFactory.getNameBuilder<Period>(NameBuilderType.PeriodicNote), fileAdapter);
 
     return new PeriodCalendarEnhancer()
-        .withPeriodEnhancer(numberOfNotesPeriodEnhancer)
-        .withPeriodEnhancer(periodicNoteExistsEnhancer);
+        .withDailyNoteEnhancer(dailyNoteExistsEnhancer)
+        .withDailyNoteEnhancer(numberOfNotesPeriodEnhancer)
+        .withWeeklyNoteEnhancer(weeklyNoteExistsEnhancer);
 }

@@ -3,7 +3,7 @@ import {useCalendarViewModel} from 'src/presentation/context/calendar-view-model
 import {CalendarUiModel} from 'src/presentation/models/calendar.ui-model';
 import {PeriodComponent} from 'src/presentation/components/period.component';
 import {CalendarHeart, ChevronLeft, ChevronRight} from 'lucide-react';
-import {arePeriodsEqual} from 'src/presentation/models/period.ui-model';
+import {arePeriodUiModelsEqual} from 'src/presentation/models/period.ui-model';
 
 export const CalendarComponent = (): ReactElement => {
     const [uiModel, setUiModel] = React.useState<CalendarUiModel | null>(null);
@@ -59,7 +59,7 @@ export const CalendarComponent = (): ReactElement => {
                     <tr key={weekIndex}>
                         <td height="35" className="weekNumber" key={weekIndex}>
                             <PeriodComponent
-                                isSelected={arePeriodsEqual(uiModel?.selectedPeriod, week)}
+                                isSelected={arePeriodUiModelsEqual(uiModel?.selectedPeriod, week)}
                                 onClick={(key, period) => viewModel?.openWeeklyNote(key, period)}
                                 model={week} />
                         </td>
@@ -67,8 +67,8 @@ export const CalendarComponent = (): ReactElement => {
                         {week.days.map((day, dayIndex) =>
                             <td height="35" key={dayIndex} className={!day.period.date.isSameMonth(uiModel?.month?.period) ? 'other-month' : ''}>
                                 <PeriodComponent
-                                    isToday={arePeriodsEqual(uiModel?.today, day)}
-                                    isSelected={arePeriodsEqual(uiModel?.selectedPeriod, day)}
+                                    isToday={arePeriodUiModelsEqual(uiModel?.today, day)}
+                                    isSelected={arePeriodUiModelsEqual(uiModel?.selectedPeriod, day)}
                                     onClick={(key, period) => viewModel?.openDailyNote(key, period)}
                                     model={day} />
                             </td>

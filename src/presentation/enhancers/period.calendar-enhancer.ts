@@ -1,17 +1,22 @@
-import { PluginSettings } from 'src/domain/settings/plugin.settings';
+import {PluginSettings} from 'src/domain/settings/plugin.settings';
 import {CalendarEnhancer} from 'src/presentation/contracts/calendar.enhancer';
 import {CalendarUiModel} from 'src/presentation/models/calendar.ui-model';
 import {PeriodEnhancer} from 'src/presentation/contracts/period.enhancer';
 import {WeekUiModel} from 'src/presentation/models/week.ui-model';
 import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
-import {PeriodNoteSettings} from 'src/domain/settings/period-note.settings';
 
 export class PeriodCalendarEnhancer implements CalendarEnhancer {
-    private readonly periodEnhancers: PeriodEnhancer[] = [];
+    private readonly dailyNoteEnhancers: PeriodEnhancer[] = [];
+    private readonly weeklyNoteEnhancers: PeriodEnhancer[] = [];
     private settings?: PluginSettings;
 
-    public withPeriodEnhancer(periodEnhancer: PeriodEnhancer): PeriodCalendarEnhancer {
-        this.periodEnhancers.push(periodEnhancer);
+    public withWeeklyNoteEnhancer(weeklyNoteEnhancer: PeriodEnhancer): PeriodCalendarEnhancer {
+        this.weeklyNoteEnhancers.push(weeklyNoteEnhancer);
+        return this;
+    }
+
+    public withDailyNoteEnhancer(dailyNoteEnhancer: PeriodEnhancer): PeriodCalendarEnhancer {
+        this.dailyNoteEnhancers.push(dailyNoteEnhancer);
         return this;
     }
 
@@ -27,32 +32,41 @@ export class PeriodCalendarEnhancer implements CalendarEnhancer {
             return calendar;
         }
 
+        const enhancedWeeks = await this.enhanceWeeks(calendar.weeks, settings);
+
         return {
             ...calendar,
-            weeks: await this.enhanceWeeks(calendar.weeks, settings)
+            lastUpdated: new Date(),
+            weeks: enhancedWeeks
         };
     }
 
     private async enhanceWeeks(weeks: WeekUiModel[], settings: PluginSettings): Promise<WeekUiModel[]> {
-        const enhancedWeeks = await this.periodEnhancers.reduce(async (week, enhancer) => {
-            return enhancer
-                .withSettings(settings.weeklyNotes)
-                .enhance<WeekUiModel>(await week);
-        }, Promise.resolve(weeks));
+        let enhancedWeeks = weeks;
+
+        for (const enhancer of this.weeklyNoteEnhancers) {
+            enhancedWeeks = await enhancer
+                .withSettings(settings)
+                .enhance<WeekUiModel>(enhancedWeeks as PeriodUiModel[]);
+        }
 
         return await Promise.all(enhancedWeeks.map(async week => {
             return {
                 ...week,
-                days: await this.enhanceDays(week.days, settings.dailyNotes)
+                days: await this.enhanceDays(week.days, settings)
             };
         }));
     }
 
-    private async enhanceDays(days: PeriodUiModel[], settings: PeriodNoteSettings): Promise<PeriodUiModel[]> {
-        return await this.periodEnhancers.reduce(async (day, enhancer) => {
-            return enhancer
+    private async enhanceDays(days: PeriodUiModel[], settings: PluginSettings): Promise<PeriodUiModel[]> {
+        let enhancedDays = days;
+
+        for (const enhancer of this.dailyNoteEnhancers) {
+            enhancedDays = await enhancer
                 .withSettings(settings)
-                .enhance(await day);
-        }, Promise.resolve(days));
+                .enhance<PeriodUiModel>(enhancedDays);
+        }
+
+        return enhancedDays;
     }
 }

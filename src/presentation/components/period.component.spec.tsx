@@ -103,7 +103,7 @@ describe('PeriodComponent', () => {
             expect(screen.getByText(periodUiModelWithNotes.period.name)).toHaveAttribute('title', 'Number of notes: 5');
         });
 
-        it('should display the number of notes for the period in the title if it has 0 notes', () => {
+        it('should not display the number of notes for the period in the title if it has 0 notes', () => {
             // Arrange
             const periodUiModelWithNotes = {...periodUiModel, noNotes: 0 } as PeriodUiModel;
 
@@ -111,7 +111,7 @@ describe('PeriodComponent', () => {
             render(setupContent(periodUiModelWithNotes, () => {}, true));
 
             // Assert
-            expect(screen.getByText(periodUiModelWithNotes.period.name)).toHaveAttribute('title', 'Number of notes: 0');
+            expect(screen.getByText(periodUiModelWithNotes.period.name)).not.toHaveAttribute('title');
         });
     });
 
