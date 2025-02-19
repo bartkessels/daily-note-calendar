@@ -10,5 +10,6 @@ export enum CommandHandlerType {
     NavigateToNextWeek,
     NavigateToPreviousWeek,
     OpenYesterdaysNote,
-    OpenTomorrowsNote
+    OpenTomorrowsNote,
+    OpenWeeklyNote
 }

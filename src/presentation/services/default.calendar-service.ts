@@ -61,6 +61,32 @@ export class DefaultCalendarService implements CalendarService {
         this.buildModel(model, weeks, callback);
     }
 
+    public loadNextMonth(model: CalendarUiModel | null, callback: (model: CalendarUiModel) => void): void {
+        const currentMonth = model?.month;
+        if (!currentMonth) {
+            return;
+        }
+
+        const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
+        const previousMonth = this.dateManager.getNextMonth(currentMonth.period, firstDayOfWeek);
+        const weeks = previousMonth.map(weekUiModel);
+
+        this.buildModel(model, weeks, callback);
+    }
+
+    public loadPreviousMonth(model: CalendarUiModel | null, callback: (model: CalendarUiModel) => void): void {
+        const currentMonth = model?.month;
+        if (!currentMonth) {
+            return;
+        }
+
+        const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
+        const previousMonth = this.dateManager.getPreviousMonth(currentMonth.period, firstDayOfWeek);
+        const weeks = previousMonth.map(weekUiModel);
+
+        this.buildModel(model, weeks, callback);
+    }
+
     public async openPeriodicNote(
         model: CalendarUiModel | null,
         key: ModifierKey,

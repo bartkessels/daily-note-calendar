@@ -10,6 +10,7 @@ import {NavigateToNextWeekCommand} from 'src/presentation/commands/navigate-to-n
 import {NavigateToPreviousWeekCommand} from 'src/presentation/commands/navigate-to-previous-week.command';
 import {OpenYesterdaysNoteCommand} from 'src/presentation/commands/open-yesterdays-note.command';
 import {OpenTomorrowsNoteCommand} from 'src/presentation/commands/open-tomorrows-note.command';
+import {OpenWeeklyNoteCommand} from 'src/presentation/commands/open-weekly-note.command';
 
 export default class DailyNoteCalendarPlugin extends Plugin {
     private readonly dependencies: Dependencies = getDependencies(this);
@@ -19,6 +20,10 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         this.registerCommands();
 
         this.app.workspace.onLayoutReady(this.initializePlugin.bind(this));
+    }
+
+    override async onExternalSettingsChange(): Promise<void> {
+        await this.initializePlugin();
     }
 
     private async initializePlugin(): Promise<void> {
@@ -41,5 +46,6 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         this.addCommand(new NavigateToPreviousWeekCommand(this.dependencies.commandHandlerFactory));
         this.addCommand(new OpenYesterdaysNoteCommand(this.dependencies.commandHandlerFactory));
         this.addCommand(new OpenTomorrowsNoteCommand(this.dependencies.commandHandlerFactory));
+        this.addCommand(new OpenWeeklyNoteCommand(this.dependencies.commandHandlerFactory));
     }
 }

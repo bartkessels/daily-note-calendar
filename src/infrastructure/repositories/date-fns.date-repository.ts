@@ -1,13 +1,15 @@
 import {DayOfWeek, WeekModel} from 'src/domain/models/week.model';
 import {DateRepository} from 'src/infrastructure/contracts/date-repository';
 import {
+    addMonths,
     addWeeks,
     eachDayOfInterval,
     endOfWeek,
     getISOWeek,
     getQuarter,
-    startOfWeek,
     startOfQuarter,
+    startOfWeek,
+    subMonths,
     subWeeks
 } from 'date-fns';
 import {Period, PeriodType} from 'src/domain/models/period.model';
@@ -70,6 +72,20 @@ export class DateFnsDateRepository implements DateRepository {
     public getPreviousWeek(startOfWeek: DayOfWeek, currentWeek: WeekModel): WeekModel {
         const previousWeekDate = subWeeks(currentWeek.date, 1);
         return this.getWeekFromDate(startOfWeek, previousWeekDate);
+    }
+
+    public getMonthFromDate(date: Date): Period {
+        return this.getMonth(date.getFullYear(), date.getMonth());
+    }
+
+    public getNextMonth(month: Period): Period {
+        const nextMonth = addMonths(month.date, 1);
+        return this.getMonthFromDate(nextMonth);
+    }
+
+    public getPreviousMonth(month: Period): Period {
+        const previousMonth = subMonths(month.date, 1);
+        return this.getMonthFromDate(previousMonth);
     }
 
     public getQuarter(month: Period): Period {

@@ -14,7 +14,7 @@ export class OpenYesterdaysNoteCommandHandler implements CommandHandler {
 
     public async execute(): Promise<void> {
         const yesterday = this.dateManagerFactory.getManager().getYesterday();
-        const yesterdayUiModel = periodUiModel(yesterday);
-        await this.viewModel.openDailyNote(ModifierKey.None, yesterdayUiModel);
+        const uiModel = periodUiModel(yesterday);
+        await this.viewModel.openDailyNote(ModifierKey.None, uiModel);
     }
 }

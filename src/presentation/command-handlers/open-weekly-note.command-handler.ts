@@ -4,7 +4,7 @@ import {CalendarViewModel} from 'src/presentation/view-models/calendar.view-mode
 import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contracts/settings-repository-factory';
 import {GeneralSettings} from 'src/domain/settings/general.settings';
 import { ModifierKey } from 'src/presentation/models/modifier-key';
-import {periodUiModel} from 'src/presentation/models/period.ui-model';
+import {weekUiModel} from 'src/presentation/models/week.ui-model';
 
 export class OpenWeeklyNoteCommandHandler implements CommandHandler {
     constructor(
@@ -22,8 +22,8 @@ export class OpenWeeklyNoteCommandHandler implements CommandHandler {
 
         const today = this.dateManagerFactory.getManager().getCurrentDay();
         const week = this.dateManagerFactory.getManager().getWeek(today, settings.firstDayOfWeek);
-        const weekUiModel = periodUiModel(week);
+        const uiModel = weekUiModel(week);
 
-        await this.viewModel.openWeeklyNote(ModifierKey.None, weekUiModel);
+        await this.viewModel.openWeeklyNote(ModifierKey.None, uiModel);
     }
 }

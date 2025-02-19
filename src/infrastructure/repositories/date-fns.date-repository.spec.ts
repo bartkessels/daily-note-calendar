@@ -500,6 +500,109 @@ describe('DateFnsDateRepository', () => {
         });
     });
 
+    describe('getMonthFromDate', () => {
+        it('should return the expected month period', () => {
+            // Arrange
+            const date = new Date(2023, 9, 2);
+
+            // Act
+            const result = repository.getMonthFromDate(date);
+
+            // Assert
+            expect(result).toEqual({
+                name: 'October',
+                date: new Date(2023, 9),
+                type: PeriodType.Month
+            });
+        });
+    });
+
+    describe('getNextMonth', () => {
+        it('should return the next month', () => {
+            // Arrange
+            const month = <Period>{
+                name: 'October',
+                date: new Date(2023, 9),
+                type: PeriodType.Month
+            };
+
+            // Act
+            const result = repository.getNextMonth(month);
+
+            // Assert
+            expect(result).toEqual(<Period>{
+                name: 'November',
+                date: new Date(2023, 10),
+                type: PeriodType.Month
+            });
+        });
+
+        it('should return the next month when the current month is december', () => {
+            // Arrange
+            const month = <Period>{
+                name: 'December',
+                date: new Date(2023, 11),
+                type: PeriodType.Month
+            };
+
+            // Act
+            const result = repository.getNextMonth(month);
+
+            // Assert
+            expect(result).toEqual(<Period>{
+                name: 'January',
+                date: new Date(2024, 0),
+                type: PeriodType.Month
+            });
+        });
+    });
+
+    describe('getPreviousMonth', () => {
+        it('should return the previous month', () => {
+            // Arrange
+            const month = <Period>{
+                name: 'October',
+                date: new Date(2023, 9),
+                type: PeriodType.Month
+            };
+
+            // Act
+            const result = repository.getPreviousMonth(month);
+
+            // Assert
+            expect(result).toEqual(<Period>{
+                name: 'September',
+                date: new Date(2023, 8),
+                type: PeriodType.Month
+            });
+        });
+
+        it('should return the previous month when the current month is january', () => {
+            // Arrange
+            const month = <Period>{
+                name: 'January',
+                date: new Date(2024, 0),
+                type: PeriodType.Month
+            };
+
+            // Act
+            const result = repository.getPreviousMonth(month);
+
+            // Assert
+            expect(result).toEqual(<Period>{
+                name: 'December',
+                date: new Date(2023, 11),
+                type: PeriodType.Month
+            });
+        });
+    });
+
+    describe('getWeeksForMonth', () => {
+        it('should return all weeks for the month', () => {
+
+        });
+    });
+
     describe('getQuarter', () => {
         it('should return the correct quarter for the month', () => {
             // Arrange

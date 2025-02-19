@@ -7,5 +7,8 @@ export interface DateRepository {
     getWeekFromDate(startOfWeek: DayOfWeek, date: Date): WeekModel;
     getPreviousWeek(startOfWeek: DayOfWeek, week: WeekModel): WeekModel;
     getNextWeek(startOfWeekDay: DayOfWeek, week: WeekModel): WeekModel;
+    getMonthFromDate(date: Date): Period;
+    getPreviousMonth(month: Period): Period;
+    getNextMonth(month: Period): Period;
     getQuarter(month: Period): Period;
 }

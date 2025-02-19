@@ -2,7 +2,7 @@ import React, {ReactElement, useCallback, useRef} from 'react';
 import {useCalendarViewModel} from 'src/presentation/context/calendar-view-model.context';
 import {CalendarUiModel} from 'src/presentation/models/calendar.ui-model';
 import {PeriodComponent} from 'src/presentation/components/period.component';
-import {CalendarHeart, ChevronLeft, ChevronRight} from 'lucide-react';
+import {CalendarHeart, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight} from 'lucide-react';
 import {arePeriodUiModelsEqual} from 'src/presentation/models/period.ui-model';
 
 export const CalendarComponent = (): ReactElement => {
@@ -20,6 +20,10 @@ export const CalendarComponent = (): ReactElement => {
                 </span>
 
                 <div className="buttons">
+                    <ChevronsLeft
+                        size={18}
+                        strokeWidth={1}
+                        onClick={() => viewModel?.loadPreviousMonth()} />
                     <ChevronLeft
                         size={18}
                         strokeWidth={1}
@@ -32,6 +36,10 @@ export const CalendarComponent = (): ReactElement => {
                         size={18}
                         strokeWidth={1}
                         onClick={() => {viewModel?.loadNextWeek()}} />
+                    <ChevronsRight
+                        size={18}
+                        strokeWidth={1}
+                        onClick={() => viewModel?.loadNextMonth()} />
                 </div>
             </div>
 

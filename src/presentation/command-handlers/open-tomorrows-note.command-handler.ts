@@ -14,7 +14,7 @@ export class OpenTomorrowsNoteCommandHandler implements CommandHandler {
 
     public async execute(): Promise<void> {
         const tomorrow = this.dateManagerFactory.getManager().getTomorrow();
-        const tomorrowUiModel = periodUiModel(tomorrow);
-        await this.viewModel.openDailyNote(ModifierKey.None, tomorrowUiModel);
+        const uiModel = periodUiModel(tomorrow);
+        await this.viewModel.openDailyNote(ModifierKey.None, uiModel);
     }
 }

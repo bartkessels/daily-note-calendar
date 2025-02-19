@@ -17,6 +17,8 @@ export interface CalendarViewModel {
     loadCurrentWeek(): void;
     loadPreviousWeek(): void;
     loadNextWeek(): void;
+    loadPreviousMonth(): void;
+    loadNextMonth(): void;
 }
 
 export class DefaultCalendarViewModel implements CalendarViewModel {
@@ -65,6 +67,14 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
 
     public loadNextWeek(): void {
         this.calendarService.loadNextWeek(this.uiModel, (model) => this.setModel(model));
+    }
+
+    public loadPreviousMonth() {
+        this.calendarService.loadPreviousMonth(this.uiModel, (model) => this.setModel(model));
+    }
+
+    public loadNextMonth() {
+        this.calendarService.loadNextMonth(this.uiModel, (model) => this.setModel(model));
     }
 
     public async openDailyNote(key: ModifierKey, period: PeriodUiModel): Promise<void> {

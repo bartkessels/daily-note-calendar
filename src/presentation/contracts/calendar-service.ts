@@ -13,5 +13,7 @@ export interface CalendarService {
     loadCurrentWeek(model: CalendarUiModel | null, callback: Callback): void;
     loadPreviousWeek(model: CalendarUiModel | null, callback: Callback): void;
     loadNextWeek(model: CalendarUiModel | null, callback: Callback): void;
+    loadPreviousMonth(model: CalendarUiModel | null, callback: Callback): void;
+    loadNextMonth(model: CalendarUiModel | null, callback: Callback): void;
     openPeriodicNote(model: CalendarUiModel | null, key: ModifierKey, period: PeriodUiModel, settings: PeriodNoteSettings, callback: Callback): Promise<void>;
 }
