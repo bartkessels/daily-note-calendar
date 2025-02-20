@@ -55,6 +55,8 @@ export class RepositoryDateManager implements DateManager {
         );
     }
 
+    // TODO: Write unit tests for the month methods
+    // TODO: Write unit tests for the sorting of the weeks for all methods
     public getPreviousMonth(month: Period, startOfWeek: DayOfWeek): WeekModel[] {
         const previousMonth = this.dateRepositoryFactory.getRepository().getPreviousMonth(month);
         return this.getWeeksForMonth(previousMonth, startOfWeek);
