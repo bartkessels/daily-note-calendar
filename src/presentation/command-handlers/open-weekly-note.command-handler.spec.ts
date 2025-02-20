@@ -8,7 +8,7 @@ import {when} from 'jest-when';
 import {DEFAULT_GENERAL_SETTINGS} from 'src/domain/settings/general.settings';
 import {WeekModel} from 'src/domain/models/week.model';
 import {ModifierKey} from 'src/presentation/models/modifier-key';
-import {periodUiModel} from 'src/presentation/models/period.ui-model';
+import {weekUiModel} from 'src/presentation/models/week.ui-model';
 
 describe('OpenWeeklyNoteCommandHandler', () => {
     let commandHandler: OpenWeeklyNoteCommandHandler;
@@ -21,64 +21,63 @@ describe('OpenWeeklyNoteCommandHandler', () => {
         const dateManagerFactory = mockDateManagerFactory(dateManager);
         const settingsRepositoryFactory = mockSettingsRepositoryFactory(settingsRepository);
 
+        when(settingsRepository.get).mockResolvedValue(DEFAULT_GENERAL_SETTINGS);
+
         commandHandler = new OpenWeeklyNoteCommandHandler(dateManagerFactory, settingsRepositoryFactory, viewModel);
     });
 
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     describe('execute', () => {
+        const today = <Period>{
+            date: new Date(2023, 9, 2),
+            name: '02',
+            type: PeriodType.Day
+        };
+
+        const week = <WeekModel> {
+            date: new Date(2023, 9, 2),
+            name: '40',
+            weekNumber: 40,
+            year: <Period> {
+                date: new Date(2023, 0),
+                name: '2023',
+                type: PeriodType.Year
+            },
+            month: <Period> {
+                date: new Date(2023, 9),
+                name: 'October',
+                type: PeriodType.Month
+            },
+            type: PeriodType.Week,
+            days: []
+        };
+
+
         it('should get the current week based on the current day from the date manager', async () => {
             // Arrange
-            const currentDay = <Period>{
-                date: new Date(2023, 9, 2),
-                name: '02',
-                type: PeriodType.Day
-            };
-            const settings = DEFAULT_GENERAL_SETTINGS;
-
-            when(settingsRepository.get).mockResolvedValue(DEFAULT_GENERAL_SETTINGS);
-            when(dateManager.getCurrentDay).mockReturnValue(currentDay);
+            when(dateManager.getCurrentDay).mockReturnValue(today);
+            when(dateManager.getWeek).calledWith(today, DEFAULT_GENERAL_SETTINGS.firstDayOfWeek).mockReturnValue(week);
 
             // Act
             await commandHandler.execute();
 
             // Assert
-            expect(dateManager.getWeek).toHaveBeenCalledWith(currentDay, settings.firstDayOfWeek);
+            expect(dateManager.getWeek).toHaveBeenCalledWith(today, DEFAULT_GENERAL_SETTINGS.firstDayOfWeek);
         });
 
         it('should call the openWeeklyNote method of the view model with the current week and None modifier key', async () => {
             // Arrange
-            const currentDay = <Period>{
-                date: new Date(2023, 9, 2),
-                name: '02',
-                type: PeriodType.Day
-            };
-            const currentWeek = <WeekModel> {
-                date: new Date(2023, 9, 2),
-                name: '02',
-                type: PeriodType.Week,
-                weekNumber: 40,
-                year: <Period> {
-                    date: new Date(2023, 0),
-                    name: '2023',
-                    type: PeriodType.Year
-                },
-                month: <Period> {
-                    date: new Date(2023, 9),
-                    name: 'October',
-                    type: PeriodType.Month
-                },
-                days: []
-            };
-            const settings = DEFAULT_GENERAL_SETTINGS;
-
-            when(settingsRepository.get).mockResolvedValue(DEFAULT_GENERAL_SETTINGS);
-            when(dateManager.getCurrentDay).mockReturnValue(currentDay);
-            when(dateManager.getWeek).calledWith(currentDay, settings.firstDayOfWeek).mockReturnValue(currentWeek);
+            when(dateManager.getCurrentDay).mockReturnValue(today);
+            when(dateManager.getWeek).calledWith(today, DEFAULT_GENERAL_SETTINGS.firstDayOfWeek).mockReturnValue(week);
 
             // Act
             await commandHandler.execute();
 
             // Assert
-            expect(viewModel.openWeeklyNote).toHaveBeenCalledWith(ModifierKey.None, periodUiModel(currentWeek));
+            expect(viewModel.openWeeklyNote).toHaveBeenCalledWith(ModifierKey.None, weekUiModel(week));
         });
     });
 });
