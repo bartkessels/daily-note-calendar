@@ -11,6 +11,16 @@ describe('RepositoryDateManager', () => {
 
     const dateRepository = mockDateRepository;
     const today = new Date(2023, 9, 2);
+    const year = <Period> {
+        date: new Date(2023),
+        name: '2023',
+        type: PeriodType.Year
+    };
+    const month = <Period>{
+        date: new Date(2023, 9),
+        name: 'October',
+        type: PeriodType.Month
+    };
 
     beforeEach(() => {
         jest.useFakeTimers();
@@ -87,16 +97,8 @@ describe('RepositoryDateManager', () => {
             // Arrange
             const expected = <WeekModel>{
                 weekNumber: 40,
-                year: <Period>{
-                    date: new Date(2023, 0),
-                    name: '2023',
-                    type: PeriodType.Year
-                },
-                month: <Period>{
-                    date: new Date(2023, 9),
-                    name: 'October',
-                    type: PeriodType.Month
-                },
+                year: year,
+                month: month,
                 date: today,
                 name: '40',
                 type: PeriodType.Week,
@@ -122,16 +124,8 @@ describe('RepositoryDateManager', () => {
             };
             const expected = <WeekModel>{
                 weekNumber: 40,
-                year: <Period>{
-                    date: new Date(2023, 0),
-                    name: '2023',
-                    type: PeriodType.Year
-                },
-                month: <Period>{
-                    date: new Date(2023, 9),
-                    name: 'October',
-                    type: PeriodType.Month
-                },
+                year: year,
+                month: month,
                 date: period.date,
                 name: '40',
                 type: PeriodType.Week,
@@ -148,212 +142,331 @@ describe('RepositoryDateManager', () => {
     });
 
     describe('getPreviousWeeks', () => {
-        it('should return the previous weeks from the repository', () => {
-            // Arrange
-            const currentWeek = <WeekModel>{
-                weekNumber: 40,
-                year: <Period>{
-                    date: new Date(2023, 0),
-                    name: '2023',
-                    type: PeriodType.Year
-                },
-                month: <Period>{
-                    date: new Date(2023, 9),
-                    name: 'October',
-                    type: PeriodType.Month
-                },
-                date: today,
-                name: '40',
+        const currentWeek = <WeekModel>{
+            weekNumber: 40,
+            year: year,
+            month: month,
+            date: new Date(2023, 9, 2),
+            name: '40',
+            type: PeriodType.Week,
+            days: []
+        };
+        const previousWeeks = [
+            <WeekModel>{
+                weekNumber: 38,
+                year: year,
+                month: month,
+                date: new Date(2023, 8, 18),
+                name: '38',
                 type: PeriodType.Week,
                 days: []
-            };
-            const expected = [
-                <WeekModel>{
-                    weekNumber: 38,
-                    year: <Period>{
-                        date: new Date(2023, 0),
-                        name: '2023',
-                        type: PeriodType.Year
-                    },
-                    month: <Period>{
-                        date: new Date(2023, 9),
-                        name: 'October',
-                        type: PeriodType.Month
-                    },
-                    date: today,
-                    name: '38',
-                    type: PeriodType.Week,
-                    days: []
-                },
-                <WeekModel>{
-                    weekNumber: 39,
-                    year: <Period>{
-                        date: new Date(2023, 0),
-                        name: '2023',
-                        type: PeriodType.Year
-                    },
-                    month: <Period>{
-                        date: new Date(2023, 9),
-                        name: 'October',
-                        type: PeriodType.Month
-                    },
-                    date: today,
-                    name: '39',
-                    type: PeriodType.Week,
-                    days: []
-                }
-            ];
+            },
+            <WeekModel>{
+                weekNumber: 39,
+                year: year,
+                month: month,
+                date: new Date(2023, 8, 25),
+                name: '39',
+                type: PeriodType.Week,
+                days: []
+            }
+        ];
+
+        it('should return the previous weeks from the repository', () => {
+            // Arrange
             when(dateRepository.getPreviousWeek)
-                .calledWith(DayOfWeek.Monday, currentWeek).mockReturnValue(expected[0])
-                .calledWith(DayOfWeek.Monday, expected[0]).mockReturnValue(expected[1]);
+                .calledWith(DayOfWeek.Monday, currentWeek).mockReturnValue(previousWeeks[0])
+                .calledWith(DayOfWeek.Monday, previousWeeks[0]).mockReturnValue(previousWeeks[1]);
 
             // Act
             const result = manager.getPreviousWeeks(DayOfWeek.Monday, currentWeek, 2);
 
             // Assert
-            expect(result).toStrictEqual(expected);
+            expect(result).toStrictEqual(previousWeeks);
+        });
+
+        it('should return the previous weeks from the repository sorted', () => {
+            // Arrange
+            when(dateRepository.getPreviousWeek)
+                .calledWith(DayOfWeek.Monday, currentWeek)
+                .mockReturnValue(previousWeeks[1])
+                .calledWith(DayOfWeek.Monday, previousWeeks[1])
+                .mockReturnValue(previousWeeks[0]);
+
+            // Act
+            const result = manager.getPreviousWeeks(DayOfWeek.Monday, currentWeek, 2);
+
+            // Assert
+            expect(result).toEqual(previousWeeks);
         });
     });
 
     describe('getNextWeeks', () => {
-        it('should return the next weeks from the repository', () => {
-            // Arrange
-            const currentWeek = <WeekModel>{
-                weekNumber: 40,
-                year: <Period>{
-                    date: new Date(2023, 0),
-                    name: '2023',
-                    type: PeriodType.Year
-                },
-                month: <Period>{
-                    date: new Date(2023, 9),
-                    name: 'October',
-                    type: PeriodType.Month
-                },
-                date: today,
-                name: '40',
+        const currentWeek = <WeekModel>{
+            weekNumber: 40,
+            year: year,
+            month: month,
+            date: new Date(2023, 9, 2),
+            name: '40',
+            type: PeriodType.Week,
+            days: []
+        };
+        const nextWeeks = [
+            <WeekModel>{
+                weekNumber: 41,
+                year: year,
+                month: month,
+                date: new Date(2023, 9, 9),
+                name: '41',
                 type: PeriodType.Week,
                 days: []
-            };
-            const expected = [
-                <WeekModel>{
-                    weekNumber: 41,
-                    year: <Period>{
-                        date: new Date(2023, 0),
-                        name: '2023',
-                        type: PeriodType.Year
-                    },
-                    month: <Period>{
-                        date: new Date(2023, 9),
-                        name: 'October',
-                        type: PeriodType.Month
-                    },
-                    date: today,
-                    name: '41',
-                    type: PeriodType.Week,
-                    days: []
-                },
-                <WeekModel>{
-                    weekNumber: 42,
-                    year: <Period>{
-                        date: new Date(2023, 0),
-                        name: '2023',
-                        type: PeriodType.Year
-                    },
-                    month: <Period>{
-                        date: new Date(2023, 9),
-                        name: 'October',
-                        type: PeriodType.Month
-                    },
-                    date: today,
-                    name: '42',
-                    type: PeriodType.Week,
-                    days: []
-                }
-            ];
+            },
+            <WeekModel>{
+                weekNumber: 42,
+                year: year,
+                month: month,
+                date: new Date(2023, 9, 16),
+                name: '42',
+                type: PeriodType.Week,
+                days: []
+            }
+        ];
+
+        it('should return the next weeks from the repository', () => {
+            // Arrange
             when(dateRepository.getNextWeek)
-                .calledWith(DayOfWeek.Monday, currentWeek).mockReturnValue(expected[0])
-                .calledWith(DayOfWeek.Monday, expected[0]).mockReturnValue(expected[1]);
+                .calledWith(DayOfWeek.Monday, currentWeek).mockReturnValue(nextWeeks[0])
+                .calledWith(DayOfWeek.Monday, nextWeeks[0]).mockReturnValue(nextWeeks[1]);
 
             // Act
             const result = manager.getNextWeeks(DayOfWeek.Monday, currentWeek, 2);
 
             // Assert
-            expect(result).toStrictEqual(expected);
+            expect(result).toStrictEqual(nextWeeks);
+        });
+
+        it('should return the next weeks from the repository sorted', () => {
+            // Arrange
+            when(dateRepository.getNextWeek)
+                .calledWith(DayOfWeek.Monday, currentWeek).mockReturnValue(nextWeeks[1])
+                .calledWith(DayOfWeek.Monday, nextWeeks[1]).mockReturnValue(nextWeeks[0]);
+
+            // Act
+            const result = manager.getNextWeeks(DayOfWeek.Monday, currentWeek, 2);
+
+            // Assert
+            expect(result).toStrictEqual(nextWeeks);
         });
     });
 
     describe('getPreviousMonth', () => {
-        it('should return the weeks from the previous month when the weeks starts on a monday from the repository', () => {
-            // Arrange
-            const month = <Period>{
-                date: new Date(2023, 9),
-                name: 'October',
-                type: PeriodType.Month
-            };
-            const expectedPreviousMonth = <Period>{
-                date: new Date(2023, 8),
-                name: 'September',
-                type: PeriodType.Month
-            };
-            const expectedWeeks: WeekModel[] = [{
-                weekNumber: 35,
-                year: <Period>{
-                    date: new Date(2023, 0),
-                    name: '2023',
-                    type: PeriodType.Year
-                },
-                month: expectedPreviousMonth,
+        const previousMonth = <Period>{
+            date: new Date(2023, 8),
+            name: 'September',
+            type: PeriodType.Month
+        };
+        const weeksOfPreviousMonth: WeekModel[] = [
+            {
+                date: new Date(2023, 7, 28),
+                name: '39',
+                weekNumber: 39,
+                year: year,
+                month: previousMonth,
+                days: [],
+                type: PeriodType.Week
+            },
+            {
                 date: new Date(2023, 8, 4),
-                name: '35',
-                type: PeriodType.Week,
-                days: [{
-                    date: new Date(2023, 7, 28),
-                    name: '28',
-                    type: PeriodType.Day
-                }]
-            }];
+                name: '40',
+                weekNumber: 40,
+                year: year,
+                month: previousMonth,
+                days: [],
+                type: PeriodType.Week
+            },
+            {
+                date: new Date(2023, 8, 11),
+                name: '41',
+                weekNumber: 41,
+                year: year,
+                month: previousMonth,
+                days: [],
+                type: PeriodType.Week
+            },
+            {
+                date: new Date(2023, 8, 18),
+                name: '42',
+                weekNumber: 42,
+                year: year,
+                month: previousMonth,
+                days: [],
+                type: PeriodType.Week
+            },
+            {
+                date: new Date(2023, 8, 25),
+                name: '43',
+                weekNumber: 43,
+                year: year,
+                month: previousMonth,
+                days: [],
+                type: PeriodType.Week
+            }
+        ];
 
-            when(dateRepository.getPreviousMonth).calledWith(month).mockReturnValue(expectedPreviousMonth);
-            when(dateRepository.getWeekFromDate).calledWith(DayOfWeek.Monday, expectedWeeks[0].date).mockReturnValue(expectedWeeks[0]);
+        it('should return call the getPreviousMonth with the given month on the repository and should call the correct getWeeksOfMonth method', () => {
+            // Arrange
+            when(dateRepository.getPreviousMonth).calledWith(month).mockReturnValue(previousMonth);
+            when(dateRepository.getWeekFromDate).mockReturnValue(weeksOfPreviousMonth[2]);
+            when(dateRepository.getPreviousWeek)
+                .calledWith(DayOfWeek.Monday, weeksOfPreviousMonth[2])
+                .mockReturnValue(weeksOfPreviousMonth[0])
+                .calledWith(DayOfWeek.Monday, weeksOfPreviousMonth[0])
+                .mockReturnValue(weeksOfPreviousMonth[1]);
+
+            when(dateRepository.getNextWeek)
+                .calledWith(DayOfWeek.Monday, weeksOfPreviousMonth[2])
+                .mockReturnValue(weeksOfPreviousMonth[3])
+                .calledWith(DayOfWeek.Monday, weeksOfPreviousMonth[3])
+                .mockReturnValue(weeksOfPreviousMonth[4]);
 
             // Act
             const result = manager.getPreviousMonth(month, DayOfWeek.Monday);
 
             // Assert
-            expect(result.length).toBe(5);
-            expect(result[0]).toBe(<WeekModel>{
-                weekNumber: 35,
-                year: <Period>{
-                    date: new Date(2023, 0),
-                    name: '2023',
-                    type: PeriodType.Year
-                },
-                month: expectedPreviousMonth,
-                date: new Date(2023, 8, 4),
-                name: '35',
-                type: PeriodType.Week,
-                days: expect.arrayContaining([{
-                    // Monday
-                    date: new Date(2023, 7, 28),
-                    name: '28',
-                    type: PeriodType.Day
-                }, {
-                    // Sunday
-                    date: new Date(2023, 8, 3),
-                    name: '03',
-                    type: PeriodType.Day
-                }])
-            });
-            expect(result[1].weekNumber).toBe(36);
-            expect(result[2].weekNumber).toBe(37);
-            expect(result[3].weekNumber).toBe(38);
-            expect(result[4].weekNumber).toBe(39);
+            expect(dateRepository.getWeekFromDate).toHaveBeenCalledWith(DayOfWeek.Monday, new Date('2023-09-15T10:00:00.000Z'));
+            expect(dateRepository.getPreviousMonth).toHaveBeenCalledWith(month);
+            expect(result).toEqual(weeksOfPreviousMonth);
+        });
+
+        it('should sort the weeks correctly', () => {
+            // Arrange
+            when(dateRepository.getPreviousMonth).calledWith(month).mockReturnValue(previousMonth);
+            when(dateRepository.getWeekFromDate).mockReturnValue(weeksOfPreviousMonth[2]);
+            when(dateRepository.getPreviousWeek)
+                .calledWith(DayOfWeek.Monday, weeksOfPreviousMonth[2])
+                .mockReturnValue(weeksOfPreviousMonth[1])
+                .calledWith(DayOfWeek.Monday, weeksOfPreviousMonth[1])
+                .mockReturnValue(weeksOfPreviousMonth[0]);
+
+            when(dateRepository.getNextWeek)
+                .calledWith(DayOfWeek.Monday, weeksOfPreviousMonth[2])
+                .mockReturnValue(weeksOfPreviousMonth[4])
+                .calledWith(DayOfWeek.Monday, weeksOfPreviousMonth[4])
+                .mockReturnValue(weeksOfPreviousMonth[3]);
+
+            // Act
+            const result = manager.getPreviousMonth(month, DayOfWeek.Monday);
+
+            // Assert
+            expect(dateRepository.getWeekFromDate).toHaveBeenCalledWith(DayOfWeek.Monday, new Date('2023-09-15T10:00:00.000Z'));
+            expect(dateRepository.getPreviousMonth).toHaveBeenCalledWith(month);
+            expect(result).toEqual(weeksOfPreviousMonth);
         });
     });
 
     describe('getNextMonth', () => {
+        const nextMonth = <Period>{
+            date: new Date(2023, 10),
+            name: 'November',
+            type: PeriodType.Month
+        };
+        const weeksOfNextMonth: WeekModel[] = [
+            {
+                date: new Date(2023, 9, 30),
+                name: '44',
+                weekNumber: 44,
+                year: year,
+                month: month,
+                days: [],
+                type: PeriodType.Week
+            },
+            {
+                date: new Date(2023, 10,4),
+                name: '45',
+                weekNumber: 45,
+                year: year,
+                month: nextMonth,
+                days: [],
+                type: PeriodType.Week
+            },
+            {
+                date: new Date(2023, 10, 13),
+                name: '46',
+                weekNumber: 46,
+                year: year,
+                month: nextMonth,
+                days: [],
+                type: PeriodType.Week
+            },
+            {
+                date: new Date(2023, 10, 20),
+                name: '47',
+                weekNumber: 47,
+                year: year,
+                month: nextMonth,
+                days: [],
+                type: PeriodType.Week
+            },
+            {
+                date: new Date(2023, 10, 27),
+                name: '48',
+                weekNumber: 48,
+                year: year,
+                month: nextMonth,
+                days: [],
+                type: PeriodType.Week
+            }
+        ];
 
+        it('should return call the getPreviousMonth with the given month on the repository and should call the correct getWeeksOfMonth method', () => {
+            // Arrange
+            when(dateRepository.getNextMonth).calledWith(month).mockReturnValue(nextMonth);
+            when(dateRepository.getWeekFromDate).mockReturnValue(weeksOfNextMonth[2]);
+            when(dateRepository.getPreviousWeek)
+                .calledWith(DayOfWeek.Monday, weeksOfNextMonth[2])
+                .mockReturnValue(weeksOfNextMonth[0])
+                .calledWith(DayOfWeek.Monday, weeksOfNextMonth[0])
+                .mockReturnValue(weeksOfNextMonth[1]);
+
+            when(dateRepository.getNextWeek)
+                .calledWith(DayOfWeek.Monday, weeksOfNextMonth[2])
+                .mockReturnValue(weeksOfNextMonth[3])
+                .calledWith(DayOfWeek.Monday, weeksOfNextMonth[3])
+                .mockReturnValue(weeksOfNextMonth[4]);
+
+            // Act
+            const result = manager.getNextMonth(month, DayOfWeek.Monday);
+
+            // Assert
+            expect(dateRepository.getWeekFromDate).toHaveBeenCalledWith(DayOfWeek.Monday, new Date('2023-11-15T11:00:00.000Z'));
+            expect(dateRepository.getNextMonth).toHaveBeenCalledWith(month);
+            expect(result).toEqual(weeksOfNextMonth);
+        });
+
+        it('should sort the weeks correctly', () => {
+            // Arrange
+            when(dateRepository.getNextMonth).calledWith(month).mockReturnValue(nextMonth);
+            when(dateRepository.getWeekFromDate).mockReturnValue(weeksOfNextMonth[2]);
+            when(dateRepository.getPreviousWeek)
+                .calledWith(DayOfWeek.Monday, weeksOfNextMonth[2])
+                .mockReturnValue(weeksOfNextMonth[1])
+                .calledWith(DayOfWeek.Monday, weeksOfNextMonth[1])
+                .mockReturnValue(weeksOfNextMonth[0]);
+
+            when(dateRepository.getNextWeek)
+                .calledWith(DayOfWeek.Monday, weeksOfNextMonth[2])
+                .mockReturnValue(weeksOfNextMonth[4])
+                .calledWith(DayOfWeek.Monday, weeksOfNextMonth[4])
+                .mockReturnValue(weeksOfNextMonth[3]);
+
+            // Act
+            const result = manager.getNextMonth(month, DayOfWeek.Monday);
+
+            // Assert
+            expect(dateRepository.getWeekFromDate).toHaveBeenCalledWith(DayOfWeek.Monday, new Date('2023-11-15T11:00:00.000Z'));
+            expect(dateRepository.getNextMonth).toHaveBeenCalledWith(month);
+            expect(result).toEqual(weeksOfNextMonth);
+        });
     });
 
     describe('getQuarter', () => {
