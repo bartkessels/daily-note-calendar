@@ -29,7 +29,7 @@ describe('RepositoryDateManager', () => {
     describe('getCurrentDay', () => {
         it('should return the period with the date of today from the repository', () => {
             // Arrange
-            const expected = <Period> {
+            const expected = <Period>{
                 date: today,
                 name: '2',
                 type: PeriodType.Day
@@ -48,7 +48,7 @@ describe('RepositoryDateManager', () => {
         it('should return the period with the date of tomorrow from the repository', () => {
             // Arrange
             const tomorrow = new Date(2023, 9, 3);
-            const expected = <Period> {
+            const expected = <Period>{
                 date: tomorrow,
                 name: '3',
                 type: PeriodType.Day
@@ -67,7 +67,7 @@ describe('RepositoryDateManager', () => {
         it('should return the period with the date of yesterday from the repository', () => {
             // Arrange
             const yesterday = new Date(2023, 9, 1);
-            const expected = <Period> {
+            const expected = <Period>{
                 date: yesterday,
                 name: '1',
                 type: PeriodType.Day
@@ -85,14 +85,14 @@ describe('RepositoryDateManager', () => {
     describe('getCurrentWeek', () => {
         it('should return the week from the repository', () => {
             // Arrange
-            const expected = <WeekModel> {
+            const expected = <WeekModel>{
                 weekNumber: 40,
-                year: <Period> {
+                year: <Period>{
                     date: new Date(2023, 0),
                     name: '2023',
                     type: PeriodType.Year
                 },
-                month: <Period> {
+                month: <Period>{
                     date: new Date(2023, 9),
                     name: 'October',
                     type: PeriodType.Month
@@ -115,19 +115,19 @@ describe('RepositoryDateManager', () => {
     describe('getWeek', () => {
         it('should return the week from the repository', () => {
             // Arrange
-            const period = <Period> {
+            const period = <Period>{
                 date: new Date(2023, 9, 2),
                 name: '2',
                 type: PeriodType.Day
             };
-            const expected = <WeekModel> {
+            const expected = <WeekModel>{
                 weekNumber: 40,
-                year: <Period> {
+                year: <Period>{
                     date: new Date(2023, 0),
                     name: '2023',
                     type: PeriodType.Year
                 },
-                month: <Period> {
+                month: <Period>{
                     date: new Date(2023, 9),
                     name: 'October',
                     type: PeriodType.Month
@@ -150,14 +150,14 @@ describe('RepositoryDateManager', () => {
     describe('getPreviousWeeks', () => {
         it('should return the previous weeks from the repository', () => {
             // Arrange
-            const currentWeek = <WeekModel> {
+            const currentWeek = <WeekModel>{
                 weekNumber: 40,
-                year: <Period> {
+                year: <Period>{
                     date: new Date(2023, 0),
                     name: '2023',
                     type: PeriodType.Year
                 },
-                month: <Period> {
+                month: <Period>{
                     date: new Date(2023, 9),
                     name: 'October',
                     type: PeriodType.Month
@@ -168,14 +168,14 @@ describe('RepositoryDateManager', () => {
                 days: []
             };
             const expected = [
-                <WeekModel> {
+                <WeekModel>{
                     weekNumber: 38,
-                    year: <Period> {
+                    year: <Period>{
                         date: new Date(2023, 0),
                         name: '2023',
                         type: PeriodType.Year
                     },
-                    month: <Period> {
+                    month: <Period>{
                         date: new Date(2023, 9),
                         name: 'October',
                         type: PeriodType.Month
@@ -185,14 +185,14 @@ describe('RepositoryDateManager', () => {
                     type: PeriodType.Week,
                     days: []
                 },
-                <WeekModel> {
+                <WeekModel>{
                     weekNumber: 39,
-                    year: <Period> {
+                    year: <Period>{
                         date: new Date(2023, 0),
                         name: '2023',
                         type: PeriodType.Year
                     },
-                    month: <Period> {
+                    month: <Period>{
                         date: new Date(2023, 9),
                         name: 'October',
                         type: PeriodType.Month
@@ -218,14 +218,14 @@ describe('RepositoryDateManager', () => {
     describe('getNextWeeks', () => {
         it('should return the next weeks from the repository', () => {
             // Arrange
-            const currentWeek = <WeekModel> {
+            const currentWeek = <WeekModel>{
                 weekNumber: 40,
-                year: <Period> {
+                year: <Period>{
                     date: new Date(2023, 0),
                     name: '2023',
                     type: PeriodType.Year
                 },
-                month: <Period> {
+                month: <Period>{
                     date: new Date(2023, 9),
                     name: 'October',
                     type: PeriodType.Month
@@ -236,14 +236,14 @@ describe('RepositoryDateManager', () => {
                 days: []
             };
             const expected = [
-                <WeekModel> {
+                <WeekModel>{
                     weekNumber: 41,
-                    year: <Period> {
+                    year: <Period>{
                         date: new Date(2023, 0),
                         name: '2023',
                         type: PeriodType.Year
                     },
-                    month: <Period> {
+                    month: <Period>{
                         date: new Date(2023, 9),
                         name: 'October',
                         type: PeriodType.Month
@@ -253,14 +253,14 @@ describe('RepositoryDateManager', () => {
                     type: PeriodType.Week,
                     days: []
                 },
-                <WeekModel> {
+                <WeekModel>{
                     weekNumber: 42,
-                    year: <Period> {
+                    year: <Period>{
                         date: new Date(2023, 0),
                         name: '2023',
                         type: PeriodType.Year
                     },
-                    month: <Period> {
+                    month: <Period>{
                         date: new Date(2023, 9),
                         name: 'October',
                         type: PeriodType.Month
@@ -283,15 +283,88 @@ describe('RepositoryDateManager', () => {
         });
     });
 
-    describe('getQuarter', () => {
-        it('should return the quarter from the repository', () => {
+    describe('getPreviousMonth', () => {
+        it('should return the weeks from the previous month when the weeks starts on a monday from the repository', () => {
             // Arrange
-            const month = <Period> {
+            const month = <Period>{
                 date: new Date(2023, 9),
                 name: 'October',
                 type: PeriodType.Month
             };
-            const expected = <Period> {
+            const expectedPreviousMonth = <Period>{
+                date: new Date(2023, 8),
+                name: 'September',
+                type: PeriodType.Month
+            };
+            const expectedWeeks: WeekModel[] = [{
+                weekNumber: 35,
+                year: <Period>{
+                    date: new Date(2023, 0),
+                    name: '2023',
+                    type: PeriodType.Year
+                },
+                month: expectedPreviousMonth,
+                date: new Date(2023, 8, 4),
+                name: '35',
+                type: PeriodType.Week,
+                days: [{
+                    date: new Date(2023, 7, 28),
+                    name: '28',
+                    type: PeriodType.Day
+                }]
+            }];
+
+            when(dateRepository.getPreviousMonth).calledWith(month).mockReturnValue(expectedPreviousMonth);
+            when(dateRepository.getWeekFromDate).calledWith(DayOfWeek.Monday, expectedWeeks[0].date).mockReturnValue(expectedWeeks[0]);
+
+            // Act
+            const result = manager.getPreviousMonth(month, DayOfWeek.Monday);
+
+            // Assert
+            expect(result.length).toBe(5);
+            expect(result[0]).toBe(<WeekModel>{
+                weekNumber: 35,
+                year: <Period>{
+                    date: new Date(2023, 0),
+                    name: '2023',
+                    type: PeriodType.Year
+                },
+                month: expectedPreviousMonth,
+                date: new Date(2023, 8, 4),
+                name: '35',
+                type: PeriodType.Week,
+                days: expect.arrayContaining([{
+                    // Monday
+                    date: new Date(2023, 7, 28),
+                    name: '28',
+                    type: PeriodType.Day
+                }, {
+                    // Sunday
+                    date: new Date(2023, 8, 3),
+                    name: '03',
+                    type: PeriodType.Day
+                }])
+            });
+            expect(result[1].weekNumber).toBe(36);
+            expect(result[2].weekNumber).toBe(37);
+            expect(result[3].weekNumber).toBe(38);
+            expect(result[4].weekNumber).toBe(39);
+        });
+    });
+
+    describe('getNextMonth', () => {
+
+    });
+
+    describe('getQuarter', () => {
+        it('should return the quarter from the repository', () => {
+            // Arrange
+            const month = <Period>{
+                date: new Date(2023, 9),
+                name: 'October',
+                type: PeriodType.Month
+            };
+            const expected = <Period>{
                 date: new Date(2023, 6),
                 name: 'Q3',
                 type: PeriodType.Quarter

@@ -10,14 +10,15 @@ export class ObsidianFileAdapter implements FileAdapter {
 
     public async exists(path: string): Promise<boolean> {
         const normalizedPath = this.normalizePath(path);
-        return await this.plugin.app.vault.adapter.exists(normalizedPath, true);
+        const file = this.plugin.app.vault.getAbstractFileByPath(normalizedPath);
+
+        return file instanceof TFile;
     }
 
     public async createFileFromTemplate(path: string, templateFilePath: string): Promise<string> {
         const normalizedFilePath = this.normalizePath(path);
         const normalizedTemplateFilePath = this.normalizePath(templateFilePath ?? '');
         const templateFileContents = await this.readContents(normalizedTemplateFilePath);
-
         const file = await this.plugin.app.vault.create(normalizedFilePath, templateFileContents);
 
         return file.path;
@@ -45,7 +46,7 @@ export class ObsidianFileAdapter implements FileAdapter {
         const file = this.plugin.app.vault.getAbstractFileByPath(normalizedPath);
 
         if (file instanceof TFile) {
-            return await this.plugin.app.vault.read(file);
+            return await this.plugin.app.vault.cachedRead(file);
         }
 
         return '';
@@ -53,11 +54,7 @@ export class ObsidianFileAdapter implements FileAdapter {
 
     public async writeContents(path: string, contents: string): Promise<void> {
         const normalizedPath = this.normalizePath(path);
-        const file = this.plugin.app.vault.getAbstractFileByPath(normalizedPath);
-
-        if (file instanceof TFile) {
-            await this.plugin.app.vault.modify(file, contents);
-        }
+        await this.plugin.app.vault.adapter.write(normalizedPath, contents);
     }
 
     public async open(path: string): Promise<void> {

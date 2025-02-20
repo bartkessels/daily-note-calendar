@@ -24,9 +24,11 @@ export const mockDateRepository = {
     getDayFromDate: jest.fn(),
     getDayFromDateString: jest.fn(),
     getWeekFromDate: jest.fn(),
-    getWeek: jest.fn(),
     getPreviousWeek: jest.fn(),
     getNextWeek: jest.fn(),
+    getMonthFromDate: jest.fn(),
+    getPreviousMonth: jest.fn(),
+    getNextMonth: jest.fn(),
     getQuarter: jest.fn()
 } as jest.Mocked<DateRepository>;
 

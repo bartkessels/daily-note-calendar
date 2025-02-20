@@ -1,17 +1,14 @@
 import {Note} from 'src/domain/models/note.model';
 import {NoteAdapter} from 'src/infrastructure/adapters/note.adapter';
 import {Plugin, TFile} from 'obsidian';
-import {DateRepository} from 'src/infrastructure/contracts/date-repository';
 import {DateRepositoryFactory} from 'src/infrastructure/contracts/date-repository-factory';
 
 export class ObsidianNoteAdapter implements NoteAdapter {
-    private readonly dateRepository: DateRepository;
-
     constructor(
         private readonly plugin: Plugin,
-        dateRepositoryFactory: DateRepositoryFactory
+        private readonly dateRepositoryFactory: DateRepositoryFactory
     ) {
-        this.dateRepository = dateRepositoryFactory.getRepository();
+
     }
 
     public async getActiveNote(): Promise<Note | null> {
@@ -32,22 +29,8 @@ export class ObsidianNoteAdapter implements NoteAdapter {
     }
 
     private async asNote(file: TFile): Promise<Note> {
-        let frontMatter: Map<string, string> = new Map<string, string>();
-
-        try {
-            await this.plugin.app.fileManager.processFrontMatter(file, (data): void => {
-                frontMatter = new Map<string, string>(Object.entries(data));
-            }, {
-                // The ctime property is otherwise changed to the current datetime when the front matter is processed.
-                // Because of this, we need to set it back to the original value.
-                ctime: file.stat.ctime,
-                mtime: file.stat.mtime
-            });
-        } catch (e) {
-            console.error(`Error processing front matter for file: ${file.path}. Error: ${e}`);
-        }
-
-        const createdOn = this.dateRepository.getDayFromDate(new Date(file.stat.ctime));
+        const createdOn = this.dateRepositoryFactory.getRepository().getDayFromDate(new Date(file.stat.ctime));
+        const frontMatter = this.readFrontMatter(file);
 
         return <Note>{
             path: file.path,
@@ -55,5 +38,20 @@ export class ObsidianNoteAdapter implements NoteAdapter {
             createdOn: createdOn,
             properties: frontMatter
         };
+    }
+
+    private readFrontMatter(file: TFile): Map<string, string> {
+        let frontMatter: Map<string, string> = new Map<string, string>();
+
+        try {
+            const frontMatterCache = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+            if (frontMatterCache) {
+                frontMatter = new Map<string, string>(Object.entries(frontMatterCache));
+            }
+        } catch (e) {
+            console.error(`Error processing front matter for file: ${file.path}. Error: ${e}`);
+        }
+
+        return frontMatter;
     }
 }
