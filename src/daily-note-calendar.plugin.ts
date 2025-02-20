@@ -11,6 +11,8 @@ import {NavigateToPreviousWeekCommand} from 'src/presentation/commands/navigate-
 import {OpenYesterdaysNoteCommand} from 'src/presentation/commands/open-yesterdays-note.command';
 import {OpenTomorrowsNoteCommand} from 'src/presentation/commands/open-tomorrows-note.command';
 import {OpenWeeklyNoteCommand} from 'src/presentation/commands/open-weekly-note.command';
+import {NavigateToNextMonthCommand} from 'src/presentation/commands/navigate-to-next-month.command';
+import {NavigateToPreviousMonthCommand} from 'src/presentation/commands/navigate-to-previous-month.command';
 
 export default class DailyNoteCalendarPlugin extends Plugin {
     private readonly dependencies: Dependencies = getDependencies(this);
@@ -44,6 +46,8 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         this.addCommand(new NavigateToCurrentWeekCommand(this.dependencies.commandHandlerFactory));
         this.addCommand(new NavigateToNextWeekCommand(this.dependencies.commandHandlerFactory));
         this.addCommand(new NavigateToPreviousWeekCommand(this.dependencies.commandHandlerFactory));
+        this.addCommand(new NavigateToNextMonthCommand(this.dependencies.commandHandlerFactory));
+        this.addCommand(new NavigateToPreviousMonthCommand(this.dependencies.commandHandlerFactory));
         this.addCommand(new OpenYesterdaysNoteCommand(this.dependencies.commandHandlerFactory));
         this.addCommand(new OpenTomorrowsNoteCommand(this.dependencies.commandHandlerFactory));
         this.addCommand(new OpenWeeklyNoteCommand(this.dependencies.commandHandlerFactory));

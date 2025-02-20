@@ -11,5 +11,7 @@ export const mockCalendarViewModel = {
     openYearlyNote: jest.fn(),
     loadCurrentWeek: jest.fn(),
     loadPreviousWeek: jest.fn(),
-    loadNextWeek: jest.fn()
+    loadNextWeek: jest.fn(),
+    loadPreviousMonth: jest.fn(),
+    loadNextMonth: jest.fn()
 } as jest.Mocked<CalendarViewModel>;

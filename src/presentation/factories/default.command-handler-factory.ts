@@ -17,6 +17,12 @@ import {
 import {OpenYesterdaysNoteCommandHandler} from 'src/presentation/command-handlers/open-yesterdays-note.command-handler';
 import {OpenTomorrowsNoteCommandHandler} from 'src/presentation/command-handlers/open-tomorrows-note.command-handler';
 import {OpenWeeklyNoteCommandHandler} from 'src/presentation/command-handlers/open-weekly-note.command-handler';
+import {
+    NavigateToPreviousMonthCommandHandler
+} from 'src/presentation/command-handlers/navigate-to-previous-month.command-handler';
+import {
+    NavigateToNextMonthCommandHandler
+} from 'src/presentation/command-handlers/navigate-to-next-month.command-handler';
 
 export class DefaultCommandHandlerFactory implements CommandHandlerFactory {
     constructor(
@@ -38,6 +44,10 @@ export class DefaultCommandHandlerFactory implements CommandHandlerFactory {
                 return new NavigateToPreviousWeekCommandHandler(this.viewModel);
             case CommandHandlerType.NavigateToNextWeek:
                 return new NavigateToNextWeekCommandHandler(this.viewModel);
+            case CommandHandlerType.NavigateToPreviousMonth:
+                return new NavigateToPreviousMonthCommandHandler(this.viewModel);
+            case CommandHandlerType.NavigateToNextMonth:
+                return new NavigateToNextMonthCommandHandler(this.viewModel);
             case CommandHandlerType.OpenYesterdaysNote:
                 return new OpenYesterdaysNoteCommandHandler(this.dateManagerFactory, this.viewModel);
             case CommandHandlerType.OpenTomorrowsNote:

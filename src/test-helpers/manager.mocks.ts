@@ -15,5 +15,7 @@ export const mockDateManager = {
     getWeek: jest.fn(),
     getPreviousWeeks: jest.fn(),
     getNextWeeks: jest.fn(),
+    getNextMonth: jest.fn(),
+    getPreviousMonth: jest.fn(),
     getQuarter: jest.fn()
 } as jest.Mocked<DateManager>;
