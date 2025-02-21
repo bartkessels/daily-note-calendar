@@ -3,7 +3,7 @@ import {ModifierKey} from 'src/presentation/models/modifier-key';
 import {Period, PeriodType} from 'src/domain/models/period.model';
 import {fireEvent, render, screen} from '@testing-library/react';
 import {PeriodComponent} from 'src/presentation/components/period.component';
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import '@testing-library/jest-dom';
 
 describe('PeriodComponent', () => {
@@ -22,7 +22,10 @@ describe('PeriodComponent', () => {
     });
 
     describe('No uiModel provided', () => {
-        it('should return an empty element', () => {
+    });
+
+    describe('Period is displayed', () => {
+        it('should return an empty element when not value is provided', () => {
             // Act
             render(
                 <PeriodComponent
@@ -31,6 +34,14 @@ describe('PeriodComponent', () => {
 
             // Assert
             expect(screen.queryByText(periodUiModel.period.name)).toBeNull();
+        });
+
+        it('should display the period name', () => {
+            // Act
+            render(setupContent(periodUiModel));
+
+            // Assert
+            expect(screen.getByText(periodUiModel.period.name)).toBeInTheDocument();
         });
     });
 

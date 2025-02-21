@@ -1,12 +1,22 @@
-import React, {ReactElement, useCallback, useRef} from 'react';
+import React, {ReactElement} from 'react';
 import {useCalendarViewModel} from 'src/presentation/context/calendar-view-model.context';
 import {CalendarUiModel} from 'src/presentation/models/calendar.ui-model';
 import {PeriodComponent} from 'src/presentation/components/period.component';
 import {CalendarHeart, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight} from 'lucide-react';
 import {arePeriodUiModelsEqual} from 'src/presentation/models/period.ui-model';
+import 'src/extensions/extensions';
 
-export const CalendarComponent = (): ReactElement => {
-    const [uiModel, setUiModel] = React.useState<CalendarUiModel | null>(null);
+interface CalendarComponentProperties {
+    initialUiModel?: CalendarUiModel | null;
+}
+
+
+export const CalendarComponent = (
+    {
+        initialUiModel = null
+    }: CalendarComponentProperties
+): ReactElement => {
+    const [uiModel, setUiModel] = React.useState<CalendarUiModel | null>(initialUiModel);
 
     const viewModel = useCalendarViewModel();
     viewModel?.setUpdateViewState(setUiModel);

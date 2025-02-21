@@ -2,7 +2,7 @@ import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
 import {ModifierKey} from 'src/presentation/models/modifier-key';
 import React, {ReactElement} from 'react';
 
-interface PeriodViewProperties {
+interface PeriodComponentProperties {
     isSelected?: boolean;
     isToday?: boolean;
     model?: PeriodUiModel,
@@ -14,7 +14,7 @@ export const PeriodComponent = (
         isSelected = false,
         isToday = false,
         model, onClick
-    }: PeriodViewProperties
+    }: PeriodComponentProperties
 ): ReactElement => {
     if (!model) {
         return <></>;
