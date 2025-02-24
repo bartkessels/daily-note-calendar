@@ -5,6 +5,7 @@ import {PeriodComponent} from 'src/presentation/components/period.component';
 import {CalendarHeart, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight} from 'lucide-react';
 import {arePeriodUiModelsEqual} from 'src/presentation/models/period.ui-model';
 import 'src/extensions/extensions';
+import Skeleton from 'react-loading-skeleton';
 
 interface CalendarComponentProperties {
     initialUiModel?: CalendarUiModel | null;
@@ -19,14 +20,23 @@ export const CalendarComponent = (
     const [uiModel, setUiModel] = React.useState<CalendarUiModel | null>(initialUiModel);
 
     const viewModel = useCalendarViewModel();
-    viewModel?.setUpdateViewState(setUiModel);
+    // viewModel?.setUpdateViewState(setUiModel);
 
     return (
         <div className="dnc">
             <div className="header">
-                <span className="title">
-                    <h1><PeriodComponent onClick={(key, period) => viewModel?.openMonthlyNote(key, period)} model={uiModel?.month}/></h1>&nbsp;
-                    <h1><PeriodComponent onClick={(key, period) => viewModel?.openYearlyNote(key, period)} model={uiModel?.year}/></h1>&nbsp;
+            <span className="title">
+
+                {(() => {
+                    if (!uiModel) {
+                        return <Skeleton width="50%"/>
+                    }
+
+                    return (<>
+                        <h1><PeriodComponent onClick={(key, period) => viewModel?.openMonthlyNote(key, period)} model={uiModel?.month}/></h1>&nbsp;
+                        <h1><PeriodComponent onClick={(key, period) => viewModel?.openYearlyNote(key, period)} model={uiModel?.year}/></h1>&nbsp;
+                    </>)
+                })()}
                 </span>
 
                 <div className="buttons">

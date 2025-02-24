@@ -1,6 +1,8 @@
 import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
 import {ModifierKey} from 'src/presentation/models/modifier-key';
 import React, {ReactElement} from 'react';
+import Skeleton, {SkeletonTheme} from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 interface PeriodComponentProperties {
     isSelected?: boolean;
@@ -40,14 +42,18 @@ export const PeriodComponent = (
         classes.push('has-note');
     }
 
-    return (
-        <div
-            id={isToday ? 'today' : ''}
-            className={classes.join(' ')}
-            {...model.noNotes > 0 ? { title: `Number of notes: ${model.noNotes}` } : {}}
-            onClick={(e: React.MouseEvent) => {
-                onClick(modifierKey(e), model);
-                e.preventDefault();
-            }}>{model.period.name}</div>
-    );
+    // if (model.isLoading) {
+    return (<Skeleton />);
+    // }
+
+    // return (
+    //     <div
+    //         id={isToday ? 'today' : ''}
+    //         className={classes.join(' ')}
+    //         {...model.noNotes > 0 ? { title: `Number of notes: ${model.noNotes}` } : {}}
+    //         onClick={(e: React.MouseEvent) => {
+    //             onClick(modifierKey(e), model);
+    //             e.preventDefault();
+    //         }}>{model.period.name}</div>
+    // );
 };

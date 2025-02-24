@@ -76,7 +76,9 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
     }
 
     public openDailyNote(key: ModifierKey, period: PeriodUiModel): void {
-        this.calendarService.openPeriodicNote(this.uiModel, key, period, this.settings.dailyNotes, this.setModel.bind(this));
+        const updatedPeriod = <PeriodUiModel> {...period, isLoading: true };
+        const uiModel = <CalendarUiModel> {...this.uiModel, selectedPeriod: { ...period, isLoading: true } };
+        this.calendarService.openPeriodicNote(uiModel, key, updatedPeriod, this.settings.dailyNotes, this.setModel.bind(this));
     }
 
     public openWeeklyNote(key: ModifierKey, period: PeriodUiModel): void {
