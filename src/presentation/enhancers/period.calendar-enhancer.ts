@@ -36,7 +36,7 @@ export class PeriodCalendarEnhancer implements CalendarEnhancer {
 
         return {
             ...calendar,
-            lastUpdated: new Date(),
+            lastUpdateRequest: new Date(),
             weeks: enhancedWeeks
         };
     }

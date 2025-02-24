@@ -23,7 +23,7 @@ export const useCalendarViewModel = (): CalendarViewModel | undefined => {
         );
         setViewModel(viewModel);
 
-        viewModel.initialize().then();
+        viewModel.initialize().catch();
     }, [dateManager, calendarEnhancer, manageDayEvent]);
 
     return viewModel?.withViewState(viewState);

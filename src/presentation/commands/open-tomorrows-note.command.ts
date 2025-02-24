@@ -13,6 +13,6 @@ export class OpenTomorrowsNoteCommand implements Command {
     }
 
     public callback: (() => any) = (): void => {
-        this.commandHandler.execute().then();
+        this.commandHandler.execute().catch();
     }
 }

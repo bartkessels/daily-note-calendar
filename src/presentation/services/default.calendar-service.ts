@@ -38,7 +38,7 @@ export class DefaultCalendarService implements CalendarService {
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
         const week = this.dateManager.getWeek(period, firstDayOfWeek);
         const weeks = this.expandWeek(week, 2, 2);
-        const updatedModel = <CalendarUiModel>{ ...model, selectedPeriod: periodUiModel(period) };
+        const updatedModel = <CalendarUiModel>{ ...model, lastUpdateRequest: new Date(), selectedPeriod: periodUiModel(period) };
 
         this.buildModel(updatedModel, weeks, callback);
     }
@@ -47,18 +47,23 @@ export class DefaultCalendarService implements CalendarService {
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
         const currentWeek = this.dateManager.getCurrentWeek(firstDayOfWeek);
         const weeks = this.expandWeek(currentWeek, 2, 2);
+        const updatedModel = <CalendarUiModel>{ ...model, lastUpdateRequest: new Date() };
 
-        this.buildModel(model, weeks, callback);
+        this.buildModel(updatedModel, weeks, callback);
     }
 
     public loadPreviousWeek(model: CalendarUiModel | null, callback: (model: CalendarUiModel) => void): void {
         const weeks = this.expandWeeks(model?.weeks ?? [], 3, 1);
-        this.buildModel(model, weeks, callback);
+        const updatedModel = <CalendarUiModel>{ ...model, lastUpdateRequest: new Date() };
+
+        this.buildModel(updatedModel, weeks, callback);
     }
 
     public loadNextWeek(model: CalendarUiModel | null, callback: (model: CalendarUiModel) => void): void {
         const weeks = this.expandWeeks(model?.weeks ?? [], 1, 3);
-        this.buildModel(model, weeks, callback);
+        const updatedModel = <CalendarUiModel>{ ...model, lastUpdateRequest: new Date() };
+
+        this.buildModel(updatedModel, weeks, callback);
     }
 
     public loadNextMonth(model: CalendarUiModel | null, callback: (model: CalendarUiModel) => void): void {
@@ -70,8 +75,9 @@ export class DefaultCalendarService implements CalendarService {
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
         const previousMonth = this.dateManager.getNextMonth(currentMonth.period, firstDayOfWeek);
         const weeks = previousMonth.map(weekUiModel);
+        const updatedModel = <CalendarUiModel>{ ...model, lastUpdateRequest: new Date() };
 
-        this.buildModel(model, weeks, callback);
+        this.buildModel(updatedModel, weeks, callback);
     }
 
     public loadPreviousMonth(model: CalendarUiModel | null, callback: (model: CalendarUiModel) => void): void {
@@ -83,36 +89,36 @@ export class DefaultCalendarService implements CalendarService {
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
         const previousMonth = this.dateManager.getPreviousMonth(currentMonth.period, firstDayOfWeek);
         const weeks = previousMonth.map(weekUiModel);
+        const updatedModel = <CalendarUiModel>{ ...model, lastUpdateRequest: new Date() };
 
-        this.buildModel(model, weeks, callback);
+        this.buildModel(updatedModel, weeks, callback);
     }
 
-    public async openPeriodicNote(
+    public openPeriodicNote(
         model: CalendarUiModel | null,
         key: ModifierKey,
         period: PeriodUiModel,
         settings: PeriodNoteSettings,
         callback: (model: CalendarUiModel) => void
-    ): Promise<void> {
+    ): void {
         if (!model) {
             return;
         }
 
         const requireModifierKeyForCreatingNote = this.settings.generalSettings.useModifierKeyToCreateNote;
-        const isCreateFileModifierKeyPressed = isCreateFileModifierKey(key);
-        const shouldCreateNote =
-            !requireModifierKeyForCreatingNote ||
-            (requireModifierKeyForCreatingNote && isCreateFileModifierKeyPressed);
+        const isCreateFileModifierKeyPressed = isCreateFileModifierKey(key) && requireModifierKeyForCreatingNote;
+        const shouldCreateNote = !requireModifierKeyForCreatingNote || isCreateFileModifierKeyPressed;
 
-        const updatedModel = { ...model, selectedPeriod: period };
+        const updatedModel = <CalendarUiModel> { ...model, lastUpdateRequest: new Date(), selectedPeriod: period };
         this.buildModel(updatedModel, updatedModel.weeks, callback);
 
         if (shouldCreateNote) {
-            await this.periodicNoteManager.createNote(settings, period.period);
-            this.buildModel(updatedModel, updatedModel.weeks, callback);
+            this.periodicNoteManager.createNote(settings, period.period).then(() => {
+                this.periodicNoteManager.openNote(settings, period.period).catch();
+            });
+        } else {
+            this.periodicNoteManager.openNote(settings, period.period).catch();
         }
-
-        await this.periodicNoteManager.openNote(settings, period.period);
     }
 
     private getMiddleWeek(weeks: WeekUiModel[]): WeekUiModel {
@@ -128,9 +134,8 @@ export class DefaultCalendarService implements CalendarService {
         const middleWeek = this.getMiddleWeek(weeks);
         const quarter = this.dateManager.getQuarter(middleWeek.month.period);
 
-        const updatedModel = {
+        const updatedModel = <CalendarUiModel>{
             ...model,
-            lastUpdated: new Date(),
             month: middleWeek.month,
             quarter: periodUiModel(quarter),
             year: middleWeek.year,

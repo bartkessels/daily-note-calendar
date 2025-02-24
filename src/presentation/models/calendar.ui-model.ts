@@ -4,7 +4,7 @@ import {weekUiModel, WeekUiModel} from 'src/presentation/models/week.ui-model';
 import {Period} from 'src/domain/models/period.model';
 
 export interface CalendarUiModel {
-    lastUpdated: Date;
+    lastUpdateRequest: Date;
     startWeekOnMonday: boolean;
     selectedPeriod?: PeriodUiModel;
     today?: PeriodUiModel;
@@ -19,7 +19,7 @@ export function calendarUiModel(firstDayOfWeek: DayOfWeek, weeks: WeekModel[], s
     const todayUiModel = today ? periodUiModel(today) : undefined;
 
     return {
-        lastUpdated: new Date(),
+        lastUpdateRequest: new Date(),
         today: todayUiModel,
         startWeekOnMonday: firstDayOfWeek === DayOfWeek.Monday,
         selectedPeriod: selectedPeriodUiModel,
