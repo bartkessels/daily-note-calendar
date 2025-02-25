@@ -75,7 +75,15 @@
 .dnc .header h1 {
     font-weight: var(--font-light);
     font-size: var(--font-ui-medium);
-    margin: auto;
+    margin: auto 0.5em auto auto;
+}
+
+.dnc .header h1.month {
+    min-width: 3em;
+}
+
+.dnc .header h1.year {
+    min-width: 1.5em;
 }
 
 .dnc .header .buttons {
@@ -123,63 +131,19 @@
     color: var(--text-accent);
 }
 
+.dnc-skeleton {
+    background: linear-gradient(90deg, #ddda 40%, #efefefaa, #ddda 60%) right / 300% 100%;
+    animation: skeleton-loading 1.5s linear infinite;
+}
 
-
-/* THIS IS FROM ANOTHER PACKAGE */
-@keyframes react-loading-skeleton {
-    100% {
-        transform: translateX(100%);
+@keyframes skeleton-loading {
+    to {
+        background-position: left;
     }
 }
 
-.react-loading-skeleton {
-    --base-color: #ebebeb;
-    --highlight-color: #f5f5f5;
-    --animation-duration: 1.5s;
-    --animation-direction: normal;
-    --pseudo-element-display: block; /* Enable animation */
-
-    background-color: var(--base-color);
-
-    width: 100%;
-    border-radius: 0.25rem;
-    display: inline-flex;
-    line-height: 1;
-
-    position: relative;
-    user-select: none;
-    overflow: hidden;
-}
-
-.react-loading-skeleton::after {
-    content: ' ';
-    display: var(--pseudo-element-display);
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+.dnc-skeleton-text:empty(> period) {
     height: 100%;
-    background-repeat: no-repeat;
-    background-image: var(
-            --custom-highlight-background,
-            linear-gradient(
-                    90deg,
-                    var(--base-color) 0%,
-                    var(--highlight-color) 50%,
-                    var(--base-color) 100%
-            )
-    );
-    transform: translateX(-100%);
-
-    animation-name: react-loading-skeleton;
-    animation-direction: var(--animation-direction);
-    animation-duration: var(--animation-duration);
-    animation-timing-function: ease-in-out;
-    animation-iteration-count: infinite;
-}
-
-@media (prefers-reduced-motion) {
-    .react-loading-skeleton {
-        --pseudo-element-display: none; /* Disable animation */
-    }
+    margin-bottom: 0.5rem;
+    border-radius: 0.25rem;
 }

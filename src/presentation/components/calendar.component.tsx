@@ -5,7 +5,11 @@ import {PeriodComponent} from 'src/presentation/components/period.component';
 import {CalendarHeart, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight} from 'lucide-react';
 import {arePeriodUiModelsEqual} from 'src/presentation/models/period.ui-model';
 import 'src/extensions/extensions';
-import Skeleton from 'react-loading-skeleton';
+import {
+    CalendarViewState,
+    LoadedCalendarViewState,
+    LoadingCalendarViewState
+} from 'src/presentation/view-states/calendar.view-state';
 
 interface CalendarComponentProperties {
     initialUiModel?: CalendarUiModel | null;
@@ -17,26 +21,23 @@ export const CalendarComponent = (
         initialUiModel = null
     }: CalendarComponentProperties
 ): ReactElement => {
-    const [uiModel, setUiModel] = React.useState<CalendarUiModel | null>(initialUiModel);
+    const [viewState, setViewState] = React.useState<CalendarViewState>(new LoadingCalendarViewState());
+    let uiModel = initialUiModel;
+    const isLoading = viewState instanceof LoadingCalendarViewState;
+
+    if (viewState instanceof LoadedCalendarViewState) {
+        uiModel = viewState.uiModel;
+    }
 
     const viewModel = useCalendarViewModel();
-    // viewModel?.setUpdateViewState(setUiModel);
+    viewModel?.setUpdateViewState(setViewState);
 
     return (
         <div className="dnc">
             <div className="header">
-            <span className="title">
-
-                {(() => {
-                    if (!uiModel) {
-                        return <Skeleton width="50%"/>
-                    }
-
-                    return (<>
-                        <h1><PeriodComponent onClick={(key, period) => viewModel?.openMonthlyNote(key, period)} model={uiModel?.month}/></h1>&nbsp;
-                        <h1><PeriodComponent onClick={(key, period) => viewModel?.openYearlyNote(key, period)} model={uiModel?.year}/></h1>&nbsp;
-                    </>)
-                })()}
+                <span className="title">
+                    <h1 className="dnc-skeleton-text month"><PeriodComponent onClick={(key, period) => viewModel?.openMonthlyNote(key, period)} model={uiModel?.month}/></h1>
+                    <h1 className="dnc-skeleton-text year"><PeriodComponent onClick={(key, period) => viewModel?.openYearlyNote(key, period)} model={uiModel?.year}/></h1>
                 </span>
 
                 <div className="buttons">
