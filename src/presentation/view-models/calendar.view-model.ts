@@ -5,6 +5,7 @@ import {CalendarService} from 'src/presentation/contracts/calendar-service';
 import { ModifierKey } from 'src/presentation/models/modifier-key';
 import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
 import {CalendarViewState, LoadedCalendarViewState, LoadingCalendarViewState} from 'src/presentation/view-states/calendar.view-state';
+import {LoadedPeriodViewState, LoadingPeriodViewState} from 'src/presentation/view-states/period.view-state';
 
 export interface CalendarViewModel {
     setUpdateViewState(callback: (state: CalendarViewState) => void): void;
@@ -43,6 +44,8 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
             this.uiModel = model;
             this.setViewState(new LoadedCalendarViewState(model));
         }
+
+        console.log(model);
     }
 
     public initialize(settings: PluginSettings, today: Period): void {
@@ -53,59 +56,85 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
     }
 
     public selectPeriod(period: Period): void {
-        this.setViewState(new LoadingCalendarViewState());
-        this.calendarService.selectPeriod(this.uiModel, period, this.setModel.bind(this));
+        this.updateUiModel(() => {
+            this.calendarService.selectPeriod(this.uiModel, period, this.setModel.bind(this));
+        });
     }
 
     public loadCurrentWeek() {
-        this.setViewState(new LoadingCalendarViewState());
-        this.calendarService.loadCurrentWeek(this.uiModel, this.setModel.bind(this));
+        this.updateUiModel(() => {
+            this.calendarService.loadCurrentWeek(this.uiModel, this.setModel.bind(this));
+        });
     }
 
     public loadPreviousWeek(): void {
-        this.setViewState(new LoadingCalendarViewState());
-        this.calendarService.loadPreviousWeek(this.uiModel, this.setModel.bind(this));
+        this.updateUiModel(() => {
+            this.calendarService.loadPreviousWeek(this.uiModel, this.setModel.bind(this));
+        });
     }
 
     public loadNextWeek(): void {
-        this.setViewState(new LoadingCalendarViewState());
-        this.calendarService.loadNextWeek(this.uiModel, this.setModel.bind(this));
+        this.updateUiModel(() => {
+            this.calendarService.loadNextWeek(this.uiModel, this.setModel.bind(this));
+        });
     }
 
     public loadPreviousMonth() {
-        this.setViewState(new LoadingCalendarViewState());
-        this.calendarService.loadPreviousMonth(this.uiModel, this.setModel.bind(this));
+        this.updateUiModel(() => {
+            this.calendarService.loadPreviousMonth(this.uiModel, this.setModel.bind(this));
+        });
     }
 
     public loadNextMonth() {
-        this.setViewState(new LoadingCalendarViewState());
-        this.calendarService.loadNextMonth(this.uiModel, this.setModel.bind(this));
+        this.updateUiModel(() => {
+            this.calendarService.loadNextMonth(this.uiModel, this.setModel.bind(this));
+        });
     }
 
     public openDailyNote(key: ModifierKey, period: PeriodUiModel): void {
-        this.setViewState(new LoadingCalendarViewState());
-        const updatedPeriod = <PeriodUiModel> {...period, isLoading: true };
-        const uiModel = <CalendarUiModel> {...this.uiModel, selectedPeriod: { ...period, isLoading: true } };
-        this.calendarService.openPeriodicNote(uiModel, key, updatedPeriod, this.settings.dailyNotes, this.setModel.bind(this));
+        this.updatePeriodUiModel(period, async (): Promise<void> => {
+            await this.calendarService.openPeriodicNote(key, period, this.settings.dailyNotes);
+        });
     }
 
     public openWeeklyNote(key: ModifierKey, period: PeriodUiModel): void {
-        this.setViewState(new LoadingCalendarViewState());
-        this.calendarService.openPeriodicNote(this.uiModel, key, period, this.settings.weeklyNotes, this.setModel.bind(this));
+        this.updatePeriodUiModel(period, async (): Promise<void> => {
+            await this.calendarService.openPeriodicNote(key, period, this.settings.weeklyNotes);
+        });
     }
 
     public openMonthlyNote(key: ModifierKey, period: PeriodUiModel): void {
-        this.setViewState(new LoadingCalendarViewState());
-        this.calendarService.openPeriodicNote(this.uiModel, key, period, this.settings.monthlyNotes, this.setModel.bind(this));
+        this.updatePeriodUiModel(period, async (): Promise<void> => {
+            await this.calendarService.openPeriodicNote(key, period, this.settings.monthlyNotes);
+        });
     }
 
     public openQuarterlyNote(key: ModifierKey, period: PeriodUiModel): void {
-        this.setViewState(new LoadingCalendarViewState());
-        this.calendarService.openPeriodicNote(this.uiModel, key, period, this.settings.quarterlyNotes, this.setModel.bind(this));
+        this.updatePeriodUiModel(period, async (): Promise<void> => {
+            await this.calendarService.openPeriodicNote(key, period, this.settings.quarterlyNotes);
+        });
     }
 
     public  openYearlyNote(key: ModifierKey, period: PeriodUiModel): void {
+        this.updatePeriodUiModel(period, async (): Promise<void> => {
+            await this.calendarService.openPeriodicNote(key, period, this.settings.yearlyNotes);
+        });
+    }
+
+    private updatePeriodUiModel(period: PeriodUiModel, action: () => Promise<void>): void {
+        const periodViewState = new LoadingPeriodViewState(period);
+        const updatedUiModel = <CalendarUiModel>{ ...this.uiModel, selectedPeriod: periodViewState };
+        this.setViewState(new LoadedCalendarViewState(updatedUiModel));
+
+        action().then(() => {
+            const loadedPeriod = new LoadedPeriodViewState(period);
+            const loadedUiModel = <CalendarUiModel>{ ...this.uiModel, selectedPeriod: loadedPeriod };
+            this.setViewState(new LoadedCalendarViewState(loadedUiModel));
+        });
+    }
+
+    private updateUiModel(action: () => void): void {
         this.setViewState(new LoadingCalendarViewState());
-        this.calendarService.openPeriodicNote(this.uiModel, key, period, this.settings.yearlyNotes, this.setModel.bind(this));
+        action();
     }
 }

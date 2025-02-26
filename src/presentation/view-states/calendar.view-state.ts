@@ -1,17 +1,13 @@
 import {CalendarUiModel} from 'src/presentation/models/calendar.ui-model';
 
-export abstract class CalendarViewState {
-    // uiModel: CalendarUiModel | null;
-}
+export abstract class CalendarViewState { }
 
-export class EmptyCalendarViewState implements CalendarViewState {
+export class EmptyCalendarViewState extends CalendarViewState { }
 
-}
+export class LoadingCalendarViewState extends CalendarViewState { }
 
-export class LoadingCalendarViewState implements CalendarViewState {
-    // uiModel: CalendarUiModel | null = null;
-}
-
-export class LoadedCalendarViewState implements CalendarViewState {
-    constructor(public uiModel: CalendarUiModel) { }
+export class LoadedCalendarViewState extends CalendarViewState {
+    constructor(public uiModel: CalendarUiModel) {
+        super();
+    }
 }

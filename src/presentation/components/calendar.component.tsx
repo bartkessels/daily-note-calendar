@@ -10,6 +10,7 @@ import {
     LoadedCalendarViewState,
     LoadingCalendarViewState
 } from 'src/presentation/view-states/calendar.view-state';
+import {LoadedPeriodViewState, LoadingPeriodViewState} from 'src/presentation/view-states/period.view-state';
 
 interface CalendarComponentProperties {
     initialUiModel?: CalendarUiModel | null;
@@ -23,10 +24,29 @@ export const CalendarComponent = (
 ): ReactElement => {
     const [viewState, setViewState] = React.useState<CalendarViewState>(new LoadingCalendarViewState());
     let uiModel = initialUiModel;
-    const isLoading = viewState instanceof LoadingCalendarViewState;
 
     if (viewState instanceof LoadedCalendarViewState) {
         uiModel = viewState.uiModel;
+    } else if (viewState instanceof LoadingCalendarViewState) {
+        return (
+            <div className="dnc">
+                <div className="header">
+                    <span className="title">
+                        <h1 className="dnc-skeleton dnc-skeleton-text dnc-skeleton-text-month" />
+                        <h1 className="dnc-skeleton dnc-skeleton-text dnc-skeleton-text-year" />
+                    </span>
+
+                    <div className="buttons">
+                        <div className="dnc-skeleton" style={{width: "1.5em", height: "1.5em"}} />
+                        <div className="dnc-skeleton" style={{width: "1.5em", height: "1.5em"}} />
+                        <div className="dnc-skeleton" style={{width: "1.5em", height: "1.5em"}} />
+                        <div className="dnc-skeleton" style={{width: "1.5em", height: "1.5em"}} />
+                        <div className="dnc-skeleton" style={{width: "1.5em", height: "1.5em"}} />
+                    </div>
+                </div>
+                <div className="dnc-skeleton" style={{width: "100%", height: "15em"}}></div>
+            </div>
+        );
     }
 
     const viewModel = useCalendarViewModel();
@@ -36,8 +56,8 @@ export const CalendarComponent = (
         <div className="dnc">
             <div className="header">
                 <span className="title">
-                    <h1 className="dnc-skeleton-text month"><PeriodComponent onClick={(key, period) => viewModel?.openMonthlyNote(key, period)} model={uiModel?.month}/></h1>
-                    <h1 className="dnc-skeleton-text year"><PeriodComponent onClick={(key, period) => viewModel?.openYearlyNote(key, period)} model={uiModel?.year}/></h1>
+                    <h1><PeriodComponent onClick={(key, period) => viewModel?.openMonthlyNote(key, period)} model={uiModel?.month}/></h1>
+                    <h1><PeriodComponent onClick={(key, period) => viewModel?.openYearlyNote(key, period)} model={uiModel?.year}/></h1>
                 </span>
 
                 <div className="buttons">
@@ -88,7 +108,7 @@ export const CalendarComponent = (
                     <tr key={weekIndex}>
                         <td height="35" className="weekNumber" key={weekIndex}>
                             <PeriodComponent
-                                isSelected={arePeriodUiModelsEqual(uiModel?.selectedPeriod, week)}
+                                isSelected={arePeriodUiModelsEqual((uiModel?.selectedPeriod as LoadedPeriodViewState).uiModel, week)}
                                 onClick={(key, period) => viewModel?.openWeeklyNote(key, period)}
                                 model={week} />
                         </td>
@@ -97,7 +117,7 @@ export const CalendarComponent = (
                             <td height="35" key={dayIndex} className={!day.period.date.isSameMonth(uiModel?.month?.period) ? 'other-month' : ''}>
                                 <PeriodComponent
                                     isToday={arePeriodUiModelsEqual(uiModel?.today, day)}
-                                    isSelected={arePeriodUiModelsEqual(uiModel?.selectedPeriod, day)}
+                                    isSelected={arePeriodUiModelsEqual((uiModel?.selectedPeriod as LoadedPeriodViewState).uiModel, day)}
                                     onClick={(key, period) => viewModel?.openDailyNote(key, period)}
                                     model={day} />
                             </td>

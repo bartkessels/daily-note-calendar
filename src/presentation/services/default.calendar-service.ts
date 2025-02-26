@@ -93,33 +93,48 @@ export class DefaultCalendarService implements CalendarService {
 
         this.buildModel(updatedModel, weeks, callback);
     }
-
-    public openPeriodicNote(
-        model: CalendarUiModel | null,
+    public async openPeriodicNote(
         key: ModifierKey,
         period: PeriodUiModel,
-        settings: PeriodNoteSettings,
-        callback: (model: CalendarUiModel) => void
-    ): void {
-        if (!model) {
-            return;
-        }
-
+        settings: PeriodNoteSettings
+    ): Promise<void> {
         const requireModifierKeyForCreatingNote = this.settings.generalSettings.useModifierKeyToCreateNote;
         const isCreateFileModifierKeyPressed = isCreateFileModifierKey(key) && requireModifierKeyForCreatingNote;
         const shouldCreateNote = !requireModifierKeyForCreatingNote || isCreateFileModifierKeyPressed;
 
-        const updatedModel = <CalendarUiModel> { ...model, lastUpdateRequest: new Date(), selectedPeriod: period };
-        this.buildModel(updatedModel, updatedModel.weeks, callback);
-
         if (shouldCreateNote) {
-            this.periodicNoteManager.createNote(settings, period.period).then(() => {
-                this.periodicNoteManager.openNote(settings, period.period).catch();
-            });
-        } else {
-            this.periodicNoteManager.openNote(settings, period.period).catch();
+            await this.periodicNoteManager.createNote(settings, period.period);
         }
+
+        await this.periodicNoteManager.openNote(settings, period.period);
     }
+
+    // public openPeriodicNote(
+    //     model: CalendarUiModel | null,
+    //     key: ModifierKey,
+    //     period: PeriodUiModel,
+    //     settings: PeriodNoteSettings,
+    //     callback: (model: CalendarUiModel) => void
+    // ): void {
+    //     if (!model) {
+    //         return;
+    //     }
+    //
+    //     const requireModifierKeyForCreatingNote = this.settings.generalSettings.useModifierKeyToCreateNote;
+    //     const isCreateFileModifierKeyPressed = isCreateFileModifierKey(key) && requireModifierKeyForCreatingNote;
+    //     const shouldCreateNote = !requireModifierKeyForCreatingNote || isCreateFileModifierKeyPressed;
+    //
+    //     const updatedModel = <CalendarUiModel> { ...model, lastUpdateRequest: new Date(), selectedPeriod: period };
+    //     this.buildModel(updatedModel, updatedModel.weeks, callback);
+    //
+    //     if (shouldCreateNote) {
+    //         this.periodicNoteManager.createNote(settings, period.period).then(() => {
+    //             this.periodicNoteManager.openNote(settings, period.period).catch();
+    //         });
+    //     } else {
+    //         this.periodicNoteManager.openNote(settings, period.period).catch();
+    //     }
+    // }
 
     private getMiddleWeek(weeks: WeekUiModel[]): WeekUiModel {
         const middleWeekIndex = Math.floor(weeks.length / 2);

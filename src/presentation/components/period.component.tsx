@@ -5,7 +5,7 @@ import React, {ReactElement} from 'react';
 interface PeriodComponentProperties {
     isSelected?: boolean;
     isToday?: boolean;
-    model?: PeriodUiModel,
+    model?: PeriodUiModel;
     onClick: (key: ModifierKey, model: PeriodUiModel) => void;
 }
 

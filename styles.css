@@ -142,8 +142,16 @@
     }
 }
 
-.dnc-skeleton-text:empty(> period) {
+.dnc-skeleton-text {
     height: 100%;
     margin-bottom: 0.5rem;
     border-radius: 0.25rem;
+}
+
+.dnc-skeleton-text-year {
+    min-width: 3em;
+}
+
+.dnc-skeleton-text-month {
+    min-width: 5em;
 }

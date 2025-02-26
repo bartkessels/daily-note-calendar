@@ -11,7 +11,7 @@ export interface CalendarService {
     initialize(settings: PluginSettings, period: Period, callback: Callback): void;
 
     // TODO: Is this the way to go?, in this case the viewmodel will be responsible for the updating of the model
-    openPeriodicNote(key: ModifierKey, period: PeriodUiModel, settings: PeriodNoteSettings): Promise<boolean>;
+    openPeriodicNote(key: ModifierKey, period: PeriodUiModel, settings: PeriodNoteSettings): Promise<void>;
 
     selectPeriod(model: CalendarUiModel | null, period: Period, callback: Callback): void;
     loadCurrentWeek(model: CalendarUiModel | null, callback: Callback): void;
@@ -19,5 +19,5 @@ export interface CalendarService {
     loadNextWeek(model: CalendarUiModel | null, callback: Callback): void;
     loadPreviousMonth(model: CalendarUiModel | null, callback: Callback): void;
     loadNextMonth(model: CalendarUiModel | null, callback: Callback): void;
-    openPeriodicNote(model: CalendarUiModel | null, key: ModifierKey, period: PeriodUiModel, settings: PeriodNoteSettings, callback: Callback): void;
+    // openPeriodicNote(model: CalendarUiModel | null, key: ModifierKey, period: PeriodUiModel, settings: PeriodNoteSettings, callback: Callback): void;
 }
