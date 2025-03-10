@@ -21,17 +21,13 @@ export class WeeklyNoteExistsPeriodEnhancer implements PeriodEnhancer {
         return this;
     }
 
-    public async enhance<T extends PeriodUiModel>(period: PeriodUiModel[]): Promise<T[]> {
+    public async enhance<T extends PeriodUiModel>(period: PeriodUiModel): Promise<T> {
         const settings = this.settings;
 
         if (!settings) {
             throw new Error('Settings not set.');
         }
 
-        return Promise.all(period.map(p => this.enhancePeriod<T>(settings, p)));
-    }
-
-    private async enhancePeriod<T extends PeriodUiModel>(settings: PeriodNoteSettings, period: PeriodUiModel): Promise<T> {
         if (period.period.type !== PeriodType.Week) {
             return period as T;
         }

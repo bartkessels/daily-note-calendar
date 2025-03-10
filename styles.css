@@ -155,3 +155,25 @@
 .dnc-skeleton-text-month {
     min-width: 5em;
 }
+
+.dnc-skeleton-button {
+    height: 100%;
+    display: inline-block;
+    min-width: 1.5em;
+    margin-left: 0.2rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.dnc-skeleton-week {
+    height: 1.5em;
+}
+
+.dnc-skeleton-calendar {
+    height: 15em;
+    min-width: 100%;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+    border-radius: 0.25rem;
+}

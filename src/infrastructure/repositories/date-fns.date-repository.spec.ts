@@ -105,6 +105,11 @@ describe('DateFnsDateRepository', () => {
                     date: new Date(2023, 0),
                     type: PeriodType.Year
                 },
+                quarter: {
+                    name: 'Q4',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Quarter
+                },
                 month: <Period> {
                     name: 'October',
                     date: new Date(2023, 9),
@@ -132,6 +137,11 @@ describe('DateFnsDateRepository', () => {
                     name: '2023',
                     date: new Date(2023, 0),
                     type: PeriodType.Year
+                },
+                quarter: {
+                    name: 'Q4',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Quarter
                 },
                 month: <Period> {
                     name: 'October',
@@ -272,6 +282,11 @@ describe('DateFnsDateRepository', () => {
                     date: new Date(2023, 0),
                     type: PeriodType.Year
                 },
+                quarter: {
+                    name: 'Q4',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Quarter
+                },
                 month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
@@ -315,6 +330,11 @@ describe('DateFnsDateRepository', () => {
                     date: new Date(2024, 0),
                     type: PeriodType.Year
                 },
+                quarter: {
+                    name: 'Q1',
+                    date: new Date(2023, 12),
+                    type: PeriodType.Quarter
+                },
                 month: <Period>{
                     name: 'January',
                     date: new Date(2024, 0),
@@ -357,6 +377,11 @@ describe('DateFnsDateRepository', () => {
                     name: '2024',
                     date: new Date(2024, 0),
                     type: PeriodType.Year
+                },
+                quarter: {
+                    name: 'Q1',
+                    date: new Date(2023, 12),
+                    type: PeriodType.Quarter
                 },
                 month: <Period>{
                     name: 'January',
@@ -403,6 +428,11 @@ describe('DateFnsDateRepository', () => {
                     date: new Date(2023, 0),
                     type: PeriodType.Year
                 },
+                quarter: <Period>{
+                    name: 'Q4',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Quarter
+                },
                 month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
@@ -446,6 +476,11 @@ describe('DateFnsDateRepository', () => {
                     date: new Date(2023, 0),
                     type: PeriodType.Year
                 },
+                quarter: <Period>{
+                    name: 'Q4',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Quarter
+                },
                 month: <Period>{
                     name: 'December',
                     date: new Date(2023, 11),
@@ -488,6 +523,11 @@ describe('DateFnsDateRepository', () => {
                     name: '2023',
                     date: new Date(2023, 0),
                     type: PeriodType.Year
+                },
+                quarter: <Period>{
+                    name: 'Q4',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Quarter
                 },
                 month: <Period>{
                     name: 'December',

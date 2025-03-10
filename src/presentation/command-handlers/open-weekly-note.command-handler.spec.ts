@@ -46,6 +46,11 @@ describe('OpenWeeklyNoteCommandHandler', () => {
                 name: '2023',
                 type: PeriodType.Year
             },
+            quarter: <Period> {
+                date: new Date(2023, 0),
+                name: 'Q1',
+                type: PeriodType.Quarter
+            },
             month: <Period> {
                 date: new Date(2023, 9),
                 name: 'October',

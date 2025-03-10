@@ -28,6 +28,10 @@ import {DefaultNoteManagerFactory} from 'src/business/factories/default.note-man
 import {CommandHandlerFactory} from 'src/presentation/contracts/command-handler-factory';
 import {DailyNoteExistsPeriodEnhancer} from 'src/presentation/enhancers/daily-note-exists.period-enhancer';
 import { WeeklyNoteExistsPeriodEnhancer } from 'src/presentation/enhancers/weekly-note-exists.period-enhancer';
+import {WeekUiModelBuilder} from 'src/presentation/builders/week-ui-model-builder';
+import { CalendarUiModelBuilder } from './presentation/builders/calendar.ui-model.builder';
+import {PeriodUiModelBuilder} from 'src/presentation/builders/period.ui-model-builder';
+import {periodUiModel} from 'src/presentation/models/period.ui-model';
 
 export interface Dependencies {
     viewModel: CalendarViewModel;
@@ -58,9 +62,12 @@ export function getDependencies(plugin: Plugin): Dependencies {
     const periodicNoteManager = new DefaultPeriodicNoteManager(nameBuilderFactory, variableParserFactory, fileRepositoryFactory, noteRepositoryFactory);
 
     // Presentation
-    const calendarEnhancer = buildCalendarEnhancer(nameBuilderFactory, noteAdapter, fileAdapter);
-    const calendarService = new DefaultCalendarService(dateManagerFactory, periodicNoteManager, calendarEnhancer);
-    const viewModel = new DefaultCalendarViewModel(calendarService);
+    const numberOfNotesPeriodEnhancer = new NumberOfNotesPeriodEnhancer(noteAdapter);
+    const weekUiModelBuilder = buildWeekUiModelBuilder(numberOfNotesPeriodEnhancer, nameBuilderFactory, fileAdapter);
+    const periodUiModelBuilder = new PeriodUiModelBuilder(numberOfNotesPeriodEnhancer);
+    const calendarUiModelBuilder = new CalendarUiModelBuilder(periodUiModelBuilder);
+    const calendarService = new DefaultCalendarService(dateManagerFactory, periodicNoteManager, weekUiModelBuilder);
+    const viewModel = new DefaultCalendarViewModel(calendarService, calendarUiModelBuilder);
 
     const commandHandlerFactory = new DefaultCommandHandlerFactory(noteManagerFactory, settingsRepositoryFactory, dateManagerFactory, viewModel);
 
@@ -72,17 +79,12 @@ export function getDependencies(plugin: Plugin): Dependencies {
     };
 }
 
-function buildCalendarEnhancer(
+function buildWeekUiModelBuilder(
+    numberOfNotesPeriodEnhancer: NumberOfNotesPeriodEnhancer,
     nameBuilderFactory: NameBuilderFactory,
-    noteAdapter: NoteAdapter,
     fileAdapter: FileAdapter
-): CalendarEnhancer {
-    const numberOfNotesPeriodEnhancer = new NumberOfNotesPeriodEnhancer(noteAdapter);
-    const dailyNoteExistsEnhancer = new DailyNoteExistsPeriodEnhancer(nameBuilderFactory.getNameBuilder<Period>(NameBuilderType.PeriodicNote), fileAdapter);
+): WeekUiModelBuilder {
     const weeklyNoteExistsEnhancer = new WeeklyNoteExistsPeriodEnhancer(nameBuilderFactory.getNameBuilder<Period>(NameBuilderType.PeriodicNote), fileAdapter);
 
-    return new PeriodCalendarEnhancer()
-        .withDailyNoteEnhancer(dailyNoteExistsEnhancer)
-        .withDailyNoteEnhancer(numberOfNotesPeriodEnhancer)
-        .withWeeklyNoteEnhancer(weeklyNoteExistsEnhancer);
+    return new WeekUiModelBuilder(numberOfNotesPeriodEnhancer, weeklyNoteExistsEnhancer);
 }

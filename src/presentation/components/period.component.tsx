@@ -5,7 +5,7 @@ import React, {ReactElement} from 'react';
 interface PeriodComponentProperties {
     isSelected?: boolean;
     isToday?: boolean;
-    model?: PeriodUiModel;
+    model?: PeriodUiModel | null;
     onClick: (key: ModifierKey, model: PeriodUiModel) => void;
 }
 
@@ -16,7 +16,7 @@ export const PeriodComponent = (
         model, onClick
     }: PeriodComponentProperties
 ): ReactElement => {
-    if (!model) {
+    if (!model || !model.period) {
         return <></>;
     }
 

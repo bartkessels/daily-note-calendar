@@ -3,6 +3,7 @@ import {Period} from 'src/domain/models/period.model';
 export interface WeekModel extends Period {
     weekNumber: number;
     year: Period;
+    quarter: Period;
     month: Period;
     days: Period[]
 }

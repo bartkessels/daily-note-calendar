@@ -3,14 +3,8 @@ import {useCalendarViewModel} from 'src/presentation/context/calendar-view-model
 import {CalendarUiModel} from 'src/presentation/models/calendar.ui-model';
 import {PeriodComponent} from 'src/presentation/components/period.component';
 import {CalendarHeart, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight} from 'lucide-react';
-import {arePeriodUiModelsEqual} from 'src/presentation/models/period.ui-model';
 import 'src/extensions/extensions';
-import {
-    CalendarViewState,
-    LoadedCalendarViewState,
-    LoadingCalendarViewState
-} from 'src/presentation/view-states/calendar.view-state';
-import {LoadedPeriodViewState, LoadingPeriodViewState} from 'src/presentation/view-states/period.view-state';
+import {WeekComponent} from 'src/presentation/components/week.component';
 
 interface CalendarComponentProperties {
     initialUiModel?: CalendarUiModel | null;
@@ -22,35 +16,10 @@ export const CalendarComponent = (
         initialUiModel = null
     }: CalendarComponentProperties
 ): ReactElement => {
-    const [viewState, setViewState] = React.useState<CalendarViewState>(new LoadingCalendarViewState());
-    let uiModel = initialUiModel;
-
-    if (viewState instanceof LoadedCalendarViewState) {
-        uiModel = viewState.uiModel;
-    } else if (viewState instanceof LoadingCalendarViewState) {
-        return (
-            <div className="dnc">
-                <div className="header">
-                    <span className="title">
-                        <h1 className="dnc-skeleton dnc-skeleton-text dnc-skeleton-text-month" />
-                        <h1 className="dnc-skeleton dnc-skeleton-text dnc-skeleton-text-year" />
-                    </span>
-
-                    <div className="buttons">
-                        <div className="dnc-skeleton" style={{width: "1.5em", height: "1.5em"}} />
-                        <div className="dnc-skeleton" style={{width: "1.5em", height: "1.5em"}} />
-                        <div className="dnc-skeleton" style={{width: "1.5em", height: "1.5em"}} />
-                        <div className="dnc-skeleton" style={{width: "1.5em", height: "1.5em"}} />
-                        <div className="dnc-skeleton" style={{width: "1.5em", height: "1.5em"}} />
-                    </div>
-                </div>
-                <div className="dnc-skeleton" style={{width: "100%", height: "15em"}}></div>
-            </div>
-        );
-    }
-
+    const [uiModel, setUiModel] = React.useState<CalendarUiModel | null>(initialUiModel);
     const viewModel = useCalendarViewModel();
-    viewModel?.setUpdateViewState(setViewState);
+
+    viewModel?.setUpdateUiModel(setUiModel);
 
     return (
         <div className="dnc">
@@ -104,25 +73,16 @@ export const CalendarComponent = (
                     </tr>
                 </thead>
                 <tbody>
-                {uiModel?.weeks.map((week, weekIndex) =>
-                    <tr key={weekIndex}>
-                        <td height="35" className="weekNumber" key={weekIndex}>
-                            <PeriodComponent
-                                isSelected={arePeriodUiModelsEqual((uiModel?.selectedPeriod as LoadedPeriodViewState).uiModel, week)}
-                                onClick={(key, period) => viewModel?.openWeeklyNote(key, period)}
-                                model={week} />
-                        </td>
 
-                        {week.days.map((day, dayIndex) =>
-                            <td height="35" key={dayIndex} className={!day.period.date.isSameMonth(uiModel?.month?.period) ? 'other-month' : ''}>
-                                <PeriodComponent
-                                    isToday={arePeriodUiModelsEqual(uiModel?.today, day)}
-                                    isSelected={arePeriodUiModelsEqual((uiModel?.selectedPeriod as LoadedPeriodViewState).uiModel, day)}
-                                    onClick={(key, period) => viewModel?.openDailyNote(key, period)}
-                                    model={day} />
-                            </td>
-                        )}
-                    </tr>
+                {uiModel?.weeks.map((week, weekIndex) =>
+                    <WeekComponent
+                        key={weekIndex}
+                        model={week}
+                        currentMonth={uiModel?.month}
+                        selectedPeriod={uiModel?.selectedPeriod}
+                        currentPeriod={uiModel?.today}
+                        onWeekClick={(key, week) => viewModel?.openWeeklyNote(key, week)}
+                        onDayClick={(key, day) => viewModel?.openDailyNote(key, day)} />
                 )}
                 </tbody>
             </table>

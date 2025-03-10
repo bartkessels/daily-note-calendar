@@ -1,7 +1,7 @@
 import {CalendarViewModel} from 'src/presentation/view-models/calendar.view-model';
 
 export const mockCalendarViewModel = {
-    setUpdateViewState: jest.fn(),
+    setUpdateUiModel: jest.fn(),
     initialize: jest.fn(),
     selectPeriod: jest.fn(),
     openDailyNote: jest.fn(),

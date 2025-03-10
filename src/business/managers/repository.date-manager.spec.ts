@@ -16,6 +16,11 @@ describe('RepositoryDateManager', () => {
         name: '2023',
         type: PeriodType.Year
     };
+    const quarter = <Period>{
+        date: new Date(2023, 6),
+        name: 'Q3',
+        type: PeriodType.Quarter
+    };
     const month = <Period>{
         date: new Date(2023, 9),
         name: 'October',
@@ -99,6 +104,7 @@ describe('RepositoryDateManager', () => {
                 weekNumber: 40,
                 year: year,
                 month: month,
+                quarter: quarter,
                 date: today,
                 name: '40',
                 type: PeriodType.Week,
@@ -125,6 +131,7 @@ describe('RepositoryDateManager', () => {
             const expected = <WeekModel>{
                 weekNumber: 40,
                 year: year,
+                quarter: quarter,
                 month: month,
                 date: period.date,
                 name: '40',
@@ -145,6 +152,7 @@ describe('RepositoryDateManager', () => {
         const currentWeek = <WeekModel>{
             weekNumber: 40,
             year: year,
+            quarter: quarter,
             month: month,
             date: new Date(2023, 9, 2),
             name: '40',
@@ -155,6 +163,7 @@ describe('RepositoryDateManager', () => {
             <WeekModel>{
                 weekNumber: 38,
                 year: year,
+                quarter: quarter,
                 month: month,
                 date: new Date(2023, 8, 18),
                 name: '38',
@@ -164,6 +173,7 @@ describe('RepositoryDateManager', () => {
             <WeekModel>{
                 weekNumber: 39,
                 year: year,
+                quarter: quarter,
                 month: month,
                 date: new Date(2023, 8, 25),
                 name: '39',
@@ -205,6 +215,7 @@ describe('RepositoryDateManager', () => {
         const currentWeek = <WeekModel>{
             weekNumber: 40,
             year: year,
+            quarter: quarter,
             month: month,
             date: new Date(2023, 9, 2),
             name: '40',
@@ -215,6 +226,7 @@ describe('RepositoryDateManager', () => {
             <WeekModel>{
                 weekNumber: 41,
                 year: year,
+                quarter: quarter,
                 month: month,
                 date: new Date(2023, 9, 9),
                 name: '41',
@@ -224,6 +236,7 @@ describe('RepositoryDateManager', () => {
             <WeekModel>{
                 weekNumber: 42,
                 year: year,
+                quarter: quarter,
                 month: month,
                 date: new Date(2023, 9, 16),
                 name: '42',
@@ -271,6 +284,7 @@ describe('RepositoryDateManager', () => {
                 name: '39',
                 weekNumber: 39,
                 year: year,
+                quarter: quarter,
                 month: previousMonth,
                 days: [],
                 type: PeriodType.Week
@@ -280,6 +294,7 @@ describe('RepositoryDateManager', () => {
                 name: '40',
                 weekNumber: 40,
                 year: year,
+                quarter: quarter,
                 month: previousMonth,
                 days: [],
                 type: PeriodType.Week
@@ -289,6 +304,7 @@ describe('RepositoryDateManager', () => {
                 name: '41',
                 weekNumber: 41,
                 year: year,
+                quarter: quarter,
                 month: previousMonth,
                 days: [],
                 type: PeriodType.Week
@@ -298,6 +314,7 @@ describe('RepositoryDateManager', () => {
                 name: '42',
                 weekNumber: 42,
                 year: year,
+                quarter: quarter,
                 month: previousMonth,
                 days: [],
                 type: PeriodType.Week
@@ -307,6 +324,7 @@ describe('RepositoryDateManager', () => {
                 name: '43',
                 weekNumber: 43,
                 year: year,
+                quarter: quarter,
                 month: previousMonth,
                 days: [],
                 type: PeriodType.Week
@@ -376,6 +394,7 @@ describe('RepositoryDateManager', () => {
                 name: '44',
                 weekNumber: 44,
                 year: year,
+                quarter: quarter,
                 month: month,
                 days: [],
                 type: PeriodType.Week
@@ -385,6 +404,7 @@ describe('RepositoryDateManager', () => {
                 name: '45',
                 weekNumber: 45,
                 year: year,
+                quarter: quarter,
                 month: nextMonth,
                 days: [],
                 type: PeriodType.Week
@@ -394,6 +414,7 @@ describe('RepositoryDateManager', () => {
                 name: '46',
                 weekNumber: 46,
                 year: year,
+                quarter: quarter,
                 month: nextMonth,
                 days: [],
                 type: PeriodType.Week
@@ -403,6 +424,7 @@ describe('RepositoryDateManager', () => {
                 name: '47',
                 weekNumber: 47,
                 year: year,
+                quarter: quarter,
                 month: nextMonth,
                 days: [],
                 type: PeriodType.Week
@@ -412,6 +434,7 @@ describe('RepositoryDateManager', () => {
                 name: '48',
                 weekNumber: 48,
                 year: year,
+                quarter: quarter,
                 month: nextMonth,
                 days: [],
                 type: PeriodType.Week

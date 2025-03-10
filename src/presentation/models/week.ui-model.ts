@@ -5,6 +5,7 @@ export interface WeekUiModel extends PeriodUiModel {
     period: WeekModel;
     weekNumber: number;
     year: PeriodUiModel;
+    quarter: PeriodUiModel;
     month: PeriodUiModel;
     days: PeriodUiModel[];
 }
@@ -16,6 +17,7 @@ export function weekUiModel(week: WeekModel): WeekUiModel {
         noNotes: 0,
         weekNumber: week.weekNumber,
         year: periodUiModel(week.year),
+        quarter: periodUiModel(week.quarter),
         month: periodUiModel(week.month),
         days: week.days.map(periodUiModel),
     };

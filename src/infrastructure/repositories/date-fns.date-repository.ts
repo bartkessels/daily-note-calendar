@@ -6,7 +6,7 @@ import {
     eachDayOfInterval,
     endOfWeek,
     getISOWeek,
-    getQuarter,
+    getQuarter, startOfMonth,
     startOfQuarter,
     startOfWeek,
     subMonths,
@@ -52,14 +52,19 @@ export class DateFnsDateRepository implements DateRepository {
     public getWeekFromDate(startOfWeekDay: DayOfWeek, date: Date): WeekModel {
         const firstDayOfWeek = startOfWeek(date, { weekStartsOn: startOfWeekDay });
         const weekNumber = getISOWeek(date);
+        const month = this.getMonth(firstDayOfWeek.getFullYear(), firstDayOfWeek.getMonth());
+        const quarter = this.getQuarter(month);
+        const year = this.getYear(firstDayOfWeek.getFullYear());
+        const days = this.getDaysOfWeek(startOfWeekDay, firstDayOfWeek);
 
         return <WeekModel> {
             date: firstDayOfWeek,
             name: weekNumber.toString().padStart(2, "0"),
             weekNumber: weekNumber,
-            year: this.getYear(firstDayOfWeek.getFullYear()),
-            month: this.getMonth(firstDayOfWeek.getFullYear(), firstDayOfWeek.getMonth()),
-            days: this.getDaysOfWeek(startOfWeekDay, firstDayOfWeek),
+            year: year,
+            quarter: quarter,
+            month: month,
+            days: days,
             type: PeriodType.Week
         };
     }
@@ -78,13 +83,15 @@ export class DateFnsDateRepository implements DateRepository {
         return this.getMonth(date.getFullYear(), date.getMonth());
     }
 
-    public getNextMonth(month: Period): Period {
-        const nextMonth = addMonths(month.date, 1);
+    public getNextMonth(period: Period): Period {
+        const firstDateOfMonth = startOfMonth(period.date);
+        const nextMonth = addMonths(firstDateOfMonth, 1);
         return this.getMonthFromDate(nextMonth);
     }
 
-    public getPreviousMonth(month: Period): Period {
-        const previousMonth = subMonths(month.date, 1);
+    public getPreviousMonth(period: Period): Period {
+        const firstDateOfMonth = startOfMonth(period.date);
+        const previousMonth = subMonths(firstDateOfMonth, 1);
         return this.getMonthFromDate(previousMonth);
     }
 

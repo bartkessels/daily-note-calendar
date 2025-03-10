@@ -5,13 +5,17 @@ export abstract class PeriodViewState { }
 export class EmptyPeriodViewState extends PeriodViewState { }
 
 export class LoadingPeriodViewState extends PeriodViewState {
-    constructor(public uiModel: PeriodUiModel) {
+    constructor(
+        public readonly previousModel?: PeriodUiModel | null
+    ) {
         super();
     }
 }
 
 export class LoadedPeriodViewState extends PeriodViewState {
-    constructor(public uiModel: PeriodUiModel) {
+    constructor(
+        public readonly model: PeriodUiModel
+    ) {
         super();
     }
 }

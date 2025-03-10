@@ -19,11 +19,7 @@ export class NumberOfNotesPeriodEnhancer implements PeriodEnhancer {
         return this;
     }
 
-    public async enhance<T extends PeriodUiModel>(period: PeriodUiModel[]): Promise<T[]> {
-        return Promise.all(period.map(p => this.enhancePeriod<T>(p)));
-    }
-
-    private async enhancePeriod<T extends PeriodUiModel>(period: PeriodUiModel): Promise<T> {
+    public async enhance<T extends PeriodUiModel>(period: PeriodUiModel): Promise<T> {
         const notes = await this.noteAdapter.getNotes(note => {
             if (this?.settings?.useCreatedOnDateFromProperties && note.createdOnProperty) {
                 return arePeriodsEqual(note.createdOnProperty, period.period);
