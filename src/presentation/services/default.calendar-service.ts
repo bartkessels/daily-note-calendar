@@ -48,29 +48,17 @@ export class DefaultCalendarService implements CalendarService {
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
         const currentWeek = this.dateManager.getCurrentWeek(firstDayOfWeek);
 
-        const previousWeeks = this.dateManager.getPreviousWeeks(firstDayOfWeek, currentWeek, 2);
-        const nextWeeks = this.dateManager.getNextWeeks(firstDayOfWeek, currentWeek, 2);
-        const weeks = [...previousWeeks, currentWeek, ...nextWeeks];
-
-        return await this.buildUiModels(weeks);
+        return await this.loadWeeks(currentWeek, 2, 2);
     }
 
     public async getPreviousWeek(weeks: WeekUiModel[]): Promise<WeekUiModel[]> {
-        const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
         const middleWeek = this.getMiddleWeek(weeks).period;
-        const previousWeeks = this.dateManager.getPreviousWeeks(firstDayOfWeek, middleWeek, 3);
-        const nextWeeks = this.dateManager.getNextWeeks(firstDayOfWeek, middleWeek, 1);
-
-        return await this.buildWeeks(previousWeeks, middleWeek, nextWeeks);
+        return await this.loadWeeks(middleWeek, 3, 1);
     }
 
     public async getNextWeek(weeks: WeekUiModel[]): Promise<WeekUiModel[]> {
-        const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
         const middleWeek = this.getMiddleWeek(weeks).period;
-        const previousWeeks = this.dateManager.getPreviousWeeks(firstDayOfWeek, middleWeek, 1);
-        const nextWeeks = this.dateManager.getNextWeeks(firstDayOfWeek, middleWeek, 3);
-
-        return await this.buildWeeks(previousWeeks, middleWeek, nextWeeks);
+        return await this.loadWeeks(middleWeek, 1, 3);
     }
 
     public async getPreviousMonth(weeks: WeekUiModel[]): Promise<WeekUiModel[]> {
@@ -90,11 +78,16 @@ export class DefaultCalendarService implements CalendarService {
     }
 
     private getMiddleWeek(weeks: WeekUiModel[]): WeekUiModel {
-        return weeks[Math.ceil(weeks.length / 2)];
+        return weeks[Math.floor(weeks.length / 2)];
     }
 
-    private async buildWeeks(previousWeeks: WeekModel[], currentWeek: WeekModel, nextWeeks: WeekModel[]): Promise<WeekUiModel[]> {
+    private async loadWeeks(currentWeek: WeekModel, noPreviousWeeks: number, noNextWeeks: number): Promise<WeekUiModel[]> {
+        const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
+
+        const previousWeeks = this.dateManager.getPreviousWeeks(firstDayOfWeek, currentWeek, noPreviousWeeks);
+        const nextWeeks = this.dateManager.getNextWeeks(firstDayOfWeek, currentWeek, noNextWeeks);
         const weeks = [...previousWeeks, currentWeek, ...nextWeeks];
+
         return await this.buildUiModels(weeks);
     }
 

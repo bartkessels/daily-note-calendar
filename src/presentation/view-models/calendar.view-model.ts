@@ -43,7 +43,6 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         // Only update the UI model if it's the latest version of the UI model
         if (!this.uiModel || model.lastUpdateRequest > this.uiModel.lastUpdateRequest) {
             this.uiModel = model;
-            console.log('Setting model', model);
             this.updateUiModel(model);
         }
     }
@@ -82,41 +81,43 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
             .withValue(currentWeek)
             .build();
 
-        this.updateUiModel(uiModel);
+        this.setModel(uiModel);
     }
 
     public async loadPreviousWeek(): Promise<void> {
-        if (!this.uiModel?.weeks) {
+        const currentWeeks = this.uiModel?.weeks;
+        if (!currentWeeks) {
             return;
         }
 
         const loadingUiModel = await this.calendarUiModelBuilder
             .dropLastWeek()
             .build();
-        this.updateUiModel(loadingUiModel);
+        this.setModel(loadingUiModel);
 
-        const weeks = await this.calendarService.getPreviousWeek(this.uiModel.weeks);
+        const weeks = await this.calendarService.getPreviousWeek(currentWeeks);
         const uiModel = await this.calendarUiModelBuilder
             .withValue(weeks)
             .build();
-        this.updateUiModel(uiModel);
+        this.setModel(uiModel);
     }
 
     public async loadNextWeek(): Promise<void> {
-        if (!this.uiModel?.weeks) {
+        const currentWeeks = this.uiModel?.weeks;
+        if (!currentWeeks) {
             return;
         }
 
         const loadingUiModel = await this.calendarUiModelBuilder
             .dropFirstWeek()
             .build();
-        this.updateUiModel(loadingUiModel);
+        this.setModel(loadingUiModel);
 
-        const weeks = await this.calendarService.getNextWeek(this.uiModel.weeks);
+        const weeks = await this.calendarService.getNextWeek(currentWeeks);
         const uiModel = await this.calendarUiModelBuilder
             .withValue(weeks)
             .build();
-        this.updateUiModel(uiModel);
+        this.setModel(uiModel);
     }
 
     public async loadPreviousMonth(): Promise<void> {
