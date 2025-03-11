@@ -20,6 +20,7 @@ export class CalendarUiModelBuilder implements UiModelBuilder<WeekUiModel[], Cal
 
     public withSettings(settings: PluginSettings): void {
         this.settings = settings;
+        this.periodBuilder.withSettings(settings);
     }
 
     public withSelectedPeriod(period: Period): CalendarUiModelBuilder {
@@ -69,7 +70,7 @@ export class CalendarUiModelBuilder implements UiModelBuilder<WeekUiModel[], Cal
                 today: today,
                 startWeekOnMonday: firstDayOfWeek === DayOfWeek.Monday,
                 selectedPeriod: selectedPeriod,
-                weeks: [null, null, null, null, null],
+                weeks: [],
                 month: undefined,
                 quarter: undefined,
                 year: undefined

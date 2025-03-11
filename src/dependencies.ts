@@ -2,17 +2,12 @@ import {ObsidianSettingsAdapter} from 'src/infrastructure/obsidian/obsidian.sett
 import {Plugin} from 'obsidian';
 import {DefaultSettingsRepositoryFactory} from 'src/infrastructure/factories/default.settings-repository-factory';
 import {DefaultNameBuilderFactory} from 'src/business/factories/default.name-builder-factory';
-import {NameBuilderFactory, NameBuilderType} from 'src/business/contracts/name-builder-factory';
+import {NameBuilderType} from 'src/business/contracts/name-builder-factory';
 import {DefaultVariableParserFactory} from 'src/business/factories/default.variable-parser-factory';
 import {Period} from 'src/domain/models/period.model';
 import {DefaultDateParserFactory} from 'src/infrastructure/factories/default.date-parser-factory';
 import {ObsidianFileAdapter} from 'src/infrastructure/obsidian/obsidian.file-adapter';
-import {FileAdapter} from 'src/infrastructure/adapters/file.adapter';
 import {DefaultVariableFactory} from 'src/business/factories/default.variable-factory';
-import {NumberOfNotesPeriodEnhancer} from 'src/presentation/enhancers/number-of-notes.period-enhancer';
-import {NoteAdapter} from 'src/infrastructure/adapters/note.adapter';
-import {CalendarEnhancer} from 'src/presentation/contracts/calendar.enhancer';
-import {PeriodCalendarEnhancer} from 'src/presentation/enhancers/period.calendar-enhancer';
 import {ObsidianNoteAdapter} from 'src/infrastructure/obsidian/obsidian.note-adapter';
 import {CalendarViewModel, DefaultCalendarViewModel} from 'src/presentation/view-models/calendar.view-model';
 import {DefaultCalendarService} from 'src/presentation/services/default.calendar-service';
@@ -26,11 +21,12 @@ import {DefaultDateManagerFactory} from 'src/business/factories/default.date-man
 import {DefaultCommandHandlerFactory} from 'src/presentation/factories/default.command-handler-factory';
 import {DefaultNoteManagerFactory} from 'src/business/factories/default.note-manager-factory';
 import {CommandHandlerFactory} from 'src/presentation/contracts/command-handler-factory';
-import { WeeklyNoteExistsPeriodEnhancer } from 'src/presentation/enhancers/weekly-note-exists.period-enhancer';
+import { PeriodNoteExistsPeriodEnhancer } from 'src/presentation/enhancers/period-note-exists.period-enhancer';
 import {WeekUiModelBuilder} from 'src/presentation/builders/week-ui-model-builder';
 import { CalendarUiModelBuilder } from './presentation/builders/calendar.ui-model.builder';
 import {PeriodUiModelBuilder} from 'src/presentation/builders/period.ui-model-builder';
 import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
+import {CreatedNotesPeriodEnhancer} from 'src/presentation/enhancers/created-notes.period-enhancer';
 
 export interface Dependencies {
     viewModel: CalendarViewModel;
@@ -62,9 +58,10 @@ export function getDependencies(plugin: Plugin): Dependencies {
     const periodicNoteManager = new DefaultPeriodicNoteManager(nameBuilderFactory, variableParserFactory, fileRepositoryFactory, noteRepositoryFactory);
 
     // Presentation
-    const numberOfNotesPeriodEnhancer = new NumberOfNotesPeriodEnhancer(noteAdapter);
-    const weekUiModelBuilder = buildWeekUiModelBuilder(numberOfNotesPeriodEnhancer, nameBuilderFactory, fileAdapter);
-    const periodUiModelBuilder = new PeriodUiModelBuilder(numberOfNotesPeriodEnhancer);
+    const createdNotesPeriodEnhancer = new CreatedNotesPeriodEnhancer(noteAdapter, dateParserFactory);
+    const periodNoteExistsEnhancer = new PeriodNoteExistsPeriodEnhancer(nameBuilderFactory.getNameBuilder<Period>(NameBuilderType.PeriodicNote), fileAdapter);
+    const periodUiModelBuilder = new PeriodUiModelBuilder(createdNotesPeriodEnhancer, periodNoteExistsEnhancer);
+    const weekUiModelBuilder = new WeekUiModelBuilder(createdNotesPeriodEnhancer, periodNoteExistsEnhancer, periodUiModelBuilder);
     const calendarUiModelBuilder = new CalendarUiModelBuilder(periodUiModelBuilder);
     const calendarService = new DefaultCalendarService(dateManagerFactory, periodicNoteManager, weekUiModelBuilder);
     const viewModel = new DefaultCalendarViewModel(calendarService, calendarUiModelBuilder);
@@ -78,14 +75,4 @@ export function getDependencies(plugin: Plugin): Dependencies {
         settingsRepositoryFactory: settingsRepositoryFactory,
         commandHandlerFactory: commandHandlerFactory
     };
-}
-
-function buildWeekUiModelBuilder(
-    numberOfNotesPeriodEnhancer: NumberOfNotesPeriodEnhancer,
-    nameBuilderFactory: NameBuilderFactory,
-    fileAdapter: FileAdapter
-): WeekUiModelBuilder {
-    const weeklyNoteExistsEnhancer = new WeeklyNoteExistsPeriodEnhancer(nameBuilderFactory.getNameBuilder<Period>(NameBuilderType.PeriodicNote), fileAdapter);
-
-    return new WeekUiModelBuilder(numberOfNotesPeriodEnhancer, weeklyNoteExistsEnhancer);
 }

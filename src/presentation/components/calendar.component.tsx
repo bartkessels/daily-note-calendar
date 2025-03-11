@@ -5,6 +5,7 @@ import {PeriodComponent} from 'src/presentation/components/period.component';
 import {CalendarHeart, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight} from 'lucide-react';
 import 'src/extensions/extensions';
 import {WeekComponent} from 'src/presentation/components/week.component';
+import {NotesComponent} from 'src/presentation/components/notes.component';
 
 interface CalendarComponentProperties {
     initialUiModel?: CalendarUiModel | null;
@@ -86,6 +87,10 @@ export const CalendarComponent = (
                 )}
                 </tbody>
             </table>
+
+            <NotesComponent
+                notes={uiModel?.selectedPeriod?.notes}
+                onNoteClicked={() => {}} />
         </div>
     );
 }

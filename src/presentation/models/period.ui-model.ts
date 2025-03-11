@@ -1,16 +1,17 @@
 import {arePeriodsEqual, Period} from 'src/domain/models/period.model';
+import {NoteUiModel} from 'src/presentation/models/note.ui-model';
 
 export interface PeriodUiModel {
     period: Period;
     hasPeriodNote: boolean;
-    noNotes: number;
+    notes: NoteUiModel[];
 }
 
 export function periodUiModel(period: Period): PeriodUiModel {
     return {
         period: period,
         hasPeriodNote: false,
-        noNotes: 0
+        notes: []
     };
 }
 

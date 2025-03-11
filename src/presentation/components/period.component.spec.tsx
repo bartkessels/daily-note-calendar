@@ -14,7 +14,7 @@ describe('PeriodComponent', () => {
             type: PeriodType.Day
         } as Period,
         hasPeriodNote: false,
-        noNotes: 0
+        notes: []
     } as PeriodUiModel;
 
     afterEach(() => {

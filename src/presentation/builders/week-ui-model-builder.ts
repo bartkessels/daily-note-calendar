@@ -1,22 +1,25 @@
 import {weekUiModel, WeekUiModel} from 'src/presentation/models/week.ui-model';
 import {WeekModel} from 'src/domain/models/week.model';
-import {NumberOfNotesPeriodEnhancer} from 'src/presentation/enhancers/number-of-notes.period-enhancer';
-import {WeeklyNoteExistsPeriodEnhancer} from 'src/presentation/enhancers/weekly-note-exists.period-enhancer';
+import {PeriodNoteExistsPeriodEnhancer} from 'src/presentation/enhancers/period-note-exists.period-enhancer';
 import {PluginSettings} from 'src/domain/settings/plugin.settings';
 import {UiModelBuilder} from 'src/presentation/contracts/ui-model-builder';
+import {PeriodUiModelBuilder} from 'src/presentation/builders/period.ui-model-builder';
+import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
+import {CreatedNotesPeriodEnhancer} from 'src/presentation/enhancers/created-notes.period-enhancer';
 
 export class WeekUiModelBuilder implements UiModelBuilder<WeekModel, WeekUiModel> {
     private model: WeekModel | null = null;
 
     constructor(
-        private readonly numberOfNotesPeriodEnhancer: NumberOfNotesPeriodEnhancer,
-        private readonly weeklyNoteExistsPeriodEnhancer: WeeklyNoteExistsPeriodEnhancer
+        private readonly createdNotesPeriodEnhancer: CreatedNotesPeriodEnhancer,
+        private readonly weeklyNoteExistsPeriodEnhancer: PeriodNoteExistsPeriodEnhancer,
+        private readonly periodUiModelBuilder: PeriodUiModelBuilder
     ) {
 
     }
 
     public withSettings(settings: PluginSettings): void {
-        this.numberOfNotesPeriodEnhancer.withSettings(settings);
+        this.createdNotesPeriodEnhancer.withSettings(settings);
         this.weeklyNoteExistsPeriodEnhancer.withSettings(settings);
     }
 
@@ -31,10 +34,21 @@ export class WeekUiModelBuilder implements UiModelBuilder<WeekModel, WeekUiModel
         }
 
         const defaultWeekUiModel = weekUiModel(this.model);
-        let enhancedWeek = await this.numberOfNotesPeriodEnhancer.enhance<WeekUiModel>(defaultWeekUiModel);
+        let enhancedWeek = await this.createdNotesPeriodEnhancer.enhance<WeekUiModel>(defaultWeekUiModel);
         enhancedWeek = await this.weeklyNoteExistsPeriodEnhancer.enhance<WeekUiModel>(enhancedWeek);
+        const days = await this.buildDays(enhancedWeek.days);
 
-        return enhancedWeek;
+        return <WeekUiModel> {...enhancedWeek, days: days};
     }
 
+    private async buildDays(days: PeriodUiModel[]): Promise<PeriodUiModel[]> {
+        const uiModels: PeriodUiModel[] = [];
+
+        for (const day of days) {
+            const uiModel = await this.periodUiModelBuilder.withValue(day.period).build();
+            uiModels.push(uiModel);
+        }
+
+        return uiModels;
+    }
 }
