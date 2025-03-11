@@ -26,16 +26,16 @@ import {DefaultDateManagerFactory} from 'src/business/factories/default.date-man
 import {DefaultCommandHandlerFactory} from 'src/presentation/factories/default.command-handler-factory';
 import {DefaultNoteManagerFactory} from 'src/business/factories/default.note-manager-factory';
 import {CommandHandlerFactory} from 'src/presentation/contracts/command-handler-factory';
-import {DailyNoteExistsPeriodEnhancer} from 'src/presentation/enhancers/daily-note-exists.period-enhancer';
 import { WeeklyNoteExistsPeriodEnhancer } from 'src/presentation/enhancers/weekly-note-exists.period-enhancer';
 import {WeekUiModelBuilder} from 'src/presentation/builders/week-ui-model-builder';
 import { CalendarUiModelBuilder } from './presentation/builders/calendar.ui-model.builder';
 import {PeriodUiModelBuilder} from 'src/presentation/builders/period.ui-model-builder';
-import {periodUiModel} from 'src/presentation/models/period.ui-model';
+import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
 
 export interface Dependencies {
     viewModel: CalendarViewModel;
     dateManagerFactory: DateManagerFactory;
+    dateParserFactory: DateParserFactory;
     settingsRepositoryFactory: SettingsRepositoryFactory;
     commandHandlerFactory: CommandHandlerFactory;
 }
@@ -74,6 +74,7 @@ export function getDependencies(plugin: Plugin): Dependencies {
     return {
         viewModel: viewModel,
         dateManagerFactory: dateManagerFactory,
+        dateParserFactory: dateParserFactory,
         settingsRepositoryFactory: settingsRepositoryFactory,
         commandHandlerFactory: commandHandlerFactory
     };

@@ -13,12 +13,14 @@ import {OpenTomorrowsNoteCommand} from 'src/presentation/commands/open-tomorrows
 import {OpenWeeklyNoteCommand} from 'src/presentation/commands/open-weekly-note.command';
 import {NavigateToNextMonthCommand} from 'src/presentation/commands/navigate-to-next-month.command';
 import {NavigateToPreviousMonthCommand} from 'src/presentation/commands/navigate-to-previous-month.command';
+import {DailyNoteCalendarPluginSettingTab} from 'src/daily-note-calendar.plugin-setting-tab';
 
 export default class DailyNoteCalendarPlugin extends Plugin {
     private readonly dependencies: Dependencies = getDependencies(this);
 
     override async onload(): Promise<void> {
         this.registerView(CalendarView.VIEW_TYPE, (leaf) => new CalendarView(leaf, this.dependencies.viewModel));
+        this.registerSettings();
         this.registerCommands();
 
         this.app.workspace.onLayoutReady(this.initializePlugin.bind(this));
@@ -39,6 +41,15 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         if (this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE).length <= 0) {
             this.app.workspace.getRightLeaf(false)?.setViewState({type: CalendarView.VIEW_TYPE});
         }
+    }
+
+    private registerSettings(): void {
+        const settingsTab = new DailyNoteCalendarPluginSettingTab(
+            this,
+            this.dependencies.dateParserFactory,
+            this.dependencies.settingsRepositoryFactory
+        );
+        this.addSettingTab(settingsTab);
     }
 
     private registerCommands(): void {
