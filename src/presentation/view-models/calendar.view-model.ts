@@ -26,7 +26,7 @@ export interface CalendarViewModel {
 export class DefaultCalendarViewModel implements CalendarViewModel {
     private settings: PluginSettings = DEFAULT_PLUGIN_SETTINGS;
     private uiModel: CalendarUiModel | null = null;
-    private updateUiModel: (state: CalendarUiModel) => void;
+    private updateUiModel: (model: CalendarUiModel) => void;
 
     constructor(
         private readonly calendarService: CalendarService,

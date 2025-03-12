@@ -14,7 +14,6 @@ export function weekUiModel(week: WeekModel): WeekUiModel {
     return {
         period: week,
         hasPeriodNote: false,
-        notes: [],
         weekNumber: week.weekNumber,
         year: periodUiModel(week.year),
         quarter: periodUiModel(week.quarter),

@@ -6,15 +6,13 @@ import {
     mockNoteRepository
 } from 'src/test-helpers/repository.mocks';
 import {
-    mockDateRepositoryFactory,
     mockFileRepositoryFactory,
     mockNoteRepositoryFactory,
-    mockSettingsRepositoryFactory
 } from 'src/test-helpers/factory.mocks';
 import {when} from 'jest-when';
 import {Note} from 'src/domain/models/note.model';
-import {Period, PeriodType} from 'src/domain/models/period.model';
-import {DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
+import {arePeriodsEqual, Period, PeriodType} from 'src/domain/models/period.model';
+import {DEFAULT_DISPLAY_NOTES_SETTINGS, DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
 
 describe('RepositoryNoteManager', () => {
     let manager: RepositoryNoteManager;
@@ -35,14 +33,10 @@ describe('RepositoryNoteManager', () => {
     beforeEach(() => {
         const fileRepositoryFactory = mockFileRepositoryFactory(fileRepository);
         const noteRepositoryFactory = mockNoteRepositoryFactory(noteRepository);
-        const settingsRepositoryFactory = mockSettingsRepositoryFactory(settingsRepository);
-        const dateRepositoryFactory = mockDateRepositoryFactory(dateRepository);
 
         manager = new RepositoryNoteManager(
             fileRepositoryFactory,
-            noteRepositoryFactory,
-            settingsRepositoryFactory,
-            dateRepositoryFactory
+            noteRepositoryFactory
         );
     });
 
@@ -71,6 +65,54 @@ describe('RepositoryNoteManager', () => {
 
             // Assert
             expect(fileRepository.open).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('getNotesForPeriod', () => {
+        const period = <Period>{
+            date: new Date(2023, 9, 2),
+            name: '2',
+            type: PeriodType.Day
+        };
+        const noteMatchingPeriod = <Note>{
+            createdOn: period,
+            name: 'Matching Note',
+            path: 'path/to/matching-note.md',
+            properties: new Map<string, string>()
+        };
+        const noteNotMatchingPeriod = <Note>{
+            createdOn: <Period>{
+                date: new Date(2023, 9, 3),
+                name: '3',
+                type: PeriodType.Day
+            },
+            name: 'Non-Matching Note',
+            path: 'path/to/non-matching-note.md',
+            properties: new Map<string, string>()
+        };
+
+        it('should filter notes based on the createdOn property', async () => {
+            // Arrange
+            when(noteRepository.getNotes).mockImplementation((filterFn) => {
+                return Promise.resolve([noteMatchingPeriod, noteNotMatchingPeriod].filter(filterFn));
+            });
+
+            // Act
+            const result = await manager.getNotesForPeriod(period);
+
+            // Assert
+            expect(result).toEqual([noteMatchingPeriod]);
+        });
+
+        it('should return an empty list when the adapter repository returns an empty list', async () => {
+            // Arrange
+            when(noteRepository.getNotes).mockResolvedValue([]);
+
+            // Act
+            const result = await manager.getNotesForPeriod(period);
+
+            // Assert
+            expect(result).toEqual([]);
         });
     });
 
@@ -122,7 +164,7 @@ describe('RepositoryNoteManager', () => {
             const result = await manager.getActiveNote();
 
             // Assert
-            expect(result?.createdOnProperty).toEqual(expectedPeriod);
+            expect(result?.properties.get('createdOn')).toEqual(expectedPeriod);
         });
 
         it('should return the active note without the createdOnProperty set when the date could not be parsed', async () => {
@@ -143,7 +185,7 @@ describe('RepositoryNoteManager', () => {
 
             // Assert
             expect(result).toEqual(note);
-            expect(result?.createdOnProperty).toBeUndefined();
+            expect(result?.properties.get('createdOn')).toBeUndefined();
         });
 
         it('should return the active note without the createdOnProperty set when the property is not set', async () => {
@@ -163,7 +205,7 @@ describe('RepositoryNoteManager', () => {
 
             // Assert
             expect(result).toEqual(note);
-            expect(result?.createdOnProperty).toBeUndefined();
+            expect(result?.properties.get('createdOn')).toBeUndefined();
         });
     });
 });

@@ -44,7 +44,6 @@ export const PeriodComponent = (
         <div
             id={isToday ? 'today' : ''}
             className={classes.join(' ')}
-            {...model.notes.length > 0 ? { title: `Number of notes: ${model.notes.length}` } : {}}
             onClick={(e: React.MouseEvent) => {
                 onClick(modifierKey(e), model);
                 e.preventDefault();

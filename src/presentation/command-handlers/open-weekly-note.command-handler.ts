@@ -24,6 +24,6 @@ export class OpenWeeklyNoteCommandHandler implements CommandHandler {
         const week = this.dateManagerFactory.getManager().getWeek(today, settings.firstDayOfWeek);
         const uiModel = weekUiModel(week);
 
-        await this.viewModel.openWeeklyNote(ModifierKey.None, uiModel);
+        this.viewModel.openWeeklyNote(ModifierKey.None, uiModel);
     }
 }

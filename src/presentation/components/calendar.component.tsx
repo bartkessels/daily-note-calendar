@@ -88,9 +88,7 @@ export const CalendarComponent = (
                 </tbody>
             </table>
 
-            <NotesComponent
-                notes={uiModel?.selectedPeriod?.notes}
-                onNoteClicked={() => {}} />
+            <NotesComponent period={uiModel?.selectedPeriod} />
         </div>
     );
 }

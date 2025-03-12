@@ -1,4 +1,4 @@
-import {Plugin} from 'obsidian';
+import {Plugin, WorkspaceLeaf} from 'obsidian';
 import {Dependencies, getDependencies} from 'src/dependencies';
 import {SettingsType} from 'src/infrastructure/contracts/settings-repository-factory';
 import {PluginSettings} from 'src/domain/settings/plugin.settings';
@@ -19,7 +19,9 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     private readonly dependencies: Dependencies = getDependencies(this);
 
     override async onload(): Promise<void> {
-        this.registerView(CalendarView.VIEW_TYPE, (leaf) => new CalendarView(leaf, this.dependencies.viewModel));
+        const calendarView = (leaf: WorkspaceLeaf)=>  new CalendarView(leaf, this.dependencies.calendarViewModel, this.dependencies.notesViewModel);
+
+        this.registerView(CalendarView.VIEW_TYPE, (leaf) => calendarView(leaf));
         this.registerSettings();
         this.registerCommands();
 
@@ -36,7 +38,8 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             .getRepository<PluginSettings>(SettingsType.Plugin)
             .get();
 
-        this.dependencies.viewModel.initialize(settings, today);
+        this.dependencies.calendarViewModel.initialize(settings, today);
+        this.dependencies.notesViewModel.initialize(settings);
 
         if (this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE).length <= 0) {
             this.app.workspace.getRightLeaf(false)?.setViewState({type: CalendarView.VIEW_TYPE});

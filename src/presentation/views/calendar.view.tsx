@@ -1,9 +1,11 @@
 import {ItemView, WorkspaceLeaf} from 'obsidian';
 import {CalendarViewModel} from 'src/presentation/view-models/calendar.view-model';
 import {createRoot} from 'react-dom/client';
-import { StrictMode } from 'react';
+import {StrictMode} from 'react';
 import {CalendarViewModelContext} from 'src/presentation/context/calendar-view-model.context';
 import {CalendarComponent} from 'src/presentation/components/calendar.component';
+import {NotesViewModelContext} from 'src/presentation/context/notes-view-model.context';
+import {NotesViewModel} from 'src/presentation/view-models/notes.view-model';
 
 export class CalendarView extends ItemView {
     public static VIEW_TYPE = 'daily-note-calendar';
@@ -12,7 +14,8 @@ export class CalendarView extends ItemView {
 
     constructor(
         leaf: WorkspaceLeaf,
-        private readonly viewModel: CalendarViewModel
+        private readonly calendarViewModel: CalendarViewModel,
+        private readonly notesViewModel: NotesViewModel
     ) {
         super(leaf);
     }
@@ -32,8 +35,10 @@ export class CalendarView extends ItemView {
     protected override async onOpen(): Promise<void> {
         createRoot((this.containerEl.children[1])).render(
             <StrictMode>
-                <CalendarViewModelContext.Provider value={this.viewModel}>
-                    <CalendarComponent />
+                <CalendarViewModelContext.Provider value={this.calendarViewModel}>
+                    <NotesViewModelContext.Provider value={this.notesViewModel}>
+                        <CalendarComponent/>
+                    </NotesViewModelContext.Provider>
                 </CalendarViewModelContext.Provider>
             </StrictMode>
         );

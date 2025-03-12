@@ -37,7 +37,7 @@ export class DefaultCommandHandlerFactory implements CommandHandlerFactory {
     public getHandler(type: CommandHandlerType): CommandHandler {
         switch (type) {
             case CommandHandlerType.DisplayInCalendar:
-                return new DisplayInCalendarCommandHandler(this.noteManagerFactory, this.settingsRepositoryFactory, this.viewModel);
+                return new DisplayInCalendarCommandHandler(this.noteManagerFactory, this.viewModel);
             case CommandHandlerType.NavigateToCurrentWeek:
                 return new NavigateToCurrentWeekCommandHandler(this.viewModel);
             case CommandHandlerType.NavigateToPreviousWeek:

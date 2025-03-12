@@ -2,16 +2,12 @@ import {NoteManager} from 'src/business/contracts/note.manager';
 import { Note } from 'src/domain/models/note.model';
 import {FileRepositoryFactory} from 'src/infrastructure/contracts/file-repository-factory';
 import {NoteRepositoryFactory} from 'src/infrastructure/contracts/note-repository-factory';
-import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contracts/settings-repository-factory';
-import {DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
-import {DateRepositoryFactory} from 'src/infrastructure/contracts/date-repository-factory';
+import {arePeriodsEqual, Period} from 'src/domain/models/period.model';
 
 export class RepositoryNoteManager implements NoteManager {
     constructor(
         private readonly fileRepositoryFactory: FileRepositoryFactory,
-        private readonly noteRepositoryFactory: NoteRepositoryFactory,
-        private readonly settingsRepositoryFactory: SettingsRepositoryFactory,
-        private readonly dateRepositoryFactory: DateRepositoryFactory
+        private readonly noteRepositoryFactory: NoteRepositoryFactory
     ) {
 
     }
@@ -25,6 +21,14 @@ export class RepositoryNoteManager implements NoteManager {
         }
     }
 
+    public async getNotesForPeriod(period: Period): Promise<Note[]> {
+        const noteRepository = this.noteRepositoryFactory.getRepository();
+
+        return await noteRepository.getNotes(note => {
+            return arePeriodsEqual(note.createdOn, period);
+        });
+    }
+
     public async deleteNote(note: Note): Promise<void> {
         const fileRepository = this.fileRepositoryFactory.getRepository();
         const doesNoteExist = await fileRepository.exists(note.path);
@@ -35,26 +39,6 @@ export class RepositoryNoteManager implements NoteManager {
     }
 
     public async getActiveNote(): Promise<Note | null> {
-        const note = await this.noteRepositoryFactory.getRepository().getActiveNote();
-        return this.setCreatedOnProperty(note);
-    }
-
-    private async setCreatedOnProperty(note: Note | null): Promise<Note | null> {
-        const settings = await this.settingsRepositoryFactory
-            .getRepository<DisplayNotesSettings>(SettingsType.DisplayNotes)
-            .get();
-        const property = note?.properties?.get(settings.createdOnDatePropertyName);
-
-        if (!note || !settings.useCreatedOnDateFromProperties || !property) {
-            return note;
-        }
-
-        const date = this.dateRepositoryFactory.getRepository()
-            .getDayFromDateString(property, settings.createdOnPropertyFormat);
-
-        return {
-            ...note,
-            createdOnProperty: date ?? undefined
-        }
+        return await this.noteRepositoryFactory.getRepository().getActiveNote();
     }
 }

@@ -21,11 +21,10 @@ export class ObsidianNoteAdapter implements NoteAdapter {
         return await this.asNote(activeFile);
     }
 
-    public async getNotes(filter: (note: Note) => boolean): Promise<Note[]> {
-        const notes = await Promise.all(this.plugin.app.vault.getMarkdownFiles().map((file: TFile) =>
+    public async getNotes(): Promise<Note[]> {
+        return await Promise.all(this.plugin.app.vault.getMarkdownFiles().map((file: TFile) =>
             this.asNote(file)
         ));
-        return notes.filter(note => filter(note));
     }
 
     private async asNote(file: TFile): Promise<Note> {

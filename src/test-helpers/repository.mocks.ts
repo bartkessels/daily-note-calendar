@@ -17,7 +17,8 @@ export const mockFileRepository = {
 } as jest.Mocked<FileRepository>;
 
 export const mockNoteRepository = {
-    getActiveNote: jest.fn()
+    getActiveNote: jest.fn(),
+    getNotes: jest.fn()
 } as jest.Mocked<NoteRepository>;
 
 export const mockDateRepository = {

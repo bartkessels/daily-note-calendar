@@ -1,8 +1,10 @@
 import {NoteManager} from 'src/business/contracts/note.manager';
 import {DateManager} from 'src/business/contracts/date.manager';
+import {jest} from '@jest/globals';
 
 export const mockNoteManager = {
     getActiveNote: jest.fn(),
+    getNotesForPeriod: jest.fn(),
     openNote: jest.fn(),
     deleteNote: jest.fn()
 } as jest.Mocked<NoteManager>;

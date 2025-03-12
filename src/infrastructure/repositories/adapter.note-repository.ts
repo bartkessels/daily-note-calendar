@@ -12,4 +12,9 @@ export class AdapterNoteRepository implements NoteRepository {
     public async getActiveNote(): Promise<Note | null> {
         return await this.adapter.getActiveNote();
     }
+
+    public async getNotes(filter: (note: Note) => boolean): Promise<Note[]> {
+        const notes = await this.adapter.getNotes();
+        return notes.filter(filter);
+    }
 }
