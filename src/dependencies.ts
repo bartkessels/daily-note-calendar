@@ -49,14 +49,14 @@ export function getDependencies(plugin: Plugin): Dependencies {
 
     const settingsRepositoryFactory = new DefaultSettingsRepositoryFactory(settingsAdapter);
     const fileRepositoryFactory = new DefaultFileRepositoryFactory(fileAdapter);
-    const noteRepositoryFactory = new DefaultNoteRepositoryFactory(noteAdapter);
+    const noteRepositoryFactory = new DefaultNoteRepositoryFactory(noteAdapter, dateParserFactory, settingsRepositoryFactory);
 
     // Business
     const nameBuilderFactory = new DefaultNameBuilderFactory(dateParserFactory);
     const variableFactory = new DefaultVariableFactory();
     const variableParserFactory = new DefaultVariableParserFactory(variableFactory, dateParserFactory);
     const dateManagerFactory = new DefaultDateManagerFactory(dateRepositoryFactory);
-    const noteManagerFactory = new DefaultNoteManagerFactory(fileRepositoryFactory, noteRepositoryFactory);
+    const noteManagerFactory = new DefaultNoteManagerFactory(fileRepositoryFactory, noteRepositoryFactory, settingsRepositoryFactory);
     const periodicNoteManager = new DefaultPeriodicNoteManager(nameBuilderFactory, variableParserFactory, fileRepositoryFactory, noteRepositoryFactory);
 
     // Presentation

@@ -1,13 +1,16 @@
 import {NoteManager} from 'src/business/contracts/note.manager';
-import { Note } from 'src/domain/models/note.model';
+import {Note} from 'src/domain/models/note.model';
 import {FileRepositoryFactory} from 'src/infrastructure/contracts/file-repository-factory';
 import {NoteRepositoryFactory} from 'src/infrastructure/contracts/note-repository-factory';
 import {arePeriodsEqual, Period} from 'src/domain/models/period.model';
+import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contracts/settings-repository-factory';
+import {DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
 
 export class RepositoryNoteManager implements NoteManager {
     constructor(
         private readonly fileRepositoryFactory: FileRepositoryFactory,
-        private readonly noteRepositoryFactory: NoteRepositoryFactory
+        private readonly noteRepositoryFactory: NoteRepositoryFactory,
+        private readonly settingsRepositoryFactory: SettingsRepositoryFactory
     ) {
 
     }
@@ -22,10 +25,17 @@ export class RepositoryNoteManager implements NoteManager {
     }
 
     public async getNotesForPeriod(period: Period): Promise<Note[]> {
+        const settings = await this.settingsRepositoryFactory
+            .getRepository<DisplayNotesSettings>(SettingsType.DisplayNotes)
+            .get();
         const noteRepository = this.noteRepositoryFactory.getRepository();
 
         return await noteRepository.getNotes(note => {
-            return arePeriodsEqual(note.createdOnProperty, period);
+            if (settings.useCreatedOnDateFromProperties) {
+                return arePeriodsEqual(note.createdOnProperty, period);
+            }
+
+            return arePeriodsEqual(note.createdOn, period);
         });
     }
 

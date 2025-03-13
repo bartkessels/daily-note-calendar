@@ -2,7 +2,7 @@ import {DEFAULT_PLUGIN_SETTINGS, PluginSettings} from 'src/domain/settings/plugi
 import {CalendarService} from 'src/presentation/contracts/calendar-service';
 import {DateManager} from 'src/business/contracts/date.manager';
 import {PeriodicNoteManager} from 'src/business/contracts/periodic-note.manager';
-import {isCreateFileModifierKey, ModifierKey} from 'src/presentation/models/modifier-key';
+import {isCreateFileModifierKey, isSelectModifierKey, ModifierKey} from 'src/presentation/models/modifier-key';
 import {PeriodNoteSettings} from 'src/domain/settings/period-note.settings';
 import {DateManagerFactory} from 'src/business/contracts/date-manager-factory';
 import {WeekModel} from 'src/domain/models/week.model';
@@ -26,7 +26,7 @@ export class DefaultCalendarService implements CalendarService {
     public async openPeriodicNote(key: ModifierKey, period: Period, settings: PeriodNoteSettings): Promise<void> {
         const requireModifierKeyForCreatingNote = this.settings.generalSettings.useModifierKeyToCreateNote;
         const isCreateFileModifierKeyPressed = isCreateFileModifierKey(key) && requireModifierKeyForCreatingNote;
-        const shouldCreateNote = !requireModifierKeyForCreatingNote || isCreateFileModifierKeyPressed;
+        const shouldCreateNote = (!requireModifierKeyForCreatingNote || isCreateFileModifierKeyPressed);
 
         if (shouldCreateNote) {
             await this.periodicNoteManager.createNote(settings, period);

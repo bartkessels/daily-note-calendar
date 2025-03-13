@@ -8,3 +8,7 @@ export enum ModifierKey {
 export function isCreateFileModifierKey(modifierKey: ModifierKey): boolean {
     return modifierKey === ModifierKey.Alt || modifierKey === ModifierKey.Meta;
 }
+
+export function isSelectModifierKey(modifierKey: ModifierKey): boolean {
+    return modifierKey === ModifierKey.Shift;
+}

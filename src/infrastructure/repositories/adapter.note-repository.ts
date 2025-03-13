@@ -15,30 +15,42 @@ export class AdapterNoteRepository implements NoteRepository {
     }
 
     public async getActiveNote(): Promise<Note | null> {
-        return await this.adapter.getActiveNote();
+        const settings = await this.settingsRepositoryFactory
+            .getRepository<DisplayNotesSettings>(SettingsType.DisplayNotes)
+            .get();
+        const activeNote = await this.adapter.getActiveNote();
+
+        if (!activeNote) {
+            return null;
+        }
+
+        return this.setCreatedOnProperty(activeNote, settings);
     }
 
     public async getNotes(filter: (note: Note) => boolean): Promise<Note[]> {
         const notes = await this.adapter.getNotes();
-        return notes.filter(filter);
+        const filteredNotes = notes.filter(filter);
+        return this.setCreatedOnProperties(filteredNotes);
     }
 
-    private async setCreatedOnProperty(notes: Note[]): Promise<Note[]> {
+    private async setCreatedOnProperties(notes: Note[]): Promise<Note[]> {
         const settings = await this.settingsRepositoryFactory
             .getRepository<DisplayNotesSettings>(SettingsType.DisplayNotes)
             .get();
 
-        return notes.map(note => {
-            const property = note.properties.get(settings.createdOnDatePropertyName);
+        return notes.map(note => this.setCreatedOnProperty(note, settings));
+    }
 
-            if (!property) {
-                return note;
-            }
+    private setCreatedOnProperty(note: Note, settings: DisplayNotesSettings): Note {
+        const property = note.properties.get(settings.createdOnDatePropertyName);
 
-            return <Note> {
-                ...note,
-                createdOnProperty: this.dateParserFactory.getParser().fromString(property, settings.createdOnPropertyFormat)
-            };
-        });
+        if (!property) {
+            return note;
+        }
+
+        return <Note> {
+            ...note,
+            createdOnProperty: this.dateParserFactory.getParser().fromString(property, settings.createdOnPropertyFormat)
+        };
     }
 }

@@ -7,7 +7,7 @@ import {
 } from 'src/test-helpers/repository.mocks';
 import {
     mockFileRepositoryFactory,
-    mockNoteRepositoryFactory,
+    mockNoteRepositoryFactory, mockSettingsRepositoryFactory,
 } from 'src/test-helpers/factory.mocks';
 import {when} from 'jest-when';
 import {Note} from 'src/domain/models/note.model';
@@ -33,10 +33,12 @@ describe('RepositoryNoteManager', () => {
     beforeEach(() => {
         const fileRepositoryFactory = mockFileRepositoryFactory(fileRepository);
         const noteRepositoryFactory = mockNoteRepositoryFactory(noteRepository);
+        const settingsRepositoryFactory = mockSettingsRepositoryFactory(settingsRepository);
 
         manager = new RepositoryNoteManager(
             fileRepositoryFactory,
-            noteRepositoryFactory
+            noteRepositoryFactory,
+            settingsRepositoryFactory
         );
     });
 
@@ -92,8 +94,10 @@ describe('RepositoryNoteManager', () => {
             properties: new Map<string, string>()
         };
 
-        it('should filter notes based on the createdOnProperty if it has a value', async () => {
+        it('should filter notes based on the createdOnProperty if it has a value and the setting is set to true', async () => {
             // Arrange
+            const settings = <DisplayNotesSettings>{ ...DEFAULT_DISPLAY_NOTES_SETTINGS, useCreatedOnDateFromProperties: true };
+            when(settingsRepository.get).mockResolvedValue(settings);
             when(noteRepository.getNotes).mockImplementation((filterFn) => {
                 return Promise.resolve([noteWithCreatedOnProperty, noteWithoutCreatedOnProperty].filter(filterFn));
             });
@@ -105,8 +109,10 @@ describe('RepositoryNoteManager', () => {
             expect(result).toEqual([noteWithCreatedOnProperty]);
         });
 
-        it('should return no notes when the createdOnProperty is not set', async () => {
+        it('should return no notes when the createdOnProperty is not set but the setting is set to true', async () => {
             // Arrange
+            const settings = <DisplayNotesSettings>{ ...DEFAULT_DISPLAY_NOTES_SETTINGS, useCreatedOnDateFromProperties: true };
+            when(settingsRepository.get).mockResolvedValue(settings);
             when(noteRepository.getNotes).mockImplementation((filterFn) => {
                 return Promise.resolve([noteWithoutCreatedOnProperty].filter(filterFn));
             });
@@ -116,6 +122,21 @@ describe('RepositoryNoteManager', () => {
 
             // Assert
             expect(result).toEqual([]);
+        });
+
+        it('should return the notes based on the createdOn if the setting is set to false', async () => {
+            // Arrange
+            const settings = <DisplayNotesSettings>{ ...DEFAULT_DISPLAY_NOTES_SETTINGS, useCreatedOnDateFromProperties: false };
+            when(settingsRepository.get).mockResolvedValue(settings);
+            when(noteRepository.getNotes).mockImplementation((filterFn) => {
+                return Promise.resolve([noteWithCreatedOnProperty, noteWithoutCreatedOnProperty].filter(filterFn));
+            });
+
+            // Act
+            const result = await manager.getNotesForPeriod(noteWithoutCreatedOnProperty.createdOn);
+
+            // Assert
+            expect(result).toEqual([noteWithoutCreatedOnProperty]);
         });
 
         it('should return an empty list when the adapter repository returns an empty list', async () => {

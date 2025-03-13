@@ -3,13 +3,21 @@ import {mockNoteAdapter} from 'src/test-helpers/adapter.mocks';
 import {mockNoteWithCreatedOnProperty} from 'src/test-helpers/model.mocks';
 import {Note} from 'src/domain/models/note.model';
 import {Period, PeriodType} from 'src/domain/models/period.model';
+import {mockDateParser} from 'src/test-helpers/parser.mocks';
+import {mockDisplayNoteSettingsRepository} from 'src/test-helpers/repository.mocks';
+import {mockDateParserFactory, mockSettingsRepositoryFactory} from 'src/test-helpers/factory.mocks';
 
 describe('AdapterNoteRepository', () => {
     let repository: AdapterNoteRepository;
     const noteAdapter = mockNoteAdapter;
+    const dateParser = mockDateParser;
+    const settingsRepository = mockDisplayNoteSettingsRepository;
 
     beforeEach(() => {
-        repository = new AdapterNoteRepository(noteAdapter);
+        const dateParserFactory = mockDateParserFactory(dateParser);
+        const settingsRepositoryFactory = mockSettingsRepositoryFactory(settingsRepository);
+
+        repository = new AdapterNoteRepository(noteAdapter, dateParserFactory, settingsRepositoryFactory);
     });
 
     afterEach(() => {
