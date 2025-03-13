@@ -4,8 +4,8 @@ import {Period} from 'src/domain/models/period.model';
 import {CalendarService} from 'src/presentation/contracts/calendar-service';
 import {ModifierKey} from 'src/presentation/models/modifier-key';
 import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
-import {WeekUiModel} from 'src/presentation/models/week.ui-model';
 import {CalendarUiModelBuilder} from 'src/presentation/builders/calendar.ui-model.builder';
+import {WeekModel} from 'src/domain/models/week.model';
 
 export interface CalendarViewModel {
     setUpdateUiModel(callback: (model: CalendarUiModel) => void): void;
@@ -70,123 +70,115 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
     }
 
     public async loadCurrentWeek(): Promise<void> {
-        const loadingUiModel = await this.calendarUiModelBuilder
-            .withoutValue()
-            .build();
-
-        this.updateUiModel(loadingUiModel);
-
-        const currentWeek = await this.calendarService.getCurrentWeek();
-        const uiModel = await this.calendarUiModelBuilder
-            .withValue(currentWeek)
-            .build();
-
-        this.setModel(uiModel);
+        await this.updateWeeks(async (): Promise<CalendarUiModel> => {
+            return await this.calendarUiModelBuilder
+                .withoutValue()
+                .build();
+        }, async (_: WeekModel[]): Promise<WeekModel[]> => {
+            return this.calendarService.getCurrentWeek();
+        });
     }
 
     public async loadPreviousWeek(): Promise<void> {
-        const currentWeeks = this.uiModel?.weeks;
-        if (!currentWeeks) {
-            return;
-        }
-
-        const loadingUiModel = await this.calendarUiModelBuilder
-            .dropLastWeek()
-            .build();
-        this.setModel(loadingUiModel);
-
-        const weeks = await this.calendarService.getPreviousWeek(currentWeeks);
-        const uiModel = await this.calendarUiModelBuilder
-            .withValue(weeks)
-            .build();
-        this.setModel(uiModel);
+        await this.updateWeeks(async (): Promise<CalendarUiModel> => {
+            return await this.calendarUiModelBuilder
+                .dropLastWeek()
+                .build();
+        }, async (currentWeeks: WeekModel[]): Promise<WeekModel[]> => {
+            return this.calendarService.getPreviousWeek(currentWeeks);
+        });
     }
 
     public async loadNextWeek(): Promise<void> {
-        const currentWeeks = this.uiModel?.weeks;
-        if (!currentWeeks) {
-            return;
-        }
-
-        const loadingUiModel = await this.calendarUiModelBuilder
-            .dropFirstWeek()
-            .build();
-        this.setModel(loadingUiModel);
-
-        const weeks = await this.calendarService.getNextWeek(currentWeeks);
-        const uiModel = await this.calendarUiModelBuilder
-            .withValue(weeks)
-            .build();
-        this.setModel(uiModel);
+        await this.updateWeeks(async (): Promise<CalendarUiModel> => {
+            return await this.calendarUiModelBuilder
+                .dropFirstWeek()
+                .build();
+        }, async (currentWeeks: WeekModel[]): Promise<WeekModel[]> => {
+            return this.calendarService.getNextWeek(currentWeeks);
+        });
     }
 
     public async loadPreviousMonth(): Promise<void> {
-        const weeks: WeekUiModel[] | undefined = this.uiModel?.weeks.filter(week => week !== null);
-        if (!weeks || weeks.length < 5) {
+        const weeks = this.uiModel?.weeks.map(week => week.period);
+        if (!weeks) {
             return;
         }
 
-        await this.updateWeeks(async (): Promise<WeekUiModel[]> => {
-            return await this.calendarService.getPreviousMonth(weeks);
+        await this.updateMonth(async (): Promise<WeekModel[]> => {
+            return this.calendarService.getPreviousMonth(weeks);
         });
     }
 
     public async loadNextMonth(): Promise<void> {
-        const weeks: WeekUiModel[] | undefined = this.uiModel?.weeks.filter(week => week !== null);
-        if (!weeks || weeks.length < 5) {
+        const weeks = this.uiModel?.weeks.map(week => week.period);
+        if (!weeks) {
             return;
         }
 
-        await this.updateWeeks(async (): Promise<WeekUiModel[]> => {
-            return await this.calendarService.getNextMonth(weeks);
+        await this.updateMonth(async (): Promise<WeekModel[]> => {
+            return this.calendarService.getNextMonth(weeks);
         });
     }
 
     public openDailyNote(key: ModifierKey, period: PeriodUiModel): void {
         this.updatePeriodUiModel(period, async (): Promise<void> => {
-            await this.calendarService.openPeriodicNote(key, period, this.settings.dailyNotes);
+            await this.calendarService.openPeriodicNote(key, period.period, this.settings.dailyNotes);
         });
     }
 
     public openWeeklyNote(key: ModifierKey, period: PeriodUiModel): void {
         this.updatePeriodUiModel(period, async (): Promise<void> => {
-            await this.calendarService.openPeriodicNote(key, period, this.settings.weeklyNotes);
+            await this.calendarService.openPeriodicNote(key, period.period, this.settings.weeklyNotes);
         });
     }
 
     public openMonthlyNote(key: ModifierKey, period: PeriodUiModel): void {
         this.updatePeriodUiModel(period, async (): Promise<void> => {
-            await this.calendarService.openPeriodicNote(key, period, this.settings.monthlyNotes);
+            await this.calendarService.openPeriodicNote(key, period.period, this.settings.monthlyNotes);
         });
     }
 
     public openQuarterlyNote(key: ModifierKey, period: PeriodUiModel): void {
         this.updatePeriodUiModel(period, async (): Promise<void> => {
-            await this.calendarService.openPeriodicNote(key, period, this.settings.quarterlyNotes);
+            await this.calendarService.openPeriodicNote(key, period.period, this.settings.quarterlyNotes);
         });
     }
 
     public openYearlyNote(key: ModifierKey, period: PeriodUiModel): void {
         this.updatePeriodUiModel(period, async (): Promise<void> => {
-            await this.calendarService.openPeriodicNote(key, period, this.settings.yearlyNotes);
+            await this.calendarService.openPeriodicNote(key, period.period, this.settings.yearlyNotes);
         });
     }
 
-    private async updateWeeks(action: () => Promise<WeekUiModel[]>): Promise<void> {
-        const loadingUiModel = await this.calendarUiModelBuilder
-            .withoutValue()
-            .build();
-        this.updateUiModel(loadingUiModel);
+    private async updateMonth(action: (currentWeeks: WeekModel[]) => Promise<WeekModel[]>): Promise<void> {
+        await this.updateWeeks(async (): Promise<CalendarUiModel> => {
+            return await this.calendarUiModelBuilder
+                .withoutValue()
+                .build();
+        }, async (currentWeeks): Promise<WeekModel[]> => {
+            return await action(currentWeeks);
+        });
+    }
 
-        const weeks = await action();
+    private async updateWeeks(loadingAction: () => Promise<CalendarUiModel>, action: (currentWeeks: WeekModel[]) => Promise<WeekModel[]>): Promise<void> {
+        const currentWeeks = this.uiModel?.weeks.map(week => week.period);
+        if (!currentWeeks) {
+            return;
+        }
+
+        const loadingUiModel = await loadingAction();
+        this.setModel(loadingUiModel);
+
+        const weeks = await action(currentWeeks);
         const uiModel = await this.calendarUiModelBuilder
             .withValue(weeks)
             .build();
-        this.updateUiModel(uiModel);
+        this.setModel(uiModel);
     }
 
     private updatePeriodUiModel(period: PeriodUiModel, action: () => Promise<void>): void {
         const updatedUiModel = <CalendarUiModel>{...this.uiModel, selectedPeriod: period};
-        action().then(() => this.updateUiModel(updatedUiModel));
+        action().then(() => this.setModel(updatedUiModel));
     }
 }

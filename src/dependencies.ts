@@ -65,8 +65,8 @@ export function getDependencies(plugin: Plugin): Dependencies {
     const weekUiModelBuilder = new WeekUiModelBuilder(periodNoteExistsEnhancer, periodUiModelBuilder);
     const notesUiModelBuilder = new NotesUiModelBuilder(dateParserFactory);
 
-    const calendarUiModelBuilder = new CalendarUiModelBuilder(periodUiModelBuilder);
-    const calendarService = new DefaultCalendarService(dateManagerFactory, periodicNoteManager, weekUiModelBuilder);
+    const calendarUiModelBuilder = new CalendarUiModelBuilder(weekUiModelBuilder, periodUiModelBuilder);
+    const calendarService = new DefaultCalendarService(dateManagerFactory, periodicNoteManager);
     const calendarViewModel = new DefaultCalendarViewModel(calendarService, calendarUiModelBuilder);
     const notesViewModel = new DefaultNotesViewModel(noteManagerFactory, notesUiModelBuilder);
 
