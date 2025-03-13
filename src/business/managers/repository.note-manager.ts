@@ -25,7 +25,7 @@ export class RepositoryNoteManager implements NoteManager {
         const noteRepository = this.noteRepositoryFactory.getRepository();
 
         return await noteRepository.getNotes(note => {
-            return arePeriodsEqual(note.createdOn, period);
+            return arePeriodsEqual(note.createdOnProperty, period);
         });
     }
 

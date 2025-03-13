@@ -63,12 +63,13 @@ export class CalendarUiModelBuilder implements UiModelBuilder<WeekUiModel[], Cal
         const today = this.today ? await this.periodBuilder.withValue(this.today).build() : null;
         const selectedPeriod = this.selectedPeriod ? await this.periodBuilder.withValue(this.selectedPeriod).build() : null;
         const firstDayOfWeek = this.settings?.generalSettings.firstDayOfWeek;
+        const startWeekOnMonday = firstDayOfWeek === DayOfWeek.Monday;
 
         if (!this.model) {
             return <CalendarUiModel>{
                 lastUpdateRequest: new Date(),
                 today: today,
-                startWeekOnMonday: firstDayOfWeek === DayOfWeek.Monday,
+                startWeekOnMonday: startWeekOnMonday,
                 selectedPeriod: selectedPeriod,
                 weeks: [],
                 month: undefined,
@@ -84,9 +85,9 @@ export class CalendarUiModelBuilder implements UiModelBuilder<WeekUiModel[], Cal
         return <CalendarUiModel>{
             lastUpdateRequest: new Date(),
             today: today,
-            startWeekOnMonday: firstDayOfWeek === DayOfWeek.Monday,
+            startWeekOnMonday: startWeekOnMonday,
             selectedPeriod: selectedPeriod,
-            weeks: this.model ? this.model : [null, null, null, null, null],
+            weeks: this.model,
             month: month,
             quarter: quarter,
             year: year

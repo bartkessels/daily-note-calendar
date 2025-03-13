@@ -2,7 +2,6 @@ import {NoteUiModel} from 'src/presentation/models/note.ui-model';
 import {DEFAULT_PLUGIN_SETTINGS, PluginSettings} from 'src/domain/settings/plugin.settings';
 import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
 import {NotesUiModel} from 'src/presentation/models/notes.ui-model';
-import {NoteManager} from 'src/business/contracts/note.manager';
 import {UiModelBuilder} from 'src/presentation/contracts/ui-model-builder';
 import {Note} from 'src/domain/models/note.model';
 import {NoteManagerFactory} from 'src/business/contracts/note-manager-factory';

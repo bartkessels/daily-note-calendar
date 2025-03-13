@@ -12,7 +12,7 @@ export enum PeriodType {
     Year
 }
 
-export function arePeriodsEqual(periodA?: Period, periodB?: Period): boolean {
+export function arePeriodsEqual(periodA?: Period | null, periodB?: Period | null): boolean {
     if (!periodA || !periodB) {
         return false;
     }

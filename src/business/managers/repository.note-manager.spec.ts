@@ -74,13 +74,14 @@ describe('RepositoryNoteManager', () => {
             name: '2',
             type: PeriodType.Day
         };
-        const noteMatchingPeriod = <Note>{
+        const noteWithCreatedOnProperty = <Note>{
             createdOn: period,
+            createdOnProperty: period,
             name: 'Matching Note',
             path: 'path/to/matching-note.md',
             properties: new Map<string, string>()
         };
-        const noteNotMatchingPeriod = <Note>{
+        const noteWithoutCreatedOnProperty = <Note>{
             createdOn: <Period>{
                 date: new Date(2023, 9, 3),
                 name: '3',
@@ -91,17 +92,30 @@ describe('RepositoryNoteManager', () => {
             properties: new Map<string, string>()
         };
 
-        it('should filter notes based on the createdOn property', async () => {
+        it('should filter notes based on the createdOnProperty if it has a value', async () => {
             // Arrange
             when(noteRepository.getNotes).mockImplementation((filterFn) => {
-                return Promise.resolve([noteMatchingPeriod, noteNotMatchingPeriod].filter(filterFn));
+                return Promise.resolve([noteWithCreatedOnProperty, noteWithoutCreatedOnProperty].filter(filterFn));
             });
 
             // Act
             const result = await manager.getNotesForPeriod(period);
 
             // Assert
-            expect(result).toEqual([noteMatchingPeriod]);
+            expect(result).toEqual([noteWithCreatedOnProperty]);
+        });
+
+        it('should return no notes when the createdOnProperty is not set', async () => {
+            // Arrange
+            when(noteRepository.getNotes).mockImplementation((filterFn) => {
+                return Promise.resolve([noteWithoutCreatedOnProperty].filter(filterFn));
+            });
+
+            // Act
+            const result = await manager.getNotesForPeriod(period);
+
+            // Assert
+            expect(result).toEqual([]);
         });
 
         it('should return an empty list when the adapter repository returns an empty list', async () => {
