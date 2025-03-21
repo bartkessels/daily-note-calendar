@@ -5,9 +5,10 @@ import {WeekUiModel} from 'src/presentation/models/week.ui-model';
 import {PluginSettings} from 'src/domain/settings/plugin.settings';
 import {Period} from 'src/domain/models/period.model';
 import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
+import {GeneralSettings} from 'src/domain/settings/general.settings';
 
 export class CalendarUiModelBuilder implements UiModelBuilder<WeekModel[], CalendarUiModel> {
-    private settings: PluginSettings | null = null;
+    private settings: GeneralSettings | null = null;
     private selectedPeriod: Period | null = null;
     private today: Period | null = null;
     private model: WeekModel[] | null = null;
@@ -20,7 +21,7 @@ export class CalendarUiModelBuilder implements UiModelBuilder<WeekModel[], Calen
     }
 
     public withSettings(settings: PluginSettings): void {
-        this.settings = settings;
+        this.settings = settings.generalSettings;
         this.weekBuilder.withSettings(settings);
         this.periodBuilder.withSettings(settings);
     }
@@ -35,24 +36,18 @@ export class CalendarUiModelBuilder implements UiModelBuilder<WeekModel[], Calen
         return this;
     }
 
-    public withValue(value: WeekModel[]): UiModelBuilder<WeekModel[], CalendarUiModel> {
-        this.model = value;
-        return this;
-    }
-
     public dropFirstWeek(): UiModelBuilder<WeekModel[], CalendarUiModel> {
-        if (this.model) {
-            this.model = this.model?.slice(1);
-        }
-
+        this.model?.pop();
         return this;
     }
 
     public dropLastWeek(): UiModelBuilder<WeekModel[], CalendarUiModel> {
-        if (this.model) {
-            this.model = this.model?.slice(0, this.model.length - 1);
-        }
+        this.model?.shift();
+        return this;
+    }
 
+    public withValue(value: WeekModel[]): UiModelBuilder<WeekModel[], CalendarUiModel> {
+        this.model = value;
         return this;
     }
 
@@ -62,10 +57,13 @@ export class CalendarUiModelBuilder implements UiModelBuilder<WeekModel[], Calen
     }
 
     public async build(): Promise<CalendarUiModel> {
+        if (!this.settings) {
+            throw new Error('Settings not set');
+        }
+
         const today = this.today ? await this.periodBuilder.withValue(this.today).build() : null;
         const selectedPeriod = this.selectedPeriod ? await this.periodBuilder.withValue(this.selectedPeriod).build() : null;
-        const firstDayOfWeek = this.settings?.generalSettings.firstDayOfWeek;
-        const startWeekOnMonday = firstDayOfWeek === DayOfWeek.Monday;
+        const startWeekOnMonday = this.settings.firstDayOfWeek === DayOfWeek.Monday;
 
         if (!this.model) {
             return <CalendarUiModel>{

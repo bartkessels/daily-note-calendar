@@ -3,6 +3,7 @@ import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
 import {NotesUiModel} from 'src/presentation/models/notes.ui-model';
 import React from 'react';
 import {useNotesViewModel} from 'src/presentation/context/notes-view-model.context';
+import {NoteComponent} from 'src/presentation/components/note.component';
 
 export interface NotesComponentProperties {
     period?: PeriodUiModel;
@@ -25,13 +26,10 @@ export const NotesComponent = (props: NotesComponentProperties) => {
         <div className="dnc">
             <ul>
                 {uiModel?.notes.map((note: NoteUiModel) =>
-                    <li
-                        key={note.filePath}
-                        onClick={() => viewModel?.selectNote(note)}>
-                        <span className="note-title">{note.name}</span><br/>
-                        <span className="note-date">Created at {note.date}</span><br/>
-                        <span className="note-path">{note.filePath}</span>
-                    </li>
+                    <NoteComponent
+                        note={note}
+                        onClick={(note) => viewModel?.selectNote(note)}
+                        onDelete={(note) => viewModel?.onDelete(note)} />
                 )}
             </ul>
         </div>

@@ -36,6 +36,10 @@ export class DefaultCalendarService implements CalendarService {
         }
     }
 
+    public async deletePeriodicNote(period: Period, settings: PeriodNoteSettings): Promise<void> {
+        await this.periodicNoteManager.deleteNote(settings, period);
+    }
+
     public getCurrentWeek(): WeekModel[] {
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
         const currentWeek = this.dateManager.getCurrentWeek(firstDayOfWeek);

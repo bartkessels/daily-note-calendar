@@ -10,7 +10,9 @@ interface WeekComponentProperties {
     selectedPeriod?: PeriodUiModel;
     currentPeriod?: PeriodUiModel;
     onWeekClick: (key: ModifierKey, week: PeriodUiModel) => void;
+    onDeleteWeekClick: (week: PeriodUiModel) => void;
     onDayClick: (key: ModifierKey, day: PeriodUiModel) => void;
+    onDeleteDayClick: (day: PeriodUiModel) => void;
 }
 
 export const WeekComponent = (
@@ -20,7 +22,9 @@ export const WeekComponent = (
         selectedPeriod,
         currentPeriod,
         onWeekClick,
-        onDayClick
+        onDeleteWeekClick,
+        onDayClick,
+        onDeleteDayClick
     }: WeekComponentProperties
 ): ReactElement => {
     if (!model) {
@@ -35,9 +39,10 @@ export const WeekComponent = (
         <tr>
             <td height="35" className="weekNumber" key={model.weekNumber}>
                 <PeriodComponent
-                    isSelected={arePeriodUiModelsEqual(model, selectedPeriod)}
                     model={model}
+                    isSelected={arePeriodUiModelsEqual(model, selectedPeriod)}
                     onClick={onWeekClick}
+                    onDelete={onDeleteWeekClick}
                 />
             </td>
 
@@ -45,10 +50,11 @@ export const WeekComponent = (
                 <td height="35" key={index}
                     className={day.period.date.isSameMonth(currentMonth?.period) ? '' : 'other-month'}>
                     <PeriodComponent
+                        model={day}
                         isToday={arePeriodUiModelsEqual(day, currentPeriod)}
                         isSelected={arePeriodUiModelsEqual(day, selectedPeriod)}
-                        model={day}
                         onClick={onDayClick}
+                        onDelete={onDeleteDayClick}
                     />
                 </td>
             ))}

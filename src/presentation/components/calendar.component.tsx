@@ -26,52 +26,68 @@ export const CalendarComponent = (
         <div className="dnc">
             <div className="header">
                 <span className="title">
-                    <h1><PeriodComponent onClick={(key, period) => viewModel?.openMonthlyNote(key, period)} model={uiModel?.month}/></h1>
-                    <h1><PeriodComponent onClick={(key, period) => viewModel?.openYearlyNote(key, period)} model={uiModel?.year}/></h1>
+                    <h1>
+                        <PeriodComponent
+                            model={uiModel?.month}
+                            onClick={(key, period) => viewModel?.openMonthlyNote(key, period)}
+                            onDelete={(period) => viewModel?.deleteMonthlyNote(period)}
+                        />
+                    </h1>
+                    <h1>
+                        <PeriodComponent
+                            model={uiModel?.year}
+                            onClick={(key, period) => viewModel?.openYearlyNote(key, period)}
+                            onDelete={(period) => viewModel?.deleteYearlyNote(period)}
+                        />
+                    </h1>
                 </span>
 
                 <div className="buttons">
                     <ChevronsLeft
                         size={18}
                         strokeWidth={1}
-                        onClick={() => viewModel?.loadPreviousMonth()} />
+                        onClick={() => viewModel?.loadPreviousMonth()}/>
                     <ChevronLeft
                         size={18}
                         strokeWidth={1}
-                        onClick={() => viewModel?.loadPreviousWeek()} />
+                        onClick={() => viewModel?.loadPreviousWeek()}/>
                     <CalendarHeart
                         size={18}
                         strokeWidth={1}
-                        onClick={() => viewModel?.loadCurrentWeek()} />
+                        onClick={() => viewModel?.loadCurrentWeek()}/>
                     <ChevronRight
                         size={18}
                         strokeWidth={1}
-                        onClick={() => {viewModel?.loadNextWeek()}} />
+                        onClick={() => {
+                            viewModel?.loadNextWeek()
+                        }}/>
                     <ChevronsRight
                         size={18}
                         strokeWidth={1}
-                        onClick={() => viewModel?.loadNextMonth()} />
+                        onClick={() => viewModel?.loadNextMonth()}/>
                 </div>
             </div>
 
             <table>
                 <thead>
-                    <tr>
-                        <th className="quarter">
-                            <PeriodComponent
-                                isSelected={false}
-                                onClick={(key, period) => viewModel?.openQuarterlyNote(key, period)}
-                                model={uiModel?.quarter} />
-                        </th>
-                        {!uiModel?.startWeekOnMonday && <th>Sun</th>}
-                        <th>Mon</th>
-                        <th>Tue</th>
-                        <th>Wed</th>
-                        <th>Thu</th>
-                        <th>Fri</th>
-                        <th>Sat</th>
-                        {uiModel?.startWeekOnMonday && <th>Sun</th>}
-                    </tr>
+                <tr>
+                    <th className="quarter">
+                        <PeriodComponent
+                            model={uiModel?.quarter}
+                            isSelected={false}
+                            onClick={(key, period) => viewModel?.openQuarterlyNote(key, period)}
+                            onDelete={(period) => viewModel?.deleteQuarterlyNote(period)}
+                        />
+                    </th>
+                    {!uiModel?.startWeekOnMonday && <th>Sun</th>}
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                    <th>Sat</th>
+                    {uiModel?.startWeekOnMonday && <th>Sun</th>}
+                </tr>
                 </thead>
                 <tbody>
 
@@ -83,12 +99,15 @@ export const CalendarComponent = (
                         selectedPeriod={uiModel?.selectedPeriod}
                         currentPeriod={uiModel?.today}
                         onWeekClick={(key, week) => viewModel?.openWeeklyNote(key, week)}
-                        onDayClick={(key, day) => viewModel?.openDailyNote(key, day)} />
+                        onDeleteWeekClick={(week) => viewModel?.deleteWeeklyNote(week)}
+                        onDayClick={(key, day) => viewModel?.openDailyNote(key, day)}
+                        onDeleteDayClick={(day) => viewModel?.deleteDailyNote(day)}
+                    />
                 )}
                 </tbody>
             </table>
 
-            <NotesComponent period={uiModel?.selectedPeriod} />
+            <NotesComponent period={uiModel?.selectedPeriod}/>
         </div>
     );
 }

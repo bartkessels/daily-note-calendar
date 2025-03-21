@@ -1,25 +1,26 @@
 import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
 import {ModifierKey} from 'src/presentation/models/modifier-key';
 import React, {ReactElement} from 'react';
+import {getContextMenuAdapter} from 'src/presentation/context/context-menu-adapter.context';
+import {ContextMenuCallbacks} from 'src/presentation/contracts/context-menu-adapter';
 
 interface PeriodComponentProperties {
     isSelected?: boolean;
     isToday?: boolean;
     model?: PeriodUiModel | null;
     onClick: (key: ModifierKey, model: PeriodUiModel) => void;
+    onDelete: (model: PeriodUiModel) => void;
 }
 
-export const PeriodComponent = (
-    {
-        isSelected = false,
-        isToday = false,
-        model, onClick
-    }: PeriodComponentProperties
-): ReactElement => {
-    if (!model || !model.period) {
+export const PeriodComponent = (props: PeriodComponentProperties): ReactElement => {
+    if (!props.model || !props.model.period) {
         return <></>;
     }
 
+    const contextMenu = getContextMenuAdapter();
+    const contextMenuCallbacks: ContextMenuCallbacks = {
+        onDelete: () => props.onDelete(props.model!)
+    };
     const modifierKey = (event: React.MouseEvent): ModifierKey => {
         if (event.metaKey) {
             return ModifierKey.Meta;
@@ -33,20 +34,24 @@ export const PeriodComponent = (
     };
 
     const classes: string[] = [];
-    if (isSelected) {
+    if (props.isSelected) {
         classes.push('selected-day');
     }
-    if (model.hasPeriodNote) {
+    if (props.model.hasPeriodNote) {
         classes.push('has-note');
     }
 
     return (
         <div
-            id={isToday ? 'today' : ''}
+            id={props.isToday ? 'today' : ''}
             className={classes.join(' ')}
-            onClick={(e: React.MouseEvent) => {
-                onClick(modifierKey(e), model);
+            onContextMenu={(e: React.MouseEvent) => {
+                contextMenu?.show(e.clientX, e.clientY, contextMenuCallbacks);
                 e.preventDefault();
-            }}>{model.period.name}</div>
+            }}
+            onClick={(e: React.MouseEvent) => {
+                props.onClick(modifierKey(e), props.model!);
+                e.preventDefault();
+            }}>{props.model.period.name}</div>
     );
 };

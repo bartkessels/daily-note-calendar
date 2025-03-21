@@ -12,10 +12,15 @@ export interface CalendarViewModel {
     initialize(settings: PluginSettings, today: Period): void;
     selectPeriod(period: Period): Promise<void>;
     openDailyNote(key: ModifierKey, period: PeriodUiModel): Promise<void>;
+    deleteDailyNote(period: PeriodUiModel): Promise<void>;
     openWeeklyNote(key: ModifierKey, period: PeriodUiModel): Promise<void>;
+    deleteWeeklyNote(period: PeriodUiModel): Promise<void>;
     openMonthlyNote(key: ModifierKey, period: PeriodUiModel): Promise<void>;
+    deleteMonthlyNote(period: PeriodUiModel): Promise<void>;
     openQuarterlyNote(key: ModifierKey, period: PeriodUiModel): Promise<void>;
+    deleteQuarterlyNote(period: PeriodUiModel): Promise<void>;
     openYearlyNote(key: ModifierKey, period: PeriodUiModel): Promise<void>;
+    deleteYearlyNote(period: PeriodUiModel): Promise<void>;
     loadCurrentWeek(): void;
     loadPreviousWeek(): void;
     loadNextWeek(): void;
@@ -52,7 +57,7 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         this.calendarService.initialize(settings);
         this.calendarUiModelBuilder.withSettings(settings);
 
-        const weeks = await this.calendarService.getCurrentWeek();
+        const weeks = this.calendarService.getCurrentWeek();
         const uiModel = await this.calendarUiModelBuilder
             .withToday(today)
             .withValue(weeks)
@@ -122,36 +127,66 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
     }
 
     public async openDailyNote(key: ModifierKey, period: PeriodUiModel): Promise<void> {
-        await this.updatePeriodUiModel(period, async (): Promise<void> => {
+        await this.updatePeriodUiModelWithSelectedPeriod(period, async (): Promise<void> => {
             if (!isSelectModifierKey(key)) {
                 await this.calendarService.openPeriodicNote(key, period.period, this.settings.dailyNotes);
             }
         });
     }
 
+    public async deleteDailyNote(period: PeriodUiModel): Promise<void> {
+        // await this.updatePeriodUiModel(period, async (): Promise<void> => {
+            await this.calendarService.deletePeriodicNote(period.period, this.settings.dailyNotes);
+        // });
+    }
+
     public async openWeeklyNote(key: ModifierKey, period: PeriodUiModel): Promise<void> {
-        await this.updatePeriodUiModel(period, async (): Promise<void> => {
+        await this.updatePeriodUiModelWithSelectedPeriod(period, async (): Promise<void> => {
             if (!isSelectModifierKey(key)) {
                 await this.calendarService.openPeriodicNote(key, period.period, this.settings.weeklyNotes);
             }
         });
     }
 
+    public async deleteWeeklyNote(period: PeriodUiModel): Promise<void> {
+        await this.updatePeriodUiModelWithSelectedPeriod(period, async (): Promise<void> => {
+            await this.calendarService.deletePeriodicNote(period.period, this.settings.weeklyNotes);
+        });
+    }
+
     public async openMonthlyNote(key: ModifierKey, period: PeriodUiModel): Promise<void> {
-        await this.updatePeriodUiModel(period, async (): Promise<void> => {
+        await this.updatePeriodUiModelWithSelectedPeriod(period, async (): Promise<void> => {
             await this.calendarService.openPeriodicNote(key, period.period, this.settings.monthlyNotes);
         });
     }
 
+    public async deleteMonthlyNote(period: PeriodUiModel): Promise<void> {
+        await this.updatePeriodUiModelWithSelectedPeriod(period, async (): Promise<void> => {
+            await this.calendarService.deletePeriodicNote(period.period, this.settings.monthlyNotes);
+        });
+    }
+
     public async openQuarterlyNote(key: ModifierKey, period: PeriodUiModel): Promise<void> {
-        await this.updatePeriodUiModel(period, async (): Promise<void> => {
+        await this.updatePeriodUiModelWithSelectedPeriod(period, async (): Promise<void> => {
             await this.calendarService.openPeriodicNote(key, period.period, this.settings.quarterlyNotes);
         });
     }
 
+    public async deleteQuarterlyNote(period: PeriodUiModel): Promise<void> {
+        await this.updatePeriodUiModelWithSelectedPeriod(period, async (): Promise<void> => {
+            await this.calendarService.deletePeriodicNote(period.period, this.settings.quarterlyNotes);
+        });
+    }
+
     public async openYearlyNote(key: ModifierKey, period: PeriodUiModel): Promise<void> {
-        await this.updatePeriodUiModel(period, async (): Promise<void> => {
+        await this.updatePeriodUiModelWithSelectedPeriod(period, async (): Promise<void> => {
             await this.calendarService.openPeriodicNote(key, period.period, this.settings.yearlyNotes);
+        });
+    }
+
+    public async deleteYearlyNote(period: PeriodUiModel): Promise<void> {
+        await this.updatePeriodUiModelWithSelectedPeriod(period, async (): Promise<void> => {
+            await this.calendarService.deletePeriodicNote(period.period, this.settings.yearlyNotes);
         });
     }
 
@@ -181,11 +216,16 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         this.setModel(uiModel);
     }
 
-    private async updatePeriodUiModel(period: PeriodUiModel, action: () => Promise<void>): Promise<void> {
+    private async updatePeriodUiModelWithSelectedPeriod(period: PeriodUiModel, action: () => Promise<void>): Promise<void> {
         const uiModel = await this.calendarUiModelBuilder
             .withSelectedPeriod(period.period)
             .build();
 
+        action().then(() => this.setModel(uiModel));
+    }
+
+    private async updatePeriodUiModel(period: PeriodUiModel, action: () => Promise<void>): Promise<void> {
+        const uiModel = await this.calendarUiModelBuilder.build();
         action().then(() => this.setModel(uiModel));
     }
 }

@@ -6,6 +6,8 @@ import {CalendarViewModelContext} from 'src/presentation/context/calendar-view-m
 import {CalendarComponent} from 'src/presentation/components/calendar.component';
 import {NotesViewModelContext} from 'src/presentation/context/notes-view-model.context';
 import {NotesViewModel} from 'src/presentation/view-models/notes.view-model';
+import {ContextMenuAdapter} from 'src/presentation/contracts/context-menu-adapter';
+import {ContextMenuAdapterContext} from 'src/presentation/context/context-menu-adapter.context';
 
 export class CalendarView extends ItemView {
     public static VIEW_TYPE = 'daily-note-calendar';
@@ -14,6 +16,7 @@ export class CalendarView extends ItemView {
 
     constructor(
         leaf: WorkspaceLeaf,
+        private readonly contextMenuAdapter: ContextMenuAdapter,
         private readonly calendarViewModel: CalendarViewModel,
         private readonly notesViewModel: NotesViewModel
     ) {
@@ -35,11 +38,13 @@ export class CalendarView extends ItemView {
     protected override async onOpen(): Promise<void> {
         createRoot((this.containerEl.children[1])).render(
             <StrictMode>
-                <CalendarViewModelContext.Provider value={this.calendarViewModel}>
-                    <NotesViewModelContext.Provider value={this.notesViewModel}>
-                        <CalendarComponent/>
-                    </NotesViewModelContext.Provider>
-                </CalendarViewModelContext.Provider>
+                <ContextMenuAdapterContext.Provider value={this.contextMenuAdapter}>
+                    <CalendarViewModelContext.Provider value={this.calendarViewModel}>
+                        <NotesViewModelContext.Provider value={this.notesViewModel}>
+                            <CalendarComponent/>
+                        </NotesViewModelContext.Provider>
+                    </CalendarViewModelContext.Provider>
+                </ContextMenuAdapterContext.Provider>
             </StrictMode>
         );
     }

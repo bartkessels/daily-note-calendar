@@ -11,9 +11,10 @@ export interface NotesViewModel {
     initialize(settings: PluginSettings): void;
     selectNote(note: NoteUiModel): Promise<void>
     loadNotes(period: PeriodUiModel): Promise<void>;
+    onDelete(note: NoteUiModel): Promise<void>;
 }
 
-export class DefaultNotesViewModel {
+export class DefaultNotesViewModel implements NotesViewModel {
     private settings: PluginSettings = DEFAULT_PLUGIN_SETTINGS;
     private uiModel: NotesUiModel | null = null;
     private updateUiModel: (model: NotesUiModel) => void;
@@ -53,5 +54,9 @@ export class DefaultNotesViewModel {
             .build();
 
         this.setModel(uiModel);
+    }
+
+    public async onDelete(note: NoteUiModel): Promise<void> {
+        await this.noteManagerFactory.getManager().deleteNote(note.note);
     }
 }

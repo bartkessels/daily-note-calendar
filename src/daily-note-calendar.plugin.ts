@@ -19,7 +19,12 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     private readonly dependencies: Dependencies = getDependencies(this);
 
     override async onload(): Promise<void> {
-        const calendarView = (leaf: WorkspaceLeaf)=>  new CalendarView(leaf, this.dependencies.calendarViewModel, this.dependencies.notesViewModel);
+        const calendarView = (leaf: WorkspaceLeaf)=>  new CalendarView(
+            leaf,
+            this.dependencies.contextMenuAdapter,
+            this.dependencies.calendarViewModel,
+            this.dependencies.notesViewModel
+        );
 
         this.registerView(CalendarView.VIEW_TYPE, (leaf) => calendarView(leaf));
         this.registerSettings();

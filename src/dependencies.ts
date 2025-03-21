@@ -28,6 +28,8 @@ import {PeriodUiModelBuilder} from 'src/presentation/builders/period.ui-model-bu
 import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
 import {DefaultNotesViewModel, NotesViewModel} from 'src/presentation/view-models/notes.view-model';
 import {NotesUiModelBuilder} from 'src/presentation/builders/notes.ui-model-builder';
+import {ContextMenuAdapter} from 'src/presentation/contracts/context-menu-adapter';
+import {ObsidianContextMenuAdapter} from 'src/presentation/adapters/obsidian.context-menu-adapter';
 
 export interface Dependencies {
     calendarViewModel: CalendarViewModel;
@@ -36,6 +38,7 @@ export interface Dependencies {
     dateParserFactory: DateParserFactory;
     settingsRepositoryFactory: SettingsRepositoryFactory;
     commandHandlerFactory: CommandHandlerFactory;
+    contextMenuAdapter: ContextMenuAdapter;
 }
 
 export function getDependencies(plugin: Plugin): Dependencies {
@@ -71,6 +74,7 @@ export function getDependencies(plugin: Plugin): Dependencies {
     const notesViewModel = new DefaultNotesViewModel(noteManagerFactory, notesUiModelBuilder);
 
     const commandHandlerFactory = new DefaultCommandHandlerFactory(noteManagerFactory, settingsRepositoryFactory, dateManagerFactory, calendarViewModel);
+    const contextMenuAdapter = new ObsidianContextMenuAdapter();
 
     return {
         calendarViewModel: calendarViewModel,
@@ -78,6 +82,7 @@ export function getDependencies(plugin: Plugin): Dependencies {
         dateManagerFactory: dateManagerFactory,
         dateParserFactory: dateParserFactory,
         settingsRepositoryFactory: settingsRepositoryFactory,
-        commandHandlerFactory: commandHandlerFactory
+        commandHandlerFactory: commandHandlerFactory,
+        contextMenuAdapter: contextMenuAdapter
     };
 }
