@@ -29,7 +29,9 @@ describe('PeriodComponent', () => {
             // Act
             render(
                 <PeriodComponent
-                    onClick={() => {}} />
+                    onClick={() => {}}
+                    onDelete={() => {}}
+                />
             );
 
             // Assert
@@ -187,6 +189,7 @@ function setupContent(
         <PeriodComponent
             model={model}
             onClick={onClick}
+            onDelete={() => {}}
             isSelected={isSelected}
             isToday={isToday}/>
     );
