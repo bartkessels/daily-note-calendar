@@ -1,13 +1,13 @@
-import {weekUiModel, WeekUiModel} from 'src/presentation/models/week.ui-model';
+import {WeekUiModel} from 'src/presentation/models/week.ui-model';
 import {WeekModel} from 'src/domain/models/week.model';
 import {PeriodNoteExistsPeriodEnhancer} from 'src/presentation/enhancers/period-note-exists.period-enhancer';
 import {PluginSettings} from 'src/domain/settings/plugin.settings';
 import {UiModelBuilder} from 'src/presentation/contracts/ui-model-builder';
 import {PeriodUiModelBuilder} from 'src/presentation/builders/period.ui-model-builder';
-import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
+import {periodUiModel, PeriodUiModel} from 'src/presentation/models/period.ui-model';
 
-export class WeekUiModelBuilder implements UiModelBuilder<WeekModel, WeekUiModel> {
-    private model: WeekModel | null = null;
+export class WeekUiModelBuilder implements UiModelBuilder<WeekModel[], WeekUiModel[]> {
+    private model: WeekModel[] = [];
 
     constructor(
         private readonly weeklyNoteExistsPeriodEnhancer: PeriodNoteExistsPeriodEnhancer,
@@ -20,21 +20,30 @@ export class WeekUiModelBuilder implements UiModelBuilder<WeekModel, WeekUiModel
         this.weeklyNoteExistsPeriodEnhancer.withSettings(settings);
     }
 
-    public withValue(value: WeekModel): UiModelBuilder<WeekModel, WeekUiModel> {
+    public withValue(value: WeekModel[]): UiModelBuilder<WeekModel[], WeekUiModel[]> {
         this.model = value;
         return this;
     }
 
-    public async build(): Promise<WeekUiModel> {
-        if (!this.model) {
-            throw new Error('Model not set');
-        }
+    public async build(): Promise<WeekUiModel[]> {
+        return await Promise.all(this.model.map(async (w) => await this.buildUiModel(w)));
+    }
 
-        const defaultWeekUiModel = weekUiModel(this.model);
-        let enhancedWeek = await this.weeklyNoteExistsPeriodEnhancer.enhance<WeekUiModel>(defaultWeekUiModel);
+    private async buildUiModel(week: WeekModel): Promise<WeekUiModel> {
+        const uiModel = <WeekUiModel>{
+            period: week,
+            hasPeriodNote: false,
+            weekNumber: week.weekNumber,
+            year: periodUiModel(week.year),
+            quarter: periodUiModel(week.quarter),
+            month: periodUiModel(week.month),
+            days: week.days.map(periodUiModel),
+        };
+
+        const enhancedWeek = await this.weeklyNoteExistsPeriodEnhancer.enhance<WeekUiModel>(uiModel);
         const days = await this.buildDays(enhancedWeek.days);
 
-        return <WeekUiModel> {...enhancedWeek, days: days};
+        return <WeekUiModel> {...uiModel, days: days };
     }
 
     private async buildDays(days: PeriodUiModel[]): Promise<PeriodUiModel[]> {

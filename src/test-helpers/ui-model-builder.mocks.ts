@@ -29,4 +29,4 @@ export const mockWeekUiModelBuilder = {
     withSettings: jest.fn(),
     withValue: jest.fn(),
     build: jest.fn()
-} as jest.Mocked<UiModelBuilder<WeekModel, WeekUiModel>>;
+} as jest.Mocked<UiModelBuilder<WeekModel[], WeekUiModel[]>>;

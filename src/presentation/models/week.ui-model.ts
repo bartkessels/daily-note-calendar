@@ -1,4 +1,4 @@
-import {periodUiModel, PeriodUiModel} from 'src/presentation/models/period.ui-model';
+import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
 import {WeekModel} from 'src/domain/models/week.model';
 
 export interface WeekUiModel extends PeriodUiModel {
@@ -8,16 +8,4 @@ export interface WeekUiModel extends PeriodUiModel {
     quarter: PeriodUiModel;
     month: PeriodUiModel;
     days: PeriodUiModel[];
-}
-
-export function weekUiModel(week: WeekModel): WeekUiModel {
-    return {
-        period: week,
-        hasPeriodNote: false,
-        weekNumber: week.weekNumber,
-        year: periodUiModel(week.year),
-        quarter: periodUiModel(week.quarter),
-        month: periodUiModel(week.month),
-        days: week.days.map(periodUiModel),
-    };
 }

@@ -13,6 +13,7 @@ export class NotesUiModelBuilder implements UiModelBuilder<Note[], NotesUiModel>
     constructor(
         private readonly dateParserFactory: DateParserFactory
     ) {
+
     }
 
     public withSettings(settings: PluginSettings): void {

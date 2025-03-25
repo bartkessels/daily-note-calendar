@@ -27,9 +27,10 @@ export const NotesComponent = (props: NotesComponentProperties) => {
             <ul>
                 {uiModel?.notes.map((note: NoteUiModel) =>
                     <NoteComponent
+                        key={note.filePath}
                         note={note}
                         onClick={(note) => viewModel?.selectNote(note)}
-                        onDelete={(note) => viewModel?.onDelete(note)} />
+                        onDelete={(note) => viewModel?.deleteNote(note)} />
                 )}
             </ul>
         </div>

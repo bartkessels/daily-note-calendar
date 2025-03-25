@@ -11,10 +11,10 @@ export class CalendarUiModelBuilder implements UiModelBuilder<WeekModel[], Calen
     private settings: GeneralSettings | null = null;
     private selectedPeriod: Period | null = null;
     private today: Period | null = null;
-    private model: WeekModel[] | null = null;
+    private value: WeekModel[] = [];
 
     constructor(
-        private readonly weekBuilder: UiModelBuilder<WeekModel, WeekUiModel>,
+        private readonly weekBuilder: UiModelBuilder<WeekModel[], WeekUiModel[]>,
         private readonly periodBuilder: UiModelBuilder<Period, PeriodUiModel>
     ) {
 
@@ -36,49 +36,22 @@ export class CalendarUiModelBuilder implements UiModelBuilder<WeekModel[], Calen
         return this;
     }
 
-    public dropFirstWeek(): UiModelBuilder<WeekModel[], CalendarUiModel> {
-        this.model?.pop();
-        return this;
-    }
-
-    public dropLastWeek(): UiModelBuilder<WeekModel[], CalendarUiModel> {
-        this.model?.shift();
-        return this;
-    }
-
     public withValue(value: WeekModel[]): UiModelBuilder<WeekModel[], CalendarUiModel> {
-        this.model = value;
-        return this;
-    }
-
-    public withoutValue(): UiModelBuilder<WeekModel[], CalendarUiModel> {
-        this.model = null;
+        this.value = value;
         return this;
     }
 
     public async build(): Promise<CalendarUiModel> {
         if (!this.settings) {
             throw new Error('Settings not set');
+        } else if (this.value.length <= 0) {
+            throw new Error('value is required');
         }
 
         const today = this.today ? await this.periodBuilder.withValue(this.today).build() : null;
         const selectedPeriod = this.selectedPeriod ? await this.periodBuilder.withValue(this.selectedPeriod).build() : null;
         const startWeekOnMonday = this.settings.firstDayOfWeek === DayOfWeek.Monday;
-
-        if (!this.model) {
-            return <CalendarUiModel>{
-                lastUpdateRequest: new Date(),
-                today: today,
-                startWeekOnMonday: startWeekOnMonday,
-                selectedPeriod: selectedPeriod,
-                weeks: [],
-                month: undefined,
-                quarter: undefined,
-                year: undefined
-            };
-        }
-
-        const weekUiModels = await Promise.all(this.model.map(async week => await this.weekBuilder.withValue(week).build()));
+        const weekUiModels = await this.weekBuilder.withValue(this.value).build();
         const month = this.getMiddleWeek(weekUiModels).month;
         const quarter = this.getMiddleWeek(weekUiModels).quarter;
         const year = this.getMiddleWeek(weekUiModels).year;

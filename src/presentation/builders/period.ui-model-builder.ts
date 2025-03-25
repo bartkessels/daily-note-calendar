@@ -1,6 +1,6 @@
 import {UiModelBuilder} from 'src/presentation/contracts/ui-model-builder';
 import {Period} from 'src/domain/models/period.model';
-import {periodUiModel, PeriodUiModel} from 'src/presentation/models/period.ui-model';
+import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
 import {PluginSettings} from 'src/domain/settings/plugin.settings';
 import {PeriodNoteExistsPeriodEnhancer} from 'src/presentation/enhancers/period-note-exists.period-enhancer';
 
@@ -27,7 +27,15 @@ export class PeriodUiModelBuilder implements UiModelBuilder<Period, PeriodUiMode
             throw new Error('Value is required');
         }
 
-        const defaultPeriodUiModel = periodUiModel(this.value);
-        return await this.periodNoteExistsPeriodEnhancer.enhance<PeriodUiModel>(defaultPeriodUiModel);
+        return await this.buildPeriodUiModel(this.value)
+    }
+
+    private async buildPeriodUiModel(period: Period): Promise<PeriodUiModel> {
+        const uiModel = <PeriodUiModel> {
+            period: period,
+            hasPeriodNote: false,
+        };
+
+        return await this.periodNoteExistsPeriodEnhancer.enhance<PeriodUiModel>(uiModel);
     }
 }

@@ -5,6 +5,7 @@ import {DayOfWeek, WeekModel} from 'src/domain/models/week.model';
 import {Period, PeriodType} from 'src/domain/models/period.model';
 import {when} from 'jest-when';
 import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
+import {WeekUiModel} from 'src/presentation/models/week.ui-model';
 
 describe('CalendarUiModelBuilder', () => {
     const weekBuilder = mockWeekUiModelBuilder;
@@ -17,6 +18,7 @@ describe('CalendarUiModelBuilder', () => {
 
         when(weekBuilder.withValue).mockReturnValue(weekBuilder);
         when(periodBuilder.withValue).mockReturnValue(periodBuilder);
+        when(weekBuilder.build).mockResolvedValue([]);
     });
 
     afterEach(() => {
@@ -51,7 +53,10 @@ describe('CalendarUiModelBuilder', () => {
         it('should use the startWeekOnMonday value from the settings if it should start on a monday', async () => {
             // Arrange
             const startWeekOnMonday = true;
-            const settings = <PluginSettings>{ ...DEFAULT_PLUGIN_SETTINGS, generalSettings: { ...DEFAULT_PLUGIN_SETTINGS.generalSettings, firstDayOfWeek: DayOfWeek.Monday } };
+            const settings = <PluginSettings>{
+                ...DEFAULT_PLUGIN_SETTINGS,
+                generalSettings: {...DEFAULT_PLUGIN_SETTINGS.generalSettings, firstDayOfWeek: DayOfWeek.Monday}
+            };
 
             // Act
             builder.withSettings(settings);
@@ -64,7 +69,10 @@ describe('CalendarUiModelBuilder', () => {
         it('should use the startWeekOnMonday value from the settings if it should start on a sunday', async () => {
             // Arrange
             const startWeekOnMonday = false;
-            const settings = <PluginSettings>{ ...DEFAULT_PLUGIN_SETTINGS, generalSettings: { ...DEFAULT_PLUGIN_SETTINGS.generalSettings, firstDayOfWeek: DayOfWeek.Sunday } };
+            const settings = <PluginSettings>{
+                ...DEFAULT_PLUGIN_SETTINGS,
+                generalSettings: {...DEFAULT_PLUGIN_SETTINGS.generalSettings, firstDayOfWeek: DayOfWeek.Sunday}
+            };
 
             // Act
             builder.withSettings(settings);
@@ -84,12 +92,12 @@ describe('CalendarUiModelBuilder', () => {
     });
 
     describe('withSelectedPeriod', () => {
-        const selectedPeriod = <Period> {
+        const selectedPeriod = <Period>{
             date: new Date(2023, 9, 2),
             name: '2',
             type: PeriodType.Day
         };
-        const selectedPeriodUiModel = <PeriodUiModel> {
+        const selectedPeriodUiModel = <PeriodUiModel>{
             period: selectedPeriod,
             hasPeriodNote: false
         };
@@ -123,12 +131,12 @@ describe('CalendarUiModelBuilder', () => {
     });
 
     describe('withToday', () => {
-        const today = <Period> {
+        const today = <Period>{
             date: new Date(2023, 9, 2),
             name: '2',
             type: PeriodType.Day
         };
-        const todayUiModel = <PeriodUiModel> {
+        const todayUiModel = <PeriodUiModel>{
             period: today,
             hasPeriodNote: false
         };
@@ -161,81 +169,87 @@ describe('CalendarUiModelBuilder', () => {
         });
     });
 
-    describe('dropFirstWeek', () => {
-        const year = <Period> {
-            date: new Date(2023, 0),
+    describe('withValue', () => {
+        const year = <Period>{
+            date: new Date(2023),
             name: '2023',
             type: PeriodType.Year
         };
-        const quarter = <Period> {
+        const quarter = <Period>{
             date: new Date(2023, 6),
             name: 'Q3',
             type: PeriodType.Quarter
         };
-        const month = <Period> {
+        const month = <Period>{
             date: new Date(2023, 9),
             name: 'October',
             type: PeriodType.Month
         };
-
-        const week1 = <WeekModel> {
-            date: new Date(2023, 9, 2),
-            name: '40',
-            type: PeriodType.Week,
-            weekNumber: 40,
-            year: year,
-            quarter: quarter,
-            month: month,
+        const weeks: WeekModel[] = [
+            <WeekModel>{
+                weekNumber: 40,
+                year: year,
+                month: month,
+                quarter: quarter,
+                date: new Date(2023, 9, 2),
+                name: '40',
+                type: PeriodType.Week,
+                days: []
+            },
+            <WeekModel>{
+                weekNumber: 41,
+                year: year,
+                month: month,
+                quarter: quarter,
+                date: new Date(2023, 9, 9),
+                name: '41',
+                type: PeriodType.Week,
+                days: []
+            }
+        ];
+        const weekUiModels = weeks.map(week => <WeekUiModel>{
+            period: week,
+            hasPeriodNote: false,
+            weekNumber: week.weekNumber,
+            year: <PeriodUiModel>{
+                period: week.year,
+                hasPeriodNote: false
+            },
+            quarter: <PeriodUiModel>{
+                period: week.quarter,
+                hasPeriodNote: false
+            },
+            month: <PeriodUiModel> {
+                period: week.month,
+                hasPeriodNote: false
+            },
             days: []
-        };
-        const week2 = <WeekModel> {
-            date: new Date(2023, 9, 9),
-            name: '41',
-            type: PeriodType.Week,
-            weekNumber: 41,
-            year: year,
-            quarter: quarter,
-            month: month,
-            days: []
-        };
-        const week3 = <WeekModel> {
-            date: new Date(2023, 9, 16),
-            name: '42',
-            type: PeriodType.Week,
-            weekNumber: 42,
-            year: year,
-            quarter: quarter,
-            month: month,
-            days: []
-        };
+        });
 
         beforeEach(() => {
             builder.withSettings(DEFAULT_PLUGIN_SETTINGS);
         });
 
-        it('should remove the first week from the model', async () => {
-            // Arrange
-            builder.withValue([week1, week2, week3]);
-
+        it('should have no weeks when the value has not been set', async () => {
             // Act
-            const result = await builder.dropFirstWeek().build();
+            const result = await builder.build();
 
             // Assert
-            expect(result.weeks).toHaveLength(2);
-            expect(result.weeks[0].weekNumber).toBe(41);
-            expect(result.weeks[1].weekNumber).toBe(42);
+            expect(weekBuilder).toHaveBeenCalledWith([]);
+            expect(result.weeks).toEqual([]);
         });
-    });
 
-    describe('dropLastWeek', () => {
+        it('should set the weeks to the given value', async () => {
+            // Arrange
+            when(weekBuilder.build).mockResolvedValue(weekUiModels);
 
-    });
+            // Act
+            const result = await builder.withValue(weeks).build();
 
-    describe('withValue', () => {
-
-    });
-
-    describe('withoutValue', () => {
-
+            // Assert
+            expect(weekBuilder.withValue).toHaveBeenCalledWith(weekUiModels);
+            expect(weekBuilder.build).toHaveBeenCalled();
+            expect(result.weeks).toEqual(weekUiModels);
+        });
     });
 });
