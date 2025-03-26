@@ -44,13 +44,25 @@ export class CalendarUiModelBuilder implements UiModelBuilder<WeekModel[], Calen
     public async build(): Promise<CalendarUiModel> {
         if (!this.settings) {
             throw new Error('Settings not set');
-        } else if (this.value.length <= 0) {
-            throw new Error('value is required');
         }
 
         const today = this.today ? await this.periodBuilder.withValue(this.today).build() : null;
         const selectedPeriod = this.selectedPeriod ? await this.periodBuilder.withValue(this.selectedPeriod).build() : null;
         const startWeekOnMonday = this.settings.firstDayOfWeek === DayOfWeek.Monday;
+
+        if (this.value.length <= 0) {
+            return <CalendarUiModel>{
+                lastUpdateRequest: new Date(),
+                today: today,
+                startWeekOnMonday: startWeekOnMonday,
+                selectedPeriod: selectedPeriod,
+                weeks: [],
+                month: undefined,
+                quarter: undefined,
+                year: undefined
+            };
+        }
+
         const weekUiModels = await this.weekBuilder.withValue(this.value).build();
         const month = this.getMiddleWeek(weekUiModels).month;
         const quarter = this.getMiddleWeek(weekUiModels).quarter;

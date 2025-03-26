@@ -235,8 +235,11 @@ describe('CalendarUiModelBuilder', () => {
             const result = await builder.build();
 
             // Assert
-            expect(weekBuilder).toHaveBeenCalledWith([]);
+            expect(weekBuilder.withValue).not.toHaveBeenCalled();
             expect(result.weeks).toEqual([]);
+            expect(result.month).toBeUndefined();
+            expect(result.year).toBeUndefined();
+            expect(result.year).toBeUndefined();
         });
 
         it('should set the weeks to the given value', async () => {
@@ -247,9 +250,12 @@ describe('CalendarUiModelBuilder', () => {
             const result = await builder.withValue(weeks).build();
 
             // Assert
-            expect(weekBuilder.withValue).toHaveBeenCalledWith(weekUiModels);
+            expect(weekBuilder.withValue).toHaveBeenCalledWith(weeks);
             expect(weekBuilder.build).toHaveBeenCalled();
             expect(result.weeks).toEqual(weekUiModels);
+            expect(result.month).toEqual(weekUiModels[0].month);
+            expect(result.quarter).toEqual(weekUiModels[0].quarter);
+            expect(result.year).toEqual(weekUiModels[0].year);
         });
     });
 });
