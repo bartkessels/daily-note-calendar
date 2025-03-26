@@ -31,8 +31,6 @@ export class ObsidianNoteAdapter implements NoteAdapter {
         const createdOn = this.dateRepositoryFactory.getRepository().getDayFromDate(new Date(file.stat.ctime));
         const frontMatter = this.readFrontMatter(file);
 
-        console.log(frontMatter);
-
         return <Note>{
             path: file.path,
             name: file.name.removeMarkdownExtension(),

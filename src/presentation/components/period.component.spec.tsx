@@ -181,7 +181,7 @@ describe('PeriodComponent', () => {
 
 function setupContent(
     model: PeriodUiModel,
-    onClick: (key: ModifierKey, model: PeriodUiModel) => void = (): void => { },
+    onClick: (key: ModifierKey, model: Period) => void = (): void => { },
     isSelected: boolean = false,
     isToday: boolean = false
 ): ReactElement {
