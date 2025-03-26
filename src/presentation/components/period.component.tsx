@@ -3,12 +3,13 @@ import {ModifierKey} from 'src/presentation/models/modifier-key';
 import React, {ReactElement} from 'react';
 import {getContextMenuAdapter} from 'src/presentation/context/context-menu-adapter.context';
 import {ContextMenuCallbacks} from 'src/presentation/contracts/context-menu-adapter';
+import {Period} from 'src/domain/models/period.model';
 
 interface PeriodComponentProperties {
     isSelected?: boolean;
     isToday?: boolean;
     model?: PeriodUiModel | null;
-    onClick: (key: ModifierKey, model: PeriodUiModel) => void;
+    onClick: (key: ModifierKey, model: Period) => void;
     onDelete: (model: PeriodUiModel) => void;
 }
 
@@ -50,7 +51,7 @@ export const PeriodComponent = (props: PeriodComponentProperties): ReactElement 
                 e.preventDefault();
             }}
             onClick={(e: React.MouseEvent) => {
-                props.onClick(modifierKey(e), props.model!);
+                props.onClick(modifierKey(e), props.model!.period);
                 e.preventDefault();
             }}>{props.model.period.name}</div>
     );

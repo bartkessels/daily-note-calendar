@@ -8,7 +8,6 @@ import {when} from 'jest-when';
 import {DEFAULT_GENERAL_SETTINGS} from 'src/domain/settings/general.settings';
 import {WeekModel} from 'src/domain/models/week.model';
 import {ModifierKey} from 'src/presentation/models/modifier-key';
-import {weekUiModel} from 'src/presentation/models/week.ui-model';
 
 describe('OpenWeeklyNoteCommandHandler', () => {
     let commandHandler: OpenWeeklyNoteCommandHandler;
@@ -82,7 +81,7 @@ describe('OpenWeeklyNoteCommandHandler', () => {
             await commandHandler.execute();
 
             // Assert
-            expect(viewModel.openWeeklyNote).toHaveBeenCalledWith(ModifierKey.None, weekUiModel(week));
+            expect(viewModel.openWeeklyNote).toHaveBeenCalledWith(ModifierKey.None, week);
         });
     });
 });

@@ -6,6 +6,8 @@ import {Period, PeriodType} from 'src/domain/models/period.model';
 import {mockDateParser} from 'src/test-helpers/parser.mocks';
 import {mockDisplayNoteSettingsRepository} from 'src/test-helpers/repository.mocks';
 import {mockDateParserFactory, mockSettingsRepositoryFactory} from 'src/test-helpers/factory.mocks';
+import {DEFAULT_DISPLAY_NOTES_SETTINGS, DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
+import {when} from 'jest-when';
 
 describe('AdapterNoteRepository', () => {
     let repository: AdapterNoteRepository;
@@ -46,6 +48,37 @@ describe('AdapterNoteRepository', () => {
 
             // Assert
             expect(result).toBeNull();
+        });
+
+        it('should set the createdOnProperty when the properties contain a valid date property', async () => {
+            // Arrange
+            const settings = <DisplayNotesSettings> { ...DEFAULT_DISPLAY_NOTES_SETTINGS, createdOnDatePropertyName: 'created_on', createdOnPropertyFormat: 'dd-MM-yyyy' };
+
+            const properties = new Map<string, string>();
+            properties.set(settings.createdOnPropertyFormat, '02-10-2023');
+
+            const note = <Note> {
+                createdOn: <Period> {
+                    date: new Date(3, 9, 2023),
+                    name: '03',
+                    type: PeriodType.Day
+                },
+                name: 'My note with a property',
+                path: 'path/to/note.md',
+                properties: properties
+            };
+
+            when(noteAdapter.getActiveNote).mockResolvedValue(note);
+
+            // Act
+            const result = await repository.getActiveNote();
+
+            // Assert
+            expect(result).not.toBeNull();
+            expect(result?.createdOnProperty).not.toBeNull();
+            expect(result?.createdOnProperty?.date).toEqual(new Date(2, 9, 2023));
+            expect(result?.createdOnProperty?.name).toEqual('02');
+            expect(result?.createdOnProperty?.type).toEqual(PeriodType.Day);
         });
     });
 

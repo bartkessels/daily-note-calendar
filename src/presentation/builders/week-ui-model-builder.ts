@@ -4,7 +4,8 @@ import {PeriodNoteExistsPeriodEnhancer} from 'src/presentation/enhancers/period-
 import {PluginSettings} from 'src/domain/settings/plugin.settings';
 import {UiModelBuilder} from 'src/presentation/contracts/ui-model-builder';
 import {PeriodUiModelBuilder} from 'src/presentation/builders/period.ui-model-builder';
-import {periodUiModel, PeriodUiModel} from 'src/presentation/models/period.ui-model';
+import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
+import {Period} from 'src/domain/models/period.model';
 
 export class WeekUiModelBuilder implements UiModelBuilder<WeekModel[], WeekUiModel[]> {
     private model: WeekModel[] = [];
@@ -30,27 +31,29 @@ export class WeekUiModelBuilder implements UiModelBuilder<WeekModel[], WeekUiMod
     }
 
     private async buildUiModel(week: WeekModel): Promise<WeekUiModel> {
+        const year = await this.periodUiModelBuilder.withValue(week.year).build();
+        const quarter = await this.periodUiModelBuilder.withValue(week.quarter).build();
+        const month = await this.periodUiModelBuilder.withValue(week.month).build();
+        const days = await this.buildDays(week.days);
+
         const uiModel = <WeekUiModel>{
             period: week,
             hasPeriodNote: false,
             weekNumber: week.weekNumber,
-            year: periodUiModel(week.year),
-            quarter: periodUiModel(week.quarter),
-            month: periodUiModel(week.month),
-            days: week.days.map(periodUiModel),
+            year: year,
+            quarter: quarter,
+            month: month,
+            days: days,
         };
 
-        const enhancedWeek = await this.weeklyNoteExistsPeriodEnhancer.enhance<WeekUiModel>(uiModel);
-        const days = await this.buildDays(enhancedWeek.days);
-
-        return <WeekUiModel> {...uiModel, days: days };
+        return await this.weeklyNoteExistsPeriodEnhancer.enhance<WeekUiModel>(uiModel);
     }
 
-    private async buildDays(days: PeriodUiModel[]): Promise<PeriodUiModel[]> {
+    private async buildDays(days: Period[]): Promise<PeriodUiModel[]> {
         const uiModels: PeriodUiModel[] = [];
 
         for (const day of days) {
-            const uiModel = await this.periodUiModelBuilder.withValue(day.period).build();
+            const uiModel = await this.periodUiModelBuilder.withValue(day).build();
             uiModels.push(uiModel);
         }
 

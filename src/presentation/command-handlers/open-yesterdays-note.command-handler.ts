@@ -2,7 +2,6 @@ import {CommandHandler} from 'src/presentation/contracts/command-handler';
 import {DateManagerFactory} from 'src/business/contracts/date-manager-factory';
 import {CalendarViewModel} from 'src/presentation/view-models/calendar.view-model';
 import {ModifierKey} from 'src/presentation/models/modifier-key';
-import {periodUiModel} from 'src/presentation/models/period.ui-model';
 
 export class OpenYesterdaysNoteCommandHandler implements CommandHandler {
     constructor(
@@ -14,7 +13,6 @@ export class OpenYesterdaysNoteCommandHandler implements CommandHandler {
 
     public async execute(): Promise<void> {
         const yesterday = this.dateManagerFactory.getManager().getYesterday();
-        const uiModel = periodUiModel(yesterday);
-        await this.viewModel.openDailyNote(ModifierKey.None, uiModel);
+        await this.viewModel.openDailyNote(ModifierKey.None, yesterday);
     }
 }

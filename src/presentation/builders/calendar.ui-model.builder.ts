@@ -63,17 +63,17 @@ export class CalendarUiModelBuilder implements UiModelBuilder<WeekModel[], Calen
             };
         }
 
-        const weekUiModels = await this.weekBuilder.withValue(this.value).build();
-        const month = this.getMiddleWeek(weekUiModels).month;
-        const quarter = this.getMiddleWeek(weekUiModels).quarter;
-        const year = this.getMiddleWeek(weekUiModels).year;
+        const weeks = await this.weekBuilder.withValue(this.value).build();
+        const month = this.getMiddleWeek(weeks).month;
+        const quarter = this.getMiddleWeek(weeks).quarter;
+        const year = this.getMiddleWeek(weeks).year;
 
         return <CalendarUiModel>{
             lastUpdateRequest: new Date(),
             today: today,
             startWeekOnMonday: startWeekOnMonday,
             selectedPeriod: selectedPeriod,
-            weeks: weekUiModels,
+            weeks: weeks,
             month: month,
             quarter: quarter,
             year: year

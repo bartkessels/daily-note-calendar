@@ -29,8 +29,8 @@ export class AdapterNoteRepository implements NoteRepository {
 
     public async getNotes(filter: (note: Note) => boolean): Promise<Note[]> {
         const notes = await this.adapter.getNotes();
-        const filteredNotes = notes.filter(filter);
-        return this.setCreatedOnProperties(filteredNotes);
+        const notesWithProperties = await this.setCreatedOnProperties(notes);
+        return notesWithProperties.filter(filter);
     }
 
     private async setCreatedOnProperties(notes: Note[]): Promise<Note[]> {
