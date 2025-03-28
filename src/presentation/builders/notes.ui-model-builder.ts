@@ -5,6 +5,7 @@ import {PluginSettings} from 'src/domain/settings/plugin.settings';
 import {NoteUiModel} from 'src/presentation/models/note.ui-model';
 import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
 import {DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
+import 'src/extensions/extensions';
 
 export class NotesUiModelBuilder implements UiModelBuilder<Note[], NotesUiModel> {
     private settings: DisplayNotesSettings | null = null;
@@ -26,7 +27,14 @@ export class NotesUiModelBuilder implements UiModelBuilder<Note[], NotesUiModel>
     }
 
     public async build(): Promise<NotesUiModel> {
-        const notes = this.notes.map(note => this.buildNoteUiModel(note));
+        const settings = this.settings;
+        if (!settings) {
+            throw new Error('Settings must be provided before building the UI model');
+        }
+
+        const notes = this.notes.map(note =>
+            this.buildNoteUiModel(note, settings)
+        );
 
         return <NotesUiModel> {
             lastUpdated: new Date(),
@@ -34,19 +42,21 @@ export class NotesUiModelBuilder implements UiModelBuilder<Note[], NotesUiModel>
         };
     }
 
-    private buildNoteUiModel(note: Note): NoteUiModel {
-        if (!this.settings) {
-            throw new Error('Settings must be provided before building the UI model');
+    private buildNoteUiModel(note: Note, settings: DisplayNotesSettings): NoteUiModel {
+        let createdOn = note.createdOn;
+
+        if (settings.useCreatedOnDateFromProperties && note.createdOnProperty) {
+            createdOn = note.createdOnProperty;
         }
 
         const displayDate = this.dateParserFactory.getParser()
-            .fromDate(note.createdOn.date, this.settings.displayDateTemplate);
+            .fromDate(createdOn.date, settings.displayDateTemplate);
 
         return <NoteUiModel> {
             note: note,
             date: displayDate,
-            name: note.name.removeMarkdownExtension(),
-            filePath: note.path
+            name: note.name,
+            filePath: note.path.removeMarkdownExtension()
         }
     }
 }

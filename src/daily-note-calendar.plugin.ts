@@ -4,7 +4,6 @@ import {SettingsType} from 'src/infrastructure/contracts/settings-repository-fac
 import {PluginSettings} from 'src/domain/settings/plugin.settings';
 import {CalendarView} from 'src/presentation/views/calendar.view';
 import {DisplayInCalendarCommand} from 'src/presentation/commands/display-in-calendar.command';
-import 'src/extensions/extensions';
 import {NavigateToCurrentWeekCommand} from 'src/presentation/commands/navigate-to-current-week.command';
 import {NavigateToNextWeekCommand} from 'src/presentation/commands/navigate-to-next-week.command';
 import {NavigateToPreviousWeekCommand} from 'src/presentation/commands/navigate-to-previous-week.command';
@@ -14,6 +13,7 @@ import {OpenWeeklyNoteCommand} from 'src/presentation/commands/open-weekly-note.
 import {NavigateToNextMonthCommand} from 'src/presentation/commands/navigate-to-next-month.command';
 import {NavigateToPreviousMonthCommand} from 'src/presentation/commands/navigate-to-previous-month.command';
 import {DailyNoteCalendarPluginSettingTab} from 'src/daily-note-calendar.plugin-setting-tab';
+import 'src/extensions/extensions';
 
 export default class DailyNoteCalendarPlugin extends Plugin {
     private readonly dependencies: Dependencies = getDependencies(this);
