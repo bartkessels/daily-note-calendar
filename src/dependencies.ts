@@ -22,7 +22,7 @@ import {DefaultCommandHandlerFactory} from 'src/presentation/factories/default.c
 import {DefaultNoteManagerFactory} from 'src/business/factories/default.note-manager-factory';
 import {CommandHandlerFactory} from 'src/presentation/contracts/command-handler-factory';
 import { PeriodNoteExistsPeriodEnhancer } from 'src/presentation/enhancers/period-note-exists.period-enhancer';
-import {WeekUiModelBuilder} from 'src/presentation/builders/week-ui-model-builder';
+import {WeekUiModelBuilder} from 'src/presentation/builders/week.ui-model-builder';
 import { CalendarUiModelBuilder } from 'src/presentation/builders/calendar.ui-model-builder';
 import {PeriodUiModelBuilder} from 'src/presentation/builders/period.ui-model-builder';
 import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
@@ -63,7 +63,7 @@ export function getDependencies(plugin: Plugin): Dependencies {
     const periodicNoteManager = new DefaultPeriodicNoteManager(nameBuilderFactory, variableParserFactory, fileRepositoryFactory, noteRepositoryFactory);
 
     // Presentation
-    const periodNoteExistsEnhancer = new PeriodNoteExistsPeriodEnhancer(nameBuilderFactory.getNameBuilder<Period>(NameBuilderType.PeriodicNote), fileAdapter);
+    const periodNoteExistsEnhancer = new PeriodNoteExistsPeriodEnhancer(periodicNoteManager);
     const periodUiModelBuilder = new PeriodUiModelBuilder(periodNoteExistsEnhancer);
     const weekUiModelBuilder = new WeekUiModelBuilder(periodNoteExistsEnhancer, periodUiModelBuilder);
     const notesUiModelBuilder = new NotesUiModelBuilder(dateParserFactory);

@@ -60,6 +60,30 @@ describe('DefaultPeriodicNoteManager', () => {
         jest.clearAllMocks();
     });
 
+    describe('doesNoteExist', () => {
+        it('should return true when the file exists', async () => {
+            // Arrange
+            when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(true);
+
+            // Act
+            const result = await manager.doesNoteExist(dailyNoteSettings, period);
+
+            // Assert
+            expect(result).toBe(true);
+        });
+
+        it('should return false when the file does not exist', async () => {
+            // Arrange
+            when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(false);
+
+            // Act
+            const result = await manager.doesNoteExist(dailyNoteSettings, period);
+
+            // Assert
+            expect(result).toBe(false);
+        });
+    });
+
     describe('createNote', () => {
         it('should create a new note when the file does not exist', async () => {
             // Arrange

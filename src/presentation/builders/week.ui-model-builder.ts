@@ -1,24 +1,24 @@
 import {WeekUiModel} from 'src/presentation/models/week.ui-model';
 import {WeekModel} from 'src/domain/models/week.model';
-import {PeriodNoteExistsPeriodEnhancer} from 'src/presentation/enhancers/period-note-exists.period-enhancer';
 import {PluginSettings} from 'src/domain/settings/plugin.settings';
 import {UiModelBuilder} from 'src/presentation/contracts/ui-model-builder';
-import {PeriodUiModelBuilder} from 'src/presentation/builders/period.ui-model-builder';
 import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
 import {Period} from 'src/domain/models/period.model';
+import {PeriodEnhancer} from 'src/presentation/contracts/period.enhancer';
 
 export class WeekUiModelBuilder implements UiModelBuilder<WeekModel[], WeekUiModel[]> {
     private model: WeekModel[] = [];
 
     constructor(
-        private readonly weeklyNoteExistsPeriodEnhancer: PeriodNoteExistsPeriodEnhancer,
-        private readonly periodUiModelBuilder: PeriodUiModelBuilder
+        private readonly periodEnhancer: PeriodEnhancer,
+        private readonly periodUiModelBuilder: UiModelBuilder<Period, PeriodUiModel>
     ) {
 
     }
 
     public withSettings(settings: PluginSettings): void {
-        this.weeklyNoteExistsPeriodEnhancer.withSettings(settings);
+        this.periodEnhancer.withSettings(settings);
+        this.periodUiModelBuilder.withSettings(settings);
     }
 
     public withValue(value: WeekModel[]): UiModelBuilder<WeekModel[], WeekUiModel[]> {
@@ -46,7 +46,7 @@ export class WeekUiModelBuilder implements UiModelBuilder<WeekModel[], WeekUiMod
             days: days,
         };
 
-        return await this.weeklyNoteExistsPeriodEnhancer.enhance<WeekUiModel>(uiModel);
+        return await this.periodEnhancer.enhance<WeekUiModel>(uiModel);
     }
 
     private async buildDays(days: Period[]): Promise<PeriodUiModel[]> {

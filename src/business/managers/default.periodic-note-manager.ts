@@ -17,10 +17,16 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
 
     }
 
+    public async doesNoteExist(settings: PeriodNoteSettings, period: Period): Promise<boolean> {
+        const fileRepository = this.fileRepositoryFactory.getRepository();
+        const filePath = this.getFilePath(period, settings);
+        return await fileRepository.exists(filePath);
+    }
+
     public async createNote(settings: PeriodNoteSettings, period: Period): Promise<void> {
         const fileRepository = this.fileRepositoryFactory.getRepository();
         const filePath = this.getFilePath(period, settings);
-        const fileExists = await fileRepository.exists(filePath);
+        const fileExists = await this.doesNoteExist(settings, period);
 
         if (!fileExists) {
             const createdFilePath = await fileRepository.create(filePath, settings.templateFile);
@@ -34,7 +40,7 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
     public async openNote(settings: PeriodNoteSettings, period: Period): Promise<void> {
         const fileRepository = this.fileRepositoryFactory.getRepository();
         const filePath = this.getFilePath(period, settings);
-        const fileExists = await fileRepository.exists(filePath);
+        const fileExists = await this.doesNoteExist(settings, period);
 
         if (!fileExists) {
             throw new Error('File does not exist');
@@ -46,7 +52,7 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
     public async deleteNote(settings: PeriodNoteSettings, period: Period): Promise<void> {
         const fileRepository = this.fileRepositoryFactory.getRepository();
         const filePath = this.getFilePath(period, settings);
-        const fileExists = await fileRepository.exists(filePath);
+        const fileExists = await this.doesNoteExist(settings, period);
 
         if (!fileExists) {
             throw new Error('File does not exist');
