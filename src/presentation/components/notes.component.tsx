@@ -35,4 +35,4 @@ export const NotesComponent = (props: NotesComponentProperties) => {
             </ul>
         </div>
     );
-}
+};

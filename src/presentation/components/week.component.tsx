@@ -16,19 +16,8 @@ interface WeekComponentProperties {
     onDeleteDayClick: (day: PeriodUiModel) => void;
 }
 
-export const WeekComponent = (
-    {
-        model,
-        currentMonth,
-        selectedPeriod,
-        currentPeriod,
-        onWeekClick,
-        onDeleteWeekClick,
-        onDayClick,
-        onDeleteDayClick
-    }: WeekComponentProperties
-): ReactElement => {
-    if (!model) {
+export const WeekComponent = (props: WeekComponentProperties): ReactElement => {
+    if (!props || !props?.model) {
         return (
             <tr>
                 <td colSpan={8} className="dnc-skeleton dnc-skeleton-week"/>
@@ -38,24 +27,24 @@ export const WeekComponent = (
 
     return (
         <tr>
-            <td height="35" className="weekNumber" key={model.weekNumber}>
+            <td height="35" className="weekNumber" key={props.model.weekNumber}>
                 <PeriodComponent
-                    model={model}
-                    isSelected={arePeriodUiModelsEqual(model, selectedPeriod)}
-                    onClick={onWeekClick}
-                    onDelete={onDeleteWeekClick}
+                    model={props.model}
+                    isSelected={arePeriodUiModelsEqual(props.model, props.selectedPeriod)}
+                    onClick={props.onWeekClick}
+                    onDelete={props.onDeleteWeekClick}
                 />
             </td>
 
-            {model.days.map((day, index) => (
+            {props.model.days.map((day, index) => (
                 <td height="35" key={index}
-                    className={day.period.date.isSameMonth(currentMonth?.period) ? '' : 'other-month'}>
+                    className={day.period.date.isSameMonth(props.currentMonth?.period) ? '' : 'other-month'}>
                     <PeriodComponent
                         model={day}
-                        isToday={arePeriodUiModelsEqual(day, currentPeriod)}
-                        isSelected={arePeriodUiModelsEqual(day, selectedPeriod)}
-                        onClick={onDayClick}
-                        onDelete={onDeleteDayClick}
+                        isToday={arePeriodUiModelsEqual(day, props.currentPeriod)}
+                        isSelected={arePeriodUiModelsEqual(day, props.selectedPeriod)}
+                        onClick={props.onDayClick}
+                        onDelete={props.onDeleteDayClick}
                     />
                 </td>
             ))}

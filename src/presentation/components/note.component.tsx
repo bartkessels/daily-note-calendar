@@ -7,7 +7,7 @@ export interface NoteComponentProperties {
     note: NoteUiModel;
     onClick: (note: NoteUiModel) => void;
     onDelete: (note: NoteUiModel) => void;
-};
+}
 
 export const NoteComponent = (props: NoteComponentProperties): ReactElement => {
     const contextMenu = getContextMenuAdapter();
@@ -31,4 +31,4 @@ export const NoteComponent = (props: NoteComponentProperties): ReactElement => {
             <span className="note-path">{props.note.filePath}</span>
         </li>
     );
-}
+};

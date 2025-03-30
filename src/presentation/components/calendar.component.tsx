@@ -3,21 +3,17 @@ import {useCalendarViewModel} from 'src/presentation/context/calendar-view-model
 import {CalendarUiModel} from 'src/presentation/models/calendar.ui-model';
 import {PeriodComponent} from 'src/presentation/components/period.component';
 import {CalendarHeart, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight} from 'lucide-react';
-import 'src/extensions/extensions';
 import {WeekComponent} from 'src/presentation/components/week.component';
 import {NotesComponent} from 'src/presentation/components/notes.component';
+import 'src/extensions/extensions';
 
 interface CalendarComponentProperties {
     initialUiModel?: CalendarUiModel | null;
 }
 
 
-export const CalendarComponent = (
-    {
-        initialUiModel = null
-    }: CalendarComponentProperties
-): ReactElement => {
-    const [uiModel, setUiModel] = React.useState<CalendarUiModel | null>(initialUiModel);
+export const CalendarComponent = (props: CalendarComponentProperties): ReactElement => {
+    const [uiModel, setUiModel] = React.useState<CalendarUiModel | null>(props?.initialUiModel ?? null);
     const viewModel = useCalendarViewModel();
 
     viewModel?.setUpdateUiModel(setUiModel);
