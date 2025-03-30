@@ -1,0 +1,103 @@
+@startuml
+actor User
+
+activate User
+User -> Obsidian: Open Obsidian
+activate Obsidian
+
+    Obsidian -> SettingsManager: getSettings()
+    activate SettingsManager
+    return settings
+    deactivate SettingsManager
+
+    Obsidian -> Calendar : initialize(settings)
+    activate Calendar
+        Calendar -> DateManager : getCurrentWeek()
+        activate DateManager
+            DateManager -> DateRepository : getWeek(settings.startOfWeek, today: Date)
+            activate DateRepository
+            return week: Week
+        return currentWeek: Week
+
+        Calendar -> DateManager : getPreviousWeeks(currentWeek, 2)
+        activate DateManager
+            DateManager -> DateRepository : getWeek(settings.startOfWeek, currentWeek.number - 1)
+            activate DateRepository
+            return week: Week
+
+            DateManager -> DateRepository : getWeek(settings.startOfWeek, currentWeek.number - 2)
+            activate DateRepository
+            return week: Week
+
+        return previousWeeks: Week[]
+
+        Calendar -> DateManager : getNextWeeks(currentWeek, 2)
+        activate DateManager
+            DateManager -> DateRepository : getWeek(settings.startOfWeek, currentWeek.number + 1)
+            activate DateRepository
+            return week: Week
+
+            DateManager -> DateRepository : getWeek(settings.startOfWeek, currentWeek.number + 2)
+            activate DateRepository
+            return week: Week
+        return nextWeeks: Week[]
+
+        Calendar -> PeriodEnhancer: setWeeklyNoteSettings(settings.weeklyNoteSettings)
+        activate PeriodEnhancer
+        return
+
+        Calendar -> PeriodEnhancer: setDailyNoteSettings(settings.dailyNotes)
+        activate PeriodEnhancer
+        return
+
+        Calendar -> PeriodEnhancer: enhance(weeks)
+        activate PeriodEnhancer
+            loop through weeks as week
+                PeriodEnhancer -> NameBuilder: withNameTemplate(weeklyNoteSettings.nameTemplate)
+                activate NameBuilder
+                return
+
+                PeriodEnhancer -> NameBuilder: withPathTemplate(weeklyNoteSettings.pathTemplate)
+                activate NameBuilder
+                return
+
+                PeriodEnhancer -> NameBuilder: withValue(week)
+                activate NameBuilder
+                return
+
+                PeriodEnhancer -> NameBuilder: build()
+                activate NameBuilder
+                return filePath
+
+                PeriodEnhancer -> FileAdapter: noteExists(filePath)
+                activate FileAdapter
+                return weeklyNoteExists
+
+                loop through week.days as day
+                    PeriodEnhancer -> NameBuilder: withNameTemplate(dailyNoteSettings.nameTemplate)
+                    activate NameBuilder
+                    return
+
+                    PeriodEnhancer -> NameBuilder: withPathTemplate(dailyNoteSettings.pathTemplate)
+                    activate NameBuilder
+                    return
+
+                    PeriodEnhancer -> NameBuilder: withValue(day)
+                    activate NameBuilder
+                    return
+
+                    PeriodEnhancer -> NameBuilder: build()
+                    activate NameBuilder
+                    return filePath
+
+                    PeriodEnhancer -> FileAdapter: noteExists(filePath)
+                    activate FileAdapter
+                    return dailyNoteExists
+                end
+            end
+        return enhancedWeeks
+
+    return view(enhancedWeeks)
+deactivate Obsidian
+
+@enduml

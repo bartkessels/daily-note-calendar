@@ -1,0 +1,101 @@
+@startuml
+
+actor User
+
+note right of Calendar
+    This flow assumes that the calendar is already initialized with the plugin settings.
+
+end note
+
+activate User
+User -> Calendar: Click on a period
+
+note right of Calendar
+    A period can either be
+
+    * a day
+    * a week
+    * a month
+    * a quarter
+    * a year
+endnote
+
+activate Calendar
+    Calendar -> CalendarViewModel: openDailyNote(key, period)
+    activate CalendarViewModel
+
+        note right of CalendarViewModel
+            Everywhere it says <i>dailyNoteSettings</i> or <i>dailyNote</i>, it can be replaced with either
+            * <i>weeklyNoteSettings</i> or <i>weeklyNote</i> for weekly notes
+            * <i>monthlyNoteSettings</i> or <i>monthlyNote</i> for weekly notes
+            * <i>quarterlyNoteSettings</i> or <i>quarterlyNote</i> for weekly notes
+            * <i>yearlyNoteSettings</i> or <i>yearlyNote</i> for weekly notes
+        endnote
+
+        opt (settings.requireModifierKey && key == modifierKey) || !settings.requireModifierKey
+            CalendarViewModel -> PeriodManager: createNote(dailyNoteSettings, period)
+            activate PeriodManager
+                PeriodManager -> NameBuilder: withNameTemplate(periodicNoteSettings.nameTemplate)
+                activate NameBuilder
+                return
+
+                PeriodManager -> NameBuilder: withPathTemplate(periodicNoteSettings.pathTemplate)
+                activate NameBuilder
+                return
+
+                PeriodManager -> NameBuilder: withValue(period)
+                activate NameBuilder
+                return
+
+                PeriodManager -> NameBuilder: build()
+                activate NameBuilder
+                return filePath
+
+                PeriodManager -> FileAdapter: noteExists(filePath)
+                activate FileAdapter
+                return noteExists
+
+                opt not noteExists
+                    PeriodManager -> FileAdapter: createNote(filePath)
+                    activate FileAdapter
+                    return
+                end
+                return
+            end
+
+            CalendarViewModel -> PeriodManager: openNote(dailyNoteSettings, period)
+            activate PeriodManager
+                PeriodManager -> NameBuilder: withNameTemplate(periodicNoteSettings.nameTemplate)
+                activate NameBuilder
+                return
+
+                PeriodManager -> NameBuilder: withPathTemplate(periodicNoteSettings.pathTemplate)
+                activate NameBuilder
+                return
+
+                PeriodManager -> NameBuilder: withValue(period)
+                activate NameBuilder
+                return
+
+                PeriodManager -> NameBuilder: build()
+                activate NameBuilder
+                return filePath
+
+                PeriodManager -> FileAdapter: noteExists(filePath)
+                activate FileAdapter
+                return noteExists
+
+                opt noteExists
+                PeriodManager -> FileAdapter: openNote(filePath)
+                activate FileAdapter
+                return
+                end
+            return
+
+            CalendarViewModel -> CalendarViewModel: updateSelectedDay(period)
+            activate CalendarViewModel
+            deactivate CalendarViewModel
+    return
+return
+
+@enduml
