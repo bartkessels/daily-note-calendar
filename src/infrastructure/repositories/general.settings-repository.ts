@@ -11,7 +11,8 @@ export class GeneralSettingsRepository implements SettingsRepository<GeneralSett
     }
 
     public async store(settings: GeneralSettings): Promise<void> {
-        const allSettings = { ...DEFAULT_PLUGIN_SETTINGS, generalSettings: settings };
+        const storedSettings = await this.adapter.getSettings(DEFAULT_PLUGIN_SETTINGS);
+        const allSettings = { ...storedSettings, generalSettings: settings };
         await this.adapter.storeSettings(allSettings);
     }
 

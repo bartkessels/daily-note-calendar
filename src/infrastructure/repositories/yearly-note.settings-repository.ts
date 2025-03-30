@@ -11,7 +11,8 @@ export class YearlyNoteSettingsRepository implements SettingsRepository<PeriodNo
     }
 
     public async store(settings: PeriodNoteSettings): Promise<void> {
-        const allSettings = { ...DEFAULT_PLUGIN_SETTINGS, yearlyNotes: settings };
+        const storedSettings = await this.adapter.getSettings(DEFAULT_PLUGIN_SETTINGS);
+        const allSettings = { ...storedSettings, yearlyNotes: settings };
         await this.adapter.storeSettings(allSettings);
     }
 

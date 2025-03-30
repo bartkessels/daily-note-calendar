@@ -3,6 +3,7 @@ import {DEFAULT_PLUGIN_SETTINGS, PluginSettings} from 'src/domain/settings/plugi
 import {when} from 'jest-when';
 import {GeneralSettingsRepository} from 'src/infrastructure/repositories/general.settings-repository';
 import {DayOfWeek} from 'src/domain/models/week.model';
+import {DEFAULT_WEEKLY_NOTE_SETTINGS} from 'src/domain/settings/period-note.settings';
 
 describe('GeneralSettingsRepository', () => {
     let repository: GeneralSettingsRepository;
@@ -21,6 +22,10 @@ describe('GeneralSettingsRepository', () => {
             // Arrange
             const oldSettings = <PluginSettings>{
                 ...DEFAULT_PLUGIN_SETTINGS,
+                weeklyNotes: {
+                    ...DEFAULT_WEEKLY_NOTE_SETTINGS,
+                    folder: 'changed/setting'
+                },
                 generalSettings: {
                     displayNotesCreatedOnDate: false,
                     displayNoteIndicator: true,
@@ -30,6 +35,10 @@ describe('GeneralSettingsRepository', () => {
             }
             const updatedSettings = <PluginSettings>{
                 ...DEFAULT_PLUGIN_SETTINGS,
+                weeklyNotes: {
+                    ...DEFAULT_WEEKLY_NOTE_SETTINGS,
+                    folder: 'changed/setting'
+                },
                 generalSettings: {
                     displayNotesCreatedOnDate: true,
                     displayNoteIndicator: false,

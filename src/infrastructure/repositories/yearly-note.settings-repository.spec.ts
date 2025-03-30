@@ -2,6 +2,7 @@ import {mockSettingsAdapter} from 'src/test-helpers/adapter.mocks';
 import {DEFAULT_PLUGIN_SETTINGS, PluginSettings} from 'src/domain/settings/plugin.settings';
 import {when} from 'jest-when';
 import {YearlyNoteSettingsRepository} from 'src/infrastructure/repositories/yearly-note.settings-repository';
+import {DEFAULT_WEEKLY_NOTE_SETTINGS} from 'src/domain/settings/period-note.settings';
 
 describe('YearlyNoteSettingsRepository', () => {
     let repository: YearlyNoteSettingsRepository;
@@ -20,6 +21,10 @@ describe('YearlyNoteSettingsRepository', () => {
             // Arrange
             const oldSettings = <PluginSettings> {
                 ...DEFAULT_PLUGIN_SETTINGS,
+                weeklyNotes: {
+                    ...DEFAULT_WEEKLY_NOTE_SETTINGS,
+                    folder: 'changed/setting'
+                },
                 yearlyNotes: {
                     nameTemplate: 'yyyy',
                     folder: 'Yearly notes',
@@ -28,6 +33,10 @@ describe('YearlyNoteSettingsRepository', () => {
             }
             const updatedSettings = <PluginSettings> {
                 ...DEFAULT_PLUGIN_SETTINGS,
+                weeklyNotes: {
+                    ...DEFAULT_WEEKLY_NOTE_SETTINGS,
+                    folder: 'changed/setting'
+                },
                 yearlyNotes: {
                     nameTemplate: 'yyyy - qqq',
                     folder: '01 journaling/yearly notes',

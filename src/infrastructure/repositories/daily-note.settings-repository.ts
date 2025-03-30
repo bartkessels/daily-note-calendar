@@ -11,7 +11,8 @@ export class DailyNoteSettingsRepository implements SettingsRepository<PeriodNot
     }
 
     public async store(settings: PeriodNoteSettings): Promise<void> {
-        const allSettings = { ...DEFAULT_PLUGIN_SETTINGS, dailyNotes: settings };
+        const storedSettings = await this.adapter.getSettings(DEFAULT_PLUGIN_SETTINGS);
+        const allSettings = { ...storedSettings, dailyNotes: settings };
         await this.adapter.storeSettings(allSettings);
     }
 
