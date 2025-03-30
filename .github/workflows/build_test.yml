@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: latest
 
-      - name: Build en test plugin
+      - name: Build and test plugin
         run: |
           npm install
           npm run test
