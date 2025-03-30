@@ -2,7 +2,7 @@ import {DefaultNoteManagerFactory} from 'src/business/factories/default.note-man
 import {RepositoryNoteManager} from 'src/business/managers/repository.note-manager';
 import {
     mockFileRepositoryFactory,
-    mockNoteRepositoryFactory,
+    mockNoteRepositoryFactory, mockSettingsRepositoryFactory,
 } from 'src/test-helpers/factory.mocks';
 
 describe('DefaultNoteManagerFactory', () => {
@@ -11,10 +11,12 @@ describe('DefaultNoteManagerFactory', () => {
     beforeEach(() => {
         const fileRepositoryFactory = mockFileRepositoryFactory();
         const noteRepositoryFactory = mockNoteRepositoryFactory();
+        const settingsRepositoryFactory = mockSettingsRepositoryFactory();
 
         factory = new DefaultNoteManagerFactory(
             fileRepositoryFactory,
-            noteRepositoryFactory
+            noteRepositoryFactory,
+            settingsRepositoryFactory
         );
     });
 

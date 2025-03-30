@@ -33,7 +33,7 @@ export class PeriodUiModelBuilder implements UiModelBuilder<Period, PeriodUiMode
     private async buildPeriodUiModel(period: Period): Promise<PeriodUiModel> {
         const uiModel = <PeriodUiModel> {
             period: period,
-            hasPeriodNote: false,
+            hasPeriodNote: false
         };
 
         return await this.periodNoteExistsPeriodEnhancer.enhance<PeriodUiModel>(uiModel);

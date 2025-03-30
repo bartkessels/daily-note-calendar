@@ -1,14 +1,14 @@
 import { Note } from 'src/domain/models/note.model';
 import {NoteRepository} from 'src/infrastructure/contracts/note-repository';
 import {NoteAdapter} from 'src/infrastructure/adapters/note.adapter';
-import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
 import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contracts/settings-repository-factory';
 import {DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
+import {DateRepositoryFactory} from 'src/infrastructure/contracts/date-repository-factory';
 
 export class AdapterNoteRepository implements NoteRepository {
     constructor(
         private readonly adapter: NoteAdapter,
-        private readonly dateParserFactory: DateParserFactory,
+        private readonly dateRepositoryFactory: DateRepositoryFactory,
         private readonly settingsRepositoryFactory: SettingsRepositoryFactory
     ) {
 
@@ -48,9 +48,12 @@ export class AdapterNoteRepository implements NoteRepository {
             return note;
         }
 
+        const createdOnPeriod = this.dateRepositoryFactory.getRepository()
+            .getDayFromDateString(property, settings.createdOnPropertyFormat);
+
         return <Note> {
             ...note,
-            createdOnProperty: this.dateParserFactory.getParser().fromString(property, settings.createdOnPropertyFormat)
+            createdOnProperty: createdOnPeriod
         };
     }
 }

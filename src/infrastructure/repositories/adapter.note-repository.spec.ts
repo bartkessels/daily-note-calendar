@@ -3,23 +3,23 @@ import {mockNoteAdapter} from 'src/test-helpers/adapter.mocks';
 import {mockNoteWithCreatedOnProperty} from 'src/test-helpers/model.mocks';
 import {Note} from 'src/domain/models/note.model';
 import {Period, PeriodType} from 'src/domain/models/period.model';
-import {mockDateParser} from 'src/test-helpers/parser.mocks';
-import {mockDisplayNoteSettingsRepository} from 'src/test-helpers/repository.mocks';
-import {mockDateParserFactory, mockSettingsRepositoryFactory} from 'src/test-helpers/factory.mocks';
+import {mockDateRepository, mockDisplayNoteSettingsRepository} from 'src/test-helpers/repository.mocks';
+import {mockDateRepositoryFactory, mockSettingsRepositoryFactory} from 'src/test-helpers/factory.mocks';
 import {DEFAULT_DISPLAY_NOTES_SETTINGS, DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
 import {when} from 'jest-when';
 
 describe('AdapterNoteRepository', () => {
     let repository: AdapterNoteRepository;
     const noteAdapter = mockNoteAdapter;
-    const dateParser = mockDateParser;
+    const dateRepository = mockDateRepository;
     const settingsRepository = mockDisplayNoteSettingsRepository;
 
     beforeEach(() => {
-        const dateParserFactory = mockDateParserFactory(dateParser);
+        const dateRepositoryFactory = mockDateRepositoryFactory(dateRepository);
         const settingsRepositoryFactory = mockSettingsRepositoryFactory(settingsRepository);
 
-        repository = new AdapterNoteRepository(noteAdapter, dateParserFactory, settingsRepositoryFactory);
+        repository = new AdapterNoteRepository(noteAdapter, dateRepositoryFactory, settingsRepositoryFactory);
+        when(settingsRepository.get).mockResolvedValue(DEFAULT_DISPLAY_NOTES_SETTINGS);
     });
 
     afterEach(() => {
@@ -52,14 +52,18 @@ describe('AdapterNoteRepository', () => {
 
         it('should set the createdOnProperty when the properties contain a valid date property', async () => {
             // Arrange
-            const settings = <DisplayNotesSettings> { ...DEFAULT_DISPLAY_NOTES_SETTINGS, createdOnDatePropertyName: 'created_on', createdOnPropertyFormat: 'dd-MM-yyyy' };
+            const settings = <DisplayNotesSettings>{
+                ...DEFAULT_DISPLAY_NOTES_SETTINGS,
+                createdOnDatePropertyName: 'created_on',
+                createdOnPropertyFormat: 'dd-MM-yyyy'
+            };
 
             const properties = new Map<string, string>();
-            properties.set(settings.createdOnPropertyFormat, '02-10-2023');
+            properties.set(settings.createdOnDatePropertyName, '02-10-2023');
 
-            const note = <Note> {
-                createdOn: <Period> {
-                    date: new Date(3, 9, 2023),
+            const note = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 3),
                     name: '03',
                     type: PeriodType.Day
                 },
@@ -68,7 +72,15 @@ describe('AdapterNoteRepository', () => {
                 properties: properties
             };
 
+            when(settingsRepository.get).mockResolvedValue(settings);
             when(noteAdapter.getActiveNote).mockResolvedValue(note);
+            when(dateRepository.getDayFromDateString)
+                .calledWith('02-10-2023', settings.createdOnPropertyFormat)
+                .mockReturnValue(<Period>{
+                    date: new Date(2023, 9, 2),
+                    name: '02',
+                    type: PeriodType.Day
+                });
 
             // Act
             const result = await repository.getActiveNote();
@@ -76,7 +88,7 @@ describe('AdapterNoteRepository', () => {
             // Assert
             expect(result).not.toBeNull();
             expect(result?.createdOnProperty).not.toBeNull();
-            expect(result?.createdOnProperty?.date).toEqual(new Date(2, 9, 2023));
+            expect(result?.createdOnProperty?.date).toEqual(new Date(2023, 9, 2));
             expect(result?.createdOnProperty?.name).toEqual('02');
             expect(result?.createdOnProperty?.type).toEqual(PeriodType.Day);
         });
@@ -84,7 +96,7 @@ describe('AdapterNoteRepository', () => {
 
     describe('getNotes', () => {
         const firstNote = <Note>{
-            createdOn: <Period> {
+            createdOn: <Period>{
                 date: new Date(2023, 9, 2),
                 name: '2',
                 type: PeriodType.Day
@@ -94,7 +106,7 @@ describe('AdapterNoteRepository', () => {
             properties: new Map<string, string>()
         };
         const secondNote = <Note>{
-            createdOn: <Period> {
+            createdOn: <Period>{
                 date: new Date(2023, 9, 3),
                 name: '3',
                 type: PeriodType.Day
@@ -104,7 +116,7 @@ describe('AdapterNoteRepository', () => {
             properties: new Map<string, string>()
         };
         const thirdNote = <Note>{
-            createdOn: <Period> {
+            createdOn: <Period>{
                 date: new Date(2023, 9, 3),
                 name: '3',
                 type: PeriodType.Day

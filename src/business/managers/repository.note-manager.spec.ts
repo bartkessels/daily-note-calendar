@@ -1,6 +1,5 @@
 import {RepositoryNoteManager} from 'src/business/managers/repository.note-manager';
 import {
-    mockDateRepository,
     mockDisplayNoteSettingsRepository,
     mockFileRepository,
     mockNoteRepository
@@ -11,7 +10,7 @@ import {
 } from 'src/test-helpers/factory.mocks';
 import {when} from 'jest-when';
 import {Note} from 'src/domain/models/note.model';
-import {arePeriodsEqual, Period, PeriodType} from 'src/domain/models/period.model';
+import {Period, PeriodType} from 'src/domain/models/period.model';
 import {DEFAULT_DISPLAY_NOTES_SETTINGS, DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
 
 describe('RepositoryNoteManager', () => {
@@ -19,7 +18,6 @@ describe('RepositoryNoteManager', () => {
     const fileRepository = mockFileRepository;
     const noteRepository = mockNoteRepository;
     const settingsRepository = mockDisplayNoteSettingsRepository;
-    const dateRepository = mockDateRepository;
     const note = <Note>{
         createdOn: <Period>{
             date: new Date(2023, 9, 2),
@@ -176,71 +174,16 @@ describe('RepositoryNoteManager', () => {
     });
 
     describe('getActiveNote', () => {
-        it('should return the active note with the createdOnProperty set', async () => {
+        it('should return the active note from the repository', async () => {
             // Arrange
-            const expectedPeriod = <Period>{
-                date: new Date(2023, 9, 2),
-                name: '2',
-                type: PeriodType.Day
-            };
-            const settings = <DisplayNotesSettings>{
-                createdOnDatePropertyName: 'createdOn',
-                useCreatedOnDateFromProperties: true,
-                createdOnPropertyFormat: 'yyyy-MM-dd'
-            };
-            note.properties.set(settings.createdOnDatePropertyName, '2023-10-02');
-
-            when(settingsRepository.get).mockResolvedValue(settings);
             when(noteRepository.getActiveNote).mockResolvedValue(note);
-            when(dateRepository.getDayFromDateString).calledWith('2023-10-02', settings.createdOnPropertyFormat)
-                .mockReturnValue(expectedPeriod);
 
             // Act
             const result = await manager.getActiveNote();
 
             // Assert
-            expect(result?.properties.get('createdOn')).toEqual(expectedPeriod);
-        });
-
-        it('should return the active note without the createdOnProperty set when the date could not be parsed', async () => {
-            // Arrange
-            const settings = <DisplayNotesSettings>{
-                createdOnDatePropertyName: 'createdOn',
-                useCreatedOnDateFromProperties: true,
-                createdOnPropertyFormat: 'yyyy-MM-dd'
-            };
-            note.properties.set(settings.createdOnDatePropertyName, 'abcdefg');
-
-            when(settingsRepository.get).mockResolvedValue(settings);
-            when(noteRepository.getActiveNote).mockResolvedValue(note);
-            when(dateRepository.getDayFromDateString).mockReturnValue(null);
-
-            // Act
-            const result = await manager.getActiveNote();
-
-            // Assert
+            expect(noteRepository.getActiveNote).toHaveBeenCalled();
             expect(result).toEqual(note);
-            expect(result?.properties.get('createdOn')).toBeUndefined();
-        });
-
-        it('should return the active note without the createdOnProperty set when the property is not set', async () => {
-            // Arrange
-            const settings = <DisplayNotesSettings>{
-                createdOnDatePropertyName: 'createdOn',
-                useCreatedOnDateFromProperties: true,
-                createdOnPropertyFormat: 'yyyy-MM-dd'
-            };
-            when(settingsRepository.get).mockResolvedValue(settings);
-            when(noteRepository.getActiveNote).mockResolvedValue(note);
-
-            note.properties.delete(settings.createdOnDatePropertyName);
-
-            // Act
-            const result = await manager.getActiveNote();
-
-            // Assert
-            expect(result).toEqual(note);
-            expect(result?.properties.get('createdOn')).toBeUndefined();
         });
     });
 });
