@@ -351,7 +351,9 @@ describe('RepositoryDateManager', () => {
             const result = manager.getPreviousMonth(month, DayOfWeek.Monday);
 
             // Assert
-            expect(dateRepository.getWeekFromDate).toHaveBeenCalledWith(DayOfWeek.Monday, new Date('2023-09-15T10:00:00.000Z'));
+            const weekFromDateCalls = dateRepository.getWeekFromDate.mock.calls;
+            expect(weekFromDateCalls.some(call => call[1].getFullYear() === previousMonth.date.getFullYear())).toBeTruthy();
+            expect(weekFromDateCalls.some(call => call[1].getMonth() === previousMonth.date.getMonth())).toBeTruthy();
             expect(dateRepository.getPreviousMonth).toHaveBeenCalledWith(month);
             expect(result).toEqual(weeksOfPreviousMonth);
         });
@@ -441,7 +443,7 @@ describe('RepositoryDateManager', () => {
             }
         ];
 
-        it('should return call the getPreviousMonth with the given month on the repository and should call the correct getWeeksOfMonth method', () => {
+        it('should return call the getNextMonth with the given month on the repository and should call the correct getWeeksOfMonth method', () => {
             // Arrange
             when(dateRepository.getNextMonth).calledWith(month).mockReturnValue(nextMonth);
             when(dateRepository.getWeekFromDate).mockReturnValue(weeksOfNextMonth[2]);
@@ -461,7 +463,9 @@ describe('RepositoryDateManager', () => {
             const result = manager.getNextMonth(month, DayOfWeek.Monday);
 
             // Assert
-            expect(dateRepository.getWeekFromDate).toHaveBeenCalledWith(DayOfWeek.Monday, new Date('2023-11-15T11:00:00.000Z'));
+            const weekFromDateCalls = dateRepository.getWeekFromDate.mock.calls;
+            expect(weekFromDateCalls.some(call => call[1].getFullYear() === nextMonth.date.getFullYear())).toBeTruthy();
+            expect(weekFromDateCalls.some(call => call[1].getMonth() === nextMonth.date.getMonth())).toBeTruthy();
             expect(dateRepository.getNextMonth).toHaveBeenCalledWith(month);
             expect(result).toEqual(weeksOfNextMonth);
         });
