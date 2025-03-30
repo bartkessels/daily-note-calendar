@@ -34,7 +34,10 @@ export class DefaultNotesViewModel implements NotesViewModel {
         // Only update the UI model if it's the latest version of the UI model
         if (!this.uiModel || model.lastUpdated > this.uiModel.lastUpdated) {
             this.uiModel = model;
-            this.updateUiModel(model);
+
+            if (this.updateUiModel) {
+                this.updateUiModel(model);
+            }
         }
     }
 
