@@ -63,7 +63,7 @@ describe('AdapterNoteRepository', () => {
 
             const note = <Note>{
                 createdOn: <Period>{
-                    date: new Date(2023, 9, 3),
+                    date: new Date(2023, 9, 3, 23, 59, 59, 100),
                     name: '03',
                     type: PeriodType.Day
                 },
@@ -88,9 +88,45 @@ describe('AdapterNoteRepository', () => {
             // Assert
             expect(result).not.toBeNull();
             expect(result?.createdOnProperty).not.toBeNull();
-            expect(result?.createdOnProperty?.date).toEqual(new Date(2023, 9, 2));
+            expect(result?.createdOnProperty?.date).toEqual(new Date(2023, 9, 2, 23, 59, 59, 100));
             expect(result?.createdOnProperty?.name).toEqual('02');
             expect(result?.createdOnProperty?.type).toEqual(PeriodType.Day);
+        });
+
+        it('should not set the createdOnProperty when the properties do not contain a valid date property', async () => {
+            // Arrange
+            const settings = <DisplayNotesSettings>{
+                ...DEFAULT_DISPLAY_NOTES_SETTINGS,
+                createdOnDatePropertyName: 'created_on',
+                createdOnPropertyFormat: 'dd-MM-yyyy'
+            };
+
+            const properties = new Map<string, string>();
+            properties.set(settings.createdOnDatePropertyName, 'invalid_date');
+
+            const note = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 3),
+                    name: '03',
+                    type: PeriodType.Day
+                },
+                name: 'My note with a property',
+                path: 'path/to/note.md',
+                properties: properties
+            };
+
+            when(settingsRepository.get).mockResolvedValue(settings);
+            when(noteAdapter.getActiveNote).mockResolvedValue(note);
+            when(dateRepository.getDayFromDateString)
+                .calledWith('invalid_date', settings.createdOnPropertyFormat)
+                .mockReturnValue(null);
+
+            // Act
+            const result = await repository.getActiveNote();
+
+            // Assert
+            expect(result).not.toBeNull();
+            expect(result?.createdOnProperty).toBeNull();
         });
     });
 
@@ -128,7 +164,7 @@ describe('AdapterNoteRepository', () => {
 
         it('should return the notes that match the filter', async () => {
             // Arrange
-            noteAdapter.getNotes.mockResolvedValue([firstNote, secondNote, thirdNote]);
+            when(noteAdapter.getNotes).mockResolvedValue([firstNote, secondNote, thirdNote]);
             const filter = (note: Note) => note.createdOn.date.getDate() === firstNote.createdOn.date.getDate();
 
             // Act
@@ -140,7 +176,7 @@ describe('AdapterNoteRepository', () => {
 
         it('should return all notes if the filter is always true', async () => {
             // Arrange
-            noteAdapter.getNotes.mockResolvedValue([firstNote, secondNote, thirdNote]);
+            when(noteAdapter.getNotes).mockResolvedValue([firstNote, secondNote, thirdNote]);
             const filter = (note: Note) => true;
 
             // Act
@@ -152,7 +188,7 @@ describe('AdapterNoteRepository', () => {
 
         it('should return an empty list when the filter is always false', async () => {
             // Arrange
-            noteAdapter.getNotes.mockResolvedValue([firstNote, secondNote, thirdNote]);
+            when(noteAdapter.getNotes).mockResolvedValue([firstNote, secondNote, thirdNote]);
             const filter = (note: Note) => false;
 
             // Act
@@ -164,7 +200,7 @@ describe('AdapterNoteRepository', () => {
 
         it('should return an empty list when the adapter returns an empty list', async () => {
             // Arrange
-            noteAdapter.getNotes.mockResolvedValue([]);
+            when(noteAdapter.getNotes).mockResolvedValue([]);
             const filter = (note: Note) => true;
 
             // Act
@@ -172,6 +208,85 @@ describe('AdapterNoteRepository', () => {
 
             // Assert
             expect(result).toEqual([]);
+        });
+
+        it('should set the createdOnProperty when the properties contain a valid date property', async () => {
+            // Arrange
+            const settings = <DisplayNotesSettings>{
+                ...DEFAULT_DISPLAY_NOTES_SETTINGS,
+                createdOnDatePropertyName: 'created_on',
+                createdOnPropertyFormat: 'dd-MM-yyyy'
+            };
+
+            const properties = new Map<string, string>();
+            properties.set(settings.createdOnDatePropertyName, '02-10-2023');
+
+            const note = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 3, 23, 59, 59, 100),
+                    name: '03',
+                    type: PeriodType.Day
+                },
+                name: 'My note with a property',
+                path: 'path/to/note.md',
+                properties: properties
+            };
+
+            when(noteAdapter.getNotes).mockResolvedValue([note]);
+            when(settingsRepository.get).mockResolvedValue(settings);
+            when(dateRepository.getDayFromDateString)
+                .calledWith('02-10-2023', settings.createdOnPropertyFormat)
+                .mockReturnValue(<Period>{
+                    date: new Date(2023, 9, 2),
+                    name: '02',
+                    type: PeriodType.Day
+                });
+
+            // Act
+            const result = await repository.getNotes(_ => true);
+
+            // Assert
+            expect(result[0]).not.toBeNull();
+            expect(result[0]?.createdOnProperty).not.toBeNull();
+            expect(result[0]?.createdOnProperty?.date).toEqual(new Date(2023, 9, 2, 23, 59, 59, 100));
+            expect(result[0]?.createdOnProperty?.name).toEqual('02');
+            expect(result[0]?.createdOnProperty?.type).toEqual(PeriodType.Day);
+        });
+
+        it('should not set the createdOnProperty when the properties do not contain a valid date property', async () => {
+            // Arrange
+            const settings = <DisplayNotesSettings>{
+                ...DEFAULT_DISPLAY_NOTES_SETTINGS,
+                createdOnDatePropertyName: 'created_on',
+                createdOnPropertyFormat: 'dd-MM-yyyy'
+            };
+
+            const properties = new Map<string, string>();
+            properties.set(settings.createdOnDatePropertyName, 'invalid_date');
+
+            const note = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 3),
+                    name: '03',
+                    type: PeriodType.Day
+                },
+                name: 'My note with a property',
+                path: 'path/to/note.md',
+                properties: properties
+            };
+
+            when(noteAdapter.getNotes).mockResolvedValue([note]);
+            when(settingsRepository.get).mockResolvedValue(settings);
+            when(dateRepository.getDayFromDateString)
+                .calledWith('invalid_date', settings.createdOnPropertyFormat)
+                .mockReturnValue(null);
+
+            // Act
+            const result = await repository.getNotes(_ => true);
+
+            // Assert
+            expect(result[0]).not.toBeNull();
+            expect(result[0]?.createdOnProperty).toBeNull();
         });
     });
 });

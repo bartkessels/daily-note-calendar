@@ -51,6 +51,15 @@ export class AdapterNoteRepository implements NoteRepository {
         const createdOnPeriod = this.dateRepositoryFactory.getRepository()
             .getDayFromDateString(property, settings.createdOnPropertyFormat);
 
+        if (createdOnPeriod) {
+            createdOnPeriod.date.setHours(
+                note.createdOn.date.getHours(),
+                note.createdOn.date.getMinutes(),
+                note.createdOn.date.getSeconds(),
+                note.createdOn.date.getMilliseconds()
+            );
+        }
+
         return <Note> {
             ...note,
             createdOnProperty: createdOnPeriod
