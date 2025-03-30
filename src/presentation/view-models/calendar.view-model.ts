@@ -4,7 +4,7 @@ import {Period} from 'src/domain/models/period.model';
 import {CalendarService} from 'src/presentation/contracts/calendar-service';
 import {isSelectModifierKey, ModifierKey} from 'src/presentation/models/modifier-key';
 import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
-import {CalendarUiModelBuilder} from 'src/presentation/builders/calendar.ui-model.builder';
+import {CalendarUiModelBuilder} from 'src/presentation/builders/calendar.ui-model-builder';
 import {WeekModel} from 'src/domain/models/week.model';
 
 export interface CalendarViewModel {

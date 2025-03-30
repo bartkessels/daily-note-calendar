@@ -2,19 +2,19 @@ import {UiModelBuilder} from 'src/presentation/contracts/ui-model-builder';
 import {Period} from 'src/domain/models/period.model';
 import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
 import {PluginSettings} from 'src/domain/settings/plugin.settings';
-import {PeriodNoteExistsPeriodEnhancer} from 'src/presentation/enhancers/period-note-exists.period-enhancer';
+import {PeriodEnhancer} from 'src/presentation/contracts/period.enhancer';
 
 export class PeriodUiModelBuilder implements UiModelBuilder<Period, PeriodUiModel> {
     private value: Period | null = null;
 
     constructor(
-        private readonly periodNoteExistsPeriodEnhancer: PeriodNoteExistsPeriodEnhancer
+        private readonly periodEnhancer: PeriodEnhancer
     ) {
 
     }
 
     public withSettings(settings: PluginSettings): void {
-        this.periodNoteExistsPeriodEnhancer.withSettings(settings);
+        this.periodEnhancer.withSettings(settings);
     }
 
     public withValue(value: Period): PeriodUiModelBuilder {
@@ -36,6 +36,6 @@ export class PeriodUiModelBuilder implements UiModelBuilder<Period, PeriodUiMode
             hasPeriodNote: false
         };
 
-        return await this.periodNoteExistsPeriodEnhancer.enhance<PeriodUiModel>(uiModel);
+        return await this.periodEnhancer.enhance<PeriodUiModel>(uiModel);
     }
 }

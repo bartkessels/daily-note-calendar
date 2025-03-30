@@ -23,7 +23,7 @@ import {DefaultNoteManagerFactory} from 'src/business/factories/default.note-man
 import {CommandHandlerFactory} from 'src/presentation/contracts/command-handler-factory';
 import { PeriodNoteExistsPeriodEnhancer } from 'src/presentation/enhancers/period-note-exists.period-enhancer';
 import {WeekUiModelBuilder} from 'src/presentation/builders/week-ui-model-builder';
-import { CalendarUiModelBuilder } from './presentation/builders/calendar.ui-model.builder';
+import { CalendarUiModelBuilder } from 'src/presentation/builders/calendar.ui-model-builder';
 import {PeriodUiModelBuilder} from 'src/presentation/builders/period.ui-model-builder';
 import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
 import {DefaultNotesViewModel, NotesViewModel} from 'src/presentation/view-models/notes.view-model';

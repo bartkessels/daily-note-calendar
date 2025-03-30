@@ -1,4 +1,4 @@
-import {CalendarUiModelBuilder} from 'src/presentation/builders/calendar.ui-model.builder';
+import {CalendarUiModelBuilder} from 'src/presentation/builders/calendar.ui-model-builder';
 import {mockPeriodUiModelBuilder, mockWeekUiModelBuilder} from 'src/test-helpers/ui-model-builder.mocks';
 import {DEFAULT_PLUGIN_SETTINGS, PluginSettings} from 'src/domain/settings/plugin.settings';
 import {DayOfWeek, WeekModel} from 'src/domain/models/week.model';
