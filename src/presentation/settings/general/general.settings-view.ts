@@ -56,7 +56,7 @@ export class GeneralSettingsView extends SettingsView {
         };
     }
 
-    private addStartDayOfWeekSetting(value: DayOfWeek, onValueChange: (value: DayOfWeek) => void): void {
+    private addStartDayOfWeekSetting(value: DayOfWeek, onValueChange: (value: DayOfWeek) => Promise<void>): void {
         new Setting(this.settingsTab.containerEl)
             .setName('First day of the week')
             .setDesc('Set the first day of the week for the calendar.')
@@ -66,11 +66,11 @@ export class GeneralSettingsView extends SettingsView {
                     'monday': this.dayOfWeekName(DayOfWeek.Monday)
                 })
                 .setValue(this.dayOfWeekName(value).toLowerCase())
-                .onChange((value) => {
+                .onChange(async value => {
                     if (value.toLowerCase() === 'sunday') {
-                        onValueChange(DayOfWeek.Sunday);
+                        await onValueChange(DayOfWeek.Sunday);
                     } else {
-                        onValueChange(DayOfWeek.Monday);
+                        await onValueChange(DayOfWeek.Monday);
                     }
                 })
             );

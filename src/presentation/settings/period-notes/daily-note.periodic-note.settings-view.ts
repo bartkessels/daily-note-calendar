@@ -4,6 +4,7 @@ import {PeriodNoteSettings} from 'src/domain/settings/period-note.settings';
 import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contracts/settings-repository-factory';
 import {PeriodicNoteSettingsView} from 'src/presentation/settings/period-notes/periodic-note.settings-view';
 import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
+import {DailyNoteSettingsRepository} from 'src/infrastructure/repositories/daily-note.settings-repository';
 
 export class DailyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsView {
     override title = "Daily notes";
@@ -14,7 +15,7 @@ export class DailyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsView 
         dateParserFactory: DateParserFactory,
         settingsRepositoryFactory: SettingsRepositoryFactory
     ) {
-        const settingsRepository = settingsRepositoryFactory.getRepository<PeriodNoteSettings>(SettingsType.DailyNote);
+        const settingsRepository = settingsRepositoryFactory.getRepository<PeriodNoteSettings>(SettingsType.DailyNote) as DailyNoteSettingsRepository;
 
         super(settingsTab, settingsRepository, dateParserFactory.getParser());
     }

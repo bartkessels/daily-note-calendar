@@ -2,6 +2,7 @@ import {mockSettingsAdapter} from 'src/test-helpers/adapter.mocks';
 import {DEFAULT_PLUGIN_SETTINGS, PluginSettings} from 'src/domain/settings/plugin.settings';
 import {when} from 'jest-when';
 import {WeeklyNoteSettingsRepository} from 'src/infrastructure/repositories/weekly-note.settings-repository';
+import {DEFAULT_WEEKLY_NOTE_SETTINGS} from 'src/domain/settings/period-note.settings';
 
 describe('WeeklyNoteSettingsRepository', () => {
     let repository: WeeklyNoteSettingsRepository;
@@ -20,6 +21,10 @@ describe('WeeklyNoteSettingsRepository', () => {
             // Arrange
             const oldSettings = <PluginSettings> {
                 ...DEFAULT_PLUGIN_SETTINGS,
+                quarterlyNotes: {
+                    ...DEFAULT_WEEKLY_NOTE_SETTINGS,
+                    folder: 'changed/setting'
+                },
                 weeklyNotes: {
                     nameTemplate: 'yyyy-ww',
                     folder: 'Weekly notes',
@@ -28,6 +33,10 @@ describe('WeeklyNoteSettingsRepository', () => {
             }
             const updatedSettings = <PluginSettings> {
                 ...DEFAULT_PLUGIN_SETTINGS,
+                quarterlyNotes: {
+                    ...DEFAULT_WEEKLY_NOTE_SETTINGS,
+                    folder: 'changed/setting'
+                },
                 weeklyNotes: {
                     nameTemplate: 'yyyy - ww',
                     folder: '01 journaling/weekly notes',

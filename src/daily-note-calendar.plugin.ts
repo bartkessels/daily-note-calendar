@@ -33,10 +33,6 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         this.app.workspace.onLayoutReady(this.initializePlugin.bind(this));
     }
 
-    override async onExternalSettingsChange(): Promise<void> {
-        await this.initializePlugin();
-    }
-
     private async initializePlugin(): Promise<void> {
         const today = this.dependencies.dateManagerFactory.getManager().getCurrentDay();
         const settings = await this.dependencies.settingsRepositoryFactory

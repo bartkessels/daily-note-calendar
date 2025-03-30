@@ -11,7 +11,8 @@ export class DisplayNotesSettingsRepository implements SettingsRepository<Displa
     }
 
     public async store(settings: DisplayNotesSettings): Promise<void> {
-        const allSettings = { ...DEFAULT_PLUGIN_SETTINGS, notesSettings: settings };
+        const storedSettings = await this.adapter.getSettings(DEFAULT_PLUGIN_SETTINGS);
+        const allSettings = { ...storedSettings, notesSettings: settings };
         await this.adapter.storeSettings(allSettings);
     }
 

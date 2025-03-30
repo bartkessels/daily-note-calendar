@@ -11,7 +11,8 @@ export class QuarterlyNoteSettingsRepository implements SettingsRepository<Perio
     }
 
     public async store(settings: PeriodNoteSettings): Promise<void> {
-        const allSettings = { ...DEFAULT_PLUGIN_SETTINGS, quarterlyNotes: settings };
+        const storedSettings = await this.adapter.getSettings(DEFAULT_PLUGIN_SETTINGS);
+        const allSettings = { ...storedSettings, quarterlyNotes: settings };
         await this.adapter.storeSettings(allSettings);
     }
 

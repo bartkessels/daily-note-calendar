@@ -26,7 +26,7 @@ export abstract class SettingsView {
             .setDesc(description);
     }
 
-    protected addBooleanSetting(model: SettingUiModel<boolean>, onChange: (value: boolean) => void): void {
+    protected addBooleanSetting(model: SettingUiModel<boolean>, onChange: (value: boolean) => Promise<void>): void {
         new Setting(this.settingsTab.containerEl)
             .setName(model.name)
             .setDesc(model.description)
@@ -36,7 +36,7 @@ export abstract class SettingsView {
             );
     }
 
-    protected addTextSetting(model: SettingUiModel<string>, onChange: (value: string) => void): void {
+    protected addTextSetting(model: SettingUiModel<string>, onChange: (value: string) => Promise<void>): void {
         new Setting(this.settingsTab.containerEl)
             .setName(model.name)
             .setDesc(model.description)
@@ -47,7 +47,7 @@ export abstract class SettingsView {
             );
     }
 
-    protected addDateParseSetting(model: SettingUiModel<string>, dateParser: DateParser, onChange: (value: string) => void): void {
+    protected addDateParseSetting(model: SettingUiModel<string>, dateParser: DateParser, onChange: (value: string) => Promise<void>): void {
         const exampleElement = document.createElement('span');
         exampleElement.className = 'dnc-setting-example';
         exampleElement.setText(dateParser.fromDate(this.today, model.value));
@@ -64,9 +64,9 @@ export abstract class SettingsView {
             .addText(component => component
                 .setPlaceholder(model.placeholder)
                 .setValue(model.value)
-                .onChange((value: string) => {
+                .onChange(async (value: string) => {
                     exampleElement.setText(dateParser.fromDate(this.today, value));
-                    onChange(value);
+                    await onChange(value);
                 })
             );
     }

@@ -2,9 +2,7 @@ import {ObsidianSettingsAdapter} from 'src/infrastructure/obsidian/obsidian.sett
 import {Plugin} from 'obsidian';
 import {DefaultSettingsRepositoryFactory} from 'src/infrastructure/factories/default.settings-repository-factory';
 import {DefaultNameBuilderFactory} from 'src/business/factories/default.name-builder-factory';
-import {NameBuilderType} from 'src/business/contracts/name-builder-factory';
 import {DefaultVariableParserFactory} from 'src/business/factories/default.variable-parser-factory';
-import {Period} from 'src/domain/models/period.model';
 import {DefaultDateParserFactory} from 'src/infrastructure/factories/default.date-parser-factory';
 import {ObsidianFileAdapter} from 'src/infrastructure/obsidian/obsidian.file-adapter';
 import {DefaultVariableFactory} from 'src/business/factories/default.variable-factory';
