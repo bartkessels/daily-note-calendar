@@ -1,8 +1,8 @@
 import {SettingsView, SettingUiModel} from 'src/presentation/settings/settings-view';
 import {PluginSettingTab, Setting} from 'obsidian';
 import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contracts/settings-repository-factory';
-import {DayOfWeek, dayOfWeekName} from 'src-old/domain/models/day';
 import {GeneralSettings} from 'src/domain/settings/general.settings';
+import { DayOfWeek } from 'src/domain/models/week.model';
 
 export class GeneralSettingsView extends SettingsView {
     override title = "General";
@@ -62,10 +62,10 @@ export class GeneralSettingsView extends SettingsView {
             .setDesc('Set the first day of the week for the calendar.')
             .addDropdown(component => component
                 .addOptions({
-                    'sunday': dayOfWeekName(DayOfWeek.Sunday),
-                    'monday': dayOfWeekName(DayOfWeek.Monday)
+                    'sunday': this.dayOfWeekName(DayOfWeek.Sunday),
+                    'monday': this.dayOfWeekName(DayOfWeek.Monday)
                 })
-                .setValue(dayOfWeekName(value).toLowerCase())
+                .setValue(this.dayOfWeekName(value).toLowerCase())
                 .onChange((value) => {
                     if (value.toLowerCase() === 'sunday') {
                         onValueChange(DayOfWeek.Sunday);
@@ -83,5 +83,24 @@ export class GeneralSettingsView extends SettingsView {
             placeholder: '',
             value: value
         };
+    }
+
+    private dayOfWeekName(dayOfWeek: DayOfWeek): string {
+        switch (dayOfWeek) {
+            case DayOfWeek.Monday:
+                return 'Monday';
+            case DayOfWeek.Tuesday:
+                return 'Tuesday';
+            case DayOfWeek.Wednesday:
+                return 'Wednesday';
+            case DayOfWeek.Thursday:
+                return 'Thursday';
+            case DayOfWeek.Friday:
+                return 'Friday';
+            case DayOfWeek.Saturday:
+                return 'Saturday';
+            case DayOfWeek.Sunday:
+                return 'Sunday';
+        }
     }
 }

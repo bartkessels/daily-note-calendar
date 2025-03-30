@@ -6,7 +6,7 @@ import {WeekUiModel} from 'src/presentation/models/week.ui-model';
 import {Period} from 'src/domain/models/period.model';
 
 interface WeekComponentProperties {
-    model: WeekUiModel | null;
+    model: WeekUiModel;
     currentMonth: PeriodUiModel | undefined;
     selectedPeriod?: PeriodUiModel;
     currentPeriod?: PeriodUiModel;
@@ -17,14 +17,6 @@ interface WeekComponentProperties {
 }
 
 export const WeekComponent = (props: WeekComponentProperties): ReactElement => {
-    if (!props || !props?.model) {
-        return (
-            <tr>
-                <td colSpan={8} className="dnc-skeleton dnc-skeleton-week"/>
-            </tr>
-        );
-    }
-
     return (
         <tr>
             <td height="35" className="weekNumber" key={props.model.weekNumber}>
