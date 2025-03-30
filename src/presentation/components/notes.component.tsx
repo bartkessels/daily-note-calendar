@@ -14,13 +14,13 @@ export const NotesComponent = (props: NotesComponentProperties) => {
     const [uiModel, setUiModel] = React.useState<NotesUiModel | undefined>(props.initialUiModel);
     const viewModel = useNotesViewModel();
 
-    viewModel?.setUpdateUiModel(setUiModel);
-
     React.useEffect(() => {
+        viewModel?.setUpdateUiModel(setUiModel);
+
         if (props.period) {
             viewModel?.loadNotes(props.period);
         }
-    }, [viewModel, props.period]);
+    }, [viewModel, setUiModel, props.period]);
 
     return (
         <div className="dnc">

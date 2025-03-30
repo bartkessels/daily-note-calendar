@@ -16,7 +16,10 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
     const [uiModel, setUiModel] = React.useState<CalendarUiModel | null>(props?.initialUiModel ?? null);
     const viewModel = useCalendarViewModel();
 
-    viewModel?.setUpdateUiModel(setUiModel);
+    React.useEffect(() => {
+        viewModel?.setUpdateUiModel(setUiModel);
+        viewModel?.loadCurrentWeek();
+    }, [viewModel, setUiModel]);
 
     return (
         <div className="dnc">

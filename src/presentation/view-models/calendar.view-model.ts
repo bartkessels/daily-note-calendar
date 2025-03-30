@@ -48,7 +48,10 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         // Only update the UI model if it's the latest version of the UI model
         if (!this.uiModel || model.lastUpdateRequest > this.uiModel.lastUpdateRequest) {
             this.uiModel = model;
-            this.updateUiModel(model);
+
+            if(this.updateUiModel) {
+                this.updateUiModel(model);
+            }
         }
     }
 
