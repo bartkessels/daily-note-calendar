@@ -19,7 +19,16 @@ write my own plugin which allows you to customize the format of your daily and e
     - [1.2 Variables](#12-variables)
       - [1.2.1 Calculating dates](#121-calculating-dates)
     - [1.3 Notes created on a specific day](#13-notes-created-on-a-specific-day)
-    - [1.4 Displaying notes created on a specific day](#14-displaying-notes-created-on-a-specific-day)
+    - [1.4 Commands](#14-commands)
+        - [1.4.1 Open periodic notes](#141-open-periodic-notes)
+            - [Open weekly note](#open-weekly-note)
+            - [Open monthly note](#open-monthly-note)
+            - [Open quarterly note](#open-quarterly-note)
+            - [Open yearly note](#open-yearly-note)
+        - [1.4.2 Navigate to the next or previous week](#142-navigate-to-the-next-or-previous-week)
+        - [1.4.3 Navigate to the next or previous month](#143-navigate-to-the-next-or-previous-month)
+        - [1.4.4 Display the current note in calendar](#144-display-the-current-note-in-calendar)
+    - [1.5 Displaying notes created on a specific day](#14-displaying-notes-created-on-a-specific-day)
 - [2. External dependencies](#2-external-dependencies)
 - [3. Build and test](#3-build-and-test)
 - [4. Contribute](#4-contribute)
@@ -97,7 +106,62 @@ The _created on_ time displayed below each note can be customized using the date
 
 You can always navigate to created notes by pressing the `shift` key and clicking on the date. This will only list the notes created on that date and not open or create the daily note.
 
-## 1.4 Displaying notes created on a specific day
+## 1.4 Commands
+
+To navigate your vault even faster, the Daily Notes Calendar plugin offers a couple of commands to navigate your periodic notes.
+
+![Daily notes calendar plugin commands](./docs/images/daily-note-calendar-commands.png)
+
+### 1.4.1 Open periodic notes
+
+You can open your weekly, monthly, quarterly or yearly note by using the one of the following commands
+
+#### Open weekly note
+
+`Daily notes calendar: Open weekly note`
+> If today is 2024-12-31, the command will open the note `2024-W52` in the folder specified in the settings.
+
+#### Open monthly note
+`Daily notes calendar: Open monthly note`
+> If today is 2024-12-31, the command will open the note `2024-12` in the folder specified in the settings.
+
+#### Open quarterly note
+`Daily notes calendar: Open quarterly note`
+> If today is 2024-12-31, the command will open the note `2024-Q4` in the folder specified in the settings.
+
+#### Open yearly note
+`Daily notes calendar: Open yearly note`
+> If today is 2024-12-31, the command will open the note `2024` in the folder specified in the settings.
+
+### 1.4.2 Navigate to the next or previous week
+
+You can navigate the calendar to the next or previous week by using the following commands
+
+`Daily notes calendar: Navigate to the next week`
+> This will navigate to the next week relative to the current weeks in the calendar.
+
+`Daily notes calendar: Navigate to the previous week`
+> This will navigate to the previous week relative to the current weeks in the calendar.
+
+### 1.4.3 Navigate to the next or previous month
+
+You can navigate the calendar to the next or previous month by using the following commands
+
+`Daily notes calendar: Navigate to the next month`
+> This will navigate to the next month relative to the current month in the calendar.
+
+`Daily notes calendar: Navigate to the previous month`
+> This will navigate to the previous month relative to the current month in the calendar.
+
+### 1.4.4 Display the current note in calendar
+
+You can navigate to the current note's date in the calendar using the following command
+
+`Daily notes calendar: Display the current note in calendar`
+> This will navigate the calendar to the date of the currently opened note.
+> This will either take the creation date of the note, or the created date property if you've enabled that setting.
+
+## 1.5 Displaying notes created on a specific day
 
 When you've enabled the feature to display notes created on a specific day, you can also choose to display the current opened note in the calendar. This can be done by using the command `Daily notes calendar: Display the current note in calendar`.
 This will highlight the date of the current note in the calendar, and below the calendar all notes that are created on the same date as the currently opened note.
