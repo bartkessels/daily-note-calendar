@@ -1,5 +1,5 @@
 import {NoteManager} from 'src/business/contracts/note.manager';
-import {Note} from 'src/domain/models/note.model';
+import {Note, SortNotes} from 'src/domain/models/note.model';
 import {FileRepositoryFactory} from 'src/infrastructure/contracts/file-repository-factory';
 import {NoteRepositoryFactory} from 'src/infrastructure/contracts/note-repository-factory';
 import {arePeriodsEqual, Period} from 'src/domain/models/period.model';
@@ -29,14 +29,19 @@ export class RepositoryNoteManager implements NoteManager {
             .getRepository<DisplayNotesSettings>(SettingsType.DisplayNotes)
             .get();
         const noteRepository = this.noteRepositoryFactory.getRepository();
-
-        return await noteRepository.getNotes(note => {
+        const notes = await noteRepository.getNotes(note => {
             if (settings.useCreatedOnDateFromProperties) {
                 return arePeriodsEqual(note.createdOnProperty, period);
             }
 
             return arePeriodsEqual(note.createdOn, period);
         });
+
+        if (settings.sortNotes === SortNotes.Ascending) {
+            return notes.sort((a, b) => a.createdOn.date.getTime() - b.createdOn.date.getTime());
+        } else {
+            return notes.sort((a, b) => b.createdOn.date.getTime() - a.createdOn.date.getTime());
+        }
     }
 
     public async deleteNote(note: Note): Promise<void> {

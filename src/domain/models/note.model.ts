@@ -7,3 +7,8 @@ export interface Note {
     path: string;
     properties: Map<string, string>;
 }
+
+export enum SortNotes {
+    Ascending = 'ascending',
+    Descending = 'descending'
+}
