@@ -31,7 +31,7 @@ export class DateFnsDateRepository implements DateRepository {
             day: this.dayFormat
         });
 
-        return <Period> {
+        return <Period>{
             name: formatter.format(date),
             date: date,
             type: PeriodType.Day
@@ -50,16 +50,16 @@ export class DateFnsDateRepository implements DateRepository {
     }
 
     public getWeekFromDate(startOfWeekDay: DayOfWeek, date: Date): WeekModel {
-        const firstDayOfWeek = startOfWeek(date, { weekStartsOn: startOfWeekDay });
-        const weekNumber = getISOWeek(date);
+        const firstDayOfWeek = startOfWeek(date, {weekStartsOn: startOfWeekDay});
+        const weekNumber = getISOWeek(firstDayOfWeek);
         const month = this.getMonth(firstDayOfWeek.getFullYear(), firstDayOfWeek.getMonth());
         const quarter = this.getQuarter(month);
         const year = this.getYear(firstDayOfWeek.getFullYear());
         const days = this.getDaysOfWeek(startOfWeekDay, firstDayOfWeek);
 
-        return <WeekModel> {
+        return <WeekModel>{
             date: firstDayOfWeek,
-            name: weekNumber.toString().padStart(2, "0"),
+            name: weekNumber.toString().padStart(2, '0'),
             weekNumber: weekNumber,
             year: year,
             quarter: quarter,
@@ -127,7 +127,7 @@ export class DateFnsDateRepository implements DateRepository {
 
         const date = new Date(year, monthIndex);
 
-        return <Period> {
+        return <Period>{
             name: formatter.format(date),
             date: date,
             type: PeriodType.Month
