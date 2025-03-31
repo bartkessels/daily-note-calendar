@@ -3,6 +3,7 @@ import {DEFAULT_PLUGIN_SETTINGS, PluginSettings} from 'src/domain/settings/plugi
 import {when} from 'jest-when';
 import {DisplayNotesSettingsRepository} from 'src/infrastructure/repositories/display-notes.settings-repository';
 import {DEFAULT_WEEKLY_NOTE_SETTINGS} from 'src/domain/settings/period-note.settings';
+import {SortNotes} from 'src/domain/models/note.model';
 
 describe('DisplayNotesSettingsRepository', () => {
     let repository: DisplayNotesSettingsRepository;
@@ -65,7 +66,8 @@ describe('DisplayNotesSettingsRepository', () => {
                     displayDateTemplate: 'yyyy-MM-dd',
                     useCreatedOnDateFromProperties: false,
                     createdOnDatePropertyName: 'createdOn',
-                    createdOnPropertyFormat: 'yyyyMMdd'
+                    createdOnPropertyFormat: 'yyyyMMdd',
+                    sortNotes: SortNotes.Ascending
                 }
             };
 

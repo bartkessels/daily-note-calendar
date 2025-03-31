@@ -9,7 +9,7 @@ import {
     mockNoteRepositoryFactory, mockSettingsRepositoryFactory,
 } from 'src/test-helpers/factory.mocks';
 import {when} from 'jest-when';
-import {Note} from 'src/domain/models/note.model';
+import {Note, SortNotes} from 'src/domain/models/note.model';
 import {Period, PeriodType} from 'src/domain/models/period.model';
 import {DEFAULT_DISPLAY_NOTES_SETTINGS, DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
 
@@ -94,7 +94,10 @@ describe('RepositoryNoteManager', () => {
 
         it('should filter notes based on the createdOnProperty if it has a value and the setting is set to true', async () => {
             // Arrange
-            const settings = <DisplayNotesSettings>{ ...DEFAULT_DISPLAY_NOTES_SETTINGS, useCreatedOnDateFromProperties: true };
+            const settings = <DisplayNotesSettings>{
+                ...DEFAULT_DISPLAY_NOTES_SETTINGS,
+                useCreatedOnDateFromProperties: true
+            };
             when(settingsRepository.get).mockResolvedValue(settings);
             when(noteRepository.getNotes).mockImplementation((filterFn) => {
                 return Promise.resolve([noteWithCreatedOnProperty, noteWithoutCreatedOnProperty].filter(filterFn));
@@ -109,7 +112,10 @@ describe('RepositoryNoteManager', () => {
 
         it('should return no notes when the createdOnProperty is not set but the setting is set to true', async () => {
             // Arrange
-            const settings = <DisplayNotesSettings>{ ...DEFAULT_DISPLAY_NOTES_SETTINGS, useCreatedOnDateFromProperties: true };
+            const settings = <DisplayNotesSettings>{
+                ...DEFAULT_DISPLAY_NOTES_SETTINGS,
+                useCreatedOnDateFromProperties: true
+            };
             when(settingsRepository.get).mockResolvedValue(settings);
             when(noteRepository.getNotes).mockImplementation((filterFn) => {
                 return Promise.resolve([noteWithoutCreatedOnProperty].filter(filterFn));
@@ -124,7 +130,10 @@ describe('RepositoryNoteManager', () => {
 
         it('should return the notes based on the createdOn if the setting is set to false', async () => {
             // Arrange
-            const settings = <DisplayNotesSettings>{ ...DEFAULT_DISPLAY_NOTES_SETTINGS, useCreatedOnDateFromProperties: false };
+            const settings = <DisplayNotesSettings>{
+                ...DEFAULT_DISPLAY_NOTES_SETTINGS,
+                useCreatedOnDateFromProperties: false
+            };
             when(settingsRepository.get).mockResolvedValue(settings);
             when(noteRepository.getNotes).mockImplementation((filterFn) => {
                 return Promise.resolve([noteWithCreatedOnProperty, noteWithoutCreatedOnProperty].filter(filterFn));
@@ -146,6 +155,94 @@ describe('RepositoryNoteManager', () => {
 
             // Assert
             expect(result).toEqual([]);
+        });
+
+        it('should return the notes in ascending order when the setting is set to Ascending', async () => {
+            // Arrange
+            const firstNote = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 3),
+                    name: '3',
+                    type: PeriodType.Day
+                },
+                name: 'first note',
+                path: 'path/to/first-note.md',
+                properties: new Map<string, string>()
+            };
+            const secondNote = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 4),
+                    name: '4',
+                    type: PeriodType.Day
+                },
+                name: 'second note',
+                path: 'path/to/second-note.md',
+                properties: new Map<string, string>()
+            };
+            const thirdNote = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 7),
+                    name: '7',
+                    type: PeriodType.Day
+                },
+                name: 'third note',
+                path: 'path/to/third-note.md',
+                properties: new Map<string, string>()
+            };
+
+            const settings = {...DEFAULT_DISPLAY_NOTES_SETTINGS, sortNotes: SortNotes.Ascending};
+            when(settingsRepository.get).mockResolvedValue(settings);
+            when(noteRepository.getNotes).mockResolvedValue([thirdNote, firstNote, secondNote]);
+
+            // Act
+            const result = await manager.getNotesForPeriod(period);
+
+            // Assert
+            expect(result).toEqual([firstNote, secondNote, thirdNote]);
+        });
+
+        it('should return the notes in descending order when the setting is set to Descending', async () => {
+            // Arrange
+            const firstNote = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 3),
+                    name: '3',
+                    type: PeriodType.Day
+                },
+                name: 'first note',
+                path: 'path/to/first-note.md',
+                properties: new Map<string, string>()
+            };
+            const secondNote = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 4),
+                    name: '4',
+                    type: PeriodType.Day
+                },
+                name: 'second note',
+                path: 'path/to/second-note.md',
+                properties: new Map<string, string>()
+            };
+            const thirdNote = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 7),
+                    name: '7',
+                    type: PeriodType.Day
+                },
+                name: 'third note',
+                path: 'path/to/third-note.md',
+                properties: new Map<string, string>()
+            };
+
+            const settings = {...DEFAULT_DISPLAY_NOTES_SETTINGS, sortNotes: SortNotes.Descending};
+            when(settingsRepository.get).mockResolvedValue(settings);
+            when(noteRepository.getNotes).mockResolvedValue([thirdNote, firstNote, secondNote]);
+
+            // Act
+            const result = await manager.getNotesForPeriod(period);
+
+            // Assert
+            expect(result).toEqual([thirdNote, secondNote, firstNote]);
         });
     });
 

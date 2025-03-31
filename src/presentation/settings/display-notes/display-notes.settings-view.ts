@@ -1,8 +1,9 @@
 import {SettingsView, SettingUiModel} from 'src/presentation/settings/settings-view';
-import {PluginSettingTab} from 'obsidian';
+import {PluginSettingTab, Setting} from 'obsidian';
 import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contracts/settings-repository-factory';
 import {DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
 import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
+import { SortNotes } from 'src/domain/models/note.model';
 
 export class DisplayNotesSettingsView extends SettingsView {
     override title = "Notes settings";
@@ -21,6 +22,11 @@ export class DisplayNotesSettingsView extends SettingsView {
         const settingsRepository = this.settingsRepositoryFactory
             .getRepository<DisplayNotesSettings>(SettingsType.DisplayNotes);
         const settings = await settingsRepository.get();
+
+        this.addSortOrderSetting(settings.sortNotes, async value => {
+            settings.sortNotes = value;
+            await settingsRepository.store(settings);
+        });
 
         this.addDateParseSetting(this.getDisplayDateTemplateSetting(settings.displayDateTemplate), dateParser, async value => {
             settings.displayDateTemplate = value;
@@ -74,5 +80,25 @@ export class DisplayNotesSettingsView extends SettingsView {
             placeholder: 'yyyy/MM/dd HH:mm',
             value: value
         };
+    }
+
+    private addSortOrderSetting(value: SortNotes, onValueChange: (value: SortNotes) => Promise<void>): void {
+        new Setting(this.settingsTab.containerEl)
+            .setName('Display order for the notes')
+            .setDesc('The order in which the notes will be ordered based on the created date.')
+            .addDropdown(component => component
+                .addOptions({
+                    'ascending': 'Ascending',
+                    'descending': 'Descending'
+                })
+                .setValue(value)
+                .onChange(async value => {
+                    if (value.toLowerCase() === 'ascending') {
+                        await onValueChange(SortNotes.Ascending);
+                    } else {
+                        await onValueChange(SortNotes.Descending);
+                    }
+                })
+            );
     }
 }
