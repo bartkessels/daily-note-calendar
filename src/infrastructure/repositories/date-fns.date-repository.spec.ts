@@ -131,8 +131,8 @@ describe('DateFnsDateRepository', () => {
             // Assert
             expect(result).toEqual(<WeekModel> {
                 date: new Date(2023, 9, 1),
-                name: '40',
-                weekNumber: 40,
+                name: '39',
+                weekNumber: 39,
                 year: <Period> {
                     name: '2023',
                     date: new Date(2023, 0),
@@ -517,8 +517,8 @@ describe('DateFnsDateRepository', () => {
             // Assert
             expect(result).toEqual(<WeekModel>{
                 date: new Date(2023, 11, 24),
-                name: '52',
-                weekNumber: 52,
+                name: '51',
+                weekNumber: 51,
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
