@@ -1,4 +1,4 @@
-import {DayOfWeek, WeekModel} from 'src/domain/models/week.model';
+import {DayOfWeek, WeekModel, WeekNumberStandard} from 'src/domain/models/week.model';
 import {DateRepository} from 'src/infrastructure/contracts/date-repository';
 import {
     addMonths,
@@ -6,7 +6,7 @@ import {
     eachDayOfInterval,
     endOfWeek,
     getISOWeek,
-    getQuarter, startOfMonth,
+    getQuarter, getWeek, startOfMonth,
     startOfQuarter,
     startOfWeek,
     subMonths,
@@ -39,8 +39,7 @@ export class DateFnsDateRepository implements DateRepository {
     }
 
     public getDayFromDateString(dateString: string, dateTemplate: string): Period | null {
-        const date = this.dateParserFactory.getParser()
-            .fromString(dateString, dateTemplate);
+        const date = this.dateParserFactory.getParser().fromString(dateString, dateTemplate);
 
         if (!date) {
             return null;
@@ -49,9 +48,14 @@ export class DateFnsDateRepository implements DateRepository {
         return this.getDayFromDate(date);
     }
 
-    public getWeekFromDate(startOfWeekDay: DayOfWeek, date: Date): WeekModel {
+    public getWeekFromDate(startOfWeekDay: DayOfWeek, standard: WeekNumberStandard, date: Date): WeekModel {
         const firstDayOfWeek = startOfWeek(date, {weekStartsOn: startOfWeekDay});
-        const weekNumber = getISOWeek(firstDayOfWeek);
+        let weekNumber = getISOWeek(firstDayOfWeek);
+
+        if (standard === WeekNumberStandard.US) {
+            weekNumber = getWeek(firstDayOfWeek, {weekStartsOn: startOfWeekDay});
+        }
+
         const month = this.getMonth(firstDayOfWeek.getFullYear(), firstDayOfWeek.getMonth());
         const quarter = this.getQuarter(month);
         const year = this.getYear(firstDayOfWeek.getFullYear());
@@ -69,14 +73,14 @@ export class DateFnsDateRepository implements DateRepository {
         };
     }
 
-    public getNextWeek(startOfWeek: DayOfWeek, currentWeek: WeekModel): WeekModel {
+    public getNextWeek(startOfWeek: DayOfWeek, standard: WeekNumberStandard, currentWeek: WeekModel): WeekModel {
         const nextWeekDate = addWeeks(currentWeek.date, 1);
-        return this.getWeekFromDate(startOfWeek, nextWeekDate);
+        return this.getWeekFromDate(startOfWeek, standard, nextWeekDate);
     }
 
-    public getPreviousWeek(startOfWeek: DayOfWeek, currentWeek: WeekModel): WeekModel {
+    public getPreviousWeek(startOfWeek: DayOfWeek, standard: WeekNumberStandard, currentWeek: WeekModel): WeekModel {
         const previousWeekDate = subWeeks(currentWeek.date, 1);
-        return this.getWeekFromDate(startOfWeek, previousWeekDate);
+        return this.getWeekFromDate(startOfWeek, standard, previousWeekDate);
     }
 
     public getMonthFromDate(date: Date): Period {

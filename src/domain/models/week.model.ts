@@ -17,3 +17,8 @@ export enum DayOfWeek {
     Friday = 5,
     Saturday = 6
 }
+
+export enum WeekNumberStandard {
+    ISO = 0,
+    US = 1
+}

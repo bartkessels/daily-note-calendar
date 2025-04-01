@@ -20,8 +20,9 @@ export class OpenWeeklyNoteCommandHandler implements CommandHandler {
             .get();
 
         const today = this.dateManagerFactory.getManager().getCurrentDay();
-        const week = this.dateManagerFactory.getManager().getWeek(today, settings.firstDayOfWeek);
+        const week = this.dateManagerFactory.getManager()
+            .getWeek(today, settings.firstDayOfWeek, settings.weekNumberStandard);
 
-        this.viewModel.openWeeklyNote(ModifierKey.None, week);
+        await this.viewModel.openWeeklyNote(ModifierKey.None, week);
     }
 }

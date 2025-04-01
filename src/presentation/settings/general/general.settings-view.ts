@@ -2,7 +2,7 @@ import {SettingsView, SettingUiModel} from 'src/presentation/settings/settings-v
 import {PluginSettingTab, Setting} from 'obsidian';
 import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contracts/settings-repository-factory';
 import {GeneralSettings} from 'src/domain/settings/general.settings';
-import { DayOfWeek } from 'src/domain/models/week.model';
+import {DayOfWeek, WeekNumberStandard} from 'src/domain/models/week.model';
 
 export class GeneralSettingsView extends SettingsView {
     override title = "General";
@@ -30,6 +30,10 @@ export class GeneralSettingsView extends SettingsView {
         });
         this.addStartDayOfWeekSetting(settings.firstDayOfWeek, async value => {
             settings.firstDayOfWeek = value;
+            await settingsRepository.store(settings);
+        });
+        this.addWeekNumberStandardSetting(settings.weekNumberStandard, async value => {
+            settings.weekNumberStandard = value;
             await settingsRepository.store(settings);
         });
         this.addBooleanSetting(this.getUseModifierKeyToCreateNoteSetting(settings.useModifierKeyToCreateNote), async value => {
@@ -76,6 +80,26 @@ export class GeneralSettingsView extends SettingsView {
             );
     }
 
+    private addWeekNumberStandardSetting(value: WeekNumberStandard, onValueChange: (value: WeekNumberStandard) => Promise<void>): void {
+        new Setting(this.settingsTab.containerEl)
+            .setName('Week number standard')
+            .setDesc('Set the week number standard for the calendar.')
+            .addDropdown(component => component
+                .addOptions({
+                    'iso': this.weekNumberStandardName(WeekNumberStandard.ISO),
+                    'us': this.weekNumberStandardName(WeekNumberStandard.US)
+                })
+                .setValue(value === WeekNumberStandard.ISO ? 'iso' : 'us')
+                .onChange(async value => {
+                    if (value.toLowerCase() === 'iso') {
+                        await onValueChange(WeekNumberStandard.ISO);
+                    } else {
+                        await onValueChange(WeekNumberStandard.US);
+                    }
+                })
+            );
+    }
+
     private getUseModifierKeyToCreateNoteSetting(value: boolean): SettingUiModel<boolean> {
         return <SettingUiModel<boolean>> {
             name: 'Use modifier key to create a note',
@@ -101,6 +125,15 @@ export class GeneralSettingsView extends SettingsView {
                 return 'Saturday';
             case DayOfWeek.Sunday:
                 return 'Sunday';
+        }
+    }
+
+    private weekNumberStandardName(standard: WeekNumberStandard): string {
+        switch (standard) {
+            case WeekNumberStandard.ISO:
+                return 'ISO 8601';
+            case WeekNumberStandard.US:
+                return 'US';
         }
     }
 }
