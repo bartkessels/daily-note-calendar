@@ -63,19 +63,23 @@ describe('OpenWeeklyNoteCommandHandler', () => {
         it('should get the current week based on the current day from the date manager', async () => {
             // Arrange
             when(dateManager.getCurrentDay).mockReturnValue(today);
-            when(dateManager.getWeek).calledWith(today, DEFAULT_GENERAL_SETTINGS.firstDayOfWeek).mockReturnValue(week);
+            when(dateManager.getWeek)
+                .calledWith(today, DEFAULT_GENERAL_SETTINGS.firstDayOfWeek, DEFAULT_GENERAL_SETTINGS.weekNumberStandard)
+                .mockReturnValue(week);
 
             // Act
             await commandHandler.execute();
 
             // Assert
-            expect(dateManager.getWeek).toHaveBeenCalledWith(today, DEFAULT_GENERAL_SETTINGS.firstDayOfWeek);
+            expect(dateManager.getWeek).toHaveBeenCalledWith(today, DEFAULT_GENERAL_SETTINGS.firstDayOfWeek, DEFAULT_GENERAL_SETTINGS.weekNumberStandard);
         });
 
         it('should call the openWeeklyNote method of the view model with the current week and None modifier key', async () => {
             // Arrange
             when(dateManager.getCurrentDay).mockReturnValue(today);
-            when(dateManager.getWeek).calledWith(today, DEFAULT_GENERAL_SETTINGS.firstDayOfWeek).mockReturnValue(week);
+            when(dateManager.getWeek)
+                .calledWith(today, DEFAULT_GENERAL_SETTINGS.firstDayOfWeek, DEFAULT_GENERAL_SETTINGS.weekNumberStandard)
+                .mockReturnValue(week);
 
             // Act
             await commandHandler.execute();
