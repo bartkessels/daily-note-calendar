@@ -1,4 +1,4 @@
-import {ContextMenuAdapter} from 'src/presentation/contracts/context-menu-adapter';
+import {ContextMenuAdapter} from 'src/presentation/adapters/context-menu.adapter';
 
 export const mockContextMenuAdapter = {
     show: jest.fn(),

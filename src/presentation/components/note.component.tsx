@@ -1,7 +1,7 @@
 import {NoteUiModel} from 'src/presentation/models/note.ui-model';
 import React, {ReactElement} from 'react';
 import {getContextMenuAdapter} from 'src/presentation/context/context-menu-adapter.context';
-import {ContextMenuCallbacks} from 'src/presentation/contracts/context-menu-adapter';
+import {ContextMenuCallbacks} from 'src/presentation/adapters/context-menu.adapter';
 
 export interface NoteComponentProperties {
     note: NoteUiModel;

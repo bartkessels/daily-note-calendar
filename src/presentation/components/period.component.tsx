@@ -2,8 +2,8 @@ import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
 import {ModifierKey} from 'src/presentation/models/modifier-key';
 import React, {ReactElement} from 'react';
 import {getContextMenuAdapter} from 'src/presentation/context/context-menu-adapter.context';
-import {ContextMenuCallbacks} from 'src/presentation/contracts/context-menu-adapter';
 import {Period} from 'src/domain/models/period.model';
+import {ContextMenuCallbacks} from 'src/presentation/adapters/context-menu.adapter';
 
 interface PeriodComponentProperties {
     isSelected?: boolean;

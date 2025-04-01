@@ -1,4 +1,4 @@
-import {ContextMenuAdapter} from 'src/presentation/contracts/context-menu-adapter';
+import {ContextMenuAdapter} from 'src/presentation/contracts/context-menu.adapter';
 import {Menu} from 'obsidian';
 
 export class ObsidianContextMenuAdapter implements ContextMenuAdapter {
@@ -15,8 +15,8 @@ export class ObsidianContextMenuAdapter implements ContextMenuAdapter {
         delete this.contextMenu;
     }
 
-    private addDeleteNoteMenuItem(menu: any, deleteCallback: () => void): any {
-        return menu.addItem((menuItem: any) => menuItem
+    private addDeleteNoteMenuItem(menu: Menu, deleteCallback: () => void): any {
+        return menu.addItem(menuItem => menuItem
             .setIcon('trash')
             .setTitle('Delete')
             .onClick(deleteCallback)

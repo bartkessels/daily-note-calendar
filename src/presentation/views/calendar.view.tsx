@@ -6,7 +6,7 @@ import {CalendarViewModelContext} from 'src/presentation/context/calendar-view-m
 import {CalendarComponent} from 'src/presentation/components/calendar.component';
 import {NotesViewModelContext} from 'src/presentation/context/notes-view-model.context';
 import {NotesViewModel} from 'src/presentation/view-models/notes.view-model';
-import {ContextMenuAdapter} from 'src/presentation/contracts/context-menu-adapter';
+import {ContextMenuAdapter} from 'src/presentation/contracts/context-menu.adapter';
 import {ContextMenuAdapterContext} from 'src/presentation/context/context-menu-adapter.context';
 
 export class CalendarView extends ItemView {

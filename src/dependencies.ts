@@ -26,8 +26,8 @@ import {PeriodUiModelBuilder} from 'src/presentation/builders/period.ui-model-bu
 import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
 import {DefaultNotesViewModel, NotesViewModel} from 'src/presentation/view-models/notes.view-model';
 import {NotesUiModelBuilder} from 'src/presentation/builders/notes.ui-model-builder';
-import {ContextMenuAdapter} from 'src/presentation/contracts/context-menu-adapter';
-import {ObsidianContextMenuAdapter} from 'src/presentation/adapters/obsidian.context-menu-adapter';
+import {ContextMenuAdapter} from 'src/presentation/adapters/context-menu.adapter';
+import {ObsidianContextMenuAdapter} from 'src/presentation/obsidian/obsidian.context-menu-adapter';
 
 export interface Dependencies {
     calendarViewModel: CalendarViewModel;
