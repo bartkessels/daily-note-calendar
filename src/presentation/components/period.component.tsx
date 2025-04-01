@@ -20,6 +20,9 @@ export const PeriodComponent = (props: PeriodComponentProperties): ReactElement 
 
     const contextMenu = getContextMenuAdapter();
     const contextMenuCallbacks: ContextMenuCallbacks = {
+        openInCurrentTab: () => {},
+        openInHorizontalSplitView: () => {},
+        openInVerticalSplitView: () => {},
         onDelete: () => props.onDelete(props.model!)
     };
     const modifierKey = (event: React.MouseEvent): ModifierKey => {

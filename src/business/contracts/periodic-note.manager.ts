@@ -5,5 +5,7 @@ export interface PeriodicNoteManager {
     doesNoteExist(settings: PeriodNoteSettings, period: Period): Promise<boolean>;
     createNote(settings: PeriodNoteSettings, period: Period): Promise<void>;
     openNote(settings: PeriodNoteSettings, period: Period): Promise<void>;
+    openNoteInHorizontalSplitView(settings: PeriodNoteSettings, period: Period): Promise<void>;
+    openNoteInVerticalSplitView(settings: PeriodNoteSettings, period: Period): Promise<void>;
     deleteNote(settings: PeriodNoteSettings, period: Period): Promise<void>;
 }

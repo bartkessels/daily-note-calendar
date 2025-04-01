@@ -2,7 +2,7 @@ import {DEFAULT_PLUGIN_SETTINGS, PluginSettings} from 'src/domain/settings/plugi
 import {CalendarService} from 'src/presentation/contracts/calendar-service';
 import {DateManager} from 'src/business/contracts/date.manager';
 import {PeriodicNoteManager} from 'src/business/contracts/periodic-note.manager';
-import {isCreateFileModifierKey, isSelectModifierKey, ModifierKey} from 'src/presentation/models/modifier-key';
+import {isCreateFileModifierKey, ModifierKey} from 'src/presentation/models/modifier-key';
 import {PeriodNoteSettings} from 'src/domain/settings/period-note.settings';
 import {DateManagerFactory} from 'src/business/contracts/date-manager-factory';
 import {WeekModel} from 'src/domain/models/week.model';
@@ -24,16 +24,16 @@ export class DefaultCalendarService implements CalendarService {
     }
 
     public async openPeriodicNote(key: ModifierKey, period: Period, settings: PeriodNoteSettings): Promise<void> {
-        const requireModifierKeyForCreatingNote = this.settings.generalSettings.useModifierKeyToCreateNote;
-        const isCreateFileModifierKeyPressed = isCreateFileModifierKey(key) && requireModifierKeyForCreatingNote;
-        const shouldCreateNote = (!requireModifierKeyForCreatingNote || isCreateFileModifierKeyPressed);
+        await this.openNote(key, period, settings, this.periodicNoteManager.openNote.bind(this));
+    }
 
-        if (shouldCreateNote) {
-            await this.periodicNoteManager.createNote(settings, period);
-            await this.periodicNoteManager.openNote(settings, period);
-        } else {
-            await this.periodicNoteManager.openNote(settings, period);
-        }
+
+    public async openNoteInHorizontalSplitView(key: ModifierKey, period: Period, settings: PeriodNoteSettings): Promise<void> {
+        await this.openNote(key, period, settings, this.periodicNoteManager.openNoteInHorizontalSplitView.bind(this));
+    }
+
+    public async openNoteInVerticalSplitView(key: ModifierKey, period: Period, settings: PeriodNoteSettings): Promise<void> {
+        await this.openNote(key, period, settings, this.periodicNoteManager.openNoteInVerticalSplitView.bind(this));
     }
 
     public async deletePeriodicNote(period: Period, settings: PeriodNoteSettings): Promise<void> {
@@ -71,6 +71,24 @@ export class DefaultCalendarService implements CalendarService {
         const nextMonth = this.dateManager.getNextMonth(middleWeek, firstDayOfWeek);
 
         return this.sortWeeks(nextMonth);
+    }
+
+    private async openNote(
+        key: ModifierKey,
+        period: Period,
+        settings: PeriodNoteSettings,
+        openAction: (settings: PeriodNoteSettings, period: Period) => Promise<void>
+    ): Promise<void> {
+        const requireModifierKeyForCreatingNote = this.settings.generalSettings.useModifierKeyToCreateNote;
+        const isCreateFileModifierKeyPressed = isCreateFileModifierKey(key) && requireModifierKeyForCreatingNote;
+        const shouldCreateNote = (!requireModifierKeyForCreatingNote || isCreateFileModifierKeyPressed);
+
+        if (shouldCreateNote) {
+            await this.periodicNoteManager.createNote(settings, period);
+            await openAction(settings, period);
+        } else {
+            await openAction(settings, period);
+        }
     }
 
     private getMiddleWeek(weeks: WeekModel[]): WeekModel {

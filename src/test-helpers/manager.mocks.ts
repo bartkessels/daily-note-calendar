@@ -7,6 +7,8 @@ export const mockNoteManager = {
     getActiveNote: jest.fn(),
     getNotesForPeriod: jest.fn(),
     openNote: jest.fn(),
+    openNoteInHorizontalSplitView: jest.fn(),
+    openNoteInVerticalSplitView: jest.fn(),
     deleteNote: jest.fn()
 } as jest.Mocked<NoteManager>;
 
@@ -27,5 +29,7 @@ export const mockPeriodicNoteManager = {
     doesNoteExist: jest.fn(),
     createNote: jest.fn(),
     openNote: jest.fn(),
+    openNoteInHorizontalSplitView: jest.fn(),
+    openNoteInVerticalSplitView: jest.fn(),
     deleteNote: jest.fn()
 } as jest.Mocked<PeriodicNoteManager>;

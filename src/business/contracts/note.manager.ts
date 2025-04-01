@@ -5,5 +5,7 @@ export interface NoteManager {
     getActiveNote(): Promise<Note | null>;
     getNotesForPeriod(period: Period): Promise<Note[]>;
     openNote(note: Note): Promise<void>;
+    openNoteInHorizontalSplitView(note: Note): Promise<void>;
+    openNoteInVerticalSplitView(note: Note): Promise<void>;
     deleteNote(note: Note): Promise<void>;
 }

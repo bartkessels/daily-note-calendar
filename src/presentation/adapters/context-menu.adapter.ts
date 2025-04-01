@@ -4,5 +4,7 @@ export interface ContextMenuAdapter {
 }
 
 export interface ContextMenuCallbacks {
+    openInHorizontalSplitView: () => void;
+    openInVerticalSplitView: () => void;
     onDelete: () => void;
 }

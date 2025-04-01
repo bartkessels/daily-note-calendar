@@ -57,15 +57,19 @@ export class ObsidianFileAdapter implements FileAdapter {
         await this.plugin.app.vault.adapter.write(normalizedPath, contents);
     }
 
-    public async open(path: string): Promise<void> {
-        const normalizedPath = this.normalizePath(path);
-        const file = this.plugin.app.vault.getFileByPath(normalizedPath);
+    public async openInCurrentTab(path: string): Promise<void> {
+        const file = this.getFile(path);
+        await this.plugin.app.workspace.getLeaf().openFile(file, {active: true});
+    }
 
-        if (!file) {
-            throw new Error(`File does not exist: ${normalizedPath}.`);
-        }
+    public async openInHorizontalSplitView(path: string): Promise<void> {
+        const file = this.getFile(path);
+        await this.plugin.app.workspace.getLeaf('split', 'horizontal').openFile(file, {active: true});
+    }
 
-        await this.plugin.app.workspace.getLeaf().openFile(file, { active: true });
+    public async openInVerticalSplitView(path: string): Promise<void> {
+        const file = this.getFile(path);
+        await this.plugin.app.workspace.getLeaf('split', 'vertical').openFile(file, {active: true});
     }
 
     public async delete(path: string): Promise<void> {
@@ -76,6 +80,17 @@ export class ObsidianFileAdapter implements FileAdapter {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (<any>this.plugin.app).fileManager.promptForFileDeletion(file);
         }
+    }
+
+    private getFile(path: string): TFile {
+        const normalizedPath = this.normalizePath(path);
+        const file = this.plugin.app.vault.getFileByPath(normalizedPath);
+
+        if (!file) {
+            throw new Error(`File does not exist: ${normalizedPath}.`);
+        }
+
+        return file;
     }
 
     private normalizePath(filePath: string): string {

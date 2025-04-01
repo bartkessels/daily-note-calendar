@@ -12,6 +12,9 @@ export interface NoteComponentProperties {
 export const NoteComponent = (props: NoteComponentProperties): ReactElement => {
     const contextMenu = getContextMenuAdapter();
     const contextMenuCallbacks: ContextMenuCallbacks = {
+        openInCurrentTab: () => props.onClick(props.note),
+        openInHorizontalSplitView: () => {},
+        openInVerticalSplitView: () => {},
         onDelete: () => props.onDelete(props.note)
     };
 

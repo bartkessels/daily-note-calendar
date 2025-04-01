@@ -46,7 +46,31 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
             throw new Error('File does not exist');
         }
 
-        await fileRepository.open(filePath);
+        await fileRepository.openInCurrentTab(filePath);
+    }
+
+    public async openNoteInHorizontalSplitView(settings: PeriodNoteSettings, period: Period): Promise<void> {
+        const fileRepository = this.fileRepositoryFactory.getRepository();
+        const filePath = this.getFilePath(period, settings);
+        const fileExists = await this.doesNoteExist(settings, period);
+
+        if (!fileExists) {
+            throw new Error('File does not exist');
+        }
+
+        await fileRepository.openInHorizontalSplitView(filePath);
+    }
+
+    public async openNoteInVerticalSplitView(settings: PeriodNoteSettings, period: Period): Promise<void> {
+        const fileRepository = this.fileRepositoryFactory.getRepository();
+        const filePath = this.getFilePath(period, settings);
+        const fileExists = await this.doesNoteExist(settings, period);
+
+        if (!fileExists) {
+            throw new Error('File does not exist');
+        }
+
+        await fileRepository.openInVerticalSplitView(filePath);
     }
 
     public async deleteNote(settings: PeriodNoteSettings, period: Period): Promise<void> {

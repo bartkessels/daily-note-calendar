@@ -166,7 +166,7 @@ describe('DefaultPeriodicNoteManager', () => {
             await manager.openNote(dailyNoteSettings, period);
 
             // Assert
-            expect(fileRepository.open).toHaveBeenCalledWith(completeFilePath);
+            expect(fileRepository.openInCurrentTab).toHaveBeenCalledWith(completeFilePath);
         });
 
         it('should throw an exception when the file does not exist', async () => {
@@ -177,6 +177,57 @@ describe('DefaultPeriodicNoteManager', () => {
             const result = manager.openNote(dailyNoteSettings, period);
 
             // Assert
+            expect(fileRepository.openInCurrentTab).not.toHaveBeenCalled();
+            await expect(result).rejects.toThrow('File does not exist');
+        });
+    });
+
+    describe('openNoteInHorizontalSplit', () => {
+        it('should open the note when it does exist', async () => {
+            // Arrange
+            when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(true);
+
+            // Act
+            await manager.openNoteInHorizontalSplitView(dailyNoteSettings, period);
+
+            // Assert
+            expect(fileRepository.openInHorizontalSplitView).toHaveBeenCalledWith(completeFilePath);
+        });
+
+        it('should throw an exception when the file does not exist', async () => {
+            // Arrange
+            when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(false);
+
+            // Act
+            const result = manager.openNoteInHorizontalSplitView(dailyNoteSettings, period);
+
+            // Assert
+            expect(fileRepository.openInHorizontalSplitView).not.toHaveBeenCalled();
+            await expect(result).rejects.toThrow('File does not exist');
+        });
+    });
+
+    describe('openNoteInVerticalSplit', () => {
+        it('should open the note when it does exist', async () => {
+            // Arrange
+            when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(true);
+
+            // Act
+            await manager.openNoteInVerticalSplitView(dailyNoteSettings, period);
+
+            // Assert
+            expect(fileRepository.openInVerticalSplitView).toHaveBeenCalledWith(completeFilePath);
+        });
+
+        it('should throw an exception when the file does not exist', async () => {
+            // Arrange
+            when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(false);
+
+            // Act
+            const result = manager.openNoteInVerticalSplitView(dailyNoteSettings, period);
+
+            // Assert
+            expect(fileRepository.openInVerticalSplitView).not.toHaveBeenCalled();
             await expect(result).rejects.toThrow('File does not exist');
         });
     });
