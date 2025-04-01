@@ -5,12 +5,13 @@ import {NotesUiModel} from 'src/presentation/models/notes.ui-model';
 import {UiModelBuilder} from 'src/presentation/contracts/ui-model-builder';
 import {Note} from 'src/domain/models/note.model';
 import {NoteManagerFactory} from 'src/business/contracts/note-manager-factory';
+import {Period} from 'src/domain/models/period.model';
 
 export interface NotesViewModel {
     setUpdateUiModel(callback: (model: NotesUiModel) => void): void;
     initialize(settings: PluginSettings): void;
     selectNote(note: NoteUiModel): Promise<void>
-    loadNotes(period: PeriodUiModel): Promise<void>;
+    loadNotes(period: Period): Promise<void>;
     deleteNote(note: NoteUiModel): Promise<void>;
 }
 
@@ -50,8 +51,8 @@ export class DefaultNotesViewModel implements NotesViewModel {
         await this.noteManagerFactory.getManager().openNote(note.note);
     }
 
-    public async loadNotes(period: PeriodUiModel): Promise<void> {
-        const notes = await this.noteManagerFactory.getManager().getNotesForPeriod(period.period);
+    public async loadNotes(period: Period): Promise<void> {
+        const notes = await this.noteManagerFactory.getManager().getNotesForPeriod(period);
         const uiModel = await this.notesUiModelBuilder
             .withValue(notes)
             .build();

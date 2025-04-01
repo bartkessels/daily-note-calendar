@@ -9,4 +9,5 @@ export interface PeriodService {
     openNoteInHorizontalSplitView(key: ModifierKey, period: Period, settings: PeriodNoteSettings): Promise<void>;
     openNoteInVerticalSplitView(key: ModifierKey, period: Period, settings: PeriodNoteSettings): Promise<void>;
     deleteNote(period: Period, settings: PeriodNoteSettings): Promise<void>;
+    hasPeriodicNote(period: Period, settings: PeriodNoteSettings): Promise<boolean>;
 }

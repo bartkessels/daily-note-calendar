@@ -1,30 +1,29 @@
-import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
 import {ModifierKey} from 'src/presentation/models/modifier-key';
 import React, {ReactElement} from 'react';
 import {getContextMenuAdapter} from 'src/presentation/context/context-menu-adapter.context';
-import {Period} from 'src/domain/models/period.model';
 import {ContextMenuCallbacks} from 'src/presentation/adapters/context-menu.adapter';
 
 interface PeriodComponentProperties {
-    isSelected?: boolean;
-    isToday?: boolean;
-    model?: PeriodUiModel | null;
-    onClick: (key: ModifierKey, model: Period) => void;
-    onDelete: (model: PeriodUiModel) => void;
+    name: string;
+    isSelected: boolean;
+    isToday: boolean;
+    hasPeriodNote: boolean;
+    onClick: (key: ModifierKey) => void;
+    onOpenInHorizontalSplitViewClick: (key: ModifierKey) => void;
+    onOpenInVerticalSplitViewClick: (key: ModifierKey) => void;
+    onDelete: () => void;
 }
 
 export const PeriodComponent = (props: PeriodComponentProperties): ReactElement => {
-    if (!props.model || !props.model.period) {
-        return <></>;
-    }
-
     const contextMenu = getContextMenuAdapter();
-    const contextMenuCallbacks: ContextMenuCallbacks = {
-        openInCurrentTab: () => {},
-        openInHorizontalSplitView: () => {},
-        openInVerticalSplitView: () => {},
-        onDelete: () => props.onDelete(props.model!)
+    const contextMenuCallbacks = (key: ModifierKey) => {
+        return {
+            openInHorizontalSplitView: () => props.onOpenInHorizontalSplitViewClick(key),
+            openInVerticalSplitView: () => props.onOpenInVerticalSplitViewClick(key),
+            onDelete: () => props.onDelete()
+        } as ContextMenuCallbacks;
     };
+
     const modifierKey = (event: React.MouseEvent): ModifierKey => {
         if (event.metaKey) {
             return ModifierKey.Meta;
@@ -41,7 +40,7 @@ export const PeriodComponent = (props: PeriodComponentProperties): ReactElement 
     if (props.isSelected) {
         classes.push('selected-day');
     }
-    if (props.model.hasPeriodNote) {
+    if (props.hasPeriodNote) {
         classes.push('has-note');
     }
 
@@ -50,12 +49,13 @@ export const PeriodComponent = (props: PeriodComponentProperties): ReactElement 
             id={props.isToday ? 'today' : ''}
             className={classes.join(' ')}
             onContextMenu={(e: React.MouseEvent) => {
-                contextMenu?.show(e.clientX, e.clientY, contextMenuCallbacks);
+                const callbacks = contextMenuCallbacks(modifierKey(e));
+                contextMenu?.show(e.clientX, e.clientY, callbacks);
                 e.preventDefault();
             }}
             onClick={(e: React.MouseEvent) => {
-                props.onClick(modifierKey(e), props.model!.period);
+                props.onClick(modifierKey(e));
                 e.preventDefault();
-            }}>{props.model.period.name}</div>
+            }}>{props.name}</div>
     );
 };

@@ -34,6 +34,10 @@ export class DefaultPeriodService implements PeriodService {
         await this.periodicNoteManager.deleteNote(settings, period);
     }
 
+    public async hasPeriodicNote(period: Period, settings: PeriodNoteSettings): Promise<boolean> {
+        return await this.periodicNoteManager.doesNoteExist(settings, period);
+    }
+
     private async openNote(
         key: ModifierKey,
         period: Period,

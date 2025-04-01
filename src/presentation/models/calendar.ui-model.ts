@@ -1,13 +1,12 @@
-import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
-import {WeekUiModel} from 'src/presentation/models/week.ui-model';
+import {Period} from 'src/domain/models/period.model';
+import {WeekModel} from 'src/domain/models/week.model';
 
 export interface CalendarUiModel {
     lastUpdateRequest: Date;
     startWeekOnMonday: boolean;
-    selectedPeriod?: PeriodUiModel;
-    today?: PeriodUiModel;
-    weeks: WeekUiModel[];
-    month?: PeriodUiModel;
-    quarter?: PeriodUiModel;
-    year?: PeriodUiModel;
+    today: Period | null;
+    weeks: WeekModel[];
+    month: Period;
+    quarter: Period;
+    year: Period;
 }

@@ -4,9 +4,10 @@ import {NotesUiModel} from 'src/presentation/models/notes.ui-model';
 import React from 'react';
 import {useNotesViewModel} from 'src/presentation/context/notes-view-model.context';
 import {NoteComponent} from 'src/presentation/components/note.component';
+import {Period} from 'src/domain/models/period.model';
 
 export interface NotesComponentProperties {
-    period?: PeriodUiModel;
+    period: Period | null;
     initialUiModel?: NotesUiModel;
 }
 

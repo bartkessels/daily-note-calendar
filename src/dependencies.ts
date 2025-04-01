@@ -19,18 +19,25 @@ import {DefaultDateManagerFactory} from 'src/business/factories/default.date-man
 import {DefaultCommandHandlerFactory} from 'src/presentation/factories/default.command-handler-factory';
 import {DefaultNoteManagerFactory} from 'src/business/factories/default.note-manager-factory';
 import {CommandHandlerFactory} from 'src/presentation/contracts/command-handler-factory';
-import { PeriodNoteExistsPeriodEnhancer } from 'src/presentation/enhancers/period-note-exists.period-enhancer';
-import {WeekUiModelBuilder} from 'src/presentation/builders/week.ui-model-builder';
-import { CalendarUiModelBuilder } from 'src/presentation/builders/calendar.ui-model-builder';
-import {PeriodUiModelBuilder} from 'src/presentation/builders/period.ui-model-builder';
 import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
 import {DefaultNotesViewModel, NotesViewModel} from 'src/presentation/view-models/notes.view-model';
 import {NotesUiModelBuilder} from 'src/presentation/builders/notes.ui-model-builder';
 import {ContextMenuAdapter} from 'src/presentation/adapters/context-menu.adapter';
 import {ObsidianContextMenuAdapter} from 'src/presentation/obsidian/obsidian.context-menu-adapter';
+import {DefaultPeriodService} from 'src/presentation/services/default.period-service';
+import {DayPeriodNoteViewModel} from 'src/presentation/view-models/day.period-note-view-model';
+import {WeekPeriodNoteViewModel} from 'src/presentation/view-models/week.period-note-view-model';
+import {MonthPeriodNoteViewModel} from 'src/presentation/view-models/month.period-note-view-model';
+import {QuarterPeriodNoteViewModel} from 'src/presentation/view-models/quarter.period-note-view-model';
+import {YearPeriodNoteViewModel} from 'src/presentation/view-models/year.period-note-view-model';
 
 export interface Dependencies {
     calendarViewModel: CalendarViewModel;
+    dailyNoteViewModel: DayPeriodNoteViewModel;
+    weeklyNoteViewModel: WeekPeriodNoteViewModel;
+    monthlyNoteViewModel: MonthPeriodNoteViewModel;
+    quarterlyNoteViewModel: QuarterPeriodNoteViewModel;
+    yearlyNoteViewModel: YearPeriodNoteViewModel;
     notesViewModel: NotesViewModel;
     dateManagerFactory: DateManagerFactory;
     dateParserFactory: DateParserFactory;
@@ -61,14 +68,17 @@ export function getDependencies(plugin: Plugin): Dependencies {
     const periodicNoteManager = new DefaultPeriodicNoteManager(nameBuilderFactory, variableParserFactory, fileRepositoryFactory, noteRepositoryFactory);
 
     // Presentation
-    const periodNoteExistsEnhancer = new PeriodNoteExistsPeriodEnhancer(periodicNoteManager);
-    const periodUiModelBuilder = new PeriodUiModelBuilder(periodNoteExistsEnhancer);
-    const weekUiModelBuilder = new WeekUiModelBuilder(periodNoteExistsEnhancer, periodUiModelBuilder);
     const notesUiModelBuilder = new NotesUiModelBuilder(dateParserFactory);
 
-    const calendarUiModelBuilder = new CalendarUiModelBuilder(weekUiModelBuilder, periodUiModelBuilder);
-    const calendarService = new DefaultCalendarService(dateManagerFactory, periodicNoteManager);
-    const calendarViewModel = new DefaultCalendarViewModel(calendarService, calendarUiModelBuilder);
+    const calendarService = new DefaultCalendarService(dateManagerFactory);
+    const periodService = new DefaultPeriodService(periodicNoteManager);
+
+    const calendarViewModel = new DefaultCalendarViewModel(calendarService);
+    const dailyNoteViewModel = new DayPeriodNoteViewModel(periodService);
+    const weeklyNoteViewModel = new WeekPeriodNoteViewModel(periodService);
+    const monthlyNoteViewModel = new MonthPeriodNoteViewModel(periodService);
+    const quarterlyNoteViewModel = new QuarterPeriodNoteViewModel(periodService);
+    const yearlyNoteViewModel = new YearPeriodNoteViewModel(periodService);
     const notesViewModel = new DefaultNotesViewModel(noteManagerFactory, notesUiModelBuilder);
 
     const commandHandlerFactory = new DefaultCommandHandlerFactory(noteManagerFactory, settingsRepositoryFactory, dateManagerFactory, calendarViewModel);
@@ -76,6 +86,11 @@ export function getDependencies(plugin: Plugin): Dependencies {
 
     return {
         calendarViewModel: calendarViewModel,
+        dailyNoteViewModel: dailyNoteViewModel,
+        weeklyNoteViewModel: weeklyNoteViewModel,
+        monthlyNoteViewModel: monthlyNoteViewModel,
+        quarterlyNoteViewModel: quarterlyNoteViewModel,
+        yearlyNoteViewModel: yearlyNoteViewModel,
         notesViewModel: notesViewModel,
         dateManagerFactory: dateManagerFactory,
         dateParserFactory: dateParserFactory,

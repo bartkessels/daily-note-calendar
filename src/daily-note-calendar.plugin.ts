@@ -23,6 +23,11 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             leaf,
             this.dependencies.contextMenuAdapter,
             this.dependencies.calendarViewModel,
+            this.dependencies.dailyNoteViewModel,
+            this.dependencies.weeklyNoteViewModel,
+            this.dependencies.monthlyNoteViewModel,
+            this.dependencies.quarterlyNoteViewModel,
+            this.dependencies.yearlyNoteViewModel,
             this.dependencies.notesViewModel
         );
 
@@ -40,6 +45,11 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             .get();
 
         this.dependencies.calendarViewModel.initialize(settings, today);
+        this.dependencies.dailyNoteViewModel.updateSettings(settings);
+        this.dependencies.weeklyNoteViewModel.updateSettings(settings);
+        this.dependencies.monthlyNoteViewModel.updateSettings(settings);
+        this.dependencies.quarterlyNoteViewModel.updateSettings(settings);
+        this.dependencies.yearlyNoteViewModel.updateSettings(settings);
         this.dependencies.notesViewModel.initialize(settings);
 
         if (this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE).length <= 0) {

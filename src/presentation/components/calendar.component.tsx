@@ -1,10 +1,13 @@
 import React, {ReactElement} from 'react';
 import {useCalendarViewModel} from 'src/presentation/context/calendar-view-model.context';
 import {CalendarUiModel} from 'src/presentation/models/calendar.ui-model';
-import {PeriodComponent} from 'src/presentation/components/period.component';
 import {CalendarHeart, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight} from 'lucide-react';
-import {WeekComponent} from 'src/presentation/components/week.component';
 import {NotesComponent} from 'src/presentation/components/notes.component';
+import {MonthlyNoteComponent} from 'src/presentation/components/month.component';
+import { QuarterlyNoteComponent } from './quarter.component';
+import {YearlyNoteComponent} from 'src/presentation/components/year.component';
+import {WeeklyNoteComponent} from 'src/presentation/components/week.component';
+import {Period} from 'src/domain/models/period.model';
 import 'src/extensions/extensions';
 
 interface CalendarComponentProperties {
@@ -14,6 +17,7 @@ interface CalendarComponentProperties {
 
 export const CalendarComponent = (props: CalendarComponentProperties): ReactElement => {
     const [uiModel, setUiModel] = React.useState<CalendarUiModel | null>(props?.initialUiModel ?? null);
+    const [selectedPeriod, setSelectedPeriod] = React.useState<Period | null>(null);
     const viewModel = useCalendarViewModel();
 
     React.useEffect(() => {
@@ -21,23 +25,20 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
         viewModel?.loadCurrentWeek();
     }, [viewModel, setUiModel]);
 
+    if (!uiModel) {
+        console.log(uiModel);
+        return (<></>);
+    }
+
     return (
         <div className="dnc">
             <div className="header">
                 <span className="title">
                     <h1>
-                        <PeriodComponent
-                            model={uiModel?.month}
-                            onClick={(key, period) => viewModel?.openMonthlyNote(key, period)}
-                            onDelete={(period) => viewModel?.deleteMonthlyNote(period)}
-                        />
+                        <MonthlyNoteComponent month={uiModel.month} />
                     </h1>
                     <h1>
-                        <PeriodComponent
-                            model={uiModel?.year}
-                            onClick={(key, period) => viewModel?.openYearlyNote(key, period)}
-                            onDelete={(period) => viewModel?.deleteYearlyNote(period)}
-                        />
+                        <YearlyNoteComponent year={uiModel.year} />
                     </h1>
                 </span>
 
@@ -71,12 +72,7 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
                 <thead>
                 <tr>
                     <th className="quarter">
-                        <PeriodComponent
-                            model={uiModel?.quarter}
-                            isSelected={false}
-                            onClick={(key, period) => viewModel?.openQuarterlyNote(key, period)}
-                            onDelete={(period) => viewModel?.deleteQuarterlyNote(period)}
-                        />
+                        <QuarterlyNoteComponent quarter={uiModel.quarter} />
                     </th>
                     {!uiModel?.startWeekOnMonday && <th>Sun</th>}
                     <th>Mon</th>
@@ -91,22 +87,17 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
                 <tbody>
 
                 {uiModel?.weeks.map((week, weekIndex) =>
-                    <WeekComponent
-                        key={weekIndex}
-                        model={week}
-                        currentMonth={uiModel?.month}
-                        selectedPeriod={uiModel?.selectedPeriod}
-                        currentPeriod={uiModel?.today}
-                        onWeekClick={(key, week) => viewModel?.openWeeklyNote(key, week)}
-                        onDeleteWeekClick={(week) => viewModel?.deleteWeeklyNote(week)}
-                        onDayClick={(key, day) => viewModel?.openDailyNote(key, day)}
-                        onDeleteDayClick={(day) => viewModel?.deleteDailyNote(day)}
-                    />
+                    <WeeklyNoteComponent
+                        week={week}
+                        days={week.days}
+                        selectedPeriod={selectedPeriod}
+                        today={uiModel?.today}
+                        onSelect={(period) => setSelectedPeriod(period)} />
                 )}
                 </tbody>
             </table>
 
-            <NotesComponent period={uiModel?.selectedPeriod}/>
+            <NotesComponent period={selectedPeriod}/>
         </div>
     );
 }
