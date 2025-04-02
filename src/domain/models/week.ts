@@ -1,6 +1,6 @@
 import {Period} from 'src/domain/models/period.model';
 
-export interface WeekModel extends Period {
+export interface Week extends Period {
     weekNumber: number;
     year: Period;
     quarter: Period;

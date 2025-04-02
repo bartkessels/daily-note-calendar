@@ -1,29 +1,25 @@
-import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
 import React, {ReactElement} from 'react';
 import {PeriodComponent} from 'src/presentation/components/period.component';
 import {arePeriodsEqual, Period} from 'src/domain/models/period.model';
 import {useWeeklyNoteViewModel} from 'src/presentation/context/period-view-model.context';
 import {DailyNoteComponent} from 'src/presentation/components/day.component';
+import {Week} from 'src/domain/models/week';
 
 interface WeeklyNoteProperties {
-    initialUiModel?: PeriodUiModel;
-    week: Period;
+    week: Week;
     days: Period[];
-    today: Period | null;
+    today: Period;
     selectedPeriod: Period | null;
+    currentMonth: Period | null;
     onSelect: (period: Period) => void;
 }
 
 export const WeeklyNoteComponent = (props: WeeklyNoteProperties): ReactElement => {
     const viewModel = useWeeklyNoteViewModel();
-    const [uiModel, setUiModel] = React.useState<PeriodUiModel | null>(props.initialUiModel ?? null);
-
-    React.useEffect(() => {
-        viewModel?.setUpdateUiModel(setUiModel);
-        viewModel?.initialize(props.week);
-    }, [viewModel, setUiModel, props.week]);
-
+    const [hasPeriodicNote, setHasPeriodicNote] = React.useState<boolean>(false);
     const isSelected = arePeriodsEqual(props.selectedPeriod, props.week);
+
+    viewModel?.hasPeriodicNote(props.week).then(setHasPeriodicNote.bind(this));
 
     return (
         <tr>
@@ -32,7 +28,7 @@ export const WeeklyNoteComponent = (props: WeeklyNoteProperties): ReactElement =
                     name={props.week.name}
                     isSelected={isSelected}
                     isToday={false}
-                    hasPeriodNote={uiModel?.hasPeriodNote ?? false}
+                    hasPeriodNote={hasPeriodicNote}
                     onClick={(key) => {
                         props.onSelect(props.week);
                         viewModel?.openNote(key, props.week);
@@ -53,6 +49,9 @@ export const WeeklyNoteComponent = (props: WeeklyNoteProperties): ReactElement =
                 <td height="35" key={index}>
                     <DailyNoteComponent
                         day={day}
+                        selectedPeriod={props.selectedPeriod}
+                        today={props.today}
+                        isSameMonth={day.date.isSameMonth(props.currentMonth)}
                         onSelect={() => props.onSelect(day)} />
                 </td>
             ))}

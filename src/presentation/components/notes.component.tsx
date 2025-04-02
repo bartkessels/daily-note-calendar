@@ -1,36 +1,31 @@
-import {NoteUiModel} from 'src/presentation/models/note.ui-model';
-import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
-import {NotesUiModel} from 'src/presentation/models/notes.ui-model';
 import React from 'react';
 import {useNotesViewModel} from 'src/presentation/context/notes-view-model.context';
 import {NoteComponent} from 'src/presentation/components/note.component';
 import {Period} from 'src/domain/models/period.model';
+import {Note} from 'src/domain/models/note.model';
 
 export interface NotesComponentProperties {
     period: Period | null;
-    initialUiModel?: NotesUiModel;
 }
 
 export const NotesComponent = (props: NotesComponentProperties) => {
-    const [uiModel, setUiModel] = React.useState<NotesUiModel | undefined>(props.initialUiModel);
     const viewModel = useNotesViewModel();
+    const [notes, setNotes] = React.useState<Note[]>([]);
 
     React.useEffect(() => {
-        viewModel?.setUpdateUiModel(setUiModel);
-
         if (props.period) {
-            viewModel?.loadNotes(props.period);
+            viewModel?.loadNotes(props.period).then(setNotes);
         }
-    }, [viewModel, setUiModel, props.period]);
+    }, [viewModel, setNotes, props.period]);
 
     return (
         <div className="dnc">
             <ul>
-                {uiModel?.notes.map((note: NoteUiModel) =>
+                {notes.map((note: Note) =>
                     <NoteComponent
-                        key={note.filePath}
+                        key={note.path}
                         note={note}
-                        onClick={(note) => viewModel?.selectNote(note)}
+                        onClick={(note) => viewModel?.openNote(note)}
                         onDelete={(note) => viewModel?.deleteNote(note)} />
                 )}
             </ul>

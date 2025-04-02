@@ -2,7 +2,7 @@ import {SettingsView, SettingUiModel} from 'src/presentation/settings/settings-v
 import {PluginSettingTab, Setting} from 'obsidian';
 import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contracts/settings-repository-factory';
 import {GeneralSettings} from 'src/domain/settings/general.settings';
-import { DayOfWeek } from 'src/domain/models/week.model';
+import { DayOfWeek } from 'src/domain/models/week';
 
 export class GeneralSettingsView extends SettingsView {
     override title = "General";

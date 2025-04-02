@@ -1,66 +1,29 @@
-import {NoteUiModel} from 'src/presentation/models/note.ui-model';
-import {DEFAULT_PLUGIN_SETTINGS, PluginSettings} from 'src/domain/settings/plugin.settings';
-import {PeriodUiModel} from 'src/presentation/models/period.ui-model';
-import {NotesUiModel} from 'src/presentation/models/notes.ui-model';
-import {UiModelBuilder} from 'src/presentation/contracts/ui-model-builder';
 import {Note} from 'src/domain/models/note.model';
 import {NoteManagerFactory} from 'src/business/contracts/note-manager-factory';
 import {Period} from 'src/domain/models/period.model';
 
 export interface NotesViewModel {
-    setUpdateUiModel(callback: (model: NotesUiModel) => void): void;
-    initialize(settings: PluginSettings): void;
-    selectNote(note: NoteUiModel): Promise<void>
-    loadNotes(period: Period): Promise<void>;
-    deleteNote(note: NoteUiModel): Promise<void>;
+    loadNotes(period: Period): Promise<Note[]>;
+    openNote(note: Note): Promise<void>
+    deleteNote(note: Note): Promise<void>;
 }
 
 export class DefaultNotesViewModel implements NotesViewModel {
-    private settings: PluginSettings = DEFAULT_PLUGIN_SETTINGS;
-    private uiModel: NotesUiModel | null = null;
-    private updateUiModel: (model: NotesUiModel) => void;
-
     constructor(
         private readonly noteManagerFactory: NoteManagerFactory,
-        private readonly notesUiModelBuilder: UiModelBuilder<Note[], NotesUiModel>
     ) {
 
     }
 
-    public setUpdateUiModel(callback: (model: NotesUiModel) => void): void {
-        this.updateUiModel = callback;
+    public async loadNotes(period: Period): Promise<Note[]> {
+        return await this.noteManagerFactory.getManager().getNotesForPeriod(period);
     }
 
-    private setModel(model: NotesUiModel): void {
-        // Only update the UI model if it's the latest version of the UI model
-        if (!this.uiModel || model.lastUpdated > this.uiModel.lastUpdated) {
-            this.uiModel = model;
-
-            if (this.updateUiModel) {
-                this.updateUiModel(model);
-            }
-        }
+    public async openNote(note: Note): Promise<void> {
+        await this.noteManagerFactory.getManager().openNote(note);
     }
 
-    public initialize(settings: PluginSettings): void {
-        this.settings = settings;
-        this.notesUiModelBuilder.withSettings(settings);
-    }
-
-    public async selectNote(note: NoteUiModel): Promise<void> {
-        await this.noteManagerFactory.getManager().openNote(note.note);
-    }
-
-    public async loadNotes(period: Period): Promise<void> {
-        const notes = await this.noteManagerFactory.getManager().getNotesForPeriod(period);
-        const uiModel = await this.notesUiModelBuilder
-            .withValue(notes)
-            .build();
-
-        this.setModel(uiModel);
-    }
-
-    public async deleteNote(note: NoteUiModel): Promise<void> {
-        await this.noteManagerFactory.getManager().deleteNote(note.note);
+    public async deleteNote(note: Note): Promise<void> {
+        await this.noteManagerFactory.getManager().deleteNote(note);
     }
 }

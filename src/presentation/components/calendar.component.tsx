@@ -1,6 +1,5 @@
 import React, {ReactElement} from 'react';
 import {useCalendarViewModel} from 'src/presentation/context/calendar-view-model.context';
-import {CalendarUiModel} from 'src/presentation/models/calendar.ui-model';
 import {CalendarHeart, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight} from 'lucide-react';
 import {NotesComponent} from 'src/presentation/components/notes.component';
 import {MonthlyNoteComponent} from 'src/presentation/components/month.component';
@@ -9,36 +8,40 @@ import {YearlyNoteComponent} from 'src/presentation/components/year.component';
 import {WeeklyNoteComponent} from 'src/presentation/components/week.component';
 import {Period} from 'src/domain/models/period.model';
 import 'src/extensions/extensions';
+import {Calendar} from 'src/domain/models/calendar.model';
 
 interface CalendarComponentProperties {
-    initialUiModel?: CalendarUiModel | null;
+    initialCalendar?: Calendar | null;
 }
 
-
 export const CalendarComponent = (props: CalendarComponentProperties): ReactElement => {
-    const [uiModel, setUiModel] = React.useState<CalendarUiModel | null>(props?.initialUiModel ?? null);
-    const [selectedPeriod, setSelectedPeriod] = React.useState<Period | null>(null);
     const viewModel = useCalendarViewModel();
+    const [calendar, setCalendar] = React.useState<Calendar | null>(props.initialCalendar ?? null);
+    const [selectedPeriod, setSelectedPeriod] = React.useState<Period | null>(null);
 
     React.useEffect(() => {
-        viewModel?.setUpdateUiModel(setUiModel);
-        viewModel?.loadCurrentWeek();
-    }, [viewModel, setUiModel]);
+        setCalendar(viewModel?.getCurrentWeek() ?? null);
+    }, [viewModel, setCalendar]);
 
-    if (!uiModel) {
-        console.log(uiModel);
+    if (!calendar) {
         return (<></>);
     }
+
+    const loadNextWeek = () => setCalendar(viewModel?.getNextWeek(calendar) ?? null);
+    const loadPreviousWeek = () => setCalendar(viewModel?.getPreviousWeek(calendar) ?? null);
+    const loadCurrentWeek = () => setCalendar(viewModel?.getCurrentWeek() ?? null);
+    const loadNextMonth = () => setCalendar(viewModel?.getNextMonth(calendar) ?? null);
+    const loadPreviousMonth = () => setCalendar(viewModel?.getPreviousMonth(calendar) ?? null);
 
     return (
         <div className="dnc">
             <div className="header">
                 <span className="title">
                     <h1>
-                        <MonthlyNoteComponent month={uiModel.month} />
+                        <MonthlyNoteComponent month={calendar.month} />
                     </h1>
                     <h1>
-                        <YearlyNoteComponent year={uiModel.year} />
+                        <YearlyNoteComponent year={calendar.year} />
                     </h1>
                 </span>
 
@@ -46,25 +49,23 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
                     <ChevronsLeft
                         size={18}
                         strokeWidth={1}
-                        onClick={() => viewModel?.loadPreviousMonth()}/>
+                        onClick={() => loadPreviousMonth()}/>
                     <ChevronLeft
                         size={18}
                         strokeWidth={1}
-                        onClick={() => viewModel?.loadPreviousWeek()}/>
+                        onClick={() => loadPreviousWeek()}/>
                     <CalendarHeart
                         size={18}
                         strokeWidth={1}
-                        onClick={() => viewModel?.loadCurrentWeek()}/>
+                        onClick={() => loadCurrentWeek()}/>
                     <ChevronRight
                         size={18}
                         strokeWidth={1}
-                        onClick={() => {
-                            viewModel?.loadNextWeek()
-                        }}/>
+                        onClick={() => loadNextWeek()}/>
                     <ChevronsRight
                         size={18}
                         strokeWidth={1}
-                        onClick={() => viewModel?.loadNextMonth()}/>
+                        onClick={() => loadNextMonth()}/>
                 </div>
             </div>
 
@@ -72,27 +73,29 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
                 <thead>
                 <tr>
                     <th className="quarter">
-                        <QuarterlyNoteComponent quarter={uiModel.quarter} />
+                        <QuarterlyNoteComponent quarter={calendar.quarter} />
                     </th>
-                    {!uiModel?.startWeekOnMonday && <th>Sun</th>}
+                    {!calendar.startWeekOnMonday && <th>Sun</th>}
                     <th>Mon</th>
                     <th>Tue</th>
                     <th>Wed</th>
                     <th>Thu</th>
                     <th>Fri</th>
                     <th>Sat</th>
-                    {uiModel?.startWeekOnMonday && <th>Sun</th>}
+                    {calendar.startWeekOnMonday && <th>Sun</th>}
                 </tr>
                 </thead>
                 <tbody>
 
-                {uiModel?.weeks.map((week, weekIndex) =>
+                {calendar.weeks.map((week, weekIndex) =>
                     <WeeklyNoteComponent
+                        key={weekIndex}
                         week={week}
                         days={week.days}
                         selectedPeriod={selectedPeriod}
-                        today={uiModel?.today}
-                        onSelect={(period) => setSelectedPeriod(period)} />
+                        today={calendar.today}
+                        currentMonth={calendar.month}
+                        onSelect={setSelectedPeriod} />
                 )}
                 </tbody>
             </table>

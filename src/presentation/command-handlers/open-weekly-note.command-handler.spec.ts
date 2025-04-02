@@ -6,7 +6,7 @@ import {mockDateManagerFactory, mockSettingsRepositoryFactory} from 'src/test-he
 import {Period, PeriodType} from 'src/domain/models/period.model';
 import {when} from 'jest-when';
 import {DEFAULT_GENERAL_SETTINGS} from 'src/domain/settings/general.settings';
-import {WeekModel} from 'src/domain/models/week.model';
+import {Week} from 'src/domain/models/week';
 import {ModifierKey} from 'src/presentation/models/modifier-key';
 
 describe('OpenWeeklyNoteCommandHandler', () => {
@@ -36,7 +36,7 @@ describe('OpenWeeklyNoteCommandHandler', () => {
             type: PeriodType.Day
         };
 
-        const week = <WeekModel> {
+        const week = <Week> {
             date: new Date(2023, 9, 2),
             name: '40',
             weekNumber: 40,

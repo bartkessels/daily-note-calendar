@@ -31,11 +31,13 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             this.dependencies.notesViewModel
         );
 
+        await this.initializePlugin();
+
         this.registerView(CalendarView.VIEW_TYPE, (leaf) => calendarView(leaf));
         this.registerSettings();
         this.registerCommands();
 
-        this.app.workspace.onLayoutReady(this.initializePlugin.bind(this));
+        this.app.workspace.onLayoutReady(this.registerPlugin.bind(this));
     }
 
     private async initializePlugin(): Promise<void> {
@@ -50,8 +52,9 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         this.dependencies.monthlyNoteViewModel.updateSettings(settings);
         this.dependencies.quarterlyNoteViewModel.updateSettings(settings);
         this.dependencies.yearlyNoteViewModel.updateSettings(settings);
-        this.dependencies.notesViewModel.initialize(settings);
+    }
 
+    private registerPlugin(): void {
         if (this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE).length <= 0) {
             this.app.workspace.getRightLeaf(false)?.setViewState({type: CalendarView.VIEW_TYPE});
         }

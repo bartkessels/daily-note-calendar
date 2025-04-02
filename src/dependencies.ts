@@ -7,7 +7,7 @@ import {DefaultDateParserFactory} from 'src/infrastructure/factories/default.dat
 import {ObsidianFileAdapter} from 'src/infrastructure/obsidian/obsidian.file-adapter';
 import {DefaultVariableFactory} from 'src/business/factories/default.variable-factory';
 import {ObsidianNoteAdapter} from 'src/infrastructure/obsidian/obsidian.note-adapter';
-import {CalendarViewModel, DefaultCalendarViewModel} from 'src/presentation/view-models/calendar.view-model';
+import {DefaultCalendarViewModel} from 'src/presentation/view-models/calendar.view-model';
 import {DefaultCalendarService} from 'src/presentation/services/default.calendar-service';
 import {DefaultPeriodicNoteManager} from 'src/business/managers/default.periodic-note-manager';
 import {DefaultDateRepositoryFactory} from 'src/infrastructure/factories/default.date-repository-factory';
@@ -21,7 +21,6 @@ import {DefaultNoteManagerFactory} from 'src/business/factories/default.note-man
 import {CommandHandlerFactory} from 'src/presentation/contracts/command-handler-factory';
 import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
 import {DefaultNotesViewModel, NotesViewModel} from 'src/presentation/view-models/notes.view-model';
-import {NotesUiModelBuilder} from 'src/presentation/builders/notes.ui-model-builder';
 import {ContextMenuAdapter} from 'src/presentation/adapters/context-menu.adapter';
 import {ObsidianContextMenuAdapter} from 'src/presentation/obsidian/obsidian.context-menu-adapter';
 import {DefaultPeriodService} from 'src/presentation/services/default.period-service';
@@ -30,6 +29,7 @@ import {WeekPeriodNoteViewModel} from 'src/presentation/view-models/week.period-
 import {MonthPeriodNoteViewModel} from 'src/presentation/view-models/month.period-note-view-model';
 import {QuarterPeriodNoteViewModel} from 'src/presentation/view-models/quarter.period-note-view-model';
 import {YearPeriodNoteViewModel} from 'src/presentation/view-models/year.period-note-view-model';
+import {CalendarViewModel} from 'src/presentation/contracts/calendar.view-model';
 
 export interface Dependencies {
     calendarViewModel: CalendarViewModel;
@@ -68,8 +68,6 @@ export function getDependencies(plugin: Plugin): Dependencies {
     const periodicNoteManager = new DefaultPeriodicNoteManager(nameBuilderFactory, variableParserFactory, fileRepositoryFactory, noteRepositoryFactory);
 
     // Presentation
-    const notesUiModelBuilder = new NotesUiModelBuilder(dateParserFactory);
-
     const calendarService = new DefaultCalendarService(dateManagerFactory);
     const periodService = new DefaultPeriodService(periodicNoteManager);
 
@@ -79,7 +77,7 @@ export function getDependencies(plugin: Plugin): Dependencies {
     const monthlyNoteViewModel = new MonthPeriodNoteViewModel(periodService);
     const quarterlyNoteViewModel = new QuarterPeriodNoteViewModel(periodService);
     const yearlyNoteViewModel = new YearPeriodNoteViewModel(periodService);
-    const notesViewModel = new DefaultNotesViewModel(noteManagerFactory, notesUiModelBuilder);
+    const notesViewModel = new DefaultNotesViewModel(noteManagerFactory);
 
     const commandHandlerFactory = new DefaultCommandHandlerFactory(noteManagerFactory, settingsRepositoryFactory, dateManagerFactory, calendarViewModel);
     const contextMenuAdapter = new ObsidianContextMenuAdapter();

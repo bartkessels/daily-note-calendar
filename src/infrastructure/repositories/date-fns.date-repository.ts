@@ -1,4 +1,4 @@
-import {DayOfWeek, WeekModel} from 'src/domain/models/week.model';
+import {DayOfWeek, Week} from 'src/domain/models/week';
 import {DateRepository} from 'src/infrastructure/contracts/date-repository';
 import {
     addMonths,
@@ -49,7 +49,7 @@ export class DateFnsDateRepository implements DateRepository {
         return this.getDayFromDate(date);
     }
 
-    public getWeekFromDate(startOfWeekDay: DayOfWeek, date: Date): WeekModel {
+    public getWeekFromDate(startOfWeekDay: DayOfWeek, date: Date): Week {
         const firstDayOfWeek = startOfWeek(date, {weekStartsOn: startOfWeekDay});
         const weekNumber = getISOWeek(firstDayOfWeek);
         const month = this.getMonth(firstDayOfWeek.getFullYear(), firstDayOfWeek.getMonth());
@@ -57,7 +57,7 @@ export class DateFnsDateRepository implements DateRepository {
         const year = this.getYear(firstDayOfWeek.getFullYear());
         const days = this.getDaysOfWeek(startOfWeekDay, firstDayOfWeek);
 
-        return <WeekModel>{
+        return <Week>{
             date: firstDayOfWeek,
             name: weekNumber.toString().padStart(2, '0'),
             weekNumber: weekNumber,
@@ -69,12 +69,12 @@ export class DateFnsDateRepository implements DateRepository {
         };
     }
 
-    public getNextWeek(startOfWeek: DayOfWeek, currentWeek: WeekModel): WeekModel {
+    public getNextWeek(startOfWeek: DayOfWeek, currentWeek: Week): Week {
         const nextWeekDate = addWeeks(currentWeek.date, 1);
         return this.getWeekFromDate(startOfWeek, nextWeekDate);
     }
 
-    public getPreviousWeek(startOfWeek: DayOfWeek, currentWeek: WeekModel): WeekModel {
+    public getPreviousWeek(startOfWeek: DayOfWeek, currentWeek: Week): Week {
         const previousWeekDate = subWeeks(currentWeek.date, 1);
         return this.getWeekFromDate(startOfWeek, previousWeekDate);
     }

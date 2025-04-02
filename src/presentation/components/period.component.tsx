@@ -5,6 +5,7 @@ import {ContextMenuCallbacks} from 'src/presentation/adapters/context-menu.adapt
 
 interface PeriodComponentProperties {
     name: string;
+    classNames?: string[];
     isSelected: boolean;
     isToday: boolean;
     hasPeriodNote: boolean;
@@ -36,7 +37,7 @@ export const PeriodComponent = (props: PeriodComponentProperties): ReactElement 
         return ModifierKey.None
     };
 
-    const classes: string[] = [];
+    const classes: string[] = props.classNames ?? [];
     if (props.isSelected) {
         classes.push('selected-day');
     }

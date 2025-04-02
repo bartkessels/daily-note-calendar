@@ -2,7 +2,7 @@ import {DEFAULT_PLUGIN_SETTINGS, PluginSettings} from 'src/domain/settings/plugi
 import {CalendarService} from 'src/presentation/contracts/calendar-service';
 import {DateManager} from 'src/business/contracts/date.manager';
 import {DateManagerFactory} from 'src/business/contracts/date-manager-factory';
-import {WeekModel} from 'src/domain/models/week.model';
+import {Week} from 'src/domain/models/week';
 import {Period} from 'src/domain/models/period.model';
 
 export class DefaultCalendarService implements CalendarService {
@@ -19,24 +19,24 @@ export class DefaultCalendarService implements CalendarService {
         this.settings = settings;
     }
 
-    public getCurrentWeek(): WeekModel[] {
+    public getCurrentWeek(): Week[] {
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
         const currentWeek = this.dateManager.getCurrentWeek(firstDayOfWeek);
 
         return this.loadWeeks(currentWeek, 2, 2);
     }
 
-    public getPreviousWeek(weeks: WeekModel[]): WeekModel[] {
+    public getPreviousWeek(weeks: Week[]): Week[] {
         const middleWeek = this.getMiddleWeek(weeks);
         return this.loadWeeks(middleWeek, 3, 1);
     }
 
-    public getNextWeek(weeks: WeekModel[]): WeekModel[] {
+    public getNextWeek(weeks: Week[]): Week[] {
         const middleWeek = this.getMiddleWeek(weeks);
         return this.loadWeeks(middleWeek, 1, 3);
     }
 
-    public getPreviousMonth(weeks: WeekModel[]): WeekModel[] {
+    public getPreviousMonth(weeks: Week[]): Week[] {
         const middleWeek = this.getMiddleWeek(weeks);
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
         const previousMonth = this.dateManager.getPreviousMonth(middleWeek, firstDayOfWeek);
@@ -44,7 +44,7 @@ export class DefaultCalendarService implements CalendarService {
         return this.sortWeeks(previousMonth);
     }
 
-    public getNextMonth(weeks: WeekModel[]): WeekModel[] {
+    public getNextMonth(weeks: Week[]): Week[] {
         const middleWeek = this.getMiddleWeek(weeks);
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
         const nextMonth = this.dateManager.getNextMonth(middleWeek, firstDayOfWeek);
@@ -52,26 +52,26 @@ export class DefaultCalendarService implements CalendarService {
         return this.sortWeeks(nextMonth);
     }
 
-    public getMonthForWeeks(weeks: WeekModel[]): Period {
+    public getMonthForWeeks(weeks: Week[]): Period {
         const middleWeek = this.getMiddleWeek(weeks);
         return middleWeek.month;
     }
 
-    public getQuarterForWeeks(weeks: WeekModel[]): Period {
+    public getQuarterForWeeks(weeks: Week[]): Period {
         const middleWeek = this.getMiddleWeek(weeks);
         return middleWeek.quarter;
     }
 
-    public getYearForWeeks(weeks: WeekModel[]): Period {
+    public getYearForWeeks(weeks: Week[]): Period {
         const middleWeek = this.getMiddleWeek(weeks);
         return middleWeek.year;
     }
 
-    private getMiddleWeek(weeks: WeekModel[]): WeekModel {
+    private getMiddleWeek(weeks: Week[]): Week {
         return weeks[Math.floor(weeks.length / 2)];
     }
 
-    private loadWeeks(currentWeek: WeekModel, noPreviousWeeks: number, noNextWeeks: number): WeekModel[] {
+    private loadWeeks(currentWeek: Week, noPreviousWeeks: number, noNextWeeks: number): Week[] {
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
 
         const previousWeeks = this.dateManager.getPreviousWeeks(firstDayOfWeek, currentWeek, noPreviousWeeks);
@@ -81,7 +81,7 @@ export class DefaultCalendarService implements CalendarService {
         return this.sortWeeks(weeks);
     }
 
-    private sortWeeks(weeks: WeekModel[]): WeekModel[] {
+    private sortWeeks(weeks: Week[]): Week[] {
         return weeks.sort((a, b) => a.date.getTime() - b.date.getTime());
     }
 }

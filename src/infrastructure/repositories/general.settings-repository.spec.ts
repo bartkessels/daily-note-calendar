@@ -2,7 +2,7 @@ import {mockSettingsAdapter} from 'src/test-helpers/adapter.mocks';
 import {DEFAULT_PLUGIN_SETTINGS, PluginSettings} from 'src/domain/settings/plugin.settings';
 import {when} from 'jest-when';
 import {GeneralSettingsRepository} from 'src/infrastructure/repositories/general.settings-repository';
-import {DayOfWeek} from 'src/domain/models/week.model';
+import {DayOfWeek} from 'src/domain/models/week';
 import {DEFAULT_WEEKLY_NOTE_SETTINGS} from 'src/domain/settings/period-note.settings';
 
 describe('GeneralSettingsRepository', () => {
