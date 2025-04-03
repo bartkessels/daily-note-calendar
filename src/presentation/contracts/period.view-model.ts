@@ -1,6 +1,6 @@
 import {PluginSettings} from 'src/domain/settings/plugin.settings';
-import {ModifierKey} from 'src/presentation/models/modifier-key';
 import {Period} from 'src/domain/models/period.model';
+import { ModifierKey } from 'src/domain/models/modifier-key';
 
 export interface PeriodNoteViewModel {
     updateSettings(settings: PluginSettings): void;

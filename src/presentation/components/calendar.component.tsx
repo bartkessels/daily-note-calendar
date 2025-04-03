@@ -1,14 +1,14 @@
 import React, {ReactElement} from 'react';
-import {useCalendarViewModel} from 'src/presentation/context/calendar-view-model.context';
 import {CalendarHeart, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight} from 'lucide-react';
+import {useCalendarViewModel} from 'src/presentation/context/view-model.context';
 import {NotesComponent} from 'src/presentation/components/notes.component';
 import {MonthlyNoteComponent} from 'src/presentation/components/month.component';
 import { QuarterlyNoteComponent } from './quarter.component';
 import {YearlyNoteComponent} from 'src/presentation/components/year.component';
 import {WeeklyNoteComponent} from 'src/presentation/components/week.component';
 import {Period} from 'src/domain/models/period.model';
-import 'src/extensions/extensions';
 import {Calendar} from 'src/domain/models/calendar.model';
+import 'src/extensions/extensions';
 
 interface CalendarComponentProperties {
     initialCalendar?: Calendar | null;

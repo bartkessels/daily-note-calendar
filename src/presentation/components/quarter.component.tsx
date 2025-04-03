@@ -1,6 +1,6 @@
 import {Period} from 'src/domain/models/period.model';
 import React, {ReactElement} from 'react';
-import {useQuarterlyNoteViewModel} from 'src/presentation/context/period-view-model.context';
+import {useQuarterlyNoteViewModel} from 'src/presentation/context/view-model.context';
 import {PeriodComponent} from 'src/presentation/components/period.component';
 
 interface QuarterlyNoteProperties {

@@ -3,7 +3,7 @@ import {PeriodNoteSettings} from 'src/domain/settings/period-note.settings';
 import {PeriodService} from 'src/presentation/contracts/period-service';
 import {PluginSettings} from 'src/domain/settings/plugin.settings';
 import {Period} from 'src/domain/models/period.model';
-import {ModifierKey} from 'src/presentation/models/modifier-key';
+import {ModifierKey} from 'src/domain/models/modifier-key';
 
 export abstract class GeneralPeriodNoteViewModel implements PeriodNoteViewModel {
     protected settings: PeriodNoteSettings;

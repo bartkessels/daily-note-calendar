@@ -1,9 +1,9 @@
 import {PeriodService} from 'src/presentation/contracts/period-service';
 import {PeriodicNoteManager} from 'src/business/contracts/periodic-note.manager';
-import {isCreateFileModifierKey, ModifierKey} from 'src/presentation/models/modifier-key';
 import {Period} from 'src/domain/models/period.model';
 import {PeriodNoteSettings} from 'src/domain/settings/period-note.settings';
 import {DEFAULT_PLUGIN_SETTINGS, PluginSettings} from 'src/domain/settings/plugin.settings';
+import {isCreateFileModifierKey, ModifierKey} from 'src/domain/models/modifier-key';
 
 export class DefaultPeriodService implements PeriodService {
     private settings: PluginSettings = DEFAULT_PLUGIN_SETTINGS;

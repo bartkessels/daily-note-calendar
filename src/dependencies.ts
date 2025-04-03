@@ -20,7 +20,7 @@ import {DefaultCommandHandlerFactory} from 'src/presentation/factories/default.c
 import {DefaultNoteManagerFactory} from 'src/business/factories/default.note-manager-factory';
 import {CommandHandlerFactory} from 'src/presentation/contracts/command-handler-factory';
 import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
-import {DefaultNotesViewModel, NotesViewModel} from 'src/presentation/view-models/notes.view-model';
+import {DefaultNotesViewModel} from 'src/presentation/view-models/notes.view-model';
 import {ContextMenuAdapter} from 'src/presentation/adapters/context-menu.adapter';
 import {ObsidianContextMenuAdapter} from 'src/presentation/obsidian/obsidian.context-menu-adapter';
 import {DefaultPeriodService} from 'src/presentation/services/default.period-service';
@@ -30,6 +30,7 @@ import {MonthPeriodNoteViewModel} from 'src/presentation/view-models/month.perio
 import {QuarterPeriodNoteViewModel} from 'src/presentation/view-models/quarter.period-note-view-model';
 import {YearPeriodNoteViewModel} from 'src/presentation/view-models/year.period-note-view-model';
 import {CalendarViewModel} from 'src/presentation/contracts/calendar.view-model';
+import {NotesViewModel} from 'src/presentation/contracts/notes.view-model';
 
 export interface Dependencies {
     calendarViewModel: CalendarViewModel;
@@ -79,7 +80,14 @@ export function getDependencies(plugin: Plugin): Dependencies {
     const yearlyNoteViewModel = new YearPeriodNoteViewModel(periodService);
     const notesViewModel = new DefaultNotesViewModel(noteManagerFactory);
 
-    const commandHandlerFactory = new DefaultCommandHandlerFactory(noteManagerFactory, settingsRepositoryFactory, dateManagerFactory, calendarViewModel);
+    const commandHandlerFactory = new DefaultCommandHandlerFactory(
+        noteManagerFactory,
+        settingsRepositoryFactory,
+        dateManagerFactory,
+        calendarViewModel,
+        weeklyNoteViewModel,
+        dailyNoteViewModel
+    );
     const contextMenuAdapter = new ObsidianContextMenuAdapter();
 
     return {

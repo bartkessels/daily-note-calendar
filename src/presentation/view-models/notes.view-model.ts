@@ -1,12 +1,7 @@
 import {Note} from 'src/domain/models/note.model';
 import {NoteManagerFactory} from 'src/business/contracts/note-manager-factory';
 import {Period} from 'src/domain/models/period.model';
-
-export interface NotesViewModel {
-    loadNotes(period: Period): Promise<Note[]>;
-    openNote(note: Note): Promise<void>
-    deleteNote(note: Note): Promise<void>;
-}
+import {NotesViewModel} from 'src/presentation/contracts/notes.view-model';
 
 export class DefaultNotesViewModel implements NotesViewModel {
     constructor(

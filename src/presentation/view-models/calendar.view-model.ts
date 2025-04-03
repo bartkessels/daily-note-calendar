@@ -49,7 +49,6 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
 
     private buildCalendar(weeks: Week[]): Calendar {
         const startWeekOnMonday = this.settings.generalSettings.firstDayOfWeek === DayOfWeek.Monday;
-
         const month = this.calendarService.getMonthForWeeks(weeks);
         const quarter = this.calendarService.getQuarterForWeeks(weeks);
         const year = this.calendarService.getYearForWeeks(weeks);

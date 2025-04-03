@@ -1,8 +1,8 @@
 import {arePeriodsEqual, Period} from 'src/domain/models/period.model';
 import React, {ReactElement} from 'react';
-import {useDailyNoteViewModel} from 'src/presentation/context/period-view-model.context';
+import {useDailyNoteViewModel} from 'src/presentation/context/view-model.context';
 import {PeriodComponent} from 'src/presentation/components/period.component';
-import {isSelectModifierKey} from 'src/presentation/models/modifier-key';
+import {isSelectModifierKey} from 'src/domain/models/modifier-key';
 
 interface DailyNoteProperties {
     day: Period;

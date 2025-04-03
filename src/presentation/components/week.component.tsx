@@ -1,7 +1,7 @@
 import React, {ReactElement} from 'react';
 import {PeriodComponent} from 'src/presentation/components/period.component';
 import {arePeriodsEqual, Period} from 'src/domain/models/period.model';
-import {useWeeklyNoteViewModel} from 'src/presentation/context/period-view-model.context';
+import {useWeeklyNoteViewModel} from 'src/presentation/context/view-model.context';
 import {DailyNoteComponent} from 'src/presentation/components/day.component';
 import {Week} from 'src/domain/models/week';
 

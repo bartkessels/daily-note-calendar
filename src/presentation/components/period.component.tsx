@@ -1,7 +1,7 @@
-import {ModifierKey} from 'src/presentation/models/modifier-key';
 import React, {ReactElement} from 'react';
 import {getContextMenuAdapter} from 'src/presentation/context/context-menu-adapter.context';
 import {ContextMenuCallbacks} from 'src/presentation/adapters/context-menu.adapter';
+import { ModifierKey } from 'src/domain/models/modifier-key';
 
 interface PeriodComponentProperties {
     name: string;

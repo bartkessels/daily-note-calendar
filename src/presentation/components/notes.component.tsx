@@ -1,8 +1,8 @@
 import React from 'react';
-import {useNotesViewModel} from 'src/presentation/context/notes-view-model.context';
 import {NoteComponent} from 'src/presentation/components/note.component';
 import {Period} from 'src/domain/models/period.model';
 import {Note} from 'src/domain/models/note.model';
+import {useNotesViewModel} from 'src/presentation/context/view-model.context';
 
 export interface NotesComponentProperties {
     period: Period | null;

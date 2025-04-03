@@ -1,5 +1,5 @@
 import {Period} from 'src/domain/models/period.model';
-import {useYearlyNoteViewModel} from 'src/presentation/context/period-view-model.context';
+import {useYearlyNoteViewModel} from 'src/presentation/context/view-model.context';
 import React, {ReactElement} from 'react';
 import {PeriodComponent} from 'src/presentation/components/period.component';
 

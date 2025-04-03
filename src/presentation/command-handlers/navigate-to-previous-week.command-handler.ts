@@ -1,5 +1,5 @@
 import {CommandHandler} from 'src/presentation/contracts/command-handler';
-import {CalendarViewModel} from 'src/presentation/view-models/calendar.view-model';
+import { CalendarViewModel } from 'src/presentation/contracts/calendar.view-model';
 
 export class NavigateToPreviousWeekCommandHandler implements CommandHandler {
     constructor(
