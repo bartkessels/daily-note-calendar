@@ -7,7 +7,7 @@ import {DefaultDateParserFactory} from 'src/infrastructure/factories/default.dat
 import {ObsidianFileAdapter} from 'src/infrastructure/obsidian/obsidian.file-adapter';
 import {DefaultVariableFactory} from 'src/business/factories/default.variable-factory';
 import {ObsidianNoteAdapter} from 'src/infrastructure/obsidian/obsidian.note-adapter';
-import {DefaultCalendarViewModel} from 'src/presentation/view-models/calendar.view-model';
+import {DefaultCalendarViewModel} from 'src/presentation/view-models/default.calendar-view-model';
 import {DefaultCalendarService} from 'src/presentation/services/default.calendar-service';
 import {DefaultPeriodicNoteManager} from 'src/business/managers/default.periodic-note-manager';
 import {DefaultDateRepositoryFactory} from 'src/infrastructure/factories/default.date-repository-factory';
@@ -20,7 +20,7 @@ import {DefaultCommandHandlerFactory} from 'src/presentation/factories/default.c
 import {DefaultNoteManagerFactory} from 'src/business/factories/default.note-manager-factory';
 import {CommandHandlerFactory} from 'src/presentation/contracts/command-handler-factory';
 import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
-import {DefaultNotesViewModel} from 'src/presentation/view-models/notes.view-model';
+import {DefaultNotesViewModel} from 'src/presentation/view-models/default.notes-view-model';
 import {ContextMenuAdapter} from 'src/presentation/adapters/context-menu.adapter';
 import {ObsidianContextMenuAdapter} from 'src/presentation/obsidian/obsidian.context-menu-adapter';
 import {DefaultPeriodService} from 'src/presentation/services/default.period-service';

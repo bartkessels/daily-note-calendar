@@ -1,4 +1,4 @@
-import {CalendarViewModel} from 'src/presentation/view-models/calendar.view-model';
+import {CalendarViewModel} from 'src/presentation/view-models/default.calendar-view-model';
 import {CommandHandler} from 'src/presentation/contracts/command-handler';
 import {NoteManagerFactory} from 'src/business/contracts/note-manager-factory';
 import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contracts/settings-repository-factory';

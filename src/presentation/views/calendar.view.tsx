@@ -2,7 +2,7 @@ import {ItemView, WorkspaceLeaf} from 'obsidian';
 import {createRoot} from 'react-dom/client';
 import {StrictMode} from 'react';
 import {CalendarComponent} from 'src/presentation/components/calendar.component';
-import {NotesViewModel} from 'src/presentation/view-models/notes.view-model';
+import {NotesViewModel} from 'src/presentation/view-models/default.notes-view-model';
 import {ContextMenuAdapterContext} from 'src/presentation/context/context-menu-adapter.context';
 import {ContextMenuAdapter} from 'src/presentation/adapters/context-menu.adapter';
 import {DayPeriodNoteViewModel} from 'src/presentation/view-models/day.period-note-view-model';
