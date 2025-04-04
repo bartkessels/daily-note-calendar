@@ -51,8 +51,7 @@ export class DefaultPeriodService implements PeriodService {
         openAction: (settings: PeriodNoteSettings, period: Period) => Promise<void>
     ): Promise<void> {
         const requireModifierKeyForCreatingNote = this.settings.generalSettings.useModifierKeyToCreateNote;
-        const isCreateFileModifierKeyPressed = isCreateFileModifierKey(key) && requireModifierKeyForCreatingNote;
-        const shouldCreateNote = (!requireModifierKeyForCreatingNote || isCreateFileModifierKeyPressed);
+        const shouldCreateNote = !requireModifierKeyForCreatingNote || isCreateFileModifierKey(key);
 
         if (shouldCreateNote) {
             await this.periodicNoteManager.createNote(settings, period);

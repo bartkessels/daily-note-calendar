@@ -1,5 +1,6 @@
 import {PeriodService} from 'src/presentation/contracts/period-service';
 import {CalendarService} from 'src/presentation/contracts/calendar-service';
+import {NoteService} from 'src/presentation/contracts/note-service';
 
 export const mockPeriodService = {
     initialize: jest.fn(),
@@ -21,3 +22,11 @@ export const mockCalendarService = {
     getQuarterForWeeks: jest.fn(),
     getYearForWeeks: jest.fn()
 } as jest.Mocked<CalendarService>;
+
+export const mockNoteService = {
+    getNotesForPeriod: jest.fn(),
+    openNote: jest.fn(),
+    openNoteInHorizontalSplitView: jest.fn(),
+    openNoteInVerticalSplitView: jest.fn(),
+    deleteNote: jest.fn()
+} as jest.Mocked<NoteService>;

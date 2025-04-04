@@ -1,12 +1,11 @@
-import { mockNoteManager } from "src/test-helpers/manager.mocks";
 import {DefaultNotesViewModel} from 'src/presentation/view-models/default.notes-view-model';
-import {mockNoteManagerFactory} from 'src/test-helpers/factory.mocks';
 import {Period, PeriodType} from 'src/domain/models/period.model';
 import {Note} from 'src/domain/models/note.model';
 import {when} from 'jest-when';
+import {mockNoteService} from 'src/test-helpers/service.mocks';
 
 describe('NotesViewModel', () => {
-    const noteManager = mockNoteManager;
+    const noteService = mockNoteService;
     const period = <Period> {
         date: new Date(2023, 9, 2),
         name: '02',
@@ -23,9 +22,7 @@ describe('NotesViewModel', () => {
     let viewModel: DefaultNotesViewModel;
 
     beforeEach(() => {
-        const noteManagerFactory = mockNoteManagerFactory(noteManager);
-
-        viewModel = new DefaultNotesViewModel(noteManagerFactory);
+        viewModel = new DefaultNotesViewModel(noteService);
     })
 
     afterEach(() => {
@@ -33,57 +30,57 @@ describe('NotesViewModel', () => {
     });
 
     describe('loadNotes', () => {
-        it('should call the noteManager and return the result', async () => {
+        it('should call the noteService and return the result', async () => {
             // Arrange
             const expectedNotes = [note];
-            when(noteManager.getNotesForPeriod).mockReturnValue(expectedNotes);
+            when(noteService.getNotesForPeriod).mockResolvedValue(expectedNotes);
 
             // Act
             const result = await viewModel.loadNotes(period);
 
             // Assert
             expect(result).toEqual(expectedNotes);
-            expect(noteManager.getNotesForPeriod).toHaveBeenCalledWith(period);
+            expect(noteService.getNotesForPeriod).toHaveBeenCalledWith(period);
         });
     });
 
     describe('openNoteInHorizontalSplitView', () => {
-        it('should call the noteManager', async () => {
+        it('should call the noteService', async () => {
             // Act
             await viewModel.openNoteInHorizontalSplitView(note);
 
             // Assert
-            expect(noteManager.openNoteInHorizontalSplitView).toHaveBeenCalledWith(note);
+            expect(noteService.openNoteInHorizontalSplitView).toHaveBeenCalledWith(note);
         });
     });
 
     describe('openNoteInVerticalSplitView', () => {
-        it('should call the noteManager', async () => {
+        it('should call the noteService', async () => {
             // Act
             await viewModel.openNoteInVerticalSplitView(note);
 
             // Assert
-            expect(noteManager.openNoteInVerticalSplitView).toHaveBeenCalledWith(note);
+            expect(noteService.openNoteInVerticalSplitView).toHaveBeenCalledWith(note);
         });
     });
 
     describe('openNote', () => {
-        it('should call the noteManager', async () => {
+        it('should call the noteService', async () => {
             // Act
             await viewModel.openNote(note);
 
             // Assert
-            expect(noteManager.openNote).toHaveBeenCalledWith(note);
+            expect(noteService.openNote).toHaveBeenCalledWith(note);
         });
     });
 
     describe('deleteNote', () => {
-        it('should call the noteManager', async () => {
+        it('should call the noteService', async () => {
             // Act
             await viewModel.deleteNote(note);
 
             // Assert
-            expect(noteManager.deleteNote).toHaveBeenCalledWith(note);
+            expect(noteService.deleteNote).toHaveBeenCalledWith(note);
         });
     });
 });

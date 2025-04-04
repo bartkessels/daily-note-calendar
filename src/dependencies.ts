@@ -31,6 +31,7 @@ import {QuarterPeriodNoteViewModel} from 'src/presentation/view-models/quarter.p
 import {YearPeriodNoteViewModel} from 'src/presentation/view-models/year.period-note-view-model';
 import {CalendarViewModel} from 'src/presentation/contracts/calendar.view-model';
 import {NotesViewModel} from 'src/presentation/contracts/notes.view-model';
+import {DefaultNoteService} from 'src/presentation/services/default.note-service';
 
 export interface Dependencies {
     calendarViewModel: CalendarViewModel;
@@ -71,6 +72,7 @@ export function getDependencies(plugin: Plugin): Dependencies {
     // Presentation
     const calendarService = new DefaultCalendarService(dateManagerFactory);
     const periodService = new DefaultPeriodService(periodicNoteManager);
+    const noteService = new DefaultNoteService(noteManagerFactory);
 
     const calendarViewModel = new DefaultCalendarViewModel(calendarService);
     const dailyNoteViewModel = new DayPeriodNoteViewModel(periodService);
@@ -78,7 +80,7 @@ export function getDependencies(plugin: Plugin): Dependencies {
     const monthlyNoteViewModel = new MonthPeriodNoteViewModel(periodService);
     const quarterlyNoteViewModel = new QuarterPeriodNoteViewModel(periodService);
     const yearlyNoteViewModel = new YearPeriodNoteViewModel(periodService);
-    const notesViewModel = new DefaultNotesViewModel(noteManagerFactory);
+    const notesViewModel = new DefaultNotesViewModel(noteService);
 
     const commandHandlerFactory = new DefaultCommandHandlerFactory(
         noteManagerFactory,
