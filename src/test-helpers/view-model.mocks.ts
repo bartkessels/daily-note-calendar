@@ -31,5 +31,7 @@ export const mockPeriodNoteViewModel = {
 export const mockNotesViewModel = {
     loadNotes: jest.fn(),
     openNote: jest.fn(),
+    openNoteInHorizontalSplitView: jest.fn(),
+    openNoteInVerticalSplitView: jest.fn(),
     deleteNote: jest.fn()
 } as jest.Mocked<NotesViewModel>;
