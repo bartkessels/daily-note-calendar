@@ -25,6 +25,8 @@ export const NotesComponent = (props: NotesComponentProperties) => {
                     <NoteComponent
                         key={note.path}
                         note={note}
+                        onOpenInHorizontalSplitView={(note) => viewModel?.openNoteInHorizontalSplitView(note)}
+                        onOpenInVerticalSplitView={(note) => viewModel?.openNoteInVerticalSplitView(note)}
                         onClick={(note) => viewModel?.openNote(note)}
                         onDelete={(note) => viewModel?.deleteNote(note)} />
                 )}

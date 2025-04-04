@@ -5,6 +5,8 @@ import {Note} from 'src/domain/models/note.model';
 
 export interface NoteComponentProperties {
     note: Note;
+    onOpenInHorizontalSplitView: (note: Note) => void;
+    onOpenInVerticalSplitView: (note: Note) => void;
     onClick: (note: Note) => void;
     onDelete: (note: Note) => void;
 }
@@ -12,8 +14,8 @@ export interface NoteComponentProperties {
 export const NoteComponent = (props: NoteComponentProperties): ReactElement => {
     const contextMenu = getContextMenuAdapter();
     const contextMenuCallbacks: ContextMenuCallbacks = {
-        openInHorizontalSplitView: () => {},
-        openInVerticalSplitView: () => {},
+        openInHorizontalSplitView: () => props.onOpenInHorizontalSplitView(props.note),
+        openInVerticalSplitView: () => props.onOpenInVerticalSplitView(props.note),
         onDelete: () => props.onDelete(props.note)
     };
 

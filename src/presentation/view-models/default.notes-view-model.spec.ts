@@ -47,6 +47,26 @@ describe('NotesViewModel', () => {
         });
     });
 
+    describe('openNoteInHorizontalSplitView', () => {
+        it('should call the noteManager', async () => {
+            // Act
+            await viewModel.openNoteInHorizontalSplitView(note);
+
+            // Assert
+            expect(noteManager.openNoteInHorizontalSplitView).toHaveBeenCalledWith(note);
+        });
+    });
+
+    describe('openNoteInVerticalSplitView', () => {
+        it('should call the noteManager', async () => {
+            // Act
+            await viewModel.openNoteInVerticalSplitView(note);
+
+            // Assert
+            expect(noteManager.openNoteInVerticalSplitView).toHaveBeenCalledWith(note);
+        });
+    });
+
     describe('openNote', () => {
         it('should call the noteManager', async () => {
             // Act

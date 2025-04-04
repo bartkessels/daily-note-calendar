@@ -14,6 +14,14 @@ export class DefaultNotesViewModel implements NotesViewModel {
         return await this.noteManagerFactory.getManager().getNotesForPeriod(period);
     }
 
+    public async openNoteInHorizontalSplitView(note: Note): Promise<void> {
+        await this.noteManagerFactory.getManager().openNoteInHorizontalSplitView(note);
+    }
+
+    public async openNoteInVerticalSplitView(note: Note): Promise<void> {
+        await this.noteManagerFactory.getManager().openNoteInVerticalSplitView(note);
+    }
+
     public async openNote(note: Note): Promise<void> {
         await this.noteManagerFactory.getManager().openNote(note);
     }

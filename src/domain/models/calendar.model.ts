@@ -7,5 +7,5 @@ export interface Calendar {
     quarter: Period;
     year: Period;
     weeks: Week[];
-    today: Period;
+    today: Period | null;
 }

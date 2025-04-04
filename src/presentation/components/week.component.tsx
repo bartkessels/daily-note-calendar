@@ -8,7 +8,7 @@ import {Week} from 'src/domain/models/week';
 interface WeeklyNoteProperties {
     week: Week;
     days: Period[];
-    today: Period;
+    today: Period | null;
     selectedPeriod: Period | null;
     currentMonth: Period | null;
     onSelect: (period: Period) => void;
