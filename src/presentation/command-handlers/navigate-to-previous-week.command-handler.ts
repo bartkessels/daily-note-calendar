@@ -9,6 +9,6 @@ export class NavigateToPreviousWeekCommandHandler implements CommandHandler {
     }
 
     public async execute(): Promise<void> {
-        this.viewModel.loadPreviousWeek();
+        this.viewModel.navigateToPreviousWeek?.call(this);
     }
 }

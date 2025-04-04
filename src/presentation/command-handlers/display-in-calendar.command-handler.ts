@@ -1,8 +1,8 @@
-import {CalendarViewModel} from 'src/presentation/view-models/default.calendar-view-model';
 import {CommandHandler} from 'src/presentation/contracts/command-handler';
 import {NoteManagerFactory} from 'src/business/contracts/note-manager-factory';
 import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contracts/settings-repository-factory';
 import {DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
+import { CalendarViewModel } from 'src/presentation/contracts/calendar.view-model';
 
 export class DisplayInCalendarCommandHandler implements CommandHandler {
     constructor(
@@ -23,11 +23,10 @@ export class DisplayInCalendarCommandHandler implements CommandHandler {
             return;
         }
 
-
         if (settings.useCreatedOnDateFromProperties && activeNote.createdOnProperty) {
-            this.viewModel.selectPeriod(activeNote.createdOnProperty);
+            this.viewModel.setSelectedPeriod?.call(this, activeNote.createdOnProperty);
         } else if (!settings.useCreatedOnDateFromProperties) {
-            this.viewModel.selectPeriod(activeNote.createdOn);
+            this.viewModel.setSelectedPeriod?.call(this, activeNote.createdOn);
         }
     }
 }

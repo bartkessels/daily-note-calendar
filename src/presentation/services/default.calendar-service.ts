@@ -21,7 +21,8 @@ export class DefaultCalendarService implements CalendarService {
 
     public getCurrentWeek(): Week[] {
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
-        const currentWeek = this.dateManager.getCurrentWeek(firstDayOfWeek);
+        const weekNumberStandard = this.settings.generalSettings.weekNumberStandard;
+        const currentWeek = this.dateManager.getCurrentWeek(firstDayOfWeek, weekNumberStandard);
 
         return this.loadWeeks(currentWeek, 2, 2);
     }
@@ -39,7 +40,8 @@ export class DefaultCalendarService implements CalendarService {
     public getPreviousMonth(weeks: Week[]): Week[] {
         const middleWeek = this.getMiddleWeek(weeks);
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
-        const previousMonth = this.dateManager.getPreviousMonth(middleWeek, firstDayOfWeek);
+        const weekNumberStandard = this.settings.generalSettings.weekNumberStandard;
+        const previousMonth = this.dateManager.getPreviousMonth(middleWeek, firstDayOfWeek, weekNumberStandard);
 
         return this.sortWeeks(previousMonth);
     }
@@ -47,7 +49,8 @@ export class DefaultCalendarService implements CalendarService {
     public getNextMonth(weeks: Week[]): Week[] {
         const middleWeek = this.getMiddleWeek(weeks);
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
-        const nextMonth = this.dateManager.getNextMonth(middleWeek, firstDayOfWeek);
+        const weekNumberStandard = this.settings.generalSettings.weekNumberStandard;
+        const nextMonth = this.dateManager.getNextMonth(middleWeek, firstDayOfWeek, weekNumberStandard);
 
         return this.sortWeeks(nextMonth);
     }
@@ -73,9 +76,10 @@ export class DefaultCalendarService implements CalendarService {
 
     private loadWeeks(currentWeek: Week, noPreviousWeeks: number, noNextWeeks: number): Week[] {
         const firstDayOfWeek = this.settings.generalSettings.firstDayOfWeek;
+        const weekNumberStandard = this.settings.generalSettings.weekNumberStandard;
 
-        const previousWeeks = this.dateManager.getPreviousWeeks(firstDayOfWeek, currentWeek, noPreviousWeeks);
-        const nextWeeks = this.dateManager.getNextWeeks(firstDayOfWeek, currentWeek, noNextWeeks);
+        const previousWeeks = this.dateManager.getPreviousWeeks(currentWeek, firstDayOfWeek, weekNumberStandard, noPreviousWeeks);
+        const nextWeeks = this.dateManager.getNextWeeks(currentWeek, firstDayOfWeek, weekNumberStandard, noNextWeeks);
         const weeks = [...previousWeeks, currentWeek, ...nextWeeks];
 
         return this.sortWeeks(weeks);

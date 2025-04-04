@@ -4,12 +4,14 @@ import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contra
 import {GeneralSettings} from 'src/domain/settings/general.settings';
 import {ModifierKey} from 'src/domain/models/modifier-key';
 import {PeriodNoteViewModel} from 'src/presentation/contracts/period.view-model';
+import {CalendarViewModel} from 'src/presentation/contracts/calendar.view-model';
 
 export class OpenWeeklyNoteCommandHandler implements CommandHandler {
     constructor(
         private readonly dateManagerFactory: DateManagerFactory,
         private readonly settingsRepositoryFactory: SettingsRepositoryFactory,
         private readonly viewModel: PeriodNoteViewModel,
+        private readonly calendarViewModel: CalendarViewModel
     ) {
 
     }
@@ -20,8 +22,10 @@ export class OpenWeeklyNoteCommandHandler implements CommandHandler {
             .get();
 
         const today = this.dateManagerFactory.getManager().getCurrentDay();
-        const week = this.dateManagerFactory.getManager().getWeek(today, settings.firstDayOfWeek);
+        const week = this.dateManagerFactory.getManager()
+            .getWeek(today, settings.firstDayOfWeek, settings.weekNumberStandard);
 
+        this.calendarViewModel.setSelectedPeriod?.call(this, week);
         await this.viewModel.openNote(ModifierKey.None, week);
     }
 }

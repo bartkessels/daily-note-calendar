@@ -3,7 +3,15 @@ import {PeriodNoteViewModel} from 'src/presentation/contracts/period.view-model'
 import {NotesViewModel} from 'src/presentation/contracts/notes.view-model';
 
 export const mockCalendarViewModel = {
+    setSelectedPeriod: jest.fn(),
+    navigateToNextWeek: jest.fn(),
+    navigateToPreviousWeek: jest.fn(),
+    navigateToCurrentWeek: jest.fn(),
+    navigateToNextMonth: jest.fn(),
+    navigateToPreviousMonth: jest.fn(),
+
     initialize: jest.fn(),
+    initializeCallbacks: jest.fn(),
     getCurrentWeek: jest.fn(),
     getPreviousWeek: jest.fn(),
     getNextWeek: jest.fn(),

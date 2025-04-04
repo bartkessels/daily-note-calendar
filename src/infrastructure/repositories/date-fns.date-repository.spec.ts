@@ -3,7 +3,7 @@ import {mockDateParser} from 'src/test-helpers/parser.mocks';
 import {mockDateParserFactory} from 'src/test-helpers/factory.mocks';
 import {when} from 'jest-when';
 import {Period, PeriodType} from 'src/domain/models/period.model';
-import {DayOfWeek, Week} from 'src/domain/models/week';
+import {DayOfWeek, Week, WeekNumberStandard} from 'src/domain/models/week';
 
 describe('DateFnsDateRepository', () => {
     let repository: DateFnsDateRepository;
@@ -87,20 +87,20 @@ describe('DateFnsDateRepository', () => {
     });
 
     describe('getWeekFromDate', () => {
-        it('should return the expected week period when the week starts on a monday', () => {
+        it('should return the expected week period when the week starts on a monday with the ISO standard', () => {
             // Arrange
             const tuesday = new Date(2023, 9, 3);
             const startOfWeek = DayOfWeek.Monday;
 
             // Act
-            const result = repository.getWeekFromDate(startOfWeek, tuesday);
+            const result = repository.getWeekFromDate(startOfWeek, WeekNumberStandard.ISO, tuesday);
 
             // Assert
-            expect(result).toEqual(<Week> {
+            expect(result).toEqual(<Week>{
                 date: new Date(2023, 9, 2),
                 name: '40',
                 weekNumber: 40,
-                year: <Period> {
+                year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
                     type: PeriodType.Year
@@ -110,7 +110,7 @@ describe('DateFnsDateRepository', () => {
                     date: new Date(2023, 9),
                     type: PeriodType.Quarter
                 },
-                month: <Period> {
+                month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
                     type: PeriodType.Month
@@ -120,20 +120,53 @@ describe('DateFnsDateRepository', () => {
             });
         });
 
-        it('should return the expected week period when the week starts on a sunday', () => {
+        it('should return the expected week period when the week starts on a monday with the US standard', () => {
+            // Arrange
+            const tuesday = new Date(2023, 9, 3);
+            const startOfWeek = DayOfWeek.Monday;
+
+            // Act
+            const result = repository.getWeekFromDate(startOfWeek, WeekNumberStandard.US, tuesday);
+
+            // Assert
+            expect(result).toEqual(<Week>{
+                date: new Date(2023, 9, 2),
+                name: '41',
+                weekNumber: 41,
+                year: <Period>{
+                    name: '2023',
+                    date: new Date(2023, 0),
+                    type: PeriodType.Year
+                },
+                quarter: {
+                    name: 'Q4',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Quarter
+                },
+                month: <Period>{
+                    name: 'October',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Month
+                },
+                days: expect.any(Array),
+                type: PeriodType.Week
+            });
+        });
+
+        it('should return the expected week period when the week starts on a sunday with the ISO standard', () => {
             // Arrange
             const tuesday = new Date(2023, 9, 3);
             const startOfWeek = DayOfWeek.Sunday;
 
             // Act
-            const result = repository.getWeekFromDate(startOfWeek, tuesday);
+            const result = repository.getWeekFromDate(startOfWeek, WeekNumberStandard.ISO, tuesday);
 
             // Assert
-            expect(result).toEqual(<Week> {
+            expect(result).toEqual(<Week>{
                 date: new Date(2023, 9, 1),
                 name: '39',
                 weekNumber: 39,
-                year: <Period> {
+                year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
                     type: PeriodType.Year
@@ -143,7 +176,7 @@ describe('DateFnsDateRepository', () => {
                     date: new Date(2023, 9),
                     type: PeriodType.Quarter
                 },
-                month: <Period> {
+                month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
                     type: PeriodType.Month
@@ -153,13 +186,46 @@ describe('DateFnsDateRepository', () => {
             });
         });
 
-        it('should return the correct days for the week when the week starts on a sunday', () => {
+        it('should return the expected week period when the week starts on a sunday with the US standard', () => {
             // Arrange
             const tuesday = new Date(2023, 9, 3);
             const startOfWeek = DayOfWeek.Sunday;
 
             // Act
-            const result = repository.getWeekFromDate(startOfWeek, tuesday);
+            const result = repository.getWeekFromDate(startOfWeek, WeekNumberStandard.US, tuesday);
+
+            // Assert
+            expect(result).toEqual(<Week>{
+                date: new Date(2023, 9, 1),
+                name: '40',
+                weekNumber: 40,
+                year: <Period>{
+                    name: '2023',
+                    date: new Date(2023, 0),
+                    type: PeriodType.Year
+                },
+                quarter: {
+                    name: 'Q4',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Quarter
+                },
+                month: <Period>{
+                    name: 'October',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Month
+                },
+                days: expect.any(Array),
+                type: PeriodType.Week
+            });
+        });
+
+        it('should return the correct days for the week when the week starts on a sunday with the ISO standard', () => {
+            // Arrange
+            const tuesday = new Date(2023, 9, 3);
+            const startOfWeek = DayOfWeek.Sunday;
+
+            // Act
+            const result = repository.getWeekFromDate(startOfWeek, WeekNumberStandard.ISO, tuesday);
 
             // Assert
             expect(result.days.length).toBe(7);
@@ -200,13 +266,107 @@ describe('DateFnsDateRepository', () => {
             });
         });
 
-        it('should return the correct days for the week when the week starts on a monday', () => {
+        it('should return the correct days for the week when the week starts on a sunday with the US standard', () => {
+            // Arrange
+            const tuesday = new Date(2023, 9, 3);
+            const startOfWeek = DayOfWeek.Sunday;
+
+            // Act
+            const result = repository.getWeekFromDate(startOfWeek, WeekNumberStandard.US, tuesday);
+
+            // Assert
+            expect(result.days.length).toBe(7);
+            expect(result.days[0]).toEqual({
+                name: '01',
+                date: new Date(2023, 9, 1),
+                type: PeriodType.Day
+            });
+            expect(result.days[1]).toEqual({
+                name: '02',
+                date: new Date(2023, 9, 2),
+                type: PeriodType.Day
+            });
+            expect(result.days[2]).toEqual({
+                name: '03',
+                date: new Date(2023, 9, 3),
+                type: PeriodType.Day
+            });
+            expect(result.days[3]).toEqual({
+                name: '04',
+                date: new Date(2023, 9, 4),
+                type: PeriodType.Day
+            });
+            expect(result.days[4]).toEqual({
+                name: '05',
+                date: new Date(2023, 9, 5),
+                type: PeriodType.Day
+            });
+            expect(result.days[5]).toEqual({
+                name: '06',
+                date: new Date(2023, 9, 6),
+                type: PeriodType.Day
+            });
+            expect(result.days[6]).toEqual({
+                name: '07',
+                date: new Date(2023, 9, 7),
+                type: PeriodType.Day
+            });
+        });
+
+        it('should return the correct days for the week when the week starts on a monday with the ISO standard', () => {
             // Arrange
             const tuesday = new Date(2023, 9, 3);
             const startOfWeek = DayOfWeek.Monday;
 
             // Act
-            const result = repository.getWeekFromDate(startOfWeek, tuesday);
+            const result = repository.getWeekFromDate(startOfWeek, WeekNumberStandard.ISO, tuesday);
+
+            // Assert
+            expect(result.days.length).toBe(7);
+            expect(result.days[0]).toEqual({
+                name: '02',
+                date: new Date(2023, 9, 2),
+                type: PeriodType.Day
+            });
+            expect(result.days[1]).toEqual({
+                name: '03',
+                date: new Date(2023, 9, 3),
+                type: PeriodType.Day
+            });
+            expect(result.days[2]).toEqual({
+                name: '04',
+                date: new Date(2023, 9, 4),
+                type: PeriodType.Day
+            });
+            expect(result.days[3]).toEqual({
+                name: '05',
+                date: new Date(2023, 9, 5),
+                type: PeriodType.Day
+            });
+            expect(result.days[4]).toEqual({
+                name: '06',
+                date: new Date(2023, 9, 6),
+                type: PeriodType.Day
+            });
+            expect(result.days[5]).toEqual({
+                name: '07',
+                date: new Date(2023, 9, 7),
+                type: PeriodType.Day
+            });
+            expect(result.days[6]).toEqual({
+                name: '08',
+                date: new Date(2023, 9, 8),
+                type: PeriodType.Day
+            });
+        });
+
+        it('should return the correct days for the week when the week starts on a monday with the US standard', () => {
+            // Arrange
+            const tuesday = new Date(2023, 9, 3);
+            const startOfWeek = DayOfWeek.Monday;
+
+            // Act
+            const result = repository.getWeekFromDate(startOfWeek, WeekNumberStandard.US, tuesday);
 
             // Assert
             expect(result.days.length).toBe(7);
@@ -249,7 +409,7 @@ describe('DateFnsDateRepository', () => {
     });
 
     describe('getNextWeek', () => {
-        it('should return the next week', () => {
+        it('should return the next week when the week starts on monday with the ISO standard', () => {
             // Arrange
             const currentWeek = <Week>{
                 date: new Date(2023, 9, 3),
@@ -270,7 +430,7 @@ describe('DateFnsDateRepository', () => {
             };
 
             // Act
-            const result = repository.getNextWeek(DayOfWeek.Monday, currentWeek);
+            const result = repository.getNextWeek(DayOfWeek.Monday, WeekNumberStandard.ISO, currentWeek);
 
             // Assert
             expect(result).toEqual(<Week>{
@@ -297,7 +457,151 @@ describe('DateFnsDateRepository', () => {
             });
         });
 
-        it('should return the next week when the current week is week 52 and the week starts on monday', () => {
+        it('should return the next week when the week starts on monday with the US standard', () => {
+            // Arrange
+            const currentWeek = <Week>{
+                date: new Date(2023, 9, 3),
+                name: '39',
+                weekNumber: 39,
+                year: <Period>{
+                    name: '2023',
+                    date: new Date(2023, 0),
+                    type: PeriodType.Year
+                },
+                month: <Period>{
+                    name: 'October',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Month
+                },
+                days: expect.any(Array),
+                type: PeriodType.Week
+            };
+
+            // Act
+            const result = repository.getNextWeek(DayOfWeek.Monday, WeekNumberStandard.US, currentWeek);
+
+            // Assert
+            expect(result).toEqual(<Week>{
+                date: new Date(2023, 9, 9),
+                name: '42',
+                weekNumber: 42,
+                year: <Period>{
+                    name: '2023',
+                    date: new Date(2023, 0),
+                    type: PeriodType.Year
+                },
+                quarter: {
+                    name: 'Q4',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Quarter
+                },
+                month: <Period>{
+                    name: 'October',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Month
+                },
+                days: expect.any(Array),
+                type: PeriodType.Week
+            });
+        });
+
+        it('should return the next week when the week starts on sunday with the ISO standard', () => {
+            // Arrange
+            const currentWeek = <Week>{
+                date: new Date(2023, 9, 3),
+                name: '40',
+                weekNumber: 40,
+                year: <Period>{
+                    name: '2023',
+                    date: new Date(2023, 0),
+                    type: PeriodType.Year
+                },
+                month: <Period>{
+                    name: 'October',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Month
+                },
+                days: expect.any(Array),
+                type: PeriodType.Week
+            };
+
+            // Act
+            const result = repository.getNextWeek(DayOfWeek.Sunday, WeekNumberStandard.ISO, currentWeek);
+
+            // Assert
+            expect(result).toEqual(<Week>{
+                date: new Date(2023, 9, 8),
+                name: '40',
+                weekNumber: 40,
+                year: <Period>{
+                    name: '2023',
+                    date: new Date(2023, 0),
+                    type: PeriodType.Year
+                },
+                quarter: {
+                    name: 'Q4',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Quarter
+                },
+                month: <Period>{
+                    name: 'October',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Month
+                },
+                days: expect.any(Array),
+                type: PeriodType.Week
+            });
+        });
+
+        it('should return the next week when the week starts on sunday with the US standard', () => {
+            // Arrange
+            const currentWeek = <Week>{
+                date: new Date(2023, 9, 3),
+                name: '39',
+                weekNumber: 39,
+                year: <Period>{
+                    name: '2023',
+                    date: new Date(2023, 0),
+                    type: PeriodType.Year
+                },
+                month: <Period>{
+                    name: 'October',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Month
+                },
+                days: expect.any(Array),
+                type: PeriodType.Week
+            };
+
+            // Act
+            const result = repository.getNextWeek(DayOfWeek.Sunday, WeekNumberStandard.US, currentWeek);
+
+            // Assert
+            expect(result).toEqual(<Week>{
+                date: new Date(2023, 9, 8),
+                name: '41',
+                weekNumber: 41,
+                year: <Period>{
+                    name: '2023',
+                    date: new Date(2023, 0),
+                    type: PeriodType.Year
+                },
+                quarter: {
+                    name: 'Q4',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Quarter
+                },
+                month: <Period>{
+                    name: 'October',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Month
+                },
+                days: expect.any(Array),
+                type: PeriodType.Week
+            });
+        });
+
+        it('should return the next week when the current week is week 52 and the week starts on monday with the ISO standard', () => {
             // Arrange
             const currentWeek = <Week>{
                 date: new Date(2023, 11, 31),
@@ -318,7 +622,7 @@ describe('DateFnsDateRepository', () => {
             };
 
             // Act
-            const result = repository.getNextWeek(DayOfWeek.Monday, currentWeek);
+            const result = repository.getNextWeek(DayOfWeek.Monday, WeekNumberStandard.ISO, currentWeek);
 
             // Assert
             expect(result).toEqual(<Week>{
@@ -345,7 +649,55 @@ describe('DateFnsDateRepository', () => {
             });
         });
 
-        it('should return the next week when the current week is week 52 and the week starts on sunday', () => {
+        it('should return the next week when the current week is week 52 and the week starts on monday with the US standard', () => {
+            // Arrange
+            const currentWeek = <Week>{
+                date: new Date(2023, 11, 31),
+                name: '51',
+                weekNumber: 51,
+                year: <Period>{
+                    name: '2023',
+                    date: new Date(2023, 0),
+                    type: PeriodType.Year
+                },
+                month: <Period>{
+                    name: 'December',
+                    date: new Date(2023, 11),
+                    type: PeriodType.Month
+                },
+                days: expect.any(Array),
+                type: PeriodType.Week
+            };
+
+            // Act
+            const result = repository.getNextWeek(DayOfWeek.Monday, WeekNumberStandard.US, currentWeek);
+
+            // Assert
+            expect(result).toEqual(<Week>{
+                date: new Date(2024, 0, 1),
+                name: '01',
+                weekNumber: 1,
+                year: <Period>{
+                    name: '2024',
+                    date: new Date(2024, 0),
+                    type: PeriodType.Year
+                },
+                quarter: {
+                    name: 'Q1',
+                    date: new Date(2023, 12),
+                    type: PeriodType.Quarter
+                },
+                month: <Period>{
+                    name: 'January',
+                    date: new Date(2024, 0),
+                    type: PeriodType.Month
+                },
+                days: expect.any(Array),
+                type: PeriodType.Week
+            });
+        });
+
+        it('should return the next week when the current week is week 52 and the week starts on sunday with the ISO standard', () => {
             // Arrange
             const currentWeek = <Week>{
                 date: new Date(2023, 11, 31),
@@ -366,7 +718,7 @@ describe('DateFnsDateRepository', () => {
             };
 
             // Act
-            const result = repository.getNextWeek(DayOfWeek.Sunday, currentWeek);
+            const result = repository.getNextWeek(DayOfWeek.Sunday, WeekNumberStandard.ISO, currentWeek);
 
             // Assert
             expect(result).toEqual(<Week>{
@@ -392,10 +744,58 @@ describe('DateFnsDateRepository', () => {
                 type: PeriodType.Week
             });
         });
+
+        it('should return the next week when the current week is week 52 and the week starts on sunday with the US standard', () => {
+            // Arrange
+            const currentWeek = <Week>{
+                date: new Date(2023, 11, 31),
+                name: '51',
+                weekNumber: 51,
+                year: <Period>{
+                    name: '2023',
+                    date: new Date(2023, 0),
+                    type: PeriodType.Year
+                },
+                month: <Period>{
+                    name: 'December',
+                    date: new Date(2023, 11),
+                    type: PeriodType.Month
+                },
+                days: expect.any(Array),
+                type: PeriodType.Week
+            };
+
+            // Act
+            const result = repository.getNextWeek(DayOfWeek.Sunday, WeekNumberStandard.US, currentWeek);
+
+            // Assert
+            expect(result).toEqual(<Week>{
+                date: new Date(2024, 0, 7),
+                name: '02',
+                weekNumber: 2,
+                year: <Period>{
+                    name: '2024',
+                    date: new Date(2024, 0),
+                    type: PeriodType.Year
+                },
+                quarter: {
+                    name: 'Q1',
+                    date: new Date(2023, 12),
+                    type: PeriodType.Quarter
+                },
+                month: <Period>{
+                    name: 'January',
+                    date: new Date(2024, 0),
+                    type: PeriodType.Month
+                },
+                days: expect.any(Array),
+                type: PeriodType.Week
+            });
+        });
     });
 
     describe('getPreviousWeek', () => {
-        it('should return the previous week', () => {
+        it('should return the previous week when the week starts on monday with the ISO standard', () => {
             // Arrange
             const currentWeek = <Week>{
                 date: new Date(2023, 9, 3),
@@ -416,22 +816,43 @@ describe('DateFnsDateRepository', () => {
             };
 
             // Act
-            const result = repository.getNextWeek(DayOfWeek.Monday, currentWeek);
+            const result = repository.getPreviousWeek(DayOfWeek.Monday, WeekNumberStandard.ISO, currentWeek);
 
             // Assert
             expect(result).toEqual(<Week>{
-                date: new Date(2023, 9, 9),
-                name: '41',
-                weekNumber: 41,
+                date: new Date(2023, 8, 25),
+                name: '39',
+                weekNumber: 39,
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
                     type: PeriodType.Year
                 },
                 quarter: <Period>{
-                    name: 'Q4',
-                    date: new Date(2023, 9),
+                    name: 'Q3',
+                    date: new Date(2023, 6),
                     type: PeriodType.Quarter
+                },
+                month: <Period>{
+                    name: 'September',
+                    date: new Date(2023, 8),
+                    type: PeriodType.Month
+                },
+                days: expect.any(Array),
+                type: PeriodType.Week
+            });
+        });
+
+        it('should return the previous week when the week starts on monday with the US standard', () => {
+            // Arrange
+            const currentWeek = <Week>{
+                date: new Date(2023, 9, 3),
+                name: '40',
+                weekNumber: 40,
+                year: <Period>{
+                    name: '2023',
+                    date: new Date(2023, 0),
+                    type: PeriodType.Year
                 },
                 month: <Period>{
                     name: 'October',
@@ -440,10 +861,133 @@ describe('DateFnsDateRepository', () => {
                 },
                 days: expect.any(Array),
                 type: PeriodType.Week
+            };
+
+            // Act
+            const result = repository.getPreviousWeek(DayOfWeek.Monday, WeekNumberStandard.US, currentWeek);
+
+            // Assert
+            expect(result).toEqual(<Week>{
+                date: new Date(2023, 8, 25),
+                name: '40',
+                weekNumber: 40,
+                year: <Period>{
+                    name: '2023',
+                    date: new Date(2023, 0),
+                    type: PeriodType.Year
+                },
+                quarter: <Period>{
+                    name: 'Q3',
+                    date: new Date(2023, 6),
+                    type: PeriodType.Quarter
+                },
+                month: <Period>{
+                    name: 'September',
+                    date: new Date(2023, 8),
+                    type: PeriodType.Month
+                },
+                days: expect.any(Array),
+                type: PeriodType.Week
             });
         });
 
-        it('should return the previous week when the current week is week 1 and the week starts on monday', () => {
+        it('should return the previous week when the week starts on sunday with the ISO standard', () => {
+            // Arrange
+            const currentWeek = <Week>{
+                date: new Date(2023, 9, 3),
+                name: '40',
+                weekNumber: 40,
+                year: <Period>{
+                    name: '2023',
+                    date: new Date(2023, 0),
+                    type: PeriodType.Year
+                },
+                month: <Period>{
+                    name: 'October',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Month
+                },
+                days: expect.any(Array),
+                type: PeriodType.Week
+            };
+
+            // Act
+            const result = repository.getPreviousWeek(DayOfWeek.Sunday, WeekNumberStandard.ISO, currentWeek);
+
+            // Assert
+            expect(result).toEqual(<Week>{
+                date: new Date(2023, 8, 24),
+                name: '38',
+                weekNumber: 38,
+                year: <Period>{
+                    name: '2023',
+                    date: new Date(2023, 0),
+                    type: PeriodType.Year
+                },
+                quarter: <Period>{
+                    name: 'Q3',
+                    date: new Date(2023, 6),
+                    type: PeriodType.Quarter
+                },
+                month: <Period>{
+                    name: 'September',
+                    date: new Date(2023, 8),
+                    type: PeriodType.Month
+                },
+                days: expect.any(Array),
+                type: PeriodType.Week
+            });
+        });
+
+        it('should return the previous week when the week starts on sunday with the US standard', () => {
+            // Arrange
+            const currentWeek = <Week>{
+                date: new Date(2023, 9, 3),
+                name: '40',
+                weekNumber: 40,
+                year: <Period>{
+                    name: '2023',
+                    date: new Date(2023, 0),
+                    type: PeriodType.Year
+                },
+                month: <Period>{
+                    name: 'October',
+                    date: new Date(2023, 9),
+                    type: PeriodType.Month
+                },
+                days: expect.any(Array),
+                type: PeriodType.Week
+            };
+
+            // Act
+            const result = repository.getPreviousWeek(DayOfWeek.Sunday, WeekNumberStandard.US, currentWeek);
+
+            // Assert
+            expect(result).toEqual(<Week>{
+                date: new Date(2023, 8, 24),
+                name: '39',
+                weekNumber: 39,
+                year: <Period>{
+                    name: '2023',
+                    date: new Date(2023, 0),
+                    type: PeriodType.Year
+                },
+                quarter: <Period>{
+                    name: 'Q3',
+                    date: new Date(2023, 6),
+                    type: PeriodType.Quarter
+                },
+                month: <Period>{
+                    name: 'September',
+                    date: new Date(2023, 8),
+                    type: PeriodType.Month
+                },
+                days: expect.any(Array),
+                type: PeriodType.Week
+            });
+        });
+
+        it('should return the previous week when the current week is week 1 and the week starts on monday with the ISO standard', () => {
             // Arrange
             const currentWeek = <Week>{
                 date: new Date(2024, 0, 1),
@@ -464,7 +1008,7 @@ describe('DateFnsDateRepository', () => {
             };
 
             // Act
-            const result = repository.getPreviousWeek(DayOfWeek.Monday, currentWeek);
+            const result = repository.getPreviousWeek(DayOfWeek.Monday, WeekNumberStandard.ISO, currentWeek);
 
             // Assert
             expect(result).toEqual(<Week>{
@@ -491,7 +1035,7 @@ describe('DateFnsDateRepository', () => {
             });
         });
 
-        it('should return the next week when the current week is week 52 and the week starts on sunday', () => {
+        it('should return the previous week when the current week is week 1 and the week starts on monday with the US standard', () => {
             // Arrange
             const currentWeek = <Week>{
                 date: new Date(2024, 0, 1),
@@ -512,13 +1056,13 @@ describe('DateFnsDateRepository', () => {
             };
 
             // Act
-            const result = repository.getPreviousWeek(DayOfWeek.Sunday, currentWeek);
+            const result = repository.getPreviousWeek(DayOfWeek.Monday, WeekNumberStandard.US, currentWeek);
 
             // Assert
             expect(result).toEqual(<Week>{
-                date: new Date(2023, 11, 24),
-                name: '51',
-                weekNumber: 51,
+                date: new Date(2023, 11, 25),
+                name: '53',
+                weekNumber: 53,
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),

@@ -2,7 +2,7 @@ import {RepositoryDateManager} from 'src/business/managers/repository.date-manag
 import {afterEach} from '@jest/globals';
 import {Period, PeriodType} from 'src/domain/models/period.model';
 import {when} from 'jest-when';
-import {DayOfWeek, Week} from 'src/domain/models/week';
+import {DayOfWeek, Week, WeekNumberStandard} from 'src/domain/models/week';
 import {mockDateRepository} from 'src/test-helpers/repository.mocks';
 import {mockDateRepositoryFactory} from 'src/test-helpers/factory.mocks';
 
@@ -110,10 +110,10 @@ describe('RepositoryDateManager', () => {
                 type: PeriodType.Week,
                 days: []
             };
-            when(dateRepository.getWeekFromDate).calledWith(DayOfWeek.Monday, today).mockReturnValue(expected);
+            when(dateRepository.getWeekFromDate).calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, today).mockReturnValue(expected);
 
             // Act
-            const result = manager.getCurrentWeek(DayOfWeek.Monday);
+            const result = manager.getCurrentWeek(DayOfWeek.Monday, WeekNumberStandard.ISO);
 
             // Assert
             expect(result).toBe(expected);
@@ -138,10 +138,10 @@ describe('RepositoryDateManager', () => {
                 type: PeriodType.Week,
                 days: []
             };
-            when(dateRepository.getWeekFromDate).calledWith(DayOfWeek.Monday, period.date).mockReturnValue(expected);
+            when(dateRepository.getWeekFromDate).calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, period.date).mockReturnValue(expected);
 
             // Act
-            const result = manager.getWeek(period, DayOfWeek.Monday);
+            const result = manager.getWeek(period, DayOfWeek.Monday, WeekNumberStandard.ISO);
 
             // Assert
             expect(result).toBe(expected);
@@ -185,11 +185,11 @@ describe('RepositoryDateManager', () => {
         it('should return the previous weeks from the repository', () => {
             // Arrange
             when(dateRepository.getPreviousWeek)
-                .calledWith(DayOfWeek.Monday, currentWeek).mockReturnValue(previousWeeks[0])
-                .calledWith(DayOfWeek.Monday, previousWeeks[0]).mockReturnValue(previousWeeks[1]);
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, currentWeek).mockReturnValue(previousWeeks[0])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, previousWeeks[0]).mockReturnValue(previousWeeks[1]);
 
             // Act
-            const result = manager.getPreviousWeeks(DayOfWeek.Monday, currentWeek, 2);
+            const result = manager.getPreviousWeeks(currentWeek, DayOfWeek.Monday, WeekNumberStandard.ISO, 2);
 
             // Assert
             expect(result).toStrictEqual(previousWeeks);
@@ -198,13 +198,13 @@ describe('RepositoryDateManager', () => {
         it('should return the previous weeks from the repository sorted', () => {
             // Arrange
             when(dateRepository.getPreviousWeek)
-                .calledWith(DayOfWeek.Monday, currentWeek)
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, currentWeek)
                 .mockReturnValue(previousWeeks[1])
-                .calledWith(DayOfWeek.Monday, previousWeeks[1])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, previousWeeks[1])
                 .mockReturnValue(previousWeeks[0]);
 
             // Act
-            const result = manager.getPreviousWeeks(DayOfWeek.Monday, currentWeek, 2);
+            const result = manager.getPreviousWeeks(currentWeek, DayOfWeek.Monday, WeekNumberStandard.ISO, 2);
 
             // Assert
             expect(result).toEqual(previousWeeks);
@@ -248,11 +248,11 @@ describe('RepositoryDateManager', () => {
         it('should return the next weeks from the repository', () => {
             // Arrange
             when(dateRepository.getNextWeek)
-                .calledWith(DayOfWeek.Monday, currentWeek).mockReturnValue(nextWeeks[0])
-                .calledWith(DayOfWeek.Monday, nextWeeks[0]).mockReturnValue(nextWeeks[1]);
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, currentWeek).mockReturnValue(nextWeeks[0])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, nextWeeks[0]).mockReturnValue(nextWeeks[1]);
 
             // Act
-            const result = manager.getNextWeeks(DayOfWeek.Monday, currentWeek, 2);
+            const result = manager.getNextWeeks(currentWeek, DayOfWeek.Monday, WeekNumberStandard.ISO, 2);
 
             // Assert
             expect(result).toStrictEqual(nextWeeks);
@@ -261,11 +261,11 @@ describe('RepositoryDateManager', () => {
         it('should return the next weeks from the repository sorted', () => {
             // Arrange
             when(dateRepository.getNextWeek)
-                .calledWith(DayOfWeek.Monday, currentWeek).mockReturnValue(nextWeeks[1])
-                .calledWith(DayOfWeek.Monday, nextWeeks[1]).mockReturnValue(nextWeeks[0]);
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, currentWeek).mockReturnValue(nextWeeks[1])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, nextWeeks[1]).mockReturnValue(nextWeeks[0]);
 
             // Act
-            const result = manager.getNextWeeks(DayOfWeek.Monday, currentWeek, 2);
+            const result = manager.getNextWeeks(currentWeek, DayOfWeek.Monday, WeekNumberStandard.ISO, 2);
 
             // Assert
             expect(result).toStrictEqual(nextWeeks);
@@ -336,24 +336,24 @@ describe('RepositoryDateManager', () => {
             when(dateRepository.getPreviousMonth).calledWith(month).mockReturnValue(previousMonth);
             when(dateRepository.getWeekFromDate).mockReturnValue(weeksOfPreviousMonth[2]);
             when(dateRepository.getPreviousWeek)
-                .calledWith(DayOfWeek.Monday, weeksOfPreviousMonth[2])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfPreviousMonth[2])
                 .mockReturnValue(weeksOfPreviousMonth[0])
-                .calledWith(DayOfWeek.Monday, weeksOfPreviousMonth[0])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfPreviousMonth[0])
                 .mockReturnValue(weeksOfPreviousMonth[1]);
 
             when(dateRepository.getNextWeek)
-                .calledWith(DayOfWeek.Monday, weeksOfPreviousMonth[2])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfPreviousMonth[2])
                 .mockReturnValue(weeksOfPreviousMonth[3])
-                .calledWith(DayOfWeek.Monday, weeksOfPreviousMonth[3])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfPreviousMonth[3])
                 .mockReturnValue(weeksOfPreviousMonth[4]);
 
             // Act
-            const result = manager.getPreviousMonth(month, DayOfWeek.Monday);
+            const result = manager.getPreviousMonth(month, DayOfWeek.Monday, WeekNumberStandard.ISO);
 
             // Assert
             const weekFromDateCalls = dateRepository.getWeekFromDate.mock.calls;
-            expect(weekFromDateCalls.some(call => call[1].getFullYear() === previousMonth.date.getFullYear())).toBeTruthy();
-            expect(weekFromDateCalls.some(call => call[1].getMonth() === previousMonth.date.getMonth())).toBeTruthy();
+            expect(weekFromDateCalls.some(call => call[2].getFullYear() === previousMonth.date.getFullYear())).toBeTruthy();
+            expect(weekFromDateCalls.some(call => call[2].getMonth() === previousMonth.date.getMonth())).toBeTruthy();
             expect(dateRepository.getPreviousMonth).toHaveBeenCalledWith(month);
             expect(result).toEqual(weeksOfPreviousMonth);
         });
@@ -363,24 +363,24 @@ describe('RepositoryDateManager', () => {
             when(dateRepository.getPreviousMonth).calledWith(month).mockReturnValue(previousMonth);
             when(dateRepository.getWeekFromDate).mockReturnValue(weeksOfPreviousMonth[2]);
             when(dateRepository.getPreviousWeek)
-                .calledWith(DayOfWeek.Monday, weeksOfPreviousMonth[2])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfPreviousMonth[2])
                 .mockReturnValue(weeksOfPreviousMonth[1])
-                .calledWith(DayOfWeek.Monday, weeksOfPreviousMonth[1])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfPreviousMonth[1])
                 .mockReturnValue(weeksOfPreviousMonth[0]);
 
             when(dateRepository.getNextWeek)
-                .calledWith(DayOfWeek.Monday, weeksOfPreviousMonth[2])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfPreviousMonth[2])
                 .mockReturnValue(weeksOfPreviousMonth[4])
-                .calledWith(DayOfWeek.Monday, weeksOfPreviousMonth[4])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfPreviousMonth[4])
                 .mockReturnValue(weeksOfPreviousMonth[3]);
 
             // Act
-            const result = manager.getPreviousMonth(month, DayOfWeek.Monday);
+            const result = manager.getPreviousMonth(month, DayOfWeek.Monday, WeekNumberStandard.ISO);
 
             // Assert
             const weekFromDateCalls = dateRepository.getWeekFromDate.mock.calls;
-            expect(weekFromDateCalls.some(call => call[1].getFullYear() === previousMonth.date.getFullYear())).toBeTruthy();
-            expect(weekFromDateCalls.some(call => call[1].getMonth() === previousMonth.date.getMonth())).toBeTruthy();
+            expect(weekFromDateCalls.some(call => call[2].getFullYear() === previousMonth.date.getFullYear())).toBeTruthy();
+            expect(weekFromDateCalls.some(call => call[2].getMonth() === previousMonth.date.getMonth())).toBeTruthy();
             expect(dateRepository.getPreviousMonth).toHaveBeenCalledWith(month);
             expect(result).toEqual(weeksOfPreviousMonth);
         });
@@ -450,24 +450,24 @@ describe('RepositoryDateManager', () => {
             when(dateRepository.getNextMonth).calledWith(month).mockReturnValue(nextMonth);
             when(dateRepository.getWeekFromDate).mockReturnValue(weeksOfNextMonth[2]);
             when(dateRepository.getPreviousWeek)
-                .calledWith(DayOfWeek.Monday, weeksOfNextMonth[2])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO ,weeksOfNextMonth[2])
                 .mockReturnValue(weeksOfNextMonth[0])
-                .calledWith(DayOfWeek.Monday, weeksOfNextMonth[0])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO ,weeksOfNextMonth[0])
                 .mockReturnValue(weeksOfNextMonth[1]);
 
             when(dateRepository.getNextWeek)
-                .calledWith(DayOfWeek.Monday, weeksOfNextMonth[2])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO ,weeksOfNextMonth[2])
                 .mockReturnValue(weeksOfNextMonth[3])
-                .calledWith(DayOfWeek.Monday, weeksOfNextMonth[3])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO ,weeksOfNextMonth[3])
                 .mockReturnValue(weeksOfNextMonth[4]);
 
             // Act
-            const result = manager.getNextMonth(month, DayOfWeek.Monday);
+            const result = manager.getNextMonth(month, DayOfWeek.Monday, WeekNumberStandard.ISO);
 
             // Assert
             const weekFromDateCalls = dateRepository.getWeekFromDate.mock.calls;
-            expect(weekFromDateCalls.some(call => call[1].getFullYear() === nextMonth.date.getFullYear())).toBeTruthy();
-            expect(weekFromDateCalls.some(call => call[1].getMonth() === nextMonth.date.getMonth())).toBeTruthy();
+            expect(weekFromDateCalls.some(call => call[2].getFullYear() === nextMonth.date.getFullYear())).toBeTruthy();
+            expect(weekFromDateCalls.some(call => call[2].getMonth() === nextMonth.date.getMonth())).toBeTruthy();
             expect(dateRepository.getNextMonth).toHaveBeenCalledWith(month);
             expect(result).toEqual(weeksOfNextMonth);
         });
@@ -477,24 +477,24 @@ describe('RepositoryDateManager', () => {
             when(dateRepository.getNextMonth).calledWith(month).mockReturnValue(nextMonth);
             when(dateRepository.getWeekFromDate).mockReturnValue(weeksOfNextMonth[2]);
             when(dateRepository.getPreviousWeek)
-                .calledWith(DayOfWeek.Monday, weeksOfNextMonth[2])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfNextMonth[2])
                 .mockReturnValue(weeksOfNextMonth[1])
-                .calledWith(DayOfWeek.Monday, weeksOfNextMonth[1])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfNextMonth[1])
                 .mockReturnValue(weeksOfNextMonth[0]);
 
             when(dateRepository.getNextWeek)
-                .calledWith(DayOfWeek.Monday, weeksOfNextMonth[2])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfNextMonth[2])
                 .mockReturnValue(weeksOfNextMonth[4])
-                .calledWith(DayOfWeek.Monday, weeksOfNextMonth[4])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfNextMonth[4])
                 .mockReturnValue(weeksOfNextMonth[3]);
 
             // Act
-            const result = manager.getNextMonth(month, DayOfWeek.Monday);
+            const result = manager.getNextMonth(month, DayOfWeek.Monday, WeekNumberStandard.ISO);
 
             // Assert
             const weekFromDateCalls = dateRepository.getWeekFromDate.mock.calls;
-            expect(weekFromDateCalls.some(call => call[1].getFullYear() === nextMonth.date.getFullYear())).toBeTruthy();
-            expect(weekFromDateCalls.some(call => call[1].getMonth() === nextMonth.date.getMonth())).toBeTruthy();
+            expect(weekFromDateCalls.some(call => call[2].getFullYear() === nextMonth.date.getFullYear())).toBeTruthy();
+            expect(weekFromDateCalls.some(call => call[2].getMonth() === nextMonth.date.getMonth())).toBeTruthy();
             expect(dateRepository.getNextMonth).toHaveBeenCalledWith(month);
             expect(result).toEqual(weeksOfNextMonth);
         });

@@ -20,7 +20,7 @@ describe('NavigateToPreviousWeekCommandHandler', () => {
             commandHandler.execute();
 
             // Assert
-            expect(viewModel.loadPreviousWeek).toHaveBeenCalled();
+            expect(viewModel.navigateToPreviousWeek).toHaveBeenCalled();
         });
     });
 });

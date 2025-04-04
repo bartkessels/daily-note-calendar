@@ -17,7 +17,7 @@ describe('NavigateToCurrentWeekCommandHandler', () => {
             commandHandler.execute();
 
             // Assert
-            expect(viewModel.loadCurrentWeek).toHaveBeenCalled();
+            expect(viewModel.navigateToCurrentWeek).toHaveBeenCalled();
         });
     });
 });

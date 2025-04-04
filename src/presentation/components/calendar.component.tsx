@@ -33,6 +33,15 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
     const loadNextMonth = () => setCalendar(viewModel?.getNextMonth(calendar) ?? null);
     const loadPreviousMonth = () => setCalendar(viewModel?.getPreviousMonth(calendar) ?? null);
 
+    viewModel?.initializeCallbacks(
+        setSelectedPeriod,
+        loadNextWeek,
+        loadPreviousWeek,
+        loadCurrentWeek,
+        loadNextMonth,
+        loadPreviousMonth
+    );
+
     return (
         <div className="dnc">
             <div className="header">

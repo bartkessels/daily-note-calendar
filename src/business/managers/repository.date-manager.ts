@@ -1,5 +1,5 @@
 import {DateManager} from 'src/business/contracts/date.manager';
-import {DayOfWeek, Week} from 'src/domain/models/week';
+import {DayOfWeek, Week, WeekNumberStandard} from 'src/domain/models/week';
 import {Period} from 'src/domain/models/period.model';
 import {DateRepositoryFactory} from 'src/infrastructure/contracts/date-repository-factory';
 
@@ -33,50 +33,50 @@ export class RepositoryDateManager implements DateManager {
             .getDayFromDate(yesterday);
     }
 
-    public getCurrentWeek(startOfWeek: DayOfWeek): Week {
+    public getCurrentWeek(startOfWeek: DayOfWeek, standard: WeekNumberStandard): Week {
         return this.dateRepositoryFactory.getRepository()
-            .getWeekFromDate(startOfWeek, this.today);
+            .getWeekFromDate(startOfWeek, standard, this.today);
     }
 
-    public getWeek(period: Period, startOfWeek: DayOfWeek): Week {
+    public getWeek(period: Period, startOfWeek: DayOfWeek, standard: WeekNumberStandard): Week {
         return this.dateRepositoryFactory.getRepository()
-            .getWeekFromDate(startOfWeek, period.date);
+            .getWeekFromDate(startOfWeek, standard, period.date);
     }
 
-    public getPreviousWeeks(startOfWeek: DayOfWeek, currentWeek: Week, noWeeks: number): Week[] {
+    public getPreviousWeeks(currentWeek: Week, startOfWeek: DayOfWeek, standard: WeekNumberStandard, noWeeks: number): Week[] {
         return this.getWeeks(currentWeek, noWeeks, (week) =>
-            this.dateRepositoryFactory.getRepository().getPreviousWeek(startOfWeek, week)
+            this.dateRepositoryFactory.getRepository().getPreviousWeek(startOfWeek, standard, week)
         );
     }
 
-    public getNextWeeks(startOfWeek: DayOfWeek, currentWeek: Week, noWeeks: number): Week[] {
+    public getNextWeeks(currentWeek: Week, startOfWeek: DayOfWeek, standard: WeekNumberStandard, noWeeks: number): Week[] {
         return this.getWeeks(currentWeek, noWeeks, (week) =>
-            this.dateRepositoryFactory.getRepository().getNextWeek(startOfWeek, week)
+            this.dateRepositoryFactory.getRepository().getNextWeek(startOfWeek, standard, week)
         );
     }
 
-    public getPreviousMonth(month: Period, startOfWeek: DayOfWeek): Week[] {
+    public getPreviousMonth(month: Period, startOfWeek: DayOfWeek, standard: WeekNumberStandard): Week[] {
         const previousMonth = this.dateRepositoryFactory.getRepository().getPreviousMonth(month);
-        return this.getWeeksForMonth(previousMonth, startOfWeek);
+        return this.getWeeksForMonth(previousMonth, startOfWeek, standard);
     }
 
-    public getNextMonth(month: Period, startOfWeek: DayOfWeek): Week[] {
+    public getNextMonth(month: Period, startOfWeek: DayOfWeek, standard: WeekNumberStandard): Week[] {
         const nextMonth = this.dateRepositoryFactory.getRepository().getNextMonth(month);
-        return this.getWeeksForMonth(nextMonth, startOfWeek);
+        return this.getWeeksForMonth(nextMonth, startOfWeek, standard);
     }
 
     public getQuarter(month: Period): Period {
         return this.dateRepositoryFactory.getRepository().getQuarter(month);
     }
 
-    private getWeeksForMonth(month: Period, startOfWeek: DayOfWeek): Week[] {
+    private getWeeksForMonth(month: Period, startOfWeek: DayOfWeek, standard: WeekNumberStandard): Week[] {
         const startOfMonth = new Date(month.date.getFullYear(), month.date.getMonth(), 1);
         const endOfMonth = new Date(month.date.getFullYear(), month.date.getMonth() + 1, 0);
         const middleOfMonth = new Date((startOfMonth.getTime() + endOfMonth.getTime()) / 2);
 
-        const middleWeek = this.dateRepositoryFactory.getRepository().getWeekFromDate(startOfWeek, middleOfMonth);
-        const previousWeeks = this.getPreviousWeeks(startOfWeek, middleWeek, 2);
-        const nextWeeks = this.getNextWeeks(startOfWeek, middleWeek, 2);
+        const middleWeek = this.dateRepositoryFactory.getRepository().getWeekFromDate(startOfWeek, standard, middleOfMonth);
+        const previousWeeks = this.getPreviousWeeks(middleWeek, startOfWeek, standard, 2);
+        const nextWeeks = this.getNextWeeks(middleWeek, startOfWeek, standard, 2);
 
         return this.sortWeeks([ ...previousWeeks, middleWeek, ...nextWeeks ]);
     }

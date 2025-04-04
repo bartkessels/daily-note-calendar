@@ -17,7 +17,7 @@ describe('NavigateToNextMonthCommandHandler', () => {
             commandHandler.execute();
 
             // Assert
-            expect(viewModel.loadNextMonth).toHaveBeenCalled();
+            expect(viewModel.navigateToNextMonth).toHaveBeenCalled();
         });
     });
 });

@@ -1,5 +1,5 @@
 import {CommandHandler} from 'src/presentation/contracts/command-handler';
-import {CalendarViewModel} from 'src/presentation/view-models/default.calendar-view-model';
+import {CalendarViewModel} from 'src/presentation/contracts/calendar.view-model';
 
 export class NavigateToNextMonthCommandHandler implements CommandHandler {
     constructor(
@@ -9,6 +9,6 @@ export class NavigateToNextMonthCommandHandler implements CommandHandler {
     }
 
     public async execute(): Promise<void> {
-        this.viewModel.loadNextMonth();
+        this.viewModel.navigateToNextMonth?.call(this);
     }
 }

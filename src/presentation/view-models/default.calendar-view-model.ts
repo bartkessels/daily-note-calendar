@@ -9,6 +9,13 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
     private settings: PluginSettings = DEFAULT_PLUGIN_SETTINGS;
     private today: Period | null = null;
 
+    public setSelectedPeriod?: (period: Period) => void;
+    public navigateToNextWeek?: () => void;
+    public navigateToPreviousWeek?: () => void;
+    public navigateToCurrentWeek?: () => void;
+    public navigateToNextMonth?: () => void;
+    public navigateToPreviousMonth?: () => void;
+
     constructor(
         private readonly calendarService: CalendarService
     ) {
@@ -20,6 +27,22 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         this.today = today;
 
         this.calendarService.initialize(settings);
+    }
+
+    public initializeCallbacks(
+        setSelectedPeriod: (period: Period) => void,
+        navigateToNextWeek: () => void,
+        navigateToPreviousWeek: () => void,
+        navigateToCurrentWeek: () => void,
+        navigateToNextMonth: () => void,
+        navigateToPreviousMonth: () => void
+    ): void {
+        this.setSelectedPeriod = setSelectedPeriod;
+        this.navigateToNextWeek = navigateToNextWeek;
+        this.navigateToPreviousWeek = navigateToPreviousWeek;
+        this.navigateToCurrentWeek = navigateToCurrentWeek;
+        this.navigateToNextMonth = navigateToNextMonth;
+        this.navigateToPreviousMonth = navigateToPreviousMonth;
     }
 
     public getCurrentWeek(): Calendar {
