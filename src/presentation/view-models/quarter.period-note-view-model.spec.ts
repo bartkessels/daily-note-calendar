@@ -5,6 +5,7 @@ import {Period, PeriodType} from 'src/domain/models/period.model';
 import {PeriodNoteSettings} from 'src/domain/settings/period-note.settings';
 import { ModifierKey } from 'src/domain/models/modifier-key';
 import {when} from 'jest-when';
+import {DEFAULT_GENERAL_SETTINGS, GeneralSettings} from 'src/domain/settings/general.settings';
 
 describe('QuarterPeriodNoteViewModel', () => {
     const periodService = mockPeriodService;
@@ -70,6 +71,78 @@ describe('QuarterPeriodNoteViewModel', () => {
             expect(result).toEqual(true);
             expect(periodService.hasPeriodicNote)
                 .toHaveBeenCalledWith(period, settings.quarterlyNotes);
+        });
+
+        it('must return false if the display note indicator is set to false if the period has a note', async () => {
+            const settings = <PluginSettings>{
+                ...DEFAULT_PLUGIN_SETTINGS,
+                generalSettings: <GeneralSettings>{
+                    ...DEFAULT_GENERAL_SETTINGS,
+                    displayNoteIndicator: false
+                }
+            };
+            when(periodService.hasPeriodicNote).calledWith(period, settings.quarterlyNotes).mockResolvedValue(true);
+
+            // Act
+            viewModel.updateSettings(settings);
+            const result = await viewModel.hasPeriodicNote(period);
+
+            // Assert
+            expect(result).toEqual(false);
+        });
+
+        it('must return false if the display note indicator is set to false and the period has no note', async () => {
+            const settings = <PluginSettings>{
+                ...DEFAULT_PLUGIN_SETTINGS,
+                generalSettings: <GeneralSettings>{
+                    ...DEFAULT_GENERAL_SETTINGS,
+                    displayNoteIndicator: false
+                }
+            };
+            when(periodService.hasPeriodicNote).calledWith(period, settings.quarterlyNotes).mockResolvedValue(false);
+
+            // Act
+            viewModel.updateSettings(settings);
+            const result = await viewModel.hasPeriodicNote(period);
+
+            // Assert
+            expect(result).toEqual(false);
+        });
+
+        it('must return false if the display note indicator is set to true but the period has no note', async () => {
+            const settings = <PluginSettings>{
+                ...DEFAULT_PLUGIN_SETTINGS,
+                generalSettings: <GeneralSettings>{
+                    ...DEFAULT_GENERAL_SETTINGS,
+                    displayNoteIndicator: true
+                }
+            };
+            when(periodService.hasPeriodicNote).calledWith(period, settings.quarterlyNotes).mockResolvedValue(false);
+
+            // Act
+            viewModel.updateSettings(settings);
+            const result = await viewModel.hasPeriodicNote(period);
+
+            // Assert
+            expect(result).toEqual(false);
+        });
+
+        it('must return true if the display note indicator is set to true and the period has a note', async () => {
+            const settings = <PluginSettings>{
+                ...DEFAULT_PLUGIN_SETTINGS,
+                generalSettings: <GeneralSettings>{
+                    ...DEFAULT_GENERAL_SETTINGS,
+                    displayNoteIndicator: true
+                }
+            };
+            when(periodService.hasPeriodicNote).calledWith(period, settings.quarterlyNotes).mockResolvedValue(true);
+
+            // Act
+            viewModel.updateSettings(settings);
+            const result = await viewModel.hasPeriodicNote(period);
+
+            // Assert
+            expect(result).toEqual(true);
         });
     });
 
