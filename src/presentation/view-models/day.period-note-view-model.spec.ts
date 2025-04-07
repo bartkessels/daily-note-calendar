@@ -157,6 +157,7 @@ describe('DayPeriodNoteViewModel', () => {
             await viewModel.openNote(modifierKey, period);
 
             // Assert
+            expect(periodService.openNoteInHorizontalSplitView).not.toHaveBeenCalled();
             expect(periodService.openNoteInCurrentTab)
                 .toHaveBeenCalledWith(modifierKey, period, settings.dailyNotes);
         });
@@ -177,7 +178,22 @@ describe('DayPeriodNoteViewModel', () => {
             await viewModel.openNote(modifierKey, period);
 
             // Assert
+            expect(periodService.openNoteInHorizontalSplitView).not.toHaveBeenCalled();
             expect(periodService.openNoteInCurrentTab)
+                .toHaveBeenCalledWith(modifierKey, period, settings.dailyNotes);
+        });
+
+        it('should open in split view when the meta and alt keys are pressed', async () => {
+            // Arrange
+            const settings = DEFAULT_PLUGIN_SETTINGS;
+            const modifierKey = ModifierKey.MetaAlt;
+
+            // Act
+            await viewModel.openNote(modifierKey, period);
+
+            // Assert
+            expect(periodService.openNoteInCurrentTab).not.toHaveBeenCalled();
+            expect(periodService.openNoteInHorizontalSplitView)
                 .toHaveBeenCalledWith(modifierKey, period, settings.dailyNotes);
         });
     });
