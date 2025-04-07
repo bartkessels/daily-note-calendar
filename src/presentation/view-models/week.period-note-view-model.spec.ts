@@ -26,6 +26,19 @@ describe('WeekPeriodNoteViewModel', () => {
         jest.clearAllMocks();
     });
 
+    describe('updateSettings', () => {
+        it('should initialize the period service with the settings', () => {
+            // Arrange
+            const settings = DEFAULT_PLUGIN_SETTINGS;
+
+            // Act
+            viewModel.updateSettings(settings);
+
+            // Assert
+            expect(periodService.initialize).toHaveBeenCalledWith(settings);
+        });
+    });
+
     describe('hasPeriodicNote', () => {
         it('uses the default settings if no other settings have been set', async () => {
             // Arrange

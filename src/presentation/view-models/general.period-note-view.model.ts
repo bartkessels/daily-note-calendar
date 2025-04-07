@@ -15,7 +15,9 @@ export abstract class GeneralPeriodNoteViewModel implements PeriodNoteViewModel 
         this.settings = initialSettings;
     }
 
-    public abstract updateSettings(settings: PluginSettings): void;
+    public updateSettings(settings: PluginSettings): void {
+        this.periodService.initialize(settings);
+    }
 
     public async hasPeriodicNote(period: Period): Promise<boolean> {
         return await this.periodService.hasPeriodicNote(period, this.settings);

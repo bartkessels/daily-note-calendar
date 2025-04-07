@@ -9,6 +9,7 @@ export class DayPeriodNoteViewModel extends GeneralPeriodNoteViewModel {
     }
 
     public updateSettings(settings: PluginSettings): void {
+        super.updateSettings(settings);
         this.settings = settings.dailyNotes;
     }
 }
