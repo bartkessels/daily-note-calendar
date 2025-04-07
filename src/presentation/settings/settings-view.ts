@@ -1,5 +1,6 @@
 import {PluginSettingTab, Setting} from 'obsidian';
 import {DateParser} from 'src/infrastructure/contracts/date-parser';
+import {PluginSettings} from 'src/domain/settings/plugin.settings';
 
 export abstract class SettingsView {
     private readonly today: Date;

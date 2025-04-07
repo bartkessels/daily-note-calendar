@@ -82,23 +82,23 @@ export class GeneralSettingsView extends SettingsView {
     }
 
     private addWeekNumberStandardSetting(value: WeekNumberStandard, onValueChange: (value: WeekNumberStandard) => Promise<void>): void {
-        new Setting(this.settingsTab.containerEl)
-            .setName('Week number standard')
-            .setDesc('Set the week number standard for the calendar.')
-            .addDropdown(component => component
-                .addOptions({
-                    'iso': this.weekNumberStandardName(WeekNumberStandard.ISO),
-                    'us': this.weekNumberStandardName(WeekNumberStandard.US)
-                })
-                .setValue(value === WeekNumberStandard.ISO ? 'iso' : 'us')
-                .onChange(async value => {
-                    if (value.toLowerCase() === 'iso') {
-                        await onValueChange(WeekNumberStandard.ISO);
-                    } else {
-                        await onValueChange(WeekNumberStandard.US);
-                    }
-                })
-            );
+        const options = new Map<string, string>();
+        options.set('iso', this.weekNumberStandardName(WeekNumberStandard.ISO));
+        options.set('us', this.weekNumberStandardName(WeekNumberStandard.US));
+
+        this.addDropdownSetting(
+            'Week number standard',
+            'Set the week number standard for the calendar.',
+            options,
+            this.weekNumberStandardName(value).toLowerCase(),
+            async (value) => {
+                if (value.toLowerCase() === 'iso') {
+                    return await onValueChange(WeekNumberStandard.ISO);
+                } else {
+                    return await onValueChange(WeekNumberStandard.US);
+                }
+            }
+        );
     }
 
     private getUseModifierKeyToCreateNoteSetting(value: boolean): SettingUiModel<boolean> {

@@ -84,22 +84,22 @@ export class DisplayNotesSettingsView extends SettingsView {
     }
 
     private addSortOrderSetting(value: SortNotes, onValueChange: (value: SortNotes) => Promise<void>): void {
-        new Setting(this.settingsTab.containerEl)
-            .setName('Display order for the notes')
-            .setDesc('The order in which the notes will be ordered based on the created date.')
-            .addDropdown(component => component
-                .addOptions({
-                    'ascending': 'Ascending',
-                    'descending': 'Descending'
-                })
-                .setValue(value)
-                .onChange(async value => {
-                    if (value.toLowerCase() === 'ascending') {
-                        await onValueChange(SortNotes.Ascending);
-                    } else {
-                        await onValueChange(SortNotes.Descending);
-                    }
-                })
-            );
+        const options = new Map<string, string>();
+        options.set('ascending', 'Ascending');
+        options.set('descending', 'Descending');
+
+        this.addDropdownSetting(
+            'Display order for the notes',
+            'The order in which the notes will be ordered based on the created date.',
+            options,
+            value.toLowerCase(),
+            async (value) => {
+                if (value.toLowerCase() === 'ascending') {
+                    return await onValueChange(SortNotes.Ascending);
+                } else {
+                    return await onValueChange(SortNotes.Descending);
+                }
+            }
+        );
     }
 }
