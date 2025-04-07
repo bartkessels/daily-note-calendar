@@ -1,7 +1,7 @@
 import React, {ReactElement} from 'react';
 import {getContextMenuAdapter} from 'src/presentation/context/context-menu-adapter.context';
 import {ContextMenuCallbacks} from 'src/presentation/adapters/context-menu.adapter';
-import { ModifierKey } from 'src/domain/models/modifier-key';
+import {ModifierKey} from 'src/domain/models/modifier-key';
 
 interface PeriodComponentProperties {
     name: string;
@@ -26,16 +26,18 @@ export const PeriodComponent = (props: PeriodComponentProperties): ReactElement 
     };
 
     const modifierKey = (event: React.MouseEvent): ModifierKey => {
-        if (event.metaKey) {
+        if (event.metaKey && event.altKey) {
+            return ModifierKey.MetaAlt
+        } else if (event.metaKey) {
             return ModifierKey.Meta;
         } else if (event.altKey) {
             return ModifierKey.Alt;
         } else if (event.shiftKey) {
             return ModifierKey.Shift;
+        } else {
+            return ModifierKey.None
         }
-
-        return ModifierKey.None
-    };
+    }
 
     const classes: string[] = props.classNames ?? [];
     if (props.isSelected) {

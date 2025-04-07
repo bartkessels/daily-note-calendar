@@ -29,7 +29,11 @@ export abstract class GeneralPeriodNoteViewModel implements PeriodNoteViewModel 
     }
 
     public async openNote(key: ModifierKey, period: Period): Promise<void> {
-        await this.periodService.openNoteInCurrentTab(key, period, this.settings);
+        if (key === ModifierKey.MetaAlt) {
+            await this.periodService.openNoteInHorizontalSplitView(key, period, this.settings);
+        } else {
+            await this.periodService.openNoteInCurrentTab(key, period, this.settings);
+        }
     }
 
     public async openNoteInHorizontalSplitView(key: ModifierKey, period: Period): Promise<void> {
