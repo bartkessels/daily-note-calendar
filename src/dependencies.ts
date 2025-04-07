@@ -59,7 +59,7 @@ export function getDependencies(plugin: Plugin): Dependencies {
 
     const settingsRepositoryFactory = new DefaultSettingsRepositoryFactory(settingsAdapter);
     const fileRepositoryFactory = new DefaultFileRepositoryFactory(fileAdapter);
-    const noteRepositoryFactory = new DefaultNoteRepositoryFactory(noteAdapter, dateRepositoryFactory, settingsRepositoryFactory);
+    const noteRepositoryFactory = new DefaultNoteRepositoryFactory(noteAdapter, dateRepositoryFactory, dateParserFactory, settingsRepositoryFactory);
 
     // Business
     const nameBuilderFactory = new DefaultNameBuilderFactory(dateParserFactory);

@@ -31,8 +31,8 @@ export const NoteComponent = (props: NoteComponentProperties): ReactElement => {
                 e.preventDefault();
             }}>
             <span className="note-title">{props.note.name}</span><br/>
-            {/*<span className="note-date">Created at {props.note.date}</span><br/>*/}
-            {/*<span className="note-path">{props.note.filePath}</span>*/}
+            <span className="note-date">Created at {props.note.displayDate}</span><br/>
+            <span className="note-path">{props.note.path}</span>
         </li>
     );
 };
