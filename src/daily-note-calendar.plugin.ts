@@ -64,7 +64,8 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         const settingsTab = new DailyNoteCalendarPluginSettingTab(
             this,
             this.dependencies.dateParserFactory,
-            this.dependencies.settingsRepositoryFactory
+            this.dependencies.settingsRepositoryFactory,
+            () => this.initializePlugin()
         );
         this.addSettingTab(settingsTab);
     }

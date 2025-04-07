@@ -7,7 +7,8 @@ export abstract class SettingsView {
     protected abstract description: string;
 
     protected constructor(
-        protected readonly settingsTab: PluginSettingTab
+        protected readonly settingsTab: PluginSettingTab,
+        private readonly onSettingsChange: () => void
     ) {
         this.today = new Date();
     }
@@ -32,7 +33,9 @@ export abstract class SettingsView {
             .setDesc(model.description)
             .addToggle(component => component
                 .setValue(model.value)
-                .onChange(onChange)
+                .onChange((value) => {
+                    onChange(value).then(this.onSettingsChange);
+                })
             );
     }
 
@@ -43,7 +46,28 @@ export abstract class SettingsView {
             .addText(component => component
                 .setPlaceholder(model.placeholder)
                 .setValue(model.value)
-                .onChange(onChange)
+                .onChange((value) => {
+                    onChange(value).then(this.onSettingsChange);
+                })
+            );
+    }
+
+    protected addDropdownSetting(
+        name: string,
+        description: string,
+        options: Map<string, string>,
+        activeOption: string,
+        onChange: (value: string) => Promise<void>
+    ): void {
+        new Setting(this.settingsTab.containerEl)
+            .setName(name)
+            .setDesc(description)
+            .addDropdown(component => component
+                .addOptions(Object.fromEntries(options))
+                .setValue(activeOption)
+                .onChange((value) => {
+                    onChange(value).then(this.onSettingsChange);
+                })
             );
     }
 
@@ -66,7 +90,7 @@ export abstract class SettingsView {
                 .setValue(model.value)
                 .onChange(async (value: string) => {
                     exampleElement.setText(dateParser.fromDate(this.today, value));
-                    await onChange(value);
+                    onChange(value).then(this.onSettingsChange);
                 })
             );
     }

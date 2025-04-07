@@ -11,10 +11,11 @@ export class DisplayNotesSettingsView extends SettingsView {
 
     constructor(
         settingsTab: PluginSettingTab,
+        onSettingsChange: () => void,
         private readonly dateParserFactory: DateParserFactory,
         private readonly settingsRepositoryFactory: SettingsRepositoryFactory
     ) {
-        super(settingsTab);
+        super(settingsTab, onSettingsChange);
     }
 
     override async addSettings(): Promise<void> {

@@ -11,12 +11,13 @@ export class WeeklyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsView
 
     constructor(
         settingsTab: PluginSettingTab,
+        onSettingsChange: () => void,
         dateParserFactory: DateParserFactory,
         settingsRepositoryFactory: SettingsRepositoryFactory
     ) {
         const settingsRepository = settingsRepositoryFactory.getRepository<PeriodNoteSettings>(SettingsType.WeeklyNote);
 
-        super(settingsTab, settingsRepository, dateParserFactory.getParser());
+        super(settingsTab, onSettingsChange, settingsRepository, dateParserFactory.getParser());
     }
 
     override getNameTemplateSetting(value: string): SettingUiModel<string> {

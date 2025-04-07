@@ -5,14 +5,15 @@ import {GeneralSettings} from 'src/domain/settings/general.settings';
 import {DayOfWeek, WeekNumberStandard} from 'src/domain/models/week';
 
 export class GeneralSettingsView extends SettingsView {
-    override title = "General";
-    override description = "General settings for the Daily Note Calendar plugin.";
+    override title = 'General';
+    override description = 'General settings for the Daily Note Calendar plugin.';
 
     constructor(
         protected readonly settingsTab: PluginSettingTab,
+        onSettingsChange: () => void,
         private readonly settingsRepositoryFactory: SettingsRepositoryFactory
     ) {
-        super(settingsTab);
+        super(settingsTab, onSettingsChange);
     }
 
     override async addSettings(): Promise<void> {
@@ -43,7 +44,7 @@ export class GeneralSettingsView extends SettingsView {
     }
 
     private getNotesCreatedOnDateSetting(value: boolean): SettingUiModel<boolean> {
-        return <SettingUiModel<boolean>> {
+        return <SettingUiModel<boolean>>{
             name: 'Display notes created on selected date',
             description: 'When selecting a specific date in the calender, display all the notes created on that date below the calendar.',
             placeholder: '',
@@ -52,7 +53,7 @@ export class GeneralSettingsView extends SettingsView {
     }
 
     private getDisplayNoteIndicatorSetting(value: boolean): SettingUiModel<boolean> {
-        return <SettingUiModel<boolean>> {
+        return <SettingUiModel<boolean>>{
             name: 'Display an indicator on each date that has a note',
             description: 'Display an indicator below the date or week number if the date has a note.',
             placeholder: '',
@@ -61,23 +62,23 @@ export class GeneralSettingsView extends SettingsView {
     }
 
     private addStartDayOfWeekSetting(value: DayOfWeek, onValueChange: (value: DayOfWeek) => Promise<void>): void {
-        new Setting(this.settingsTab.containerEl)
-            .setName('First day of the week')
-            .setDesc('Set the first day of the week for the calendar.')
-            .addDropdown(component => component
-                .addOptions({
-                    'sunday': this.dayOfWeekName(DayOfWeek.Sunday),
-                    'monday': this.dayOfWeekName(DayOfWeek.Monday)
-                })
-                .setValue(this.dayOfWeekName(value).toLowerCase())
-                .onChange(async value => {
-                    if (value.toLowerCase() === 'sunday') {
-                        await onValueChange(DayOfWeek.Sunday);
-                    } else {
-                        await onValueChange(DayOfWeek.Monday);
-                    }
-                })
-            );
+        const options = new Map<string, string>();
+        options.set('sunday', this.dayOfWeekName(DayOfWeek.Sunday));
+        options.set('monday', this.dayOfWeekName(DayOfWeek.Monday));
+
+        this.addDropdownSetting(
+            'First day of the week',
+            'Set the first day of the week for the calendar.',
+            options,
+            this.dayOfWeekName(value).toLowerCase(),
+            async (value) => {
+                if (value.toLowerCase() === 'sunday') {
+                    return await onValueChange(DayOfWeek.Sunday);
+                } else {
+                    return await onValueChange(DayOfWeek.Monday);
+                }
+            }
+        );
     }
 
     private addWeekNumberStandardSetting(value: WeekNumberStandard, onValueChange: (value: WeekNumberStandard) => Promise<void>): void {
@@ -101,7 +102,7 @@ export class GeneralSettingsView extends SettingsView {
     }
 
     private getUseModifierKeyToCreateNoteSetting(value: boolean): SettingUiModel<boolean> {
-        return <SettingUiModel<boolean>> {
+        return <SettingUiModel<boolean>>{
             name: 'Use modifier key to create a note',
             description: 'Use a modifier key to create a note instead of clicking on the date.',
             placeholder: '',
