@@ -26,7 +26,7 @@ export const PeriodComponent = (props: PeriodComponentProperties): ReactElement 
     };
 
     const modifierKey = (event: React.MouseEvent): ModifierKey => {
-        if (event.metaKey && event.altKey) {
+        if ((event.metaKey || event.ctrlKey) && event.altKey) {
             return ModifierKey.MetaAlt
         } else if (event.metaKey) {
             return ModifierKey.Meta;
