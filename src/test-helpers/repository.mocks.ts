@@ -12,7 +12,9 @@ export const mockFileRepository = {
     create: jest.fn(),
     readContents: jest.fn(),
     writeContents: jest.fn(),
-    open: jest.fn(),
+    openInCurrentTab: jest.fn(),
+    openInHorizontalSplitView: jest.fn(),
+    openInVerticalSplitView: jest.fn(),
     delete: jest.fn()
 } as jest.Mocked<FileRepository>;
 

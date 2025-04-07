@@ -7,10 +7,11 @@ import {PluginSettingTab} from 'obsidian';
 export abstract class PeriodicNoteSettingsView extends SettingsView {
     protected constructor(
         settingsTab: PluginSettingTab,
+        onSettingsChange: () => void,
         private readonly settingsRepository: SettingsRepository<PeriodNoteSettings>,
-        private readonly dateParser: DateParser
+        private readonly dateParser: DateParser,
     ) {
-        super(settingsTab);
+        super(settingsTab, onSettingsChange);
     }
 
     override async addSettings(): Promise<void> {

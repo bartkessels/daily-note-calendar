@@ -2,7 +2,7 @@ import {RepositoryDateManager} from 'src/business/managers/repository.date-manag
 import {afterEach} from '@jest/globals';
 import {Period, PeriodType} from 'src/domain/models/period.model';
 import {when} from 'jest-when';
-import {DayOfWeek, WeekModel, WeekNumberStandard} from 'src/domain/models/week.model';
+import {DayOfWeek, Week, WeekNumberStandard} from 'src/domain/models/week';
 import {mockDateRepository} from 'src/test-helpers/repository.mocks';
 import {mockDateRepositoryFactory} from 'src/test-helpers/factory.mocks';
 
@@ -100,7 +100,7 @@ describe('RepositoryDateManager', () => {
     describe('getCurrentWeek', () => {
         it('should return the week from the repository', () => {
             // Arrange
-            const expected = <WeekModel>{
+            const expected = <Week>{
                 weekNumber: 40,
                 year: year,
                 month: month,
@@ -128,7 +128,7 @@ describe('RepositoryDateManager', () => {
                 name: '2',
                 type: PeriodType.Day
             };
-            const expected = <WeekModel>{
+            const expected = <Week>{
                 weekNumber: 40,
                 year: year,
                 quarter: quarter,
@@ -149,7 +149,7 @@ describe('RepositoryDateManager', () => {
     });
 
     describe('getPreviousWeeks', () => {
-        const currentWeek = <WeekModel>{
+        const currentWeek = <Week>{
             weekNumber: 40,
             year: year,
             quarter: quarter,
@@ -160,7 +160,7 @@ describe('RepositoryDateManager', () => {
             days: []
         };
         const previousWeeks = [
-            <WeekModel>{
+            <Week>{
                 weekNumber: 38,
                 year: year,
                 quarter: quarter,
@@ -170,7 +170,7 @@ describe('RepositoryDateManager', () => {
                 type: PeriodType.Week,
                 days: []
             },
-            <WeekModel>{
+            <Week>{
                 weekNumber: 39,
                 year: year,
                 quarter: quarter,
@@ -212,7 +212,7 @@ describe('RepositoryDateManager', () => {
     });
 
     describe('getNextWeeks', () => {
-        const currentWeek = <WeekModel>{
+        const currentWeek = <Week>{
             weekNumber: 40,
             year: year,
             quarter: quarter,
@@ -223,7 +223,7 @@ describe('RepositoryDateManager', () => {
             days: []
         };
         const nextWeeks = [
-            <WeekModel>{
+            <Week>{
                 weekNumber: 41,
                 year: year,
                 quarter: quarter,
@@ -233,7 +233,7 @@ describe('RepositoryDateManager', () => {
                 type: PeriodType.Week,
                 days: []
             },
-            <WeekModel>{
+            <Week>{
                 weekNumber: 42,
                 year: year,
                 quarter: quarter,
@@ -278,7 +278,7 @@ describe('RepositoryDateManager', () => {
             name: 'September',
             type: PeriodType.Month
         };
-        const weeksOfPreviousMonth: WeekModel[] = [
+        const weeksOfPreviousMonth: Week[] = [
             {
                 date: new Date(2023, 7, 28),
                 name: '39',
@@ -392,7 +392,7 @@ describe('RepositoryDateManager', () => {
             name: 'November',
             type: PeriodType.Month
         };
-        const weeksOfNextMonth: WeekModel[] = [
+        const weeksOfNextMonth: Week[] = [
             {
                 date: new Date(2023, 9, 30),
                 name: '44',

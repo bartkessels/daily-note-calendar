@@ -1,5 +1,5 @@
 import {DateManager} from 'src/business/contracts/date.manager';
-import {DayOfWeek, WeekModel, WeekNumberStandard} from 'src/domain/models/week.model';
+import {DayOfWeek, Week, WeekNumberStandard} from 'src/domain/models/week';
 import {Period} from 'src/domain/models/period.model';
 import {DateRepositoryFactory} from 'src/infrastructure/contracts/date-repository-factory';
 
@@ -33,34 +33,34 @@ export class RepositoryDateManager implements DateManager {
             .getDayFromDate(yesterday);
     }
 
-    public getCurrentWeek(startOfWeek: DayOfWeek, standard: WeekNumberStandard): WeekModel {
+    public getCurrentWeek(startOfWeek: DayOfWeek, standard: WeekNumberStandard): Week {
         return this.dateRepositoryFactory.getRepository()
             .getWeekFromDate(startOfWeek, standard, this.today);
     }
 
-    public getWeek(period: Period, startOfWeek: DayOfWeek, standard: WeekNumberStandard): WeekModel {
+    public getWeek(period: Period, startOfWeek: DayOfWeek, standard: WeekNumberStandard): Week {
         return this.dateRepositoryFactory.getRepository()
             .getWeekFromDate(startOfWeek, standard, period.date);
     }
 
-    public getPreviousWeeks(currentWeek: WeekModel, startOfWeek: DayOfWeek, standard: WeekNumberStandard, noWeeks: number): WeekModel[] {
+    public getPreviousWeeks(currentWeek: Week, startOfWeek: DayOfWeek, standard: WeekNumberStandard, noWeeks: number): Week[] {
         return this.getWeeks(currentWeek, noWeeks, (week) =>
             this.dateRepositoryFactory.getRepository().getPreviousWeek(startOfWeek, standard, week)
         );
     }
 
-    public getNextWeeks(currentWeek: WeekModel, startOfWeek: DayOfWeek, standard: WeekNumberStandard, noWeeks: number): WeekModel[] {
+    public getNextWeeks(currentWeek: Week, startOfWeek: DayOfWeek, standard: WeekNumberStandard, noWeeks: number): Week[] {
         return this.getWeeks(currentWeek, noWeeks, (week) =>
             this.dateRepositoryFactory.getRepository().getNextWeek(startOfWeek, standard, week)
         );
     }
 
-    public getPreviousMonth(month: Period, startOfWeek: DayOfWeek, standard: WeekNumberStandard): WeekModel[] {
+    public getPreviousMonth(month: Period, startOfWeek: DayOfWeek, standard: WeekNumberStandard): Week[] {
         const previousMonth = this.dateRepositoryFactory.getRepository().getPreviousMonth(month);
         return this.getWeeksForMonth(previousMonth, startOfWeek, standard);
     }
 
-    public getNextMonth(month: Period, startOfWeek: DayOfWeek, standard: WeekNumberStandard): WeekModel[] {
+    public getNextMonth(month: Period, startOfWeek: DayOfWeek, standard: WeekNumberStandard): Week[] {
         const nextMonth = this.dateRepositoryFactory.getRepository().getNextMonth(month);
         return this.getWeeksForMonth(nextMonth, startOfWeek, standard);
     }
@@ -69,7 +69,7 @@ export class RepositoryDateManager implements DateManager {
         return this.dateRepositoryFactory.getRepository().getQuarter(month);
     }
 
-    private getWeeksForMonth(month: Period, startOfWeek: DayOfWeek, standard: WeekNumberStandard): WeekModel[] {
+    private getWeeksForMonth(month: Period, startOfWeek: DayOfWeek, standard: WeekNumberStandard): Week[] {
         const startOfMonth = new Date(month.date.getFullYear(), month.date.getMonth(), 1);
         const endOfMonth = new Date(month.date.getFullYear(), month.date.getMonth() + 1, 0);
         const middleOfMonth = new Date((startOfMonth.getTime() + endOfMonth.getTime()) / 2);
@@ -81,9 +81,9 @@ export class RepositoryDateManager implements DateManager {
         return this.sortWeeks([ ...previousWeeks, middleWeek, ...nextWeeks ]);
     }
 
-    private getWeeks(currentWeek: WeekModel, noWeeks: number, getWeek: (week: WeekModel) => WeekModel): WeekModel[] {
+    private getWeeks(currentWeek: Week, noWeeks: number, getWeek: (week: Week) => Week): Week[] {
         let lastWeek = currentWeek;
-        const weeks: WeekModel[] = [];
+        const weeks: Week[] = [];
 
         for (let i = 0; i < noWeeks; i++) {
             lastWeek = getWeek(lastWeek);
@@ -93,7 +93,7 @@ export class RepositoryDateManager implements DateManager {
         return this.sortWeeks(weeks);
     }
 
-    private sortWeeks(weeks: WeekModel[]): WeekModel[] {
+    private sortWeeks(weeks: Week[]): Week[] {
         return weeks.sort((a, b) => a.date.getTime() - b.date.getTime());
     }
 }

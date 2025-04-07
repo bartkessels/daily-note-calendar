@@ -53,7 +53,7 @@ describe('RepositoryNoteManager', () => {
             await manager.openNote(note);
 
             // Assert
-            expect(fileRepository.open).toHaveBeenCalledWith(note.path);
+            expect(fileRepository.openInCurrentTab).toHaveBeenCalledWith(note.path);
         });
 
         it('should not open the file when it does not exist', async () => {
@@ -64,7 +64,55 @@ describe('RepositoryNoteManager', () => {
             await manager.openNote(note);
 
             // Assert
-            expect(fileRepository.open).not.toHaveBeenCalled();
+            expect(fileRepository.openInCurrentTab).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('openNoteInHorizontalSplit', () => {
+        it('should open the note when it does exist', async () => {
+            // Arrange
+            when(fileRepository.exists).calledWith(note.path).mockResolvedValue(true);
+
+            // Act
+            await manager.openNoteInHorizontalSplitView(note);
+
+            // Assert
+            expect(fileRepository.openInHorizontalSplitView).toHaveBeenCalledWith(note.path);
+        });
+
+        it('should not open the file when it does not exist', async () => {
+            // Arrange
+            when(fileRepository.exists).calledWith(note.path).mockResolvedValue(false);
+
+            // Act
+            await manager.openNoteInHorizontalSplitView(note);
+
+            // Assert
+            expect(fileRepository.openInHorizontalSplitView).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('openNoteInVerticalSplit', () => {
+        it('should open the note when it does exist', async () => {
+            // Arrange
+            when(fileRepository.exists).calledWith(note.path).mockResolvedValue(true);
+
+            // Act
+            await manager.openNoteInVerticalSplitView(note);
+
+            // Assert
+            expect(fileRepository.openInVerticalSplitView).toHaveBeenCalledWith(note.path);
+        });
+
+        it('should not open the file when it does not exist', async () => {
+            // Arrange
+            when(fileRepository.exists).calledWith(note.path).mockResolvedValue(false);
+
+            // Act
+            await manager.openNoteInVerticalSplitView(note);
+
+            // Assert
+            expect(fileRepository.openInVerticalSplitView).not.toHaveBeenCalled();
         });
     });
 

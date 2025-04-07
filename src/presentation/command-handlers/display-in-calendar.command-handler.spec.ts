@@ -51,7 +51,7 @@ describe('DisplayInCalendarCommandHandler', () => {
 
             // Assert
             expect(noteManager.getActiveNote).toHaveBeenCalled();
-            expect(viewModel.selectPeriod).toHaveBeenCalledWith(activeNote.createdOnProperty);
+            expect(viewModel.setSelectedPeriod).toHaveBeenCalledWith(activeNote.createdOnProperty);
         });
 
         it('should select the period based on the createdOn if useCreatedOnDateFromProperties is true but there is no createdOnProperty', async () => {
@@ -70,7 +70,7 @@ describe('DisplayInCalendarCommandHandler', () => {
 
             // Assert
             expect(noteManager.getActiveNote).toHaveBeenCalled();
-            expect(viewModel.selectPeriod).toHaveBeenCalledWith(activeNote.createdOn);
+            expect(viewModel.setSelectedPeriod).toHaveBeenCalledWith(activeNote.createdOn);
         });
 
         it('should select the period based on the createdOn if useCreatedOnDateFromProperties is false', async () => {
@@ -88,7 +88,7 @@ describe('DisplayInCalendarCommandHandler', () => {
 
             // Assert
             expect(noteManager.getActiveNote).toHaveBeenCalled();
-            expect(viewModel.selectPeriod).toHaveBeenCalledWith(activeNote.createdOn);
+            expect(viewModel.setSelectedPeriod).toHaveBeenCalledWith(activeNote.createdOn);
         });
     });
 });

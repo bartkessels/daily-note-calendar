@@ -1,5 +1,5 @@
 import {Settings} from 'src/domain/settings/settings';
-import {DayOfWeek, WeekNumberStandard} from 'src/domain/models/week.model';
+import {DayOfWeek, WeekNumberStandard} from 'src/domain/models/week';
 
 export interface GeneralSettings extends Settings {
     displayNotesCreatedOnDate: boolean;

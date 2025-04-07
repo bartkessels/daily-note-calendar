@@ -20,7 +20,25 @@ export class RepositoryNoteManager implements NoteManager {
         const doesNoteExist = await fileRepository.exists(note.path);
 
         if (doesNoteExist) {
-            await this.fileRepositoryFactory.getRepository().open(note.path);
+            await this.fileRepositoryFactory.getRepository().openInCurrentTab(note.path);
+        }
+    }
+
+    public async openNoteInHorizontalSplitView(note: Note): Promise<void> {
+        const fileRepository = this.fileRepositoryFactory.getRepository();
+        const doesNoteExist = await fileRepository.exists(note.path);
+
+        if (doesNoteExist) {
+            await this.fileRepositoryFactory.getRepository().openInHorizontalSplitView(note.path);
+        }
+    }
+
+    public async openNoteInVerticalSplitView(note: Note): Promise<void> {
+        const fileRepository = this.fileRepositoryFactory.getRepository();
+        const doesNoteExist = await fileRepository.exists(note.path);
+
+        if (doesNoteExist) {
+            await this.fileRepositoryFactory.getRepository().openInVerticalSplitView(note.path);
         }
     }
 

@@ -3,7 +3,7 @@ import {mockDateParser} from 'src/test-helpers/parser.mocks';
 import {mockDateParserFactory} from 'src/test-helpers/factory.mocks';
 import {when} from 'jest-when';
 import {Period, PeriodType} from 'src/domain/models/period.model';
-import {DayOfWeek, WeekModel, WeekNumberStandard} from 'src/domain/models/week.model';
+import {DayOfWeek, Week, WeekNumberStandard} from 'src/domain/models/week';
 
 describe('DateFnsDateRepository', () => {
     let repository: DateFnsDateRepository;
@@ -96,7 +96,7 @@ describe('DateFnsDateRepository', () => {
             const result = repository.getWeekFromDate(startOfWeek, WeekNumberStandard.ISO, tuesday);
 
             // Assert
-            expect(result).toEqual(<WeekModel>{
+            expect(result).toEqual(<Week>{
                 date: new Date(2023, 9, 2),
                 name: '40',
                 weekNumber: 40,
@@ -129,7 +129,7 @@ describe('DateFnsDateRepository', () => {
             const result = repository.getWeekFromDate(startOfWeek, WeekNumberStandard.US, tuesday);
 
             // Assert
-            expect(result).toEqual(<WeekModel>{
+            expect(result).toEqual(<Week>{
                 date: new Date(2023, 9, 2),
                 name: '41',
                 weekNumber: 41,
@@ -162,7 +162,7 @@ describe('DateFnsDateRepository', () => {
             const result = repository.getWeekFromDate(startOfWeek, WeekNumberStandard.ISO, tuesday);
 
             // Assert
-            expect(result).toEqual(<WeekModel>{
+            expect(result).toEqual(<Week>{
                 date: new Date(2023, 9, 1),
                 name: '39',
                 weekNumber: 39,
@@ -195,7 +195,7 @@ describe('DateFnsDateRepository', () => {
             const result = repository.getWeekFromDate(startOfWeek, WeekNumberStandard.US, tuesday);
 
             // Assert
-            expect(result).toEqual(<WeekModel>{
+            expect(result).toEqual(<Week>{
                 date: new Date(2023, 9, 1),
                 name: '40',
                 weekNumber: 40,
@@ -411,7 +411,7 @@ describe('DateFnsDateRepository', () => {
     describe('getNextWeek', () => {
         it('should return the next week when the week starts on monday with the ISO standard', () => {
             // Arrange
-            const currentWeek = <WeekModel>{
+            const currentWeek = <Week>{
                 date: new Date(2023, 9, 3),
                 name: '40',
                 weekNumber: 40,
@@ -433,7 +433,7 @@ describe('DateFnsDateRepository', () => {
             const result = repository.getNextWeek(DayOfWeek.Monday, WeekNumberStandard.ISO, currentWeek);
 
             // Assert
-            expect(result).toEqual(<WeekModel>{
+            expect(result).toEqual(<Week>{
                 date: new Date(2023, 9, 9),
                 name: '41',
                 weekNumber: 41,
@@ -459,7 +459,7 @@ describe('DateFnsDateRepository', () => {
 
         it('should return the next week when the week starts on monday with the US standard', () => {
             // Arrange
-            const currentWeek = <WeekModel>{
+            const currentWeek = <Week>{
                 date: new Date(2023, 9, 3),
                 name: '39',
                 weekNumber: 39,
@@ -481,7 +481,7 @@ describe('DateFnsDateRepository', () => {
             const result = repository.getNextWeek(DayOfWeek.Monday, WeekNumberStandard.US, currentWeek);
 
             // Assert
-            expect(result).toEqual(<WeekModel>{
+            expect(result).toEqual(<Week>{
                 date: new Date(2023, 9, 9),
                 name: '42',
                 weekNumber: 42,
@@ -507,7 +507,7 @@ describe('DateFnsDateRepository', () => {
 
         it('should return the next week when the week starts on sunday with the ISO standard', () => {
             // Arrange
-            const currentWeek = <WeekModel>{
+            const currentWeek = <Week>{
                 date: new Date(2023, 9, 3),
                 name: '40',
                 weekNumber: 40,
@@ -529,7 +529,7 @@ describe('DateFnsDateRepository', () => {
             const result = repository.getNextWeek(DayOfWeek.Sunday, WeekNumberStandard.ISO, currentWeek);
 
             // Assert
-            expect(result).toEqual(<WeekModel>{
+            expect(result).toEqual(<Week>{
                 date: new Date(2023, 9, 8),
                 name: '40',
                 weekNumber: 40,
@@ -555,7 +555,7 @@ describe('DateFnsDateRepository', () => {
 
         it('should return the next week when the week starts on sunday with the US standard', () => {
             // Arrange
-            const currentWeek = <WeekModel>{
+            const currentWeek = <Week>{
                 date: new Date(2023, 9, 3),
                 name: '39',
                 weekNumber: 39,
@@ -577,7 +577,7 @@ describe('DateFnsDateRepository', () => {
             const result = repository.getNextWeek(DayOfWeek.Sunday, WeekNumberStandard.US, currentWeek);
 
             // Assert
-            expect(result).toEqual(<WeekModel>{
+            expect(result).toEqual(<Week>{
                 date: new Date(2023, 9, 8),
                 name: '41',
                 weekNumber: 41,
@@ -603,7 +603,7 @@ describe('DateFnsDateRepository', () => {
 
         it('should return the next week when the current week is week 52 and the week starts on monday with the ISO standard', () => {
             // Arrange
-            const currentWeek = <WeekModel>{
+            const currentWeek = <Week>{
                 date: new Date(2023, 11, 31),
                 name: '52',
                 weekNumber: 52,
@@ -625,7 +625,7 @@ describe('DateFnsDateRepository', () => {
             const result = repository.getNextWeek(DayOfWeek.Monday, WeekNumberStandard.ISO, currentWeek);
 
             // Assert
-            expect(result).toEqual(<WeekModel>{
+            expect(result).toEqual(<Week>{
                 date: new Date(2024, 0, 1),
                 name: '01',
                 weekNumber: 1,
@@ -651,7 +651,7 @@ describe('DateFnsDateRepository', () => {
 
         it('should return the next week when the current week is week 52 and the week starts on monday with the US standard', () => {
             // Arrange
-            const currentWeek = <WeekModel>{
+            const currentWeek = <Week>{
                 date: new Date(2023, 11, 31),
                 name: '51',
                 weekNumber: 51,
@@ -673,7 +673,7 @@ describe('DateFnsDateRepository', () => {
             const result = repository.getNextWeek(DayOfWeek.Monday, WeekNumberStandard.US, currentWeek);
 
             // Assert
-            expect(result).toEqual(<WeekModel>{
+            expect(result).toEqual(<Week>{
                 date: new Date(2024, 0, 1),
                 name: '01',
                 weekNumber: 1,
@@ -699,7 +699,7 @@ describe('DateFnsDateRepository', () => {
 
         it('should return the next week when the current week is week 52 and the week starts on sunday with the ISO standard', () => {
             // Arrange
-            const currentWeek = <WeekModel>{
+            const currentWeek = <Week>{
                 date: new Date(2023, 11, 31),
                 name: '52',
                 weekNumber: 52,
@@ -721,7 +721,7 @@ describe('DateFnsDateRepository', () => {
             const result = repository.getNextWeek(DayOfWeek.Sunday, WeekNumberStandard.ISO, currentWeek);
 
             // Assert
-            expect(result).toEqual(<WeekModel>{
+            expect(result).toEqual(<Week>{
                 date: new Date(2024, 0, 7),
                 name: '01',
                 weekNumber: 1,
@@ -747,7 +747,7 @@ describe('DateFnsDateRepository', () => {
 
         it('should return the next week when the current week is week 52 and the week starts on sunday with the US standard', () => {
             // Arrange
-            const currentWeek = <WeekModel>{
+            const currentWeek = <Week>{
                 date: new Date(2023, 11, 31),
                 name: '51',
                 weekNumber: 51,
@@ -769,7 +769,7 @@ describe('DateFnsDateRepository', () => {
             const result = repository.getNextWeek(DayOfWeek.Sunday, WeekNumberStandard.US, currentWeek);
 
             // Assert
-            expect(result).toEqual(<WeekModel>{
+            expect(result).toEqual(<Week>{
                 date: new Date(2024, 0, 7),
                 name: '02',
                 weekNumber: 2,
@@ -797,7 +797,7 @@ describe('DateFnsDateRepository', () => {
     describe('getPreviousWeek', () => {
         it('should return the previous week when the week starts on monday with the ISO standard', () => {
             // Arrange
-            const currentWeek = <WeekModel>{
+            const currentWeek = <Week>{
                 date: new Date(2023, 9, 3),
                 name: '40',
                 weekNumber: 40,
@@ -819,7 +819,7 @@ describe('DateFnsDateRepository', () => {
             const result = repository.getPreviousWeek(DayOfWeek.Monday, WeekNumberStandard.ISO, currentWeek);
 
             // Assert
-            expect(result).toEqual(<WeekModel>{
+            expect(result).toEqual(<Week>{
                 date: new Date(2023, 8, 25),
                 name: '39',
                 weekNumber: 39,
@@ -845,7 +845,7 @@ describe('DateFnsDateRepository', () => {
 
         it('should return the previous week when the week starts on monday with the US standard', () => {
             // Arrange
-            const currentWeek = <WeekModel>{
+            const currentWeek = <Week>{
                 date: new Date(2023, 9, 3),
                 name: '40',
                 weekNumber: 40,
@@ -867,7 +867,7 @@ describe('DateFnsDateRepository', () => {
             const result = repository.getPreviousWeek(DayOfWeek.Monday, WeekNumberStandard.US, currentWeek);
 
             // Assert
-            expect(result).toEqual(<WeekModel>{
+            expect(result).toEqual(<Week>{
                 date: new Date(2023, 8, 25),
                 name: '40',
                 weekNumber: 40,
@@ -893,7 +893,7 @@ describe('DateFnsDateRepository', () => {
 
         it('should return the previous week when the week starts on sunday with the ISO standard', () => {
             // Arrange
-            const currentWeek = <WeekModel>{
+            const currentWeek = <Week>{
                 date: new Date(2023, 9, 3),
                 name: '40',
                 weekNumber: 40,
@@ -915,7 +915,7 @@ describe('DateFnsDateRepository', () => {
             const result = repository.getPreviousWeek(DayOfWeek.Sunday, WeekNumberStandard.ISO, currentWeek);
 
             // Assert
-            expect(result).toEqual(<WeekModel>{
+            expect(result).toEqual(<Week>{
                 date: new Date(2023, 8, 24),
                 name: '38',
                 weekNumber: 38,
@@ -941,7 +941,7 @@ describe('DateFnsDateRepository', () => {
 
         it('should return the previous week when the week starts on sunday with the US standard', () => {
             // Arrange
-            const currentWeek = <WeekModel>{
+            const currentWeek = <Week>{
                 date: new Date(2023, 9, 3),
                 name: '40',
                 weekNumber: 40,
@@ -963,7 +963,7 @@ describe('DateFnsDateRepository', () => {
             const result = repository.getPreviousWeek(DayOfWeek.Sunday, WeekNumberStandard.US, currentWeek);
 
             // Assert
-            expect(result).toEqual(<WeekModel>{
+            expect(result).toEqual(<Week>{
                 date: new Date(2023, 8, 24),
                 name: '39',
                 weekNumber: 39,
@@ -989,7 +989,7 @@ describe('DateFnsDateRepository', () => {
 
         it('should return the previous week when the current week is week 1 and the week starts on monday with the ISO standard', () => {
             // Arrange
-            const currentWeek = <WeekModel>{
+            const currentWeek = <Week>{
                 date: new Date(2024, 0, 1),
                 name: '01',
                 weekNumber: 1,
@@ -1011,7 +1011,7 @@ describe('DateFnsDateRepository', () => {
             const result = repository.getPreviousWeek(DayOfWeek.Monday, WeekNumberStandard.ISO, currentWeek);
 
             // Assert
-            expect(result).toEqual(<WeekModel>{
+            expect(result).toEqual(<Week>{
                 date: new Date(2023, 11, 25),
                 name: '52',
                 weekNumber: 52,
@@ -1037,7 +1037,7 @@ describe('DateFnsDateRepository', () => {
 
         it('should return the previous week when the current week is week 1 and the week starts on monday with the US standard', () => {
             // Arrange
-            const currentWeek = <WeekModel>{
+            const currentWeek = <Week>{
                 date: new Date(2024, 0, 1),
                 name: '01',
                 weekNumber: 1,
@@ -1059,7 +1059,7 @@ describe('DateFnsDateRepository', () => {
             const result = repository.getPreviousWeek(DayOfWeek.Monday, WeekNumberStandard.US, currentWeek);
 
             // Assert
-            expect(result).toEqual(<WeekModel>{
+            expect(result).toEqual(<Week>{
                 date: new Date(2023, 11, 25),
                 name: '53',
                 weekNumber: 53,

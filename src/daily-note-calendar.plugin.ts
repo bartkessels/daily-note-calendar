@@ -19,18 +19,25 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     private readonly dependencies: Dependencies = getDependencies(this);
 
     override async onload(): Promise<void> {
-        const calendarView = (leaf: WorkspaceLeaf)=>  new CalendarView(
+        const calendarView = (leaf: WorkspaceLeaf) => new CalendarView(
             leaf,
             this.dependencies.contextMenuAdapter,
             this.dependencies.calendarViewModel,
+            this.dependencies.dailyNoteViewModel,
+            this.dependencies.weeklyNoteViewModel,
+            this.dependencies.monthlyNoteViewModel,
+            this.dependencies.quarterlyNoteViewModel,
+            this.dependencies.yearlyNoteViewModel,
             this.dependencies.notesViewModel
         );
+
+        await this.initializePlugin();
 
         this.registerView(CalendarView.VIEW_TYPE, (leaf) => calendarView(leaf));
         this.registerSettings();
         this.registerCommands();
 
-        this.app.workspace.onLayoutReady(this.initializePlugin.bind(this));
+        this.app.workspace.onLayoutReady(this.registerPlugin.bind(this));
     }
 
     private async initializePlugin(): Promise<void> {
@@ -40,8 +47,14 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             .get();
 
         this.dependencies.calendarViewModel.initialize(settings, today);
-        this.dependencies.notesViewModel.initialize(settings);
+        this.dependencies.dailyNoteViewModel.updateSettings(settings);
+        this.dependencies.weeklyNoteViewModel.updateSettings(settings);
+        this.dependencies.monthlyNoteViewModel.updateSettings(settings);
+        this.dependencies.quarterlyNoteViewModel.updateSettings(settings);
+        this.dependencies.yearlyNoteViewModel.updateSettings(settings);
+    }
 
+    private registerPlugin(): void {
         if (this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE).length <= 0) {
             this.app.workspace.getRightLeaf(false)?.setViewState({type: CalendarView.VIEW_TYPE});
         }
@@ -51,7 +64,10 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         const settingsTab = new DailyNoteCalendarPluginSettingTab(
             this,
             this.dependencies.dateParserFactory,
-            this.dependencies.settingsRepositoryFactory
+            this.dependencies.settingsRepositoryFactory,
+            () => {
+                // TODO: Handle the settings change
+            }
         );
         this.addSettingTab(settingsTab);
     }

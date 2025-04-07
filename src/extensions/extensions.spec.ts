@@ -53,26 +53,6 @@ describe('String.prototype.removeMarkdownExtension', () => {
     });
 });
 
-describe('Date.prototype.isToday', () => {
-    it('should return true for todays date', () => {
-        const today = new Date();
-        const result = today.isToday();
-        expect(result).toBe(true);
-    });
-
-    it('should return false for a past date', () => {
-        const pastDate = new Date('2000-01-01');
-        const result = pastDate.isToday();
-        expect(result).toBe(false);
-    });
-
-    it('should return false for a future date', () => {
-        const futureDate = new Date('3000-01-01');
-        const result = futureDate.isToday();
-        expect(result).toBe(false);
-    });
-});
-
 describe('Date.prototype.calculate', () => {
     it('should return the same date if no calculus is provided', () => {
         const date = new Date('2024-01-01');

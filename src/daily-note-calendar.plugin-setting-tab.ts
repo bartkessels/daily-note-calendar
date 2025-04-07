@@ -19,6 +19,7 @@ import {
 } from 'src/presentation/settings/period-notes/yearly-note.periodic-note.settings-view';
 import {DisplayNotesSettingsView} from 'src/presentation/settings/display-notes/display-notes.settings-view';
 import {GeneralSettingsView} from 'src/presentation/settings/general/general.settings-view';
+import {PluginSettings} from 'src/domain/settings/plugin.settings';
 
 export class DailyNoteCalendarPluginSettingTab extends PluginSettingTab {
     private readonly settings: SettingsView[] = [];
@@ -26,17 +27,18 @@ export class DailyNoteCalendarPluginSettingTab extends PluginSettingTab {
     constructor(
         plugin: Plugin,
         dateParserFactory: DateParserFactory,
-        settingsRepositoryFactory: SettingsRepositoryFactory
+        settingsRepositoryFactory: SettingsRepositoryFactory,
+        onSettingsChange: () => void
     ) {
         super(plugin.app, plugin);
 
-        this.settings.push(new GeneralSettingsView(this, settingsRepositoryFactory));
-        this.settings.push(new DisplayNotesSettingsView(this, dateParserFactory, settingsRepositoryFactory));
-        this.settings.push(new DailyNotePeriodicNoteSettingsView(this, dateParserFactory, settingsRepositoryFactory));
-        this.settings.push(new WeeklyNotePeriodicNoteSettingsView(this, dateParserFactory, settingsRepositoryFactory));
-        this.settings.push(new MonthlyNotePeriodicNoteSettingsView(this, dateParserFactory, settingsRepositoryFactory));
-        this.settings.push(new QuarterlyNotePeriodicNoteSettingsView(this, dateParserFactory, settingsRepositoryFactory));
-        this.settings.push(new YearlyNotePeriodicNoteSettingsView(this, dateParserFactory, settingsRepositoryFactory));
+        this.settings.push(new GeneralSettingsView(this, onSettingsChange, settingsRepositoryFactory));
+        this.settings.push(new DisplayNotesSettingsView(this, onSettingsChange, dateParserFactory, settingsRepositoryFactory));
+        this.settings.push(new DailyNotePeriodicNoteSettingsView(this, onSettingsChange, dateParserFactory, settingsRepositoryFactory));
+        this.settings.push(new WeeklyNotePeriodicNoteSettingsView(this, onSettingsChange, dateParserFactory, settingsRepositoryFactory));
+        this.settings.push(new MonthlyNotePeriodicNoteSettingsView(this, onSettingsChange, dateParserFactory, settingsRepositoryFactory));
+        this.settings.push(new QuarterlyNotePeriodicNoteSettingsView(this, onSettingsChange, dateParserFactory, settingsRepositoryFactory));
+        this.settings.push(new YearlyNotePeriodicNoteSettingsView(this, onSettingsChange, dateParserFactory, settingsRepositoryFactory));
     }
 
     override async display(): Promise<void> {

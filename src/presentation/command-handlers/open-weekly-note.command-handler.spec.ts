@@ -1,20 +1,21 @@
 import {OpenWeeklyNoteCommandHandler} from 'src/presentation/command-handlers/open-weekly-note.command-handler';
 import {mockGeneralSettingsRepository} from 'src/test-helpers/repository.mocks';
 import {mockDateManager} from 'src/test-helpers/manager.mocks';
-import {mockCalendarViewModel} from 'src/test-helpers/view-model.mocks';
+import {mockCalendarViewModel, mockPeriodNoteViewModel} from 'src/test-helpers/view-model.mocks';
 import {mockDateManagerFactory, mockSettingsRepositoryFactory} from 'src/test-helpers/factory.mocks';
 import {Period, PeriodType} from 'src/domain/models/period.model';
 import {when} from 'jest-when';
 import {DEFAULT_GENERAL_SETTINGS} from 'src/domain/settings/general.settings';
-import {WeekModel} from 'src/domain/models/week.model';
-import {ModifierKey} from 'src/presentation/models/modifier-key';
+import {Week} from 'src/domain/models/week';
+import { ModifierKey } from 'src/domain/models/modifier-key';
 
 describe('OpenWeeklyNoteCommandHandler', () => {
     let commandHandler: OpenWeeklyNoteCommandHandler;
 
     const settingsRepository = mockGeneralSettingsRepository;
     const dateManager = mockDateManager;
-    const viewModel = mockCalendarViewModel;
+    const calendarViewModel = mockCalendarViewModel;
+    const viewModel = mockPeriodNoteViewModel;
 
     beforeEach(() => {
         const dateManagerFactory = mockDateManagerFactory(dateManager);
@@ -22,7 +23,7 @@ describe('OpenWeeklyNoteCommandHandler', () => {
 
         when(settingsRepository.get).mockResolvedValue(DEFAULT_GENERAL_SETTINGS);
 
-        commandHandler = new OpenWeeklyNoteCommandHandler(dateManagerFactory, settingsRepositoryFactory, viewModel);
+        commandHandler = new OpenWeeklyNoteCommandHandler(dateManagerFactory, settingsRepositoryFactory, viewModel, calendarViewModel);
     });
 
     afterEach(() => {
@@ -36,7 +37,7 @@ describe('OpenWeeklyNoteCommandHandler', () => {
             type: PeriodType.Day
         };
 
-        const week = <WeekModel> {
+        const week = <Week> {
             date: new Date(2023, 9, 2),
             name: '40',
             weekNumber: 40,
@@ -74,7 +75,7 @@ describe('OpenWeeklyNoteCommandHandler', () => {
             expect(dateManager.getWeek).toHaveBeenCalledWith(today, DEFAULT_GENERAL_SETTINGS.firstDayOfWeek, DEFAULT_GENERAL_SETTINGS.weekNumberStandard);
         });
 
-        it('should call the openWeeklyNote method of the view model with the current week and None modifier key', async () => {
+        it('should call the openNote method on the view model with the period from the date manager and select the note', async () => {
             // Arrange
             when(dateManager.getCurrentDay).mockReturnValue(today);
             when(dateManager.getWeek)
@@ -85,7 +86,8 @@ describe('OpenWeeklyNoteCommandHandler', () => {
             await commandHandler.execute();
 
             // Assert
-            expect(viewModel.openWeeklyNote).toHaveBeenCalledWith(ModifierKey.None, week);
+            expect(viewModel.openNote).toHaveBeenCalledWith(ModifierKey.None, week);
+            expect(calendarViewModel.setSelectedPeriod).toHaveBeenCalledWith(week);
         });
     });
 });

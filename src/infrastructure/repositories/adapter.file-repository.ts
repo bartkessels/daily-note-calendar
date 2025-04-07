@@ -46,11 +46,27 @@ export class AdapterFileRepository implements FileRepository {
         }
     }
 
-    public async open(path: string): Promise<void> {
+    public async openInCurrentTab(path: string): Promise<void> {
         const fileExists = await this.exists(path);
 
         if (fileExists) {
-            await this.adapter.open(path);
+            await this.adapter.openInCurrentTab(path);
+        }
+    }
+
+    public async openInHorizontalSplitView(path: string): Promise<void> {
+        const fileExists = await this.exists(path);
+
+        if (fileExists) {
+            await this.adapter.openInHorizontalSplitView(path);
+        }
+    }
+
+    public async openInVerticalSplitView(path: string): Promise<void> {
+        const fileExists = await this.exists(path);
+
+        if (fileExists) {
+            await this.adapter.openInVerticalSplitView(path);
         }
     }
 

@@ -4,7 +4,7 @@ import {
     mockNoteManagerFactory,
     mockSettingsRepositoryFactory
 } from 'src/test-helpers/factory.mocks';
-import {mockCalendarViewModel} from 'src/test-helpers/view-model.mocks';
+import {mockCalendarViewModel, mockPeriodNoteViewModel} from 'src/test-helpers/view-model.mocks';
 import {DisplayInCalendarCommandHandler} from 'src/presentation/command-handlers/display-in-calendar.command-handler';
 import {CommandHandlerType} from 'src/presentation/contracts/command-handler-factory';
 import {
@@ -38,7 +38,9 @@ describe('DefaultCommandHandlerFactory', () => {
             noteManagerFactory,
             settingsRepositoryFactory,
             dateManagerFactory,
-            mockCalendarViewModel
+            mockCalendarViewModel,
+            mockPeriodNoteViewModel,
+            mockPeriodNoteViewModel
         );
     });
 

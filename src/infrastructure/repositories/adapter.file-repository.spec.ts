@@ -183,31 +183,87 @@ describe('AdapterFileRepository', () => {
         });
     });
 
-    describe('open', () => {
-        it('should call the open method on the adapter if the file exists', async () => {
+    describe('openInCurrentTab', () => {
+        it('should call the method on the adapter if the file exists', async () => {
             // Arrange
             const filePath = 'daily-notes/2021-01-01.md';
 
             when(fileAdapter.exists).calledWith(filePath).mockResolvedValue(true);
 
             // Act
-            await repository.open(filePath);
+            await repository.openInCurrentTab(filePath);
 
             // Assert
-            expect(fileAdapter.open).toHaveBeenCalledWith(filePath);
+            expect(fileAdapter.openInCurrentTab).toHaveBeenCalledWith(filePath);
         });
 
-        it('should not call the open method on the adapter if the file does not exist', async () => {
+        it('should not call the method on the adapter if the file does not exist', async () => {
             // Arrange
             const filePath = 'daily-notes/2021-01-01.md';
 
             when(fileAdapter.exists).calledWith(filePath).mockResolvedValue(false);
 
             // Act
-            await repository.open(filePath);
+            await repository.openInCurrentTab(filePath);
 
             // Assert
-            expect(fileAdapter.open).not.toHaveBeenCalled();
+            expect(fileAdapter.openInCurrentTab).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('openInHorizontalSplitView', () => {
+        it('should call the method on the adapter if the file exists', async () => {
+            // Arrange
+            const filePath = 'daily-notes/2021-01-01.md';
+
+            when(fileAdapter.exists).calledWith(filePath).mockResolvedValue(true);
+
+            // Act
+            await repository.openInHorizontalSplitView(filePath);
+
+            // Assert
+            expect(fileAdapter.openInHorizontalSplitView).toHaveBeenCalledWith(filePath);
+        });
+
+        it('should not call the method on the adapter if the file does not exist', async () => {
+            // Arrange
+            const filePath = 'daily-notes/2021-01-01.md';
+
+            when(fileAdapter.exists).calledWith(filePath).mockResolvedValue(false);
+
+            // Act
+            await repository.openInHorizontalSplitView(filePath);
+
+            // Assert
+            expect(fileAdapter.openInHorizontalSplitView).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('openInVerticalSplitView', () => {
+        it('should call the method on the adapter if the file exists', async () => {
+            // Arrange
+            const filePath = 'daily-notes/2021-01-01.md';
+
+            when(fileAdapter.exists).calledWith(filePath).mockResolvedValue(true);
+
+            // Act
+            await repository.openInVerticalSplitView(filePath);
+
+            // Assert
+            expect(fileAdapter.openInVerticalSplitView).toHaveBeenCalledWith(filePath);
+        });
+
+        it('should not call the method on the adapter if the file does not exist', async () => {
+            // Arrange
+            const filePath = 'daily-notes/2021-01-01.md';
+
+            when(fileAdapter.exists).calledWith(filePath).mockResolvedValue(false);
+
+            // Act
+            await repository.openInVerticalSplitView(filePath);
+
+            // Assert
+            expect(fileAdapter.openInVerticalSplitView).not.toHaveBeenCalled();
         });
     });
 

@@ -7,8 +7,7 @@ declare global {
         removeMarkdownExtension(): string;
     }
     interface Date {
-        isToday(): boolean;
-        isSameMonth(other: Period | undefined): boolean;
+        isSameMonth(other: Period | null): boolean;
         calculate(calculus?: Calculus | null): Date;
     }
 }
@@ -33,12 +32,7 @@ String.prototype.removeMarkdownExtension = function(): string {
     return this.replace(extension, '');
 };
 
-Date.prototype.isToday = function() {
-    const today = new Date();
-    return this.toDateString() === today.toDateString();
-}
-
-Date.prototype.isSameMonth = function(other: Period | undefined) {
+Date.prototype.isSameMonth = function(other: Period | null): boolean {
     if (!other) {
         return false;
     }

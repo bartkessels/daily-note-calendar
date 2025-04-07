@@ -18,6 +18,14 @@ export class DefaultNoteService implements NoteService {
         await this.noteManagerFactory.getManager().openNote(note);
     }
 
+    public async openNoteInHorizontalSplitView(note: Note): Promise<void> {
+        await this.noteManagerFactory.getManager().openNoteInHorizontalSplitView(note);
+    }
+
+    public async openNoteInVerticalSplitView(note: Note): Promise<void> {
+        await this.noteManagerFactory.getManager().openNoteInVerticalSplitView(note);
+    }
+
     public async deleteNote(note: Note): Promise<void> {
         await this.noteManagerFactory.getManager().deleteNote(note);
     }

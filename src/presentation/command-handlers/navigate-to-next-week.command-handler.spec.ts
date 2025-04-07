@@ -12,12 +12,12 @@ describe('NavigateToNextWeekCommandHandler', () => {
     });
 
     describe('execute', () => {
-        it('should call the loadCurrentWeek method on the view model', () => {
+        it('should call the navigateToNextWeek method on the view model', () => {
             // Act
             commandHandler.execute();
 
             // Assert
-            expect(viewModel.loadNextWeek).toHaveBeenCalled();
+            expect(viewModel.navigateToNextWeek).toHaveBeenCalled();
         });
     });
 });
