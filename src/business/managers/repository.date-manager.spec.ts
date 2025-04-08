@@ -328,6 +328,16 @@ describe('RepositoryDateManager', () => {
                 month: previousMonth,
                 days: [],
                 type: PeriodType.Week
+            },
+            {
+                date: new Date(2023, 9, 2),
+                name: '44',
+                weekNumber: 44,
+                year: year,
+                quarter: quarter,
+                month: previousMonth,
+                days: [],
+                type: PeriodType.Week
             }
         ];
 
@@ -345,7 +355,9 @@ describe('RepositoryDateManager', () => {
                 .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfPreviousMonth[2])
                 .mockReturnValue(weeksOfPreviousMonth[3])
                 .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfPreviousMonth[3])
-                .mockReturnValue(weeksOfPreviousMonth[4]);
+                .mockReturnValue(weeksOfPreviousMonth[4])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfPreviousMonth[4])
+                .mockReturnValue(weeksOfPreviousMonth[5]);
 
             // Act
             const result = manager.getPreviousMonth(month, DayOfWeek.Monday, WeekNumberStandard.ISO);
@@ -372,7 +384,9 @@ describe('RepositoryDateManager', () => {
                 .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfPreviousMonth[2])
                 .mockReturnValue(weeksOfPreviousMonth[4])
                 .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfPreviousMonth[4])
-                .mockReturnValue(weeksOfPreviousMonth[3]);
+                .mockReturnValue(weeksOfPreviousMonth[3])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfPreviousMonth[3])
+                .mockReturnValue(weeksOfPreviousMonth[5]);
 
             // Act
             const result = manager.getPreviousMonth(month, DayOfWeek.Monday, WeekNumberStandard.ISO);
@@ -442,6 +456,16 @@ describe('RepositoryDateManager', () => {
                 month: nextMonth,
                 days: [],
                 type: PeriodType.Week
+            },
+            {
+                date: new Date(2023, 11, 4),
+                name: '49',
+                weekNumber: 49,
+                year: year,
+                quarter: quarter,
+                month: nextMonth,
+                days: [],
+                type: PeriodType.Week
             }
         ];
 
@@ -459,7 +483,9 @@ describe('RepositoryDateManager', () => {
                 .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO ,weeksOfNextMonth[2])
                 .mockReturnValue(weeksOfNextMonth[3])
                 .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO ,weeksOfNextMonth[3])
-                .mockReturnValue(weeksOfNextMonth[4]);
+                .mockReturnValue(weeksOfNextMonth[4])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO ,weeksOfNextMonth[4])
+                .mockReturnValue(weeksOfNextMonth[5]);
 
             // Act
             const result = manager.getNextMonth(month, DayOfWeek.Monday, WeekNumberStandard.ISO);
@@ -486,7 +512,9 @@ describe('RepositoryDateManager', () => {
                 .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfNextMonth[2])
                 .mockReturnValue(weeksOfNextMonth[4])
                 .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfNextMonth[4])
-                .mockReturnValue(weeksOfNextMonth[3]);
+                .mockReturnValue(weeksOfNextMonth[3])
+                .calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, weeksOfNextMonth[3])
+                .mockReturnValue(weeksOfNextMonth[5]);
 
             // Act
             const result = manager.getNextMonth(month, DayOfWeek.Monday, WeekNumberStandard.ISO);
