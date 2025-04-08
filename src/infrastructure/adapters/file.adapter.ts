@@ -1,4 +1,5 @@
 export interface FileAdapter {
+    hover(path: string): Promise<void>;
     exists(path: string): Promise<boolean>;
     createFileFromTemplate(path: string, templatePath: string): Promise<string>;
     createFile(path: string): Promise<string>;

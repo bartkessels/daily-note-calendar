@@ -1,11 +1,24 @@
 import {normalizePath, Plugin, TFile, TFolder} from 'obsidian';
 import {FileAdapter} from 'src/infrastructure/adapters/file.adapter';
+import {CalendarView} from 'src/presentation/views/calendar.view';
 
 export class ObsidianFileAdapter implements FileAdapter {
     constructor(
         private readonly plugin: Plugin
     ) {
 
+    }
+
+    public async hover(path: string): Promise<void> {
+        const normalizedPath = this.normalizePath(path);
+        const doesFileExists = await this.exists(path);
+
+        if (doesFileExists) {
+            this.plugin.registerHoverLinkSource(normalizedPath, {
+                defaultMod: true,
+                display: CalendarView.VIEW_TYPE
+            });
+        }
     }
 
     public async exists(path: string): Promise<boolean> {
