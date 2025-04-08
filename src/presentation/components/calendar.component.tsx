@@ -47,10 +47,10 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
             <div className="header">
                 <span className="title">
                     <h1>
-                        <MonthlyNoteComponent month={calendar.month} />
+                        <MonthlyNoteComponent month={calendar.month} onSelect={setSelectedPeriod} />
                     </h1>
                     <h1>
-                        <YearlyNoteComponent year={calendar.year} />
+                        <YearlyNoteComponent year={calendar.year} onSelect={setSelectedPeriod} />
                     </h1>
                 </span>
 
@@ -82,7 +82,7 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
                 <thead>
                 <tr>
                     <th className="quarter">
-                        <QuarterlyNoteComponent quarter={calendar.quarter} />
+                        <QuarterlyNoteComponent quarter={calendar.quarter} onSelect={setSelectedPeriod} />
                     </th>
                     {!calendar.startWeekOnMonday && <th>Sun</th>}
                     <th>Mon</th>

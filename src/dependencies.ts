@@ -66,7 +66,7 @@ export function getDependencies(plugin: Plugin): Dependencies {
     const variableFactory = new DefaultVariableFactory();
     const variableParserFactory = new DefaultVariableParserFactory(variableFactory, dateParserFactory);
     const dateManagerFactory = new DefaultDateManagerFactory(dateRepositoryFactory);
-    const noteManagerFactory = new DefaultNoteManagerFactory(fileRepositoryFactory, noteRepositoryFactory, settingsRepositoryFactory);
+    const noteManagerFactory = new DefaultNoteManagerFactory(fileRepositoryFactory, noteRepositoryFactory, dateRepositoryFactory, settingsRepositoryFactory);
     const periodicNoteManager = new DefaultPeriodicNoteManager(nameBuilderFactory, variableParserFactory, fileRepositoryFactory, noteRepositoryFactory);
 
     // Presentation

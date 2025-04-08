@@ -4,9 +4,13 @@ import {
     addMonths,
     addWeeks,
     eachDayOfInterval,
+    endOfMonth,
+    endOfQuarter,
     endOfWeek,
     getISOWeek,
-    getQuarter, getWeek, startOfMonth,
+    getQuarter,
+    getWeek,
+    startOfMonth,
     startOfQuarter,
     startOfWeek,
     subMonths,
@@ -110,6 +114,21 @@ export class DateFnsDateRepository implements DateRepository {
         };
     }
 
+    public getDaysForPeriod(startOfWeek: DayOfWeek, period: Period): Period[] {
+        switch (period.type) {
+            case PeriodType.Year:
+                return this.getDaysOfYear(period.date);
+            case PeriodType.Quarter:
+                return this.getDaysOfQuarter(period.date);
+            case PeriodType.Month:
+                return this.getDaysOfMonth(period.date);
+            case PeriodType.Week:
+                return this.getDaysOfWeek(startOfWeek, period.date);
+        }
+
+        return [period];
+    }
+
     private getYear(year: number): Period {
         const formatter = new Intl.DateTimeFormat(undefined, {
             year: this.yearFormat
@@ -136,6 +155,30 @@ export class DateFnsDateRepository implements DateRepository {
             date: date,
             type: PeriodType.Month
         };
+    }
+
+    private getDaysOfYear(date: Date): Period[] {
+        const start = new Date(date.getFullYear(), 0, 1);
+        const end = new Date(date.getFullYear(), 11, 31);
+        const days = eachDayOfInterval({start, end});
+
+        return days.map((date) => this.getDayFromDate(date));
+    }
+
+    private getDaysOfQuarter(date: Date): Period[] {
+        const start = startOfQuarter(date);
+        const end = endOfQuarter(date);
+        const days = eachDayOfInterval({start, end});
+
+        return days.map((date) => this.getDayFromDate(date));
+    }
+
+    private getDaysOfMonth(date: Date): Period[] {
+        const start = startOfMonth(date);
+        const end = endOfMonth(date);
+        const days = eachDayOfInterval({start, end});
+
+        return days.map((date) => this.getDayFromDate(date));
     }
 
     private getDaysOfWeek(startOfWeekDay: DayOfWeek, date: Date): Period[] {

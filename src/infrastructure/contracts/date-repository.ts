@@ -11,4 +11,5 @@ export interface DateRepository {
     getPreviousMonth(period: Period): Period;
     getNextMonth(period: Period): Period;
     getQuarter(month: Period): Period;
+    getDaysForPeriod(startOfWeekDay: DayOfWeek, period: Period): Period[];
 }
