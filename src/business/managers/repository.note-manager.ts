@@ -5,6 +5,7 @@ import {NoteRepositoryFactory} from 'src/infrastructure/contracts/note-repositor
 import {arePeriodsEqual, Period} from 'src/domain/models/period.model';
 import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contracts/settings-repository-factory';
 import {DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
+import {GeneralSettings} from 'src/domain/settings/general.settings';
 
 export class RepositoryNoteManager implements NoteManager {
     constructor(
@@ -43,19 +44,28 @@ export class RepositoryNoteManager implements NoteManager {
     }
 
     public async getNotesForPeriod(period: Period): Promise<Note[]> {
-        const settings = await this.settingsRepositoryFactory
+        const generalSettings = await this.settingsRepositoryFactory
+            .getRepository<GeneralSettings>(SettingsType.General)
+            .get();
+
+        if (!generalSettings.displayNotesCreatedOnDate) {
+            return [];
+        }
+
+        const displayNotesSettings = await this.settingsRepositoryFactory
             .getRepository<DisplayNotesSettings>(SettingsType.DisplayNotes)
             .get();
+
         const noteRepository = this.noteRepositoryFactory.getRepository();
         const notes = await noteRepository.getNotes(note => {
-            if (settings.useCreatedOnDateFromProperties) {
+            if (displayNotesSettings.useCreatedOnDateFromProperties) {
                 return arePeriodsEqual(note.createdOnProperty, period);
             }
 
             return arePeriodsEqual(note.createdOn, period);
         });
 
-        if (settings.sortNotes === SortNotes.Ascending) {
+        if (displayNotesSettings.sortNotes === SortNotes.Ascending) {
             return notes.sort((a, b) => a.createdOn.date.getTime() - b.createdOn.date.getTime());
         } else {
             return notes.sort((a, b) => b.createdOn.date.getTime() - a.createdOn.date.getTime());
