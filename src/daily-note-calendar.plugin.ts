@@ -37,7 +37,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         this.registerSettings();
         this.registerCommands();
 
-        this.app.workspace.onLayoutReady(this.registerPlugin.bind(this));
+        this.app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
     }
 
     private async initializePlugin(): Promise<void> {
@@ -52,6 +52,14 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         this.dependencies.monthlyNoteViewModel.updateSettings(settings);
         this.dependencies.quarterlyNoteViewModel.updateSettings(settings);
         this.dependencies.yearlyNoteViewModel.updateSettings(settings);
+    }
+
+    private onLayoutReady(): void {
+        this.registerPlugin();
+
+        this.app.vault.on('create', () => this.dependencies.notesViewModel.updateNotes?.call(this));
+        this.app.vault.on('delete', () => this.dependencies.notesViewModel.updateNotes?.call(this));
+        this.app.vault.on('rename', () => this.dependencies.notesViewModel.updateNotes?.call(this));
     }
 
     private registerPlugin(): void {

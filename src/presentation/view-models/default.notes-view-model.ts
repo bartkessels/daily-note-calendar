@@ -4,10 +4,16 @@ import {NotesViewModel} from 'src/presentation/contracts/notes.view-model';
 import {NoteService} from 'src/presentation/contracts/note-service';
 
 export class DefaultNotesViewModel implements NotesViewModel {
+    public updateNotes?: () => void;
+
     constructor(
         private readonly noteService: NoteService
     ) {
 
+    }
+
+    public initializeCallbacks(updateNotes: () => void): void {
+        this.updateNotes = updateNotes;
     }
 
     public async loadNotes(period: Period): Promise<Note[]> {
