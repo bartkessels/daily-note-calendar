@@ -85,12 +85,13 @@ export class GeneralSettingsView extends SettingsView {
         const options = new Map<string, string>();
         options.set('iso', this.weekNumberStandardName(WeekNumberStandard.ISO));
         options.set('us', this.weekNumberStandardName(WeekNumberStandard.US));
+        const activeOption = options.keys().next(this.weekNumberStandardName(value)).value;
 
         this.addDropdownSetting(
             'Week number standard',
             'Set the week number standard for the calendar.',
             options,
-            this.weekNumberStandardName(value).toLowerCase(),
+            activeOption,
             async (value) => {
                 if (value.toLowerCase() === 'iso') {
                     return await onValueChange(WeekNumberStandard.ISO);

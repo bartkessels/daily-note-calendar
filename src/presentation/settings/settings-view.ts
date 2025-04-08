@@ -67,6 +67,7 @@ export abstract class SettingsView {
                 .addOptions(Object.fromEntries(options))
                 .setValue(activeOption)
                 .onChange((value) => {
+                    console.log(value);
                     onChange(value).then(this.onSettingsChange);
                 })
             );

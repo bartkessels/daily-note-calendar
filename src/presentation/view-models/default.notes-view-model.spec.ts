@@ -29,6 +29,19 @@ describe('NotesViewModel', () => {
         jest.clearAllMocks();
     });
 
+    describe('initializeCallbacks', () => {
+        it('should set the callback functions', () => {
+            // Arrange
+            const updateNotes = jest.fn();
+
+            // Act
+            viewModel.initializeCallbacks(updateNotes);
+
+            // Assert
+            expect(viewModel.updateNotes).toEqual(updateNotes);
+        });
+    });
+
     describe('loadNotes', () => {
         it('should call the noteService and return the result', async () => {
             // Arrange
