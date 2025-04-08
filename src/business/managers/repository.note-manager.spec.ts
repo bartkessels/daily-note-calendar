@@ -1,7 +1,7 @@
 import {RepositoryNoteManager} from 'src/business/managers/repository.note-manager';
 import {
     mockDisplayNoteSettingsRepository,
-    mockFileRepository,
+    mockFileRepository, mockGeneralSettingsRepository,
     mockNoteRepository
 } from 'src/test-helpers/repository.mocks';
 import {
@@ -12,12 +12,15 @@ import {when} from 'jest-when';
 import {Note, SortNotes} from 'src/domain/models/note.model';
 import {Period, PeriodType} from 'src/domain/models/period.model';
 import {DEFAULT_DISPLAY_NOTES_SETTINGS, DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
+import {SettingsType} from 'src/infrastructure/contracts/settings-repository-factory';
+import {DEFAULT_GENERAL_SETTINGS, GeneralSettings} from 'src/domain/settings/general.settings';
 
 describe('RepositoryNoteManager', () => {
     let manager: RepositoryNoteManager;
     const fileRepository = mockFileRepository;
     const noteRepository = mockNoteRepository;
-    const settingsRepository = mockDisplayNoteSettingsRepository;
+    const generalSettingsRepository = mockGeneralSettingsRepository;
+    const displayNoteSettingsRepository = mockDisplayNoteSettingsRepository;
     const note = <Note>{
         createdOn: <Period>{
             date: new Date(2023, 9, 2),
@@ -31,13 +34,19 @@ describe('RepositoryNoteManager', () => {
     beforeEach(() => {
         const fileRepositoryFactory = mockFileRepositoryFactory(fileRepository);
         const noteRepositoryFactory = mockNoteRepositoryFactory(noteRepository);
-        const settingsRepositoryFactory = mockSettingsRepositoryFactory(settingsRepository);
+        const settingsRepositoryFactory = mockSettingsRepositoryFactory(displayNoteSettingsRepository);
 
         manager = new RepositoryNoteManager(
             fileRepositoryFactory,
             noteRepositoryFactory,
             settingsRepositoryFactory
         );
+
+        when(settingsRepositoryFactory.getRepository)
+            .calledWith(SettingsType.General)
+            .mockReturnValue(generalSettingsRepository)
+            .calledWith(SettingsType.DisplayNotes)
+            .mockReturnValue(displayNoteSettingsRepository);
     });
 
     afterEach(() => {
@@ -140,13 +149,42 @@ describe('RepositoryNoteManager', () => {
             properties: new Map<string, string>()
         };
 
+        beforeEach(() => {
+            when(generalSettingsRepository.get).mockResolvedValue(<GeneralSettings> {
+                ...DEFAULT_GENERAL_SETTINGS,
+                displayNotesCreatedOnDate: true
+            });
+        });
+
+        afterEach(() => {
+            jest.clearAllMocks();
+        });
+
+        it('should not return any notes when the setting to display notes is disabled', async () => {
+            // Arrange
+            const generalSettings = <GeneralSettings> {
+                ...DEFAULT_GENERAL_SETTINGS,
+                displayNotesCreatedOnDate: false
+            };
+
+            when(generalSettingsRepository.get).mockResolvedValue(generalSettings);
+
+            // Act
+            const result = await manager.getNotesForPeriod(period);
+
+            // Assert
+            expect(noteRepository.getNotes).not.toHaveBeenCalled();
+            expect(displayNoteSettingsRepository.get).not.toHaveBeenCalled();
+            expect(result).toEqual([]);
+        });
+
         it('should filter notes based on the createdOnProperty if it has a value and the setting is set to true', async () => {
             // Arrange
             const settings = <DisplayNotesSettings>{
                 ...DEFAULT_DISPLAY_NOTES_SETTINGS,
                 useCreatedOnDateFromProperties: true
             };
-            when(settingsRepository.get).mockResolvedValue(settings);
+            when(displayNoteSettingsRepository.get).mockResolvedValue(settings);
             when(noteRepository.getNotes).mockImplementation((filterFn) => {
                 return Promise.resolve([noteWithCreatedOnProperty, noteWithoutCreatedOnProperty].filter(filterFn));
             });
@@ -164,7 +202,7 @@ describe('RepositoryNoteManager', () => {
                 ...DEFAULT_DISPLAY_NOTES_SETTINGS,
                 useCreatedOnDateFromProperties: true
             };
-            when(settingsRepository.get).mockResolvedValue(settings);
+            when(displayNoteSettingsRepository.get).mockResolvedValue(settings);
             when(noteRepository.getNotes).mockImplementation((filterFn) => {
                 return Promise.resolve([noteWithoutCreatedOnProperty].filter(filterFn));
             });
@@ -182,7 +220,7 @@ describe('RepositoryNoteManager', () => {
                 ...DEFAULT_DISPLAY_NOTES_SETTINGS,
                 useCreatedOnDateFromProperties: false
             };
-            when(settingsRepository.get).mockResolvedValue(settings);
+            when(displayNoteSettingsRepository.get).mockResolvedValue(settings);
             when(noteRepository.getNotes).mockImplementation((filterFn) => {
                 return Promise.resolve([noteWithCreatedOnProperty, noteWithoutCreatedOnProperty].filter(filterFn));
             });
@@ -239,7 +277,7 @@ describe('RepositoryNoteManager', () => {
             };
 
             const settings = {...DEFAULT_DISPLAY_NOTES_SETTINGS, sortNotes: SortNotes.Ascending};
-            when(settingsRepository.get).mockResolvedValue(settings);
+            when(displayNoteSettingsRepository.get).mockResolvedValue(settings);
             when(noteRepository.getNotes).mockResolvedValue([thirdNote, firstNote, secondNote]);
 
             // Act
@@ -283,7 +321,7 @@ describe('RepositoryNoteManager', () => {
             };
 
             const settings = {...DEFAULT_DISPLAY_NOTES_SETTINGS, sortNotes: SortNotes.Descending};
-            when(settingsRepository.get).mockResolvedValue(settings);
+            when(displayNoteSettingsRepository.get).mockResolvedValue(settings);
             when(noteRepository.getNotes).mockResolvedValue([thirdNote, firstNote, secondNote]);
 
             // Act
