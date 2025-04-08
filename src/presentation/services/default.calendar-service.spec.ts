@@ -110,7 +110,7 @@ describe('DefaultCalendarService', () => {
                 currentWeek,
                 settings.generalSettings.firstDayOfWeek,
                 settings.generalSettings.weekNumberStandard,
-                2
+                3
             );
         });
         
@@ -184,7 +184,7 @@ describe('DefaultCalendarService', () => {
                     currentWeeks[0],
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
-                    3
+                    4
                 );
             expect(dateManager.getNextWeeks)
                 .toHaveBeenCalledWith(
@@ -214,7 +214,7 @@ describe('DefaultCalendarService', () => {
                     currentWeeks[0],
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
-                    3
+                    4
                 );
             expect(dateManager.getNextWeeks)
                 .toHaveBeenCalledWith(
@@ -294,7 +294,7 @@ describe('DefaultCalendarService', () => {
                     currentWeeks[0],
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
-                    1
+                    2
                 );
             expect(dateManager.getNextWeeks)
                 .toHaveBeenCalledWith(
@@ -324,7 +324,7 @@ describe('DefaultCalendarService', () => {
                     currentWeeks[0],
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
-                    1
+                    2
                 );
             expect(dateManager.getNextWeeks)
                 .toHaveBeenCalledWith(

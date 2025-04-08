@@ -69,14 +69,15 @@ export class RepositoryDateManager implements DateManager {
         return this.dateRepositoryFactory.getRepository().getQuarter(month);
     }
 
-    private getWeeksForMonth(month: Period, startOfWeek: DayOfWeek, standard: WeekNumberStandard): Week[] {
+    private getWeeksForMonth(
+        month: Period, startOfWeek: DayOfWeek, standard: WeekNumberStandard): Week[] {
         const startOfMonth = new Date(month.date.getFullYear(), month.date.getMonth(), 1);
         const endOfMonth = new Date(month.date.getFullYear(), month.date.getMonth() + 1, 0);
         const middleOfMonth = new Date((startOfMonth.getTime() + endOfMonth.getTime()) / 2);
 
         const middleWeek = this.dateRepositoryFactory.getRepository().getWeekFromDate(startOfWeek, standard, middleOfMonth);
         const previousWeeks = this.getPreviousWeeks(middleWeek, startOfWeek, standard, 2);
-        const nextWeeks = this.getNextWeeks(middleWeek, startOfWeek, standard, 2);
+        const nextWeeks = this.getNextWeeks(middleWeek, startOfWeek, standard, 3);
 
         return this.sortWeeks([ ...previousWeeks, middleWeek, ...nextWeeks ]);
     }

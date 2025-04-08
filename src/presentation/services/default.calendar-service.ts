@@ -24,17 +24,17 @@ export class DefaultCalendarService implements CalendarService {
         const weekNumberStandard = this.settings.generalSettings.weekNumberStandard;
         const currentWeek = this.dateManager.getCurrentWeek(firstDayOfWeek, weekNumberStandard);
 
-        return this.loadWeeks(currentWeek, 2, 2);
+        return this.loadWeeks(currentWeek, 2, 3);
     }
 
     public getPreviousWeek(weeks: Week[]): Week[] {
         const middleWeek = this.getMiddleWeek(weeks);
-        return this.loadWeeks(middleWeek, 3, 1);
+        return this.loadWeeks(middleWeek, 4, 1);
     }
 
     public getNextWeek(weeks: Week[]): Week[] {
         const middleWeek = this.getMiddleWeek(weeks);
-        return this.loadWeeks(middleWeek, 1, 3);
+        return this.loadWeeks(middleWeek, 2, 3);
     }
 
     public getPreviousMonth(weeks: Week[]): Week[] {
