@@ -1,7 +1,6 @@
-import React, {ReactElement} from 'react';
+import React, {ReactElement, Suspense} from 'react';
 import {CalendarHeart, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight} from 'lucide-react';
 import {useCalendarViewModel} from 'src/presentation/context/view-model.context';
-import {NotesComponent} from 'src/presentation/components/notes.component';
 import {MonthlyNoteComponent} from 'src/presentation/components/month.component';
 import { QuarterlyNoteComponent } from './quarter.component';
 import {YearlyNoteComponent} from 'src/presentation/components/year.component';
@@ -9,6 +8,7 @@ import {WeeklyNoteComponent} from 'src/presentation/components/week.component';
 import {Period} from 'src/domain/models/period.model';
 import {Calendar} from 'src/domain/models/calendar.model';
 import 'src/extensions/extensions';
+import {NotesComponent} from 'src/presentation/components/notes.component';
 
 interface CalendarComponentProperties {
     initialCalendar?: Calendar | null;
@@ -109,7 +109,8 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
                 </tbody>
             </table>
 
-            <NotesComponent period={selectedPeriod}/>
+
+            {selectedPeriod && <Suspense fallback={<p>Loading...</p>}><NotesComponent period={selectedPeriod} /></Suspense>}
         </div>
     );
 }
