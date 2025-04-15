@@ -147,6 +147,102 @@ describe('AdapterNoteRepository', () => {
             expect(result?.createdOnProperty).toBeNull();
             expect(result?.displayDate).toEqual(expectedDisplayDate);
         });
+
+        it('should get the time from the actual creation time of the note when the createdOnProperty is set without a time', async () => {
+            // Arrange
+            const expectedDisplayDate = '02-10-2023 15:15'
+            const settings = <DisplayNotesSettings>{
+                ...DEFAULT_DISPLAY_NOTES_SETTINGS,
+                createdOnDatePropertyName: 'created_on',
+                createdOnPropertyFormat: 'dd-MM-yyyy'
+            };
+
+            const properties = new Map<string, string>();
+            properties.set(settings.createdOnDatePropertyName, '02-10-2023');
+
+            const note = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 3, 23, 59, 59, 100),
+                    name: '03',
+                    type: PeriodType.Day
+                },
+                name: 'My note with a property',
+                path: 'path/to/note.md',
+                properties: properties
+            };
+
+            when(settingsRepository.get).mockResolvedValue(settings);
+            when(noteAdapter.getActiveNote).mockResolvedValue(note);
+            when(dateParser.fromDate)
+                .calledWith(new Date(2023, 9, 3, 23, 59, 59, 100), settings.displayDateTemplate)
+                .mockReturnValue(expectedDisplayDate);
+            when(dateRepository.getDayFromDateString)
+                .calledWith('02-10-2023', settings.createdOnPropertyFormat)
+                .mockReturnValue(<Period>{
+                    date: new Date(2023, 9, 2),
+                    name: '02',
+                    type: PeriodType.Day
+                });
+
+            // Act
+            const result = await repository.getActiveNote();
+
+            // Assert
+            expect(result).not.toBeNull();
+            expect(result?.createdOnProperty).not.toBeNull();
+            expect(result?.createdOnProperty?.date).toEqual(new Date(2023, 9, 2, 23, 59, 59, 100));
+            expect(result?.createdOnProperty?.name).toEqual('02');
+            expect(result?.createdOnProperty?.type).toEqual(PeriodType.Day);
+            expect(result?.displayDate).toEqual(expectedDisplayDate);
+        });
+
+        it('should get the time from the property of the note when the createdOnProperty is set with a time', async () => {
+            // Arrange
+            const expectedDisplayDate = '02-10-2023 15:15'
+            const settings = <DisplayNotesSettings>{
+                ...DEFAULT_DISPLAY_NOTES_SETTINGS,
+                createdOnDatePropertyName: 'created_on',
+                createdOnPropertyFormat: 'dd-MM-yyyy HH:mm'
+            };
+
+            const properties = new Map<string, string>();
+            properties.set(settings.createdOnDatePropertyName, '02-10-2023 15:15');
+
+            const note = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 3, 23, 59, 59, 100),
+                    name: '03',
+                    type: PeriodType.Day
+                },
+                name: 'My note with a property',
+                path: 'path/to/note.md',
+                properties: properties
+            };
+
+            when(settingsRepository.get).mockResolvedValue(settings);
+            when(noteAdapter.getActiveNote).mockResolvedValue(note);
+            when(dateParser.fromDate)
+                .calledWith(new Date(2023, 9, 3, 23, 59, 59, 100), settings.displayDateTemplate)
+                .mockReturnValue(expectedDisplayDate);
+            when(dateRepository.getDayFromDateString)
+                .calledWith('02-10-2023 15:15', settings.createdOnPropertyFormat)
+                .mockReturnValue(<Period>{
+                    date: new Date(2023, 9, 2, 15, 15),
+                    name: '02',
+                    type: PeriodType.Day
+                });
+
+            // Act
+            const result = await repository.getActiveNote();
+
+            // Assert
+            expect(result).not.toBeNull();
+            expect(result?.createdOnProperty).not.toBeNull();
+            expect(result?.createdOnProperty?.date).toEqual(new Date(2023, 9, 2, 15, 15, 0, 0));
+            expect(result?.createdOnProperty?.name).toEqual('02');
+            expect(result?.createdOnProperty?.type).toEqual(PeriodType.Day);
+            expect(result?.displayDate).toEqual(expectedDisplayDate);
+        });
     });
 
     describe('getNotes', () => {

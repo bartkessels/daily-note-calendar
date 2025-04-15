@@ -66,9 +66,21 @@ export class RepositoryNoteManager implements NoteManager {
         });
 
         if (displayNotesSettings.sortNotes === SortNotes.Ascending) {
-            return notes.sort((a, b) => a.createdOn.date.getTime() - b.createdOn.date.getTime());
+            return notes.sort((a: Note, b: Note) => {
+                if (displayNotesSettings.useCreatedOnDateFromProperties && a.createdOnProperty && b.createdOnProperty) {
+                    return a.createdOnProperty.date.getTime() - b.createdOnProperty.date.getTime();
+                }
+
+                return a.createdOn.date.getTime() - b.createdOn.date.getTime();
+            });
         } else {
-            return notes.sort((a, b) => b.createdOn.date.getTime() - a.createdOn.date.getTime());
+            return notes.sort((a: Note, b: Note) => {
+                if (displayNotesSettings.useCreatedOnDateFromProperties && a.createdOnProperty && b.createdOnProperty) {
+                    return b.createdOnProperty.date.getTime() - a.createdOnProperty.date.getTime();
+                }
+
+                return b.createdOn.date.getTime() - a.createdOn.date.getTime();
+            });
         }
     }
 
