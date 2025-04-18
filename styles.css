@@ -53,6 +53,18 @@
     border-bottom: 0.1em solid var(--text-faint);
 }
 
+.dnc .has-note:before {
+    content: "";
+    position: fixed;
+    transform:translate(-50%,-10%);
+    width: 0.45em;
+    height: 0.45em;
+    border-radius: 50%;
+    background: var(--text-accent);
+    mix-blend-mode: color-dodge;
+    opacity: 35%;
+}
+
 .dnc .selected-day:after {
     content: "";
     display: block;
