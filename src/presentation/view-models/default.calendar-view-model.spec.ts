@@ -161,7 +161,7 @@ describe('DefaultCalendarViewModel', () => {
 
     describe('getPreviousWeek', () => {
         const currentCalendar = <Calendar> {
-            startWeekOnMonday: true,
+            weekDays: [],
             month: expectedMonth,
             quarter: expectedQuarter,
             year: expectedYear,
@@ -244,7 +244,7 @@ describe('DefaultCalendarViewModel', () => {
 
     describe('getNextWeek', () => {
         const currentCalendar = <Calendar> {
-            startWeekOnMonday: true,
+            weekDays: [],
             month: expectedMonth,
             quarter: expectedQuarter,
             year: expectedYear,
@@ -327,7 +327,7 @@ describe('DefaultCalendarViewModel', () => {
 
     describe('getPreviousMonth', () => {
         const currentCalendar = <Calendar> {
-            startWeekOnMonday: true,
+            weekDays: [],
             month: expectedMonth,
             quarter: expectedQuarter,
             year: expectedYear,
@@ -410,7 +410,7 @@ describe('DefaultCalendarViewModel', () => {
 
     describe('getNextMonth', () => {
         const currentCalendar = <Calendar> {
-            startWeekOnMonday: true,
+            weekDays: [],
             month: expectedMonth,
             quarter: expectedQuarter,
             year: expectedYear,
