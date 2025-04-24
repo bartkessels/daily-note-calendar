@@ -29,6 +29,15 @@ describe('DefaultCalendarViewModel', () => {
         name: '2023',
         type: PeriodType.Year
     };
+    const weekDays = new Map<DayOfWeek, string[]>([
+        [DayOfWeek.Monday, ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']],
+        [DayOfWeek.Tuesday, ['Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon']],
+        [DayOfWeek.Wednesday, ['Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue']],
+        [DayOfWeek.Thursday, ['Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed']],
+        [DayOfWeek.Friday, ['Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu']],
+        [DayOfWeek.Saturday, ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri']],
+        [DayOfWeek.Sunday, ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']]
+    ]);
 
     let viewModel: DefaultCalendarViewModel;
 
@@ -105,7 +114,7 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getCurrentWeek();
 
             // Assert
-            expect(result.startWeekOnMonday).toBe(true);
+            expect(result.weekDays).toEqual(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
             expect(result.month).toEqual(expectedMonth);
             expect(result.quarter).toEqual(expectedQuarter);
             expect(result.year).toEqual(expectedYear);
@@ -122,12 +131,31 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getCurrentWeek();
 
             // Assert
-            expect(result.startWeekOnMonday).toBe(false);
+            expect(result.weekDays).toEqual(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']);
             expect(result.month).toEqual(expectedMonth);
             expect(result.quarter).toEqual(expectedQuarter);
             expect(result.year).toEqual(expectedYear);
             expect(result.weeks).toEqual(currentWeek);
             expect(result.today).toEqual(today);
+        });
+
+        it('should allow any day of the week to be the first day of the week', () => {
+            // Arrange
+            weekDays.forEach((days, firstDayOfWeek) => {
+                const settings = <PluginSettings>{ ...DEFAULT_PLUGIN_SETTINGS, generalSettings: { ...DEFAULT_GENERAL_SETTINGS, firstDayOfWeek: firstDayOfWeek }};
+
+                // Act
+                viewModel.initialize(settings, today);
+                const result = viewModel.getCurrentWeek();
+
+                // Assert
+                expect(result.weekDays).toEqual(days);
+                expect(result.month).toEqual(expectedMonth);
+                expect(result.quarter).toEqual(expectedQuarter);
+                expect(result.year).toEqual(expectedYear);
+                expect(result.weeks).toEqual(currentWeek);
+                expect(result.today).toEqual(today);
+            });
         });
     });
 
@@ -169,7 +197,7 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getPreviousWeek(currentCalendar);
 
             // Assert
-            expect(result.startWeekOnMonday).toBe(true);
+            expect(result.weekDays).toEqual(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
             expect(result.month).toEqual(expectedMonth);
             expect(result.quarter).toEqual(expectedQuarter);
             expect(result.year).toEqual(expectedYear);
@@ -186,12 +214,31 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getPreviousWeek(currentCalendar);
 
             // Assert
-            expect(result.startWeekOnMonday).toBe(false);
+            expect(result.weekDays).toEqual(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']);
             expect(result.month).toEqual(expectedMonth);
             expect(result.quarter).toEqual(expectedQuarter);
             expect(result.year).toEqual(expectedYear);
             expect(result.weeks).toEqual(previousWeek);
             expect(result.today).toEqual(today);
+        });
+
+        it('should allow any day of the week to be the first day of the week', () => {
+            // Arrange
+            weekDays.forEach((days, firstDayOfWeek) => {
+                const settings = <PluginSettings>{ ...DEFAULT_PLUGIN_SETTINGS, generalSettings: { ...DEFAULT_GENERAL_SETTINGS, firstDayOfWeek: firstDayOfWeek }};
+
+                // Act
+                viewModel.initialize(settings, today);
+                const result = viewModel.getPreviousWeek(currentCalendar);
+
+                // Assert
+                expect(result.weekDays).toEqual(days);
+                expect(result.month).toEqual(expectedMonth);
+                expect(result.quarter).toEqual(expectedQuarter);
+                expect(result.year).toEqual(expectedYear);
+                expect(result.weeks).toEqual(previousWeek);
+                expect(result.today).toEqual(today);
+            });
         });
     });
 
@@ -212,7 +259,7 @@ describe('DefaultCalendarViewModel', () => {
             today: null
         }
 
-        const getNextWeek = [
+        const nextWeek = [
             <Week>{
                 date: new Date(2023, 9, 2),
                 name: '40',
@@ -222,10 +269,10 @@ describe('DefaultCalendarViewModel', () => {
         ];
 
         beforeEach(() => {
-            when(calendarService.getNextWeek).mockReturnValue(getNextWeek);
-            when(calendarService.getMonthForWeeks).calledWith(getNextWeek).mockReturnValue(expectedMonth);
-            when(calendarService.getQuarterForWeeks).calledWith(getNextWeek).mockReturnValue(expectedQuarter);
-            when(calendarService.getYearForWeeks).calledWith(getNextWeek).mockReturnValue(expectedYear);
+            when(calendarService.getNextWeek).mockReturnValue(nextWeek);
+            when(calendarService.getMonthForWeeks).calledWith(nextWeek).mockReturnValue(expectedMonth);
+            when(calendarService.getQuarterForWeeks).calledWith(nextWeek).mockReturnValue(expectedQuarter);
+            when(calendarService.getYearForWeeks).calledWith(nextWeek).mockReturnValue(expectedYear);
         });
 
         it('should use the default settings for the startWeekOnMonday and today should be null when the view model is not initialized', async () => {
@@ -233,11 +280,11 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getNextWeek(currentCalendar);
 
             // Assert
-            expect(result.startWeekOnMonday).toBe(true);
+            expect(result.weekDays).toEqual(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
             expect(result.month).toEqual(expectedMonth);
             expect(result.quarter).toEqual(expectedQuarter);
             expect(result.year).toEqual(expectedYear);
-            expect(result.weeks).toEqual(getNextWeek);
+            expect(result.weeks).toEqual(nextWeek);
             expect(result.today).toBeNull();
         });
 
@@ -250,12 +297,31 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getNextWeek(currentCalendar);
 
             // Assert
-            expect(result.startWeekOnMonday).toBe(false);
+            expect(result.weekDays).toEqual(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']);
             expect(result.month).toEqual(expectedMonth);
             expect(result.quarter).toEqual(expectedQuarter);
             expect(result.year).toEqual(expectedYear);
-            expect(result.weeks).toEqual(getNextWeek);
+            expect(result.weeks).toEqual(nextWeek);
             expect(result.today).toEqual(today);
+        });
+
+        it('should allow any day of the week to be the first day of the week', () => {
+            // Arrange
+            weekDays.forEach((days, firstDayOfWeek) => {
+                const settings = <PluginSettings>{ ...DEFAULT_PLUGIN_SETTINGS, generalSettings: { ...DEFAULT_GENERAL_SETTINGS, firstDayOfWeek: firstDayOfWeek }};
+
+                // Act
+                viewModel.initialize(settings, today);
+                const result = viewModel.getNextWeek(currentCalendar);
+
+                // Assert
+                expect(result.weekDays).toEqual(days);
+                expect(result.month).toEqual(expectedMonth);
+                expect(result.quarter).toEqual(expectedQuarter);
+                expect(result.year).toEqual(expectedYear);
+                expect(result.weeks).toEqual(nextWeek);
+                expect(result.today).toEqual(today);
+            });
         });
     });
 
@@ -297,7 +363,7 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getPreviousMonth(currentCalendar);
 
             // Assert
-            expect(result.startWeekOnMonday).toBe(true);
+            expect(result.weekDays).toEqual(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
             expect(result.month).toEqual(expectedMonth);
             expect(result.quarter).toEqual(expectedQuarter);
             expect(result.year).toEqual(expectedYear);
@@ -314,12 +380,31 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getPreviousMonth(currentCalendar);
 
             // Assert
-            expect(result.startWeekOnMonday).toBe(false);
+            expect(result.weekDays).toEqual(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']);
             expect(result.month).toEqual(expectedMonth);
             expect(result.quarter).toEqual(expectedQuarter);
             expect(result.year).toEqual(expectedYear);
             expect(result.weeks).toEqual(previousMonth);
             expect(result.today).toEqual(today);
+        });
+
+        it('should allow any day of the week to be the first day of the week', () => {
+            // Arrange
+            weekDays.forEach((days, firstDayOfWeek) => {
+                const settings = <PluginSettings>{ ...DEFAULT_PLUGIN_SETTINGS, generalSettings: { ...DEFAULT_GENERAL_SETTINGS, firstDayOfWeek: firstDayOfWeek }};
+
+                // Act
+                viewModel.initialize(settings, today);
+                const result = viewModel.getPreviousMonth(currentCalendar);
+
+                // Assert
+                expect(result.weekDays).toEqual(days);
+                expect(result.month).toEqual(expectedMonth);
+                expect(result.quarter).toEqual(expectedQuarter);
+                expect(result.year).toEqual(expectedYear);
+                expect(result.weeks).toEqual(previousMonth);
+                expect(result.today).toEqual(today);
+            });
         });
     });
 
@@ -356,12 +441,12 @@ describe('DefaultCalendarViewModel', () => {
             when(calendarService.getYearForWeeks).calledWith(nextMonth).mockReturnValue(expectedYear);
         });
 
-        it('should use the default settings for the startWeekOnMonday and today should be null when the view model is not initialized', async () => {
+        it('should use the default settings for the first day of the week and today should be null when the view model is not initialized', async () => {
             // Act
             const result = viewModel.getNextMonth(currentCalendar);
 
             // Assert
-            expect(result.startWeekOnMonday).toBe(true);
+            expect(result.weekDays).toEqual(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
             expect(result.month).toEqual(expectedMonth);
             expect(result.quarter).toEqual(expectedQuarter);
             expect(result.year).toEqual(expectedYear);
@@ -369,21 +454,23 @@ describe('DefaultCalendarViewModel', () => {
             expect(result.today).toBeNull();
         });
 
-        it('should use the custom settings for the startWeekOnMonday and today should not be null when the view model is initialized', async () => {
+        it('should allow any day of the week to be the first day of the week', () => {
             // Arrange
-            const settings = <PluginSettings>{ ...DEFAULT_PLUGIN_SETTINGS, generalSettings: { ...DEFAULT_GENERAL_SETTINGS, firstDayOfWeek: DayOfWeek.Sunday }};
+            weekDays.forEach((days, firstDayOfWeek) => {
+                const settings = <PluginSettings>{ ...DEFAULT_PLUGIN_SETTINGS, generalSettings: { ...DEFAULT_GENERAL_SETTINGS, firstDayOfWeek: firstDayOfWeek }};
 
-            // Act
-            viewModel.initialize(settings, today);
-            const result = viewModel.getNextMonth(currentCalendar);
+                // Act
+                viewModel.initialize(settings, today);
+                const result = viewModel.getNextMonth(currentCalendar);
 
-            // Assert
-            expect(result.startWeekOnMonday).toBe(false);
-            expect(result.month).toEqual(expectedMonth);
-            expect(result.quarter).toEqual(expectedQuarter);
-            expect(result.year).toEqual(expectedYear);
-            expect(result.weeks).toEqual(nextMonth);
-            expect(result.today).toEqual(today);
+                // Assert
+                expect(result.weekDays).toEqual(days);
+                expect(result.month).toEqual(expectedMonth);
+                expect(result.quarter).toEqual(expectedQuarter);
+                expect(result.year).toEqual(expectedYear);
+                expect(result.weeks).toEqual(nextMonth);
+                expect(result.today).toEqual(today);
+            });
         });
     });
 });

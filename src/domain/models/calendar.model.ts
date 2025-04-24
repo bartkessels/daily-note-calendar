@@ -3,6 +3,7 @@ import {Week} from 'src/domain/models/week';
 
 export interface Calendar {
     startWeekOnMonday: boolean;
+    weekDays: string[];
     month: Period;
     quarter: Period;
     year: Period;

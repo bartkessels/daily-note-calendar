@@ -84,14 +84,8 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
                     <th className="quarter">
                         <QuarterlyNoteComponent quarter={calendar.quarter} />
                     </th>
-                    {!calendar.startWeekOnMonday && <th>Sun</th>}
-                    <th>Mon</th>
-                    <th>Tue</th>
-                    <th>Wed</th>
-                    <th>Thu</th>
-                    <th>Fri</th>
-                    <th>Sat</th>
-                    {calendar.startWeekOnMonday && <th>Sun</th>}
+
+                    {calendar.weekDays.map((day, index) => <th key={index}>{day}</th>)}
                 </tr>
                 </thead>
                 <tbody>
