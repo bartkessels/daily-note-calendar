@@ -34,9 +34,7 @@ export abstract class SettingsView {
             .setDesc(model.description)
             .addToggle(component => component
                 .setValue(model.value)
-                .onChange((value) => {
-                    onChange(value).then(this.onSettingsChange);
-                })
+                .onChange((value) => onChange(value).then(this.onSettingsChange))
             );
     }
 
@@ -47,9 +45,7 @@ export abstract class SettingsView {
             .addText(component => component
                 .setPlaceholder(model.placeholder)
                 .setValue(model.value)
-                .onChange((value) => {
-                    onChange(value).then(this.onSettingsChange);
-                })
+                .onChange((value) => onChange(value).then(this.onSettingsChange))
             );
     }
 
@@ -66,10 +62,7 @@ export abstract class SettingsView {
             .addDropdown(component => component
                 .addOptions(Object.fromEntries(options))
                 .setValue(activeOption)
-                .onChange((value) => {
-                    console.log(value);
-                    onChange(value).then(this.onSettingsChange);
-                })
+                .onChange((value) => onChange(value).then(this.onSettingsChange))
             );
     }
 

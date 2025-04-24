@@ -63,21 +63,20 @@ export class GeneralSettingsView extends SettingsView {
 
     private addStartDayOfWeekSetting(value: DayOfWeek, onValueChange: (value: DayOfWeek) => Promise<void>): void {
         const options = new Map<string, string>();
-        options.set('sunday', this.dayOfWeekName(DayOfWeek.Sunday));
         options.set('monday', this.dayOfWeekName(DayOfWeek.Monday));
+        options.set('tuesday', this.dayOfWeekName(DayOfWeek.Tuesday));
+        options.set('wednesday', this.dayOfWeekName(DayOfWeek.Wednesday));
+        options.set('thursday', this.dayOfWeekName(DayOfWeek.Thursday));
+        options.set('friday', this.dayOfWeekName(DayOfWeek.Friday));
+        options.set('saturday', this.dayOfWeekName(DayOfWeek.Saturday));
+        options.set('sunday', this.dayOfWeekName(DayOfWeek.Sunday));
 
         this.addDropdownSetting(
             'First day of the week',
             'Set the first day of the week for the calendar.',
             options,
             this.dayOfWeekName(value).toLowerCase(),
-            async (value) => {
-                if (value.toLowerCase() === 'sunday') {
-                    return await onValueChange(DayOfWeek.Sunday);
-                } else {
-                    return await onValueChange(DayOfWeek.Monday);
-                }
-            }
+            async (value) => await onValueChange(this.dayOfWeek(value))
         );
     }
 
@@ -127,6 +126,25 @@ export class GeneralSettingsView extends SettingsView {
                 return 'Saturday';
             case DayOfWeek.Sunday:
                 return 'Sunday';
+        }
+    }
+
+    private dayOfWeek(name: string): DayOfWeek {
+        switch (name.toLowerCase()) {
+            case 'monday':
+                return DayOfWeek.Monday;
+            case 'tuesday':
+                return DayOfWeek.Tuesday;
+            case 'wednesday':
+                return DayOfWeek.Wednesday;
+            case 'thursday':
+                return DayOfWeek.Thursday;
+            case 'friday':
+                return DayOfWeek.Friday;
+            case 'saturday':
+                return DayOfWeek.Saturday;
+            default:
+                return DayOfWeek.Sunday;
         }
     }
 
