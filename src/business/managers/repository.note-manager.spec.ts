@@ -243,7 +243,7 @@ describe('RepositoryNoteManager', () => {
             expect(result).toEqual([]);
         });
 
-        it('should return the notes in ascending order when the setting is set to Ascending', async () => {
+        it('should return the notes in ascending order when the setting is set to Ascending based on the created date', async () => {
             // Arrange
             const firstNote = <Note>{
                 createdOn: <Period>{
@@ -276,7 +276,7 @@ describe('RepositoryNoteManager', () => {
                 properties: new Map<string, string>()
             };
 
-            const settings = {...DEFAULT_DISPLAY_NOTES_SETTINGS, sortNotes: SortNotes.Ascending};
+            const settings = {...DEFAULT_DISPLAY_NOTES_SETTINGS, useCreatedOnDateFromProperties: false, sortNotes: SortNotes.Ascending};
             when(displayNoteSettingsRepository.get).mockResolvedValue(settings);
             when(noteRepository.getNotes).mockResolvedValue([thirdNote, firstNote, secondNote]);
 
@@ -287,7 +287,7 @@ describe('RepositoryNoteManager', () => {
             expect(result).toEqual([firstNote, secondNote, thirdNote]);
         });
 
-        it('should return the notes in descending order when the setting is set to Descending', async () => {
+        it('should return the notes in descending order when the setting is set to Descending based on the created date', async () => {
             // Arrange
             const firstNote = <Note>{
                 createdOn: <Period>{
@@ -320,7 +320,137 @@ describe('RepositoryNoteManager', () => {
                 properties: new Map<string, string>()
             };
 
-            const settings = {...DEFAULT_DISPLAY_NOTES_SETTINGS, sortNotes: SortNotes.Descending};
+            const settings = {...DEFAULT_DISPLAY_NOTES_SETTINGS, useCreatedOnDateFromProperties: false, sortNotes: SortNotes.Descending};
+            when(displayNoteSettingsRepository.get).mockResolvedValue(settings);
+            when(noteRepository.getNotes).mockResolvedValue([thirdNote, firstNote, secondNote]);
+
+            // Act
+            const result = await manager.getNotesForPeriod(period);
+
+            // Assert
+            expect(result).toEqual([thirdNote, secondNote, firstNote]);
+        });
+
+        it('should return the notes in ascending order when the setting is set to Ascending based on the created property', async () => {
+            // Arrange
+            const firstNote = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 5),
+                    name: '3',
+                    type: PeriodType.Day
+                },
+                createdOnProperty: <Period>{
+                    date: new Date(2023, 9, 2),
+                    name: '2',
+                    type: PeriodType.Day
+                },
+                name: 'first note',
+                path: 'path/to/first-note.md',
+                properties: new Map<string, string>()
+            };
+            const secondNote = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 4),
+                    name: '4',
+                    type: PeriodType.Day
+                },
+                createdOnProperty: <Period>{
+                    date: new Date(2023, 9, 3),
+                    name: '3',
+                    type: PeriodType.Day
+                },
+                name: 'second note',
+                path: 'path/to/second-note.md',
+                properties: new Map<string, string>()
+            };
+            const thirdNote = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 7),
+                    name: '7',
+                    type: PeriodType.Day
+                },
+                createdOnProperty: <Period>{
+                    date: new Date(2023, 9, 4),
+                    name: '4',
+                    type: PeriodType.Day
+                },
+                name: 'third note',
+                path: 'path/to/third-note.md',
+                properties: new Map<string, string>()
+            };
+
+            const settings = {
+                ...DEFAULT_DISPLAY_NOTES_SETTINGS,
+                createdOnDatePropertyName: 'created_on',
+                createdOnPropertyFormat: 'yyyy-MM-dd',
+                useCreatedOnDateFromProperties: true,
+                sortNotes: SortNotes.Ascending
+            };
+            when(displayNoteSettingsRepository.get).mockResolvedValue(settings);
+            when(noteRepository.getNotes).mockResolvedValue([thirdNote, firstNote, secondNote]);
+
+            // Act
+            const result = await manager.getNotesForPeriod(period);
+
+            // Assert
+            expect(result).toEqual([firstNote, secondNote, thirdNote]);
+        });
+
+        it('should return the notes in ascending order when the setting is set to Descending based on the created property', async () => {
+            // Arrange
+            const firstNote = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 5),
+                    name: '3',
+                    type: PeriodType.Day
+                },
+                createdOnProperty: <Period>{
+                    date: new Date(2023, 9, 4),
+                    name: '4',
+                    type: PeriodType.Day
+                },
+                name: 'first note',
+                path: 'path/to/first-note.md',
+                properties: new Map<string, string>()
+            };
+            const secondNote = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 4),
+                    name: '4',
+                    type: PeriodType.Day
+                },
+                createdOnProperty: <Period>{
+                    date: new Date(2023, 9, 3),
+                    name: '3',
+                    type: PeriodType.Day
+                },
+                name: 'second note',
+                path: 'path/to/second-note.md',
+                properties: new Map<string, string>()
+            };
+            const thirdNote = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 7),
+                    name: '7',
+                    type: PeriodType.Day
+                },
+                createdOnProperty: <Period>{
+                    date: new Date(2023, 9, 2),
+                    name: '2',
+                    type: PeriodType.Day
+                },
+                name: 'third note',
+                path: 'path/to/third-note.md',
+                properties: new Map<string, string>()
+            };
+
+            const settings = {
+                ...DEFAULT_DISPLAY_NOTES_SETTINGS,
+                createdOnDatePropertyName: 'created_on',
+                createdOnPropertyFormat: 'yyyy-MM-dd',
+                useCreatedOnDateFromProperties: true,
+                sortNotes: SortNotes.Ascending
+            };
             when(displayNoteSettingsRepository.get).mockResolvedValue(settings);
             when(noteRepository.getNotes).mockResolvedValue([thirdNote, firstNote, secondNote]);
 
