@@ -1,10 +1,12 @@
 import {RepositoryNoteManager} from 'src/business/managers/repository.note-manager';
 import {
+    mockDateRepository,
     mockDisplayNoteSettingsRepository,
     mockFileRepository, mockGeneralSettingsRepository,
     mockNoteRepository
 } from 'src/test-helpers/repository.mocks';
 import {
+    mockDateRepositoryFactory,
     mockFileRepositoryFactory,
     mockNoteRepositoryFactory, mockSettingsRepositoryFactory,
 } from 'src/test-helpers/factory.mocks';
@@ -19,6 +21,7 @@ describe('RepositoryNoteManager', () => {
     let manager: RepositoryNoteManager;
     const fileRepository = mockFileRepository;
     const noteRepository = mockNoteRepository;
+    const dateRepository = mockDateRepository;
     const generalSettingsRepository = mockGeneralSettingsRepository;
     const displayNoteSettingsRepository = mockDisplayNoteSettingsRepository;
     const note = <Note>{
@@ -34,11 +37,13 @@ describe('RepositoryNoteManager', () => {
     beforeEach(() => {
         const fileRepositoryFactory = mockFileRepositoryFactory(fileRepository);
         const noteRepositoryFactory = mockNoteRepositoryFactory(noteRepository);
+        const dateRepositoryFactory = mockDateRepositoryFactory(dateRepository);
         const settingsRepositoryFactory = mockSettingsRepositoryFactory(displayNoteSettingsRepository);
 
         manager = new RepositoryNoteManager(
             fileRepositoryFactory,
             noteRepositoryFactory,
+            dateRepositoryFactory,
             settingsRepositoryFactory
         );
 
