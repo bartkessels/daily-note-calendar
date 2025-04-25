@@ -6,6 +6,7 @@ import {DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
 import {GeneralSettings} from 'src/domain/settings/general.settings';
 import {PluginSettings} from 'src/domain/settings/plugin.settings';
 import {DateRepository} from 'src/infrastructure/contracts/date-repository';
+import {jest} from '@jest/globals';
 
 export const mockFileRepository = {
     exists: jest.fn(),
@@ -32,7 +33,8 @@ export const mockDateRepository = {
     getMonthFromDate: jest.fn(),
     getPreviousMonth: jest.fn(),
     getNextMonth: jest.fn(),
-    getQuarter: jest.fn()
+    getQuarter: jest.fn(),
+    getDaysForPeriod: jest.fn()
 } as jest.Mocked<DateRepository>;
 
 export const mockPeriodicNoteSettingsRepository = {

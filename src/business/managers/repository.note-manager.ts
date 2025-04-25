@@ -47,12 +47,12 @@ export class RepositoryNoteManager implements NoteManager {
 
     public async getNotesForPeriod(period: Period): Promise<Note[]> {
         const generalSettings = await this.getGeneralSettings();
-        const displayNotesSettings = await this.getDisplayNoteSettings();
 
         if (!generalSettings.displayNotesCreatedOnDate) {
             return [];
         }
 
+        const displayNotesSettings = await this.getDisplayNoteSettings();
         const periods = this.dateRepositoryFactory.getRepository().getDaysForPeriod(generalSettings.firstDayOfWeek, period);
         const notes = await Promise.all(periods.map(async period => await this.getNotesForDay(period, displayNotesSettings)));
 

@@ -61,7 +61,7 @@ describe('RepositoryNoteManager', () => {
     describe('openNote', () => {
         it('should open the note when it does exist', async () => {
             // Arrange
-            when(fileRepository.exists).calledWith(note.path).mockResolvedValue(true);
+            when(fileRepository.exists).calledWith(note.path).mockReturnValue(true);
 
             // Act
             await manager.openNote(note);
@@ -72,7 +72,7 @@ describe('RepositoryNoteManager', () => {
 
         it('should not open the file when it does not exist', async () => {
             // Arrange
-            when(fileRepository.exists).calledWith(note.path).mockResolvedValue(false);
+            when(fileRepository.exists).calledWith(note.path).mockReturnValue(false);
 
             // Act
             await manager.openNote(note);
@@ -85,7 +85,7 @@ describe('RepositoryNoteManager', () => {
     describe('openNoteInHorizontalSplit', () => {
         it('should open the note when it does exist', async () => {
             // Arrange
-            when(fileRepository.exists).calledWith(note.path).mockResolvedValue(true);
+            when(fileRepository.exists).calledWith(note.path).mockReturnValue(true);
 
             // Act
             await manager.openNoteInHorizontalSplitView(note);
@@ -96,7 +96,7 @@ describe('RepositoryNoteManager', () => {
 
         it('should not open the file when it does not exist', async () => {
             // Arrange
-            when(fileRepository.exists).calledWith(note.path).mockResolvedValue(false);
+            when(fileRepository.exists).calledWith(note.path).mockReturnValue(false);
 
             // Act
             await manager.openNoteInHorizontalSplitView(note);
@@ -109,7 +109,7 @@ describe('RepositoryNoteManager', () => {
     describe('openNoteInVerticalSplit', () => {
         it('should open the note when it does exist', async () => {
             // Arrange
-            when(fileRepository.exists).calledWith(note.path).mockResolvedValue(true);
+            when(fileRepository.exists).calledWith(note.path).mockReturnValue(true);
 
             // Act
             await manager.openNoteInVerticalSplitView(note);
@@ -120,7 +120,7 @@ describe('RepositoryNoteManager', () => {
 
         it('should not open the file when it does not exist', async () => {
             // Arrange
-            when(fileRepository.exists).calledWith(note.path).mockResolvedValue(false);
+            when(fileRepository.exists).calledWith(note.path).mockReturnValue(false);
 
             // Act
             await manager.openNoteInVerticalSplitView(note);
@@ -155,7 +155,7 @@ describe('RepositoryNoteManager', () => {
         };
 
         beforeEach(() => {
-            when(generalSettingsRepository.get).mockResolvedValue(<GeneralSettings> {
+            when(generalSettingsRepository.get).mockReturnValue(<GeneralSettings> {
                 ...DEFAULT_GENERAL_SETTINGS,
                 displayNotesCreatedOnDate: true
             });
@@ -172,7 +172,7 @@ describe('RepositoryNoteManager', () => {
                 displayNotesCreatedOnDate: false
             };
 
-            when(generalSettingsRepository.get).mockResolvedValue(generalSettings);
+            when(generalSettingsRepository.get).mockReturnValue(generalSettings);
 
             // Act
             const result = await manager.getNotesForPeriod(period);
@@ -189,7 +189,8 @@ describe('RepositoryNoteManager', () => {
                 ...DEFAULT_DISPLAY_NOTES_SETTINGS,
                 useCreatedOnDateFromProperties: true
             };
-            when(displayNoteSettingsRepository.get).mockResolvedValue(settings);
+            when(dateRepository.getDaysForPeriod).mockReturnValue([period]);
+            when(displayNoteSettingsRepository.get).mockReturnValue(settings);
             when(noteRepository.getNotes).mockImplementation((filterFn) => {
                 return Promise.resolve([noteWithCreatedOnProperty, noteWithoutCreatedOnProperty].filter(filterFn));
             });
@@ -207,7 +208,8 @@ describe('RepositoryNoteManager', () => {
                 ...DEFAULT_DISPLAY_NOTES_SETTINGS,
                 useCreatedOnDateFromProperties: true
             };
-            when(displayNoteSettingsRepository.get).mockResolvedValue(settings);
+            when(dateRepository.getDaysForPeriod).mockReturnValue([period]);
+            when(displayNoteSettingsRepository.get).mockReturnValue(settings);
             when(noteRepository.getNotes).mockImplementation((filterFn) => {
                 return Promise.resolve([noteWithoutCreatedOnProperty].filter(filterFn));
             });
@@ -225,7 +227,8 @@ describe('RepositoryNoteManager', () => {
                 ...DEFAULT_DISPLAY_NOTES_SETTINGS,
                 useCreatedOnDateFromProperties: false
             };
-            when(displayNoteSettingsRepository.get).mockResolvedValue(settings);
+            when(dateRepository.getDaysForPeriod).mockReturnValue([noteWithoutCreatedOnProperty.createdOn]);
+            when(displayNoteSettingsRepository.get).mockReturnValue(settings);
             when(noteRepository.getNotes).mockImplementation((filterFn) => {
                 return Promise.resolve([noteWithCreatedOnProperty, noteWithoutCreatedOnProperty].filter(filterFn));
             });
@@ -239,7 +242,8 @@ describe('RepositoryNoteManager', () => {
 
         it('should return an empty list when the adapter repository returns an empty list', async () => {
             // Arrange
-            when(noteRepository.getNotes).mockResolvedValue([]);
+            when(dateRepository.getDaysForPeriod).mockReturnValue([period]);
+            when(noteRepository.getNotes).mockReturnValue([]);
 
             // Act
             const result = await manager.getNotesForPeriod(period);
@@ -282,8 +286,9 @@ describe('RepositoryNoteManager', () => {
             };
 
             const settings = {...DEFAULT_DISPLAY_NOTES_SETTINGS, useCreatedOnDateFromProperties: false, sortNotes: SortNotes.Ascending};
-            when(displayNoteSettingsRepository.get).mockResolvedValue(settings);
-            when(noteRepository.getNotes).mockResolvedValue([thirdNote, firstNote, secondNote]);
+            when(dateRepository.getDaysForPeriod).mockReturnValue([period]);
+            when(displayNoteSettingsRepository.get).mockReturnValue(settings);
+            when(noteRepository.getNotes).mockReturnValue([thirdNote, firstNote, secondNote]);
 
             // Act
             const result = await manager.getNotesForPeriod(period);
@@ -326,8 +331,9 @@ describe('RepositoryNoteManager', () => {
             };
 
             const settings = {...DEFAULT_DISPLAY_NOTES_SETTINGS, useCreatedOnDateFromProperties: false, sortNotes: SortNotes.Descending};
-            when(displayNoteSettingsRepository.get).mockResolvedValue(settings);
-            when(noteRepository.getNotes).mockResolvedValue([thirdNote, firstNote, secondNote]);
+            when(dateRepository.getDaysForPeriod).mockReturnValue([period]);
+            when(displayNoteSettingsRepository.get).mockReturnValue(settings);
+            when(noteRepository.getNotes).mockReturnValue([thirdNote, firstNote, secondNote]);
 
             // Act
             const result = await manager.getNotesForPeriod(period);
@@ -391,8 +397,9 @@ describe('RepositoryNoteManager', () => {
                 useCreatedOnDateFromProperties: true,
                 sortNotes: SortNotes.Ascending
             };
-            when(displayNoteSettingsRepository.get).mockResolvedValue(settings);
-            when(noteRepository.getNotes).mockResolvedValue([thirdNote, firstNote, secondNote]);
+            when(dateRepository.getDaysForPeriod).mockReturnValue([period]);
+            when(displayNoteSettingsRepository.get).mockReturnValue(settings);
+            when(noteRepository.getNotes).mockReturnValue([thirdNote, firstNote, secondNote]);
 
             // Act
             const result = await manager.getNotesForPeriod(period);
@@ -456,8 +463,9 @@ describe('RepositoryNoteManager', () => {
                 useCreatedOnDateFromProperties: true,
                 sortNotes: SortNotes.Ascending
             };
-            when(displayNoteSettingsRepository.get).mockResolvedValue(settings);
-            when(noteRepository.getNotes).mockResolvedValue([thirdNote, firstNote, secondNote]);
+            when(dateRepository.getDaysForPeriod).mockReturnValue([period]);
+            when(displayNoteSettingsRepository.get).mockReturnValue(settings);
+            when(noteRepository.getNotes).mockReturnValue([thirdNote, firstNote, secondNote]);
 
             // Act
             const result = await manager.getNotesForPeriod(period);
@@ -470,7 +478,7 @@ describe('RepositoryNoteManager', () => {
     describe('deleteNote', () => {
         it('should delete the note when it does exist', async () => {
             // Arrange
-            when(fileRepository.exists).calledWith(note.path).mockResolvedValue(true);
+            when(fileRepository.exists).calledWith(note.path).mockReturnValue(true);
 
             // Act
             await manager.deleteNote(note);
@@ -481,7 +489,7 @@ describe('RepositoryNoteManager', () => {
 
         it('should not delete the file when it does not exist', async () => {
             // Arrange
-            when(fileRepository.exists).calledWith(note.path).mockResolvedValue(false);
+            when(fileRepository.exists).calledWith(note.path).mockReturnValue(false);
 
             // Act
             await manager.deleteNote(note);
@@ -494,7 +502,7 @@ describe('RepositoryNoteManager', () => {
     describe('getActiveNote', () => {
         it('should return the active note from the repository', async () => {
             // Arrange
-            when(noteRepository.getActiveNote).mockResolvedValue(note);
+            when(noteRepository.getActiveNote).mockReturnValue(note);
 
             // Act
             const result = await manager.getActiveNote();
