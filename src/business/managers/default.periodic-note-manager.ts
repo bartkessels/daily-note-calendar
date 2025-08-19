@@ -27,13 +27,13 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
         const fileRepository = this.fileRepositoryFactory.getRepository();
         const filePath = this.getFilePath(period, settings);
         const fileExists = await this.doesNoteExist(settings, period);
+        const templateFileExists = await fileRepository.exists(settings.templateFile);
 
-        if (!fileExists) {
-            const createdFilePath = await fileRepository.create(filePath, settings.templateFile);
-            const contents = await fileRepository.readContents(createdFilePath);
-            const parsedContent = await this.parseVariables(contents, period);
+        if (!fileExists && templateFileExists) {
+            const template = await fileRepository.readContents(settings.templateFile);
+            const parsedContent = await this.parseVariables(template, period);
 
-            await fileRepository.writeContents(createdFilePath, parsedContent);
+            await fileRepository.create(filePath, parsedContent);
         }
     }
 

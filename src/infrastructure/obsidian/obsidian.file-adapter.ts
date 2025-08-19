@@ -15,18 +15,9 @@ export class ObsidianFileAdapter implements FileAdapter {
         return file instanceof TFile;
     }
 
-    public async createFileFromTemplate(path: string, templateFilePath: string): Promise<string> {
-        const normalizedFilePath = this.normalizePath(path);
-        const normalizedTemplateFilePath = this.normalizePath(templateFilePath ?? '');
-        const templateFileContents = await this.readContents(normalizedTemplateFilePath);
-        const file = await this.plugin.app.vault.create(normalizedFilePath, templateFileContents);
-
-        return file.path;
-    }
-
-    public async createFile(path: string): Promise<string> {
+    public async createFile(path: string, content: string | null = null): Promise<string> {
         const normalizedPath = this.normalizePath(path);
-        const file = await this.plugin.app.vault.create(normalizedPath, '');
+        const file = await this.plugin.app.vault.create(normalizedPath, content ?? '');
 
         return file.path;
     }
@@ -50,11 +41,6 @@ export class ObsidianFileAdapter implements FileAdapter {
         }
 
         return '';
-    }
-
-    public async writeContents(path: string, contents: string): Promise<void> {
-        const normalizedPath = this.normalizePath(path);
-        await this.plugin.app.vault.adapter.write(normalizedPath, contents);
     }
 
     public async openInCurrentTab(path: string): Promise<void> {

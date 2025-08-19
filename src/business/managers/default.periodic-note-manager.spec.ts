@@ -17,6 +17,7 @@ import {
     mockVariableParserFactory
 } from 'src/test-helpers/factory.mocks';
 import {mockDailyNoteSettings, mockPeriod} from 'src/test-helpers/model.mocks';
+import any = jasmine.any;
 
 describe('DefaultPeriodicNoteManager', () => {
     let manager: DefaultPeriodicNoteManager;
@@ -87,13 +88,21 @@ describe('DefaultPeriodicNoteManager', () => {
     describe('createNote', () => {
         it('should create a new note when the file does not exist', async () => {
             // Arrange
+            const template = '# Daily note';
+
+            when(fileRepository.readContents).calledWith(dailyNoteSettings.templateFile).mockResolvedValue(template);
             when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(false);
+            when(fileRepository.exists).calledWith(dailyNoteSettings.templateFile).mockResolvedValue(true);
+
+            when(periodVariableParser.parseVariables).mockReturnValue(template);
+            when(todayVariableParser.parseVariables).mockReturnValue(template);
+            when(titleVariableParser.parseVariables).mockReturnValue(template);
 
             // Act
             await manager.createNote(dailyNoteSettings, period);
 
             // Assert
-            expect(fileRepository.create).toHaveBeenCalledWith(completeFilePath, dailyNoteSettings.templateFile);
+            expect(fileRepository.create).toHaveBeenCalledWith(completeFilePath, template);
         });
 
         it('should parse the variables when the file does not exist', async () => {
@@ -108,8 +117,10 @@ describe('DefaultPeriodicNoteManager', () => {
             };
 
             when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(false);
+            when(fileRepository.exists).calledWith(dailyNoteSettings.templateFile).mockResolvedValue(true);
+
             when(fileRepository.create).mockResolvedValue(completeFilePath);
-            when(fileRepository.readContents).calledWith(completeFilePath).mockResolvedValue(fileContent);
+            when(fileRepository.readContents).calledWith(dailyNoteSettings.templateFile).mockResolvedValue(fileContent);
             when(noteRepository.getActiveNote).mockResolvedValue(activeNote);
 
             when(titleVariableParser.parseVariables).mockReturnValue(fileContent);
