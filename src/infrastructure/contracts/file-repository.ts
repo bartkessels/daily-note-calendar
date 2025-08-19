@@ -1,6 +1,6 @@
 export interface FileRepository {
     exists(filePath: string): Promise<boolean>;
-    create(path: string, templateFilePath?: string | null): Promise<string>;
+    create(path: string, content: string | null): Promise<string>;
     readContents(path: string): Promise<string>;
     openInCurrentTab(path: string): Promise<void>;
     openInHorizontalSplitView(path: string): Promise<void>;
