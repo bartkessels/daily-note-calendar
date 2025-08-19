@@ -45,13 +45,12 @@ describe('AdapterFileRepository', () => {
         it('should return the complete file path for the file when it is created', async () => {
             // Arrange
             const filePath = 'daily-notes/2021-01-01.md';
-            const templateFilePath = 'templates/daily-notes.md';
+            const content = 'templates/daily-notes.md';
 
-            when(fileAdapter.exists).calledWith(templateFilePath).mockResolvedValue(true);
-            when(fileAdapter.createFileFromTemplate).calledWith(filePath, templateFilePath).mockResolvedValue(filePath);
+            when(fileAdapter.createFile).calledWith(filePath, content).mockResolvedValue(filePath);
 
             // Act
-            const result = await repository.create(filePath, templateFilePath);
+            const result = await repository.create(filePath, content);
 
             // Assert
             expect(result).toBe(filePath);
@@ -60,48 +59,28 @@ describe('AdapterFileRepository', () => {
         it('should create the folder for the file', async () => {
             // Arrange
             const filePath = 'daily-notes/2021-01-01.md';
-            const templateFilePath = 'templates/daily-notes.md';
-
-            when(fileAdapter.exists).calledWith(templateFilePath).mockResolvedValue(true);
+            const content = '## Daily note';
 
             // Act
-            await repository.create(filePath, templateFilePath);
+            await repository.create(filePath, content);
 
             // Assert
             expect(fileAdapter.createFolder).toHaveBeenCalledWith('daily-notes');
         });
 
-        it('should create a file from a template when the template file exists', async () => {
+        it('should create a file with the specified content', async () => {
             // Arrange
             const filePath = 'daily-notes/2021-01-01.md';
-            const templateFilePath = 'templates/daily-notes.md';
-
-            when(fileAdapter.exists).calledWith(templateFilePath).mockResolvedValue(true);
+            const content = '## Daily note';
 
             // Act
-            await repository.create(filePath, templateFilePath);
+            await repository.create(filePath, content);
 
             // Assert
-            expect(fileAdapter.createFileFromTemplate).toHaveBeenCalledWith(filePath, templateFilePath);
-            expect(fileAdapter.createFile).not.toHaveBeenCalled();
+            expect(fileAdapter.createFile).toHaveBeenCalledWith(filePath, content);
         });
 
-        it('should create a file without a template when the template file does not exist', async () => {
-            // Arrange
-            const filePath = 'daily-notes/2021-01-01.md';
-            const templateFilePath = 'templates/daily-notes.md';
-
-            when(fileAdapter.exists).calledWith(templateFilePath).mockResolvedValue(false);
-
-            // Act
-            await repository.create(filePath, templateFilePath);
-
-            // Assert
-            expect(fileAdapter.createFile).toHaveBeenCalledWith(filePath);
-            expect(fileAdapter.createFileFromTemplate).not.toHaveBeenCalled();
-        });
-
-        it('should create a file without a template when the template file is null', async () => {
+        it('should create a file without contents when the content is null', async () => {
             // Arrange
             const filePath = 'daily-notes/2021-01-01.md';
 
@@ -109,20 +88,7 @@ describe('AdapterFileRepository', () => {
             await repository.create(filePath, null);
 
             // Assert
-            expect(fileAdapter.createFile).toHaveBeenCalledWith(filePath);
-            expect(fileAdapter.createFileFromTemplate).not.toHaveBeenCalled();
-        });
-
-        it('should create a file without a template when the template file is not specified', async () => {
-            // Arrange
-            const filePath = 'daily-notes/2021-01-01.md';
-
-            // Act
-            await repository.create(filePath);
-
-            // Assert
-            expect(fileAdapter.createFile).toHaveBeenCalledWith(filePath);
-            expect(fileAdapter.createFileFromTemplate).not.toHaveBeenCalled();
+            expect(fileAdapter.createFile).toHaveBeenCalledWith(filePath, null);
         });
     });
 
@@ -150,36 +116,6 @@ describe('AdapterFileRepository', () => {
             // Assert
             expect(fileAdapter.readContents).not.toHaveBeenCalled();
             expect(result).toBe('');
-        });
-    });
-
-    describe('writeContents', () => {
-        it('should call the write contents method on the adapter if the file exists', async () => {
-            // Arrange
-            const filePath = 'daily-notes/2021-01-01.md';
-            const contents = 'This is my daily note';
-
-            when(fileAdapter.exists).calledWith(filePath).mockResolvedValue(true);
-
-            // Act
-            await repository.writeContents(filePath, contents);
-
-            // Assert
-            expect(fileAdapter.writeContents).toHaveBeenCalledWith(filePath, contents);
-        });
-
-        it('should not call the write contents method on the adapter if the file does not exist', async () => {
-            // Arrange
-            const filePath = 'daily-notes/2021-01-01.md';
-            const contents = 'This is my daily note';
-
-            when(fileAdapter.exists).calledWith(filePath).mockResolvedValue(false);
-
-            // Act
-            await repository.writeContents(filePath, contents);
-
-            // Assert
-            expect(fileAdapter.writeContents).not.toHaveBeenCalled();
         });
     });
 

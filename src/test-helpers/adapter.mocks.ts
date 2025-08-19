@@ -4,11 +4,9 @@ import {SettingsAdapter} from 'src/infrastructure/adapters/settings.adapter';
 
 export const mockFileAdapter = {
     exists: jest.fn(),
-    createFileFromTemplate: jest.fn(),
     createFile: jest.fn(),
     createFolder: jest.fn(),
     readContents: jest.fn(),
-    writeContents: jest.fn(),
     openInCurrentTab: jest.fn(),
     openInHorizontalSplitView: jest.fn(),
     openInVerticalSplitView: jest.fn(),

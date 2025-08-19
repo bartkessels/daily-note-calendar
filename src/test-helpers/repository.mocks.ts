@@ -11,7 +11,6 @@ export const mockFileRepository = {
     exists: jest.fn(),
     create: jest.fn(),
     readContents: jest.fn(),
-    writeContents: jest.fn(),
     openInCurrentTab: jest.fn(),
     openInHorizontalSplitView: jest.fn(),
     openInVerticalSplitView: jest.fn(),

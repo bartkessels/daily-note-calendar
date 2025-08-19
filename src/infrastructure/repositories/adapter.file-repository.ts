@@ -12,20 +12,11 @@ export class AdapterFileRepository implements FileRepository {
         return await this.adapter.exists(filePath);
     }
 
-    public async create(path: string, templateFilePath?: string | null): Promise<string> {
+    public async create(path: string, content: string | null): Promise<string> {
         const folder = path.split('/').slice(0, -1).join('/');
-        const doesTemplateFileExist = templateFilePath ? await this.adapter.exists(templateFilePath) : false;
 
         await this.adapter.createFolder(folder);
-        let filePath = '';
-
-        if (doesTemplateFileExist && templateFilePath) {
-            filePath = await this.adapter.createFileFromTemplate(path, templateFilePath);
-        } else {
-            filePath = await this.adapter.createFile(path);
-        }
-
-        return filePath;
+        return await this.adapter.createFile(path, content);
     }
 
     public async readContents(path: string): Promise<string> {
@@ -36,14 +27,6 @@ export class AdapterFileRepository implements FileRepository {
         }
 
         return await this.adapter.readContents(path);
-    }
-
-    public async writeContents(path: string, contents: string): Promise<void> {
-        const fileExists = await this.exists(path);
-
-        if (fileExists) {
-            await this.adapter.writeContents(path, contents);
-        }
     }
 
     public async openInCurrentTab(path: string): Promise<void> {
