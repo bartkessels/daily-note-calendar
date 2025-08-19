@@ -24,6 +24,7 @@ import {
 } from 'src/presentation/command-handlers/navigate-to-next-month.command-handler';
 import {CalendarViewModel} from 'src/presentation/contracts/calendar.view-model';
 import {PeriodNoteViewModel} from 'src/presentation/contracts/period.view-model';
+import {OpenTodaysNoteCommandHandler} from 'src/presentation/command-handlers/open-todays-note.command-handler';
 
 export class DefaultCommandHandlerFactory implements CommandHandlerFactory {
     constructor(
@@ -53,11 +54,12 @@ export class DefaultCommandHandlerFactory implements CommandHandlerFactory {
                 return new NavigateToNextMonthCommandHandler(this.calendarViewModel);
             case CommandHandlerType.OpenYesterdaysNote:
                 return new OpenYesterdaysNoteCommandHandler(this.dateManagerFactory, this.dayNoteViewModel, this.calendarViewModel);
+            case CommandHandlerType.OpenTodaysNote:
+                return new OpenTodaysNoteCommandHandler(this.dateManagerFactory, this.dayNoteViewModel, this.calendarViewModel);
             case CommandHandlerType.OpenTomorrowsNote:
                 return new OpenTomorrowsNoteCommandHandler(this.dateManagerFactory, this.dayNoteViewModel, this.calendarViewModel);
             case CommandHandlerType.OpenWeeklyNote:
                 return new OpenWeeklyNoteCommandHandler(this.dateManagerFactory, this.settingsRepositoryFactory, this.weekNoteViewModel, this.calendarViewModel);
         }
     }
-
 }

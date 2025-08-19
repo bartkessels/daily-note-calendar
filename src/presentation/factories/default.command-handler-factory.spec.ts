@@ -25,6 +25,7 @@ import {
 import {OpenYesterdaysNoteCommandHandler} from 'src/presentation/command-handlers/open-yesterdays-note.command-handler';
 import {OpenTomorrowsNoteCommandHandler} from 'src/presentation/command-handlers/open-tomorrows-note.command-handler';
 import {OpenWeeklyNoteCommandHandler} from 'src/presentation/command-handlers/open-weekly-note.command-handler';
+import {OpenTodaysNoteCommandHandler} from 'src/presentation/command-handlers/open-todays-note.command-handler';
 
 describe('DefaultCommandHandlerFactory', () => {
     let factory: DefaultCommandHandlerFactory;
@@ -115,6 +116,14 @@ describe('DefaultCommandHandlerFactory', () => {
 
             // Assert
             expect(result).toBeInstanceOf(OpenYesterdaysNoteCommandHandler);
+        });
+
+        it('should return the open todays note command handler', () => {
+            // Act
+            const result = factory.getHandler(CommandHandlerType.OpenTodaysNote);
+
+            // Assert
+            expect(result).toBeInstanceOf(OpenTodaysNoteCommandHandler);
         });
 
         it('should return the open tomorrows note command handler', () => {

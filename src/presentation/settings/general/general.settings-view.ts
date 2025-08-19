@@ -76,28 +76,24 @@ export class GeneralSettingsView extends SettingsView {
             'Set the first day of the week for the calendar.',
             options,
             this.dayOfWeekName(value).toLowerCase(),
-            async (value) => await onValueChange(this.dayOfWeek(value))
+            async value => await onValueChange(this.dayOfWeek(value))
         );
     }
 
     private addWeekNumberStandardSetting(value: WeekNumberStandard, onValueChange: (value: WeekNumberStandard) => Promise<void>): void {
         const options = new Map<string, string>();
-        options.set('iso', this.weekNumberStandardName(WeekNumberStandard.ISO));
-        options.set('us', this.weekNumberStandardName(WeekNumberStandard.US));
-        const activeOption = options.keys().next(this.weekNumberStandardName(value)).value;
+        options.set(WeekNumberStandard.ISO.toString(), this.weekNumberStandardName(WeekNumberStandard.ISO));
+        options.set(WeekNumberStandard.US.toString(), this.weekNumberStandardName(WeekNumberStandard.US));
+
+        console.log(value);
+        console.log(options);
 
         this.addDropdownSetting(
             'Week number standard',
             'Set the week number standard for the calendar.',
             options,
-            activeOption,
-            async (value) => {
-                if (value.toLowerCase() === 'iso') {
-                    return await onValueChange(WeekNumberStandard.ISO);
-                } else {
-                    return await onValueChange(WeekNumberStandard.US);
-                }
-            }
+            value.toString(),
+            async value => await onValueChange(this.weekNumberStandard(value))
         );
     }
 
@@ -148,12 +144,19 @@ export class GeneralSettingsView extends SettingsView {
         }
     }
 
-    private weekNumberStandardName(standard: WeekNumberStandard): string {
-        switch (standard) {
-            case WeekNumberStandard.ISO:
-                return 'ISO 8601';
-            case WeekNumberStandard.US:
-                return 'US';
+    private weekNumberStandard(standard: string): WeekNumberStandard {
+        if (standard.toLowerCase() === WeekNumberStandard.US.toString()) {
+            return WeekNumberStandard.US;
         }
+
+        return WeekNumberStandard.ISO;
+    }
+
+    private weekNumberStandardName(standard: WeekNumberStandard): string {
+        if (standard === WeekNumberStandard.US) {
+            return 'US';
+        }
+
+        return 'ISO 8601';
     }
 }

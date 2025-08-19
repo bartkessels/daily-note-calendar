@@ -19,7 +19,6 @@ import {
 } from 'src/presentation/settings/period-notes/yearly-note.periodic-note.settings-view';
 import {DisplayNotesSettingsView} from 'src/presentation/settings/display-notes/display-notes.settings-view';
 import {GeneralSettingsView} from 'src/presentation/settings/general/general.settings-view';
-import {PluginSettings} from 'src/domain/settings/plugin.settings';
 
 export class DailyNoteCalendarPluginSettingTab extends PluginSettingTab {
     private readonly settings: SettingsView[] = [];
