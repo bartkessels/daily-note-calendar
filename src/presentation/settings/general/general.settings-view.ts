@@ -1,5 +1,5 @@
 import {SettingsView, SettingUiModel} from 'src/presentation/settings/settings-view';
-import {PluginSettingTab, Setting} from 'obsidian';
+import {PluginSettingTab} from 'obsidian';
 import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contracts/settings-repository-factory';
 import {GeneralSettings} from 'src/domain/settings/general.settings';
 import {DayOfWeek, WeekNumberStandard} from 'src/domain/models/week';
@@ -84,9 +84,6 @@ export class GeneralSettingsView extends SettingsView {
         const options = new Map<string, string>();
         options.set(WeekNumberStandard.ISO.toString(), this.weekNumberStandardName(WeekNumberStandard.ISO));
         options.set(WeekNumberStandard.US.toString(), this.weekNumberStandardName(WeekNumberStandard.US));
-
-        console.log(value);
-        console.log(options);
 
         this.addDropdownSetting(
             'Week number standard',
