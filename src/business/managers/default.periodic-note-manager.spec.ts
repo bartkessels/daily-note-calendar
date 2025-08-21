@@ -17,7 +17,6 @@ import {
     mockVariableParserFactory
 } from 'src/test-helpers/factory.mocks';
 import {mockDailyNoteSettings, mockPeriod} from 'src/test-helpers/model.mocks';
-import any = jasmine.any;
 
 describe('DefaultPeriodicNoteManager', () => {
     let manager: DefaultPeriodicNoteManager;
@@ -189,7 +188,7 @@ describe('DefaultPeriodicNoteManager', () => {
 
             // Assert
             expect(fileRepository.openInCurrentTab).not.toHaveBeenCalled();
-            await expect(result).rejects.toThrow('File does not exist');
+            await expect(result).rejects.toThrow('Could not open the note: File "daily-notes/2023-10-02.md" does not exist');
         });
     });
 
@@ -214,7 +213,7 @@ describe('DefaultPeriodicNoteManager', () => {
 
             // Assert
             expect(fileRepository.openInHorizontalSplitView).not.toHaveBeenCalled();
-            await expect(result).rejects.toThrow('File does not exist');
+            await expect(result).rejects.toThrow('Could not open the note: File "daily-notes/2023-10-02.md" does not exist');
         });
     });
 
@@ -239,7 +238,7 @@ describe('DefaultPeriodicNoteManager', () => {
 
             // Assert
             expect(fileRepository.openInVerticalSplitView).not.toHaveBeenCalled();
-            await expect(result).rejects.toThrow('File does not exist');
+            await expect(result).rejects.toThrow('Could not open the note: File "daily-notes/2023-10-02.md" does not exist');
         });
     });
 
@@ -263,7 +262,7 @@ describe('DefaultPeriodicNoteManager', () => {
             const result = manager.deleteNote(dailyNoteSettings, period);
 
             // Assert
-            await expect(result).rejects.toThrow('File does not exist');
+            await expect(result).rejects.toThrow('Could not delete the note: File "daily-notes/2023-10-02.md" does not exist');
         });
     });
 });

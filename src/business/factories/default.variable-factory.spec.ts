@@ -14,7 +14,7 @@ describe('DefaultVariableFactory', () => {
                 const result = () => factory.getVariable(value);
 
                 // Assert
-                expect(result).toThrow('Could not create a variable because the type is unknown');
+                expect(() => result()).toThrow('The variable "{{unknown}}" is not supported.');
             });
         });
 
@@ -27,7 +27,7 @@ describe('DefaultVariableFactory', () => {
                 const result = () => factory.getVariable(value);
 
                 // Assert
-                expect(result).toThrow('Could not create a variable because the template is unknown');
+                expect(() => result()).toThrow('Could not parse all variables: The variable "{{date}}" requires a template, but none was provided.');
             });
 
             it('should return the variable without calculus if it has no calculus operator', () => {
@@ -85,7 +85,7 @@ describe('DefaultVariableFactory', () => {
                 const result = () => factory.getVariable(value);
 
                 // Assert
-                expect(result).toThrow('Could not create a variable because the template is unknown');
+                expect(() => result()).toThrow('Could not parse all variables: The variable "{{today}}" requires a template, but none was provided.');
             });
 
             it('should return the variable without calculus if it has no calculus operator', () => {

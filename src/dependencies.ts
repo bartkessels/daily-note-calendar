@@ -32,6 +32,7 @@ import {YearPeriodNoteViewModel} from 'src/presentation/view-models/year.period-
 import {CalendarViewModel} from 'src/presentation/contracts/calendar.view-model';
 import {NotesViewModel} from 'src/presentation/contracts/notes.view-model';
 import {DefaultNoteService} from 'src/presentation/services/default.note-service';
+import {ObsidianMessageAdapter} from 'src/presentation/obsidian/obsidian.message-adapter';
 
 export interface Dependencies {
     calendarViewModel: CalendarViewModel;
@@ -73,13 +74,14 @@ export function getDependencies(plugin: Plugin): Dependencies {
     const calendarService = new DefaultCalendarService(dateManagerFactory);
     const periodService = new DefaultPeriodService(periodicNoteManager);
     const noteService = new DefaultNoteService(noteManagerFactory);
+    const messageAdapter = new ObsidianMessageAdapter();
 
     const calendarViewModel = new DefaultCalendarViewModel(calendarService);
-    const dailyNoteViewModel = new DayPeriodNoteViewModel(periodService);
-    const weeklyNoteViewModel = new WeekPeriodNoteViewModel(periodService);
-    const monthlyNoteViewModel = new MonthPeriodNoteViewModel(periodService);
-    const quarterlyNoteViewModel = new QuarterPeriodNoteViewModel(periodService);
-    const yearlyNoteViewModel = new YearPeriodNoteViewModel(periodService);
+    const dailyNoteViewModel = new DayPeriodNoteViewModel(periodService, messageAdapter);
+    const weeklyNoteViewModel = new WeekPeriodNoteViewModel(periodService, messageAdapter);
+    const monthlyNoteViewModel = new MonthPeriodNoteViewModel(periodService, messageAdapter);
+    const quarterlyNoteViewModel = new QuarterPeriodNoteViewModel(periodService, messageAdapter);
+    const yearlyNoteViewModel = new YearPeriodNoteViewModel(periodService, messageAdapter);
     const notesViewModel = new DefaultNotesViewModel(noteService);
 
     const commandHandlerFactory = new DefaultCommandHandlerFactory(

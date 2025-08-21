@@ -59,7 +59,7 @@ describe('PeriodNameBuilder', () => {
             const result = () => nameBuilder.withName(nameTemplate).build();
 
             // Assert
-            expect(result).toThrow('Period is required!');
+            expect(() => result()).toThrow('Could not create the note name: Period is required!');
         });
 
         it('should throw an error if the name template is not provided', () => {
@@ -67,7 +67,7 @@ describe('PeriodNameBuilder', () => {
             const result = () => nameBuilder.withValue(period).build();
 
             // Assert
-            expect(result).toThrow('Name template is required!');
+            expect(() => result()).toThrow('Could not create the note name: Name template is required!');
         });
     });
 });

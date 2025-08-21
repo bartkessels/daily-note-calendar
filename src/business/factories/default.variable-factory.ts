@@ -16,9 +16,9 @@ export class DefaultVariableFactory implements VariableFactory {
         let calculus: Calculus | null = null;
 
         if (type === undefined) {
-            throw Error('Could not create a variable because the type is unknown');
+            throw Error(`Could not parse all variables: The variable "{{${name}}}" is not supported.`);
         } else if (this.typesThatRequireTemplate.includes(type) && !template) {
-            throw Error('Could not create a variable because the template is unknown');
+            throw Error(`Could not parse all variables: The variable "{{${name}}}" requires a template, but none was provided.`);
         }
 
         if (this.typesThatSupportCalculus.includes(type)) {

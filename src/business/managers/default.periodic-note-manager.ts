@@ -43,7 +43,7 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
         const fileExists = await this.doesNoteExist(settings, period);
 
         if (!fileExists) {
-            throw new Error('File does not exist');
+            throw new Error(`Could not open the note: File "${filePath}" does not exist`);
         }
 
         await fileRepository.openInCurrentTab(filePath);
@@ -55,7 +55,7 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
         const fileExists = await this.doesNoteExist(settings, period);
 
         if (!fileExists) {
-            throw new Error('File does not exist');
+            throw new Error(`Could not open the note: File "${filePath}" does not exist`);
         }
 
         await fileRepository.openInHorizontalSplitView(filePath);
@@ -67,7 +67,7 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
         const fileExists = await this.doesNoteExist(settings, period);
 
         if (!fileExists) {
-            throw new Error('File does not exist');
+            throw new Error(`Could not open the note: File "${filePath}" does not exist`);
         }
 
         await fileRepository.openInVerticalSplitView(filePath);
@@ -79,7 +79,7 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
         const fileExists = await this.doesNoteExist(settings, period);
 
         if (!fileExists) {
-            throw new Error('File does not exist');
+            throw new Error(`Could not delete the note: File "${filePath}" does not exist`);
         }
 
         await fileRepository.delete(filePath);

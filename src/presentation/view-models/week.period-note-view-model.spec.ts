@@ -7,9 +7,11 @@ import { ModifierKey } from 'src/domain/models/modifier-key';
 import {when} from 'jest-when';
 import {Week} from 'src/domain/models/week';
 import {DEFAULT_GENERAL_SETTINGS, GeneralSettings} from 'src/domain/settings/general.settings';
+import {mockMessageAdapter} from 'src/test-helpers/adapter.mocks';
 
 describe('WeekPeriodNoteViewModel', () => {
     const periodService = mockPeriodService;
+    const messageAdapter = mockMessageAdapter;
     const period = <Week> {
         date: new Date(2023, 9, 2),
         weekNumber: 40,
@@ -20,7 +22,7 @@ describe('WeekPeriodNoteViewModel', () => {
     let viewModel: WeekPeriodNoteViewModel;
 
     beforeEach(() => {
-        viewModel = new WeekPeriodNoteViewModel(periodService);
+        viewModel = new WeekPeriodNoteViewModel(periodService, messageAdapter);
     });
 
     afterEach(() => {
@@ -196,6 +198,23 @@ describe('WeekPeriodNoteViewModel', () => {
             expect(periodService.openNoteInHorizontalSplitView)
                 .toHaveBeenCalledWith(modifierKey, period, settings.weeklyNotes);
         });
+
+        it('should show an error message if the note cannot be opened', async () => {
+            // Arrange
+            const settings = DEFAULT_PLUGIN_SETTINGS;
+            const modifierKey = ModifierKey.None;
+            const errorMessage = 'Could not open the note: File does not exist';
+
+            when(periodService.openNoteInCurrentTab)
+                .calledWith(modifierKey, period, settings.weeklyNotes)
+                .mockRejectedValue(new Error(errorMessage));
+
+            // Act
+            await viewModel.openNote(modifierKey, period);
+
+            // Assert
+            expect(messageAdapter.show).toHaveBeenCalledWith(errorMessage);
+        });
     });
 
     describe('openNoteInHorizontalSplitView', () => {
@@ -230,6 +249,23 @@ describe('WeekPeriodNoteViewModel', () => {
             expect(periodService.openNoteInHorizontalSplitView)
                 .toHaveBeenCalledWith(modifierKey, period, settings.weeklyNotes);
         });
+
+        it('should show an error message if the note cannot be opened', async () => {
+            // Arrange
+            const settings = DEFAULT_PLUGIN_SETTINGS;
+            const modifierKey = ModifierKey.Meta;
+            const errorMessage = 'Could not open the note: File does not exist';
+
+            when(periodService.openNoteInHorizontalSplitView)
+                .calledWith(modifierKey, period, settings.weeklyNotes)
+                .mockRejectedValue(new Error(errorMessage));
+
+            // Act
+            await viewModel.openNoteInHorizontalSplitView(modifierKey, period);
+
+            // Assert
+            expect(messageAdapter.show).toHaveBeenCalledWith(errorMessage);
+        });
     });
 
     describe('openNoteInVerticalSplitView', () => {
@@ -263,6 +299,23 @@ describe('WeekPeriodNoteViewModel', () => {
             // Assert
             expect(periodService.openNoteInVerticalSplitView)
                 .toHaveBeenCalledWith(modifierKey, period, settings.weeklyNotes);
+        });
+
+        it('should show an error message if the note cannot be opened', async () => {
+            // Arrange
+            const settings = DEFAULT_PLUGIN_SETTINGS;
+            const modifierKey = ModifierKey.Meta;
+            const errorMessage = 'Could not open the note: File does not exist';
+
+            when(periodService.openNoteInVerticalSplitView)
+                .calledWith(modifierKey, period, settings.weeklyNotes)
+                .mockRejectedValue(new Error(errorMessage));
+
+            // Act
+            await viewModel.openNoteInVerticalSplitView(modifierKey, period);
+
+            // Assert
+            expect(messageAdapter.show).toHaveBeenCalledWith(errorMessage);
         });
     });
 

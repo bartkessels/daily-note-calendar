@@ -73,7 +73,7 @@ export class ObsidianFileAdapter implements FileAdapter {
         const file = this.plugin.app.vault.getFileByPath(normalizedPath);
 
         if (!file) {
-            throw new Error(`File does not exist: ${normalizedPath}.`);
+            throw new Error(`Could not open the file: File does not exist: ${normalizedPath}.`);
         }
 
         return file;
