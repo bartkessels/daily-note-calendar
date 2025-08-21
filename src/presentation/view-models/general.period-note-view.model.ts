@@ -43,11 +43,13 @@ export abstract class GeneralPeriodNoteViewModel implements PeriodNoteViewModel 
     }
 
     public async openNoteInHorizontalSplitView(key: ModifierKey, period: Period): Promise<void> {
-        await this.tryOpenNote(key, period, this.periodService.openNoteInHorizontalSplitView.bind(this.periodService));
+        await this.tryOpenNote(key, period, async (key: ModifierKey, period: Period): Promise<void> =>
+            await this.periodService.openNoteInHorizontalSplitView(key, period, this.settings));
     }
 
     public async openNoteInVerticalSplitView(key: ModifierKey, period: Period): Promise<void> {
-        await this.tryOpenNote(key, period, this.periodService.openNoteInVerticalSplitView.bind(this.periodService));
+        await this.tryOpenNote(key, period, async (key: ModifierKey, period: Period): Promise<void> =>
+            await this.periodService.openNoteInVerticalSplitView(key, period, this.settings));
     }
 
     public async deleteNote(period: Period): Promise<void> {
@@ -61,7 +63,7 @@ export abstract class GeneralPeriodNoteViewModel implements PeriodNoteViewModel 
     ): Promise<void> {
         try {
             await action(key, period);
-        } catch (error) {
+        } catch (error: any) {
             if (error instanceof Error) {
                 this.messageAdapter.show(error.message);
             } else {
