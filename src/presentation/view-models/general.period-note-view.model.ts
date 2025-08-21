@@ -31,34 +31,42 @@ export abstract class GeneralPeriodNoteViewModel implements PeriodNoteViewModel 
     }
 
     public async openNote(key: ModifierKey, period: Period): Promise<void> {
-        try {
+        const openNote = async (key: ModifierKey, period: Period): Promise<void> => {
             if (key === ModifierKey.MetaAlt) {
                 await this.periodService.openNoteInHorizontalSplitView(key, period, this.settings);
             } else {
                 await this.periodService.openNoteInCurrentTab(key, period, this.settings);
             }
-        } catch (error: Error) {
-            this.messageAdapter.show(error.message);
-        }
+        };
+
+        await this.tryOpenNote(key, period, openNote);
     }
 
     public async openNoteInHorizontalSplitView(key: ModifierKey, period: Period): Promise<void> {
-        try {
-            await this.periodService.openNoteInHorizontalSplitView(key, period, this.settings);
-        } catch (error: Error) {
-            this.messageAdapter.show(error.message);
-        }
+        await this.tryOpenNote(key, period, this.periodService.openNoteInHorizontalSplitView.bind(this.periodService));
     }
 
     public async openNoteInVerticalSplitView(key: ModifierKey, period: Period): Promise<void> {
-        try {
-            await this.periodService.openNoteInVerticalSplitView(key, period, this.settings);
-        } catch (error: Error) {
-            this.messageAdapter.show(error.message);
-        }
+        await this.tryOpenNote(key, period, this.periodService.openNoteInVerticalSplitView.bind(this.periodService));
     }
 
     public async deleteNote(period: Period): Promise<void> {
         await this.periodService.deleteNote(period, this.settings);
+    }
+
+    private async tryOpenNote(
+        key: ModifierKey,
+        period: Period,
+        action: (key: ModifierKey, period: Period) => Promise<void>
+    ): Promise<void> {
+        try {
+            await action(key, period, this.settings);
+        } catch (error) {
+            if (error instanceof Error) {
+                this.messageAdapter.show(error.message);
+            } else {
+                this.messageAdapter.show(String(error));
+            }
+        }
     }
 }
