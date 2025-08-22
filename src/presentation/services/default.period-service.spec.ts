@@ -45,7 +45,7 @@ describe('DefaultPeriodService', () => {
             expect(periodicNoteManager.openNote).toHaveBeenCalledWith(settings, period);
         });
 
-        it('should only call the openNote action if settings require a modifier key and the modifier key is not pressed if the note does not exist', async () => {
+        it('should only call the openNote action if settings require a modifier key and the modifier key is not pressed if the note exists', async () => {
             // Arrange
             const key = ModifierKey.None;
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
@@ -65,7 +65,7 @@ describe('DefaultPeriodService', () => {
             expect(periodicNoteManager.openNote).toHaveBeenCalledWith(settings, period);
         });
 
-        it('should not call the openNote action if settings require a modifier key and the modifier key is not pressed if the file exists', async () => {
+        it('should not call the openNote action if settings require a modifier key and the modifier key is not pressed if the note does not exist', async () => {
             // Arrange
             const key = ModifierKey.None;
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
@@ -85,7 +85,7 @@ describe('DefaultPeriodService', () => {
             expect(periodicNoteManager.openNote).not.toHaveBeenCalled();
         });
 
-        it('should call the createNote and openNote action if the settings does not require a modifier key if the note already exists', async () => {
+        it('should call the createNote and openNote action if the settings do not require a modifier key if the note exists', async () => {
             // Arrange
             const key = ModifierKey.None;
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
@@ -105,7 +105,7 @@ describe('DefaultPeriodService', () => {
             expect(periodicNoteManager.openNote).toHaveBeenCalledWith(settings, period);
         });
 
-        it('should call the createNote and openNote action if the settings does not require a modifier key if the note doesnt exist', async () => {
+        it('should call the createNote and openNote action if the settings do not require a modifier key if the note doesnt exist', async () => {
             // Arrange
             const key = ModifierKey.None;
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
@@ -190,7 +190,7 @@ describe('DefaultPeriodService', () => {
             expect(periodicNoteManager.openNoteInHorizontalSplitView).not.toHaveBeenCalled();
         });
 
-        it('should call the createNote and openNoteInHorizontalSplitView action if the settings does not require a modifier key and the note already exists', async () => {
+        it('should call the createNote and openNoteInHorizontalSplitView action if the settings do not require a modifier key and the note already exists', async () => {
             // Arrange
             const key = ModifierKey.None;
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
@@ -210,7 +210,7 @@ describe('DefaultPeriodService', () => {
             expect(periodicNoteManager.openNoteInHorizontalSplitView).toHaveBeenCalledWith(settings, period);
         });
 
-        it('should call the createNote and openNoteInHorizontalSplitView action if the settings does not require a modifier key if the note does not exist', async () => {
+        it('should call the createNote and openNoteInHorizontalSplitView action if the settings do not require a modifier key if the note does not exist', async () => {
             // Arrange
             const key = ModifierKey.None;
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
@@ -295,7 +295,7 @@ describe('DefaultPeriodService', () => {
             expect(periodicNoteManager.openNoteInVerticalSplitView).not.toHaveBeenCalled();
         });
 
-        it('should call the createNote and openNoteInVerticalSplitView action if the settings does not require a modifier key if the note already exists', async () => {
+        it('should call the createNote and openNoteInVerticalSplitView action if the settings do not require a modifier key if the note exists', async () => {
             // Arrange
             const key = ModifierKey.None;
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
@@ -315,7 +315,7 @@ describe('DefaultPeriodService', () => {
             expect(periodicNoteManager.openNoteInVerticalSplitView).toHaveBeenCalledWith(settings, period);
         });
 
-        it('should call the createNote and openNoteInVerticalSplitView action if the settings does not require a modifier key if the note does not exist', async () => {
+        it('should call the createNote and openNoteInVerticalSplitView action if the settings do not require a modifier key if the note does not exist', async () => {
             // Arrange
             const key = ModifierKey.None;
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
@@ -324,7 +324,7 @@ describe('DefaultPeriodService', () => {
                     useModifierKeyToCreateNote: false
                 }
             };
-            when(periodicNoteManager.doesNoteExist).calledWith(settings, period).mockReturnValue(true);
+            when(periodicNoteManager.doesNoteExist).calledWith(settings, period).mockReturnValue(false);
 
             // Act
             await service.initialize(generalSettings);
