@@ -105,7 +105,7 @@ describe('DefaultPeriodService', () => {
             expect(periodicNoteManager.openNote).toHaveBeenCalledWith(settings, period);
         });
 
-        it('should call the createNote and openNote action if the settings do not require a modifier key if the note doesnt exist', async () => {
+        it('should call the createNote and openNote action if the settings do not require a modifier key if the note does not exist', async () => {
             // Arrange
             const key = ModifierKey.None;
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
