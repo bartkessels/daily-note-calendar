@@ -57,7 +57,12 @@ export class DefaultPeriodService implements PeriodService {
         if (shouldCreateNote) {
             await this.periodicNoteManager.createNote(settings, period);
             await openAction(settings, period);
-        } else {
+
+            return;
+        }
+
+        const doesNoteExists = await this.periodicNoteManager.doesNoteExist(settings, period);
+        if (doesNoteExists) {
             await openAction(settings, period);
         }
     }
