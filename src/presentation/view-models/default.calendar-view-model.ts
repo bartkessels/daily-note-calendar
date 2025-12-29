@@ -50,6 +50,11 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         return this.buildCalendar(currentWeek);
     }
 
+    public getWeekForPeriod(period: Period): Calendar {
+        const weeks = this.calendarService.getWeekForPeriod(period);
+        return this.buildCalendar(weeks);
+    }
+
     public getPreviousWeek(calendar: Calendar): Calendar {
         const previousWeek = this.calendarService.getPreviousWeek(calendar.weeks);
         return this.buildCalendar(previousWeek);

@@ -63,7 +63,7 @@ export abstract class GeneralPeriodNoteViewModel implements PeriodNoteViewModel 
     ): Promise<void> {
         try {
             await action(key, period);
-        } catch (error: any) {
+        } catch (error: unknown) {
             if (error instanceof Error) {
                 this.messageAdapter.show(error.message);
             } else {

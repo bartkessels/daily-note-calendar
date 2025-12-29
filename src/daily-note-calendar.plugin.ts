@@ -18,6 +18,7 @@ import {OpenTodaysNoteCommand} from 'src/presentation/commands/open-todays-note.
 
 export default class DailyNoteCalendarPlugin extends Plugin {
     private readonly dependencies: Dependencies = getDependencies(this);
+    private lastKnownDateString: string = '';
 
     override async onload(): Promise<void> {
         const calendarView = (leaf: WorkspaceLeaf) => new CalendarView(
@@ -47,6 +48,8 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             .getRepository<PluginSettings>(SettingsType.Plugin)
             .get();
 
+        this.lastKnownDateString = today.date.toDateString();
+
         this.dependencies.calendarViewModel.initialize(settings, today);
         this.dependencies.dailyNoteViewModel.updateSettings(settings);
         this.dependencies.weeklyNoteViewModel.updateSettings(settings);
@@ -58,9 +61,21 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     private onLayoutReady(): void {
         this.registerPlugin();
 
-        this.app.vault.on('create', () => this.dependencies.notesViewModel.updateNotes?.call(this));
-        this.app.vault.on('delete', () => this.dependencies.notesViewModel.updateNotes?.call(this));
-        this.app.vault.on('rename', () => this.dependencies.notesViewModel.updateNotes?.call(this));
+        const updateNotes = () => this.dependencies.notesViewModel.updateNotes?.();
+        this.registerEvent(this.app.vault.on('create', updateNotes));
+        this.registerEvent(this.app.vault.on('delete', updateNotes));
+        this.registerEvent(this.app.vault.on('rename', updateNotes));
+
+        this.registerDomEvent(window, 'focus', () => this.onWindowFocus());
+    }
+
+    private async onWindowFocus(): Promise<void> {
+        const currentDateString = new Date().toDateString();
+
+        if (currentDateString !== this.lastKnownDateString) {
+            await this.initializePlugin();
+            this.dependencies.calendarViewModel.navigateToCurrentWeek?.();
+        }
     }
 
     private registerPlugin(): void {
@@ -74,8 +89,9 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             this,
             this.dependencies.dateParserFactory,
             this.dependencies.settingsRepositoryFactory,
-            () => {
-                // TODO: Handle the settings change
+            async () => {
+                await this.initializePlugin();
+                this.dependencies.calendarViewModel.navigateToCurrentWeek?.();
             }
         );
         this.addSettingTab(settingsTab);

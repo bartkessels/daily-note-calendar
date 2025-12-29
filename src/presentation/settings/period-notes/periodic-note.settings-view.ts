@@ -21,11 +21,11 @@ export abstract class PeriodicNoteSettingsView extends SettingsView {
             settings.nameTemplate = value;
             await this.settingsRepository.store(settings);
         });
-        this.addDateParseSetting(this.getFolderSetting(settings.folder), this.dateParser, async value => {
+        this.addTextSetting(this.getFolderSetting(settings.folder), async value => {
             settings.folder = value;
             await this.settingsRepository.store(settings);
         });
-        this.addTextSetting(this.getTemplateFileSetting(settings.templateFile), async value => {
+        this.addTextSettingWithFileSuggest(this.getTemplateFileSetting(settings.templateFile), async value => {
             settings.templateFile = value;
             await this.settingsRepository.store(settings);
         });

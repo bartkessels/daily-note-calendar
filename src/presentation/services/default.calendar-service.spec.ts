@@ -160,38 +160,36 @@ describe('DefaultCalendarService', () => {
     });
 
     describe('getPreviousWeek', () => {
-        const currentWeeks = [<Week>{
-            date: new Date(2023, 9, 2),
-            name: '42',
-            type: PeriodType.Week,
-            weekNumber: 42,
-            year: expectedYear,
-            quarter: expectedQuarter,
-            month: expectedMonth,
-            days: []
-        }];
+        // 6 weeks array: indices 0,1,2,3,4,5 where index 2 is the reference week
+        const week40 = <Week>{ date: new Date(2023, 8, 25), name: '40', type: PeriodType.Week, weekNumber: 40, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week41 = <Week>{ date: new Date(2023, 9, 2), name: '41', type: PeriodType.Week, weekNumber: 41, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week42 = <Week>{ date: new Date(2023, 9, 9), name: '42', type: PeriodType.Week, weekNumber: 42, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week43 = <Week>{ date: new Date(2023, 9, 16), name: '43', type: PeriodType.Week, weekNumber: 43, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week44 = <Week>{ date: new Date(2023, 9, 23), name: '44', type: PeriodType.Week, weekNumber: 44, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week45 = <Week>{ date: new Date(2023, 9, 30), name: '45', type: PeriodType.Week, weekNumber: 45, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const currentWeeks = [week40, week41, week42, week43, week44, week45]; // week42 is reference at index 2
 
         it('should use the default settings for the firstDayOfWeek and weekNumberStandard if the initialize method has not been called', async () => {
             // Arrange
             const settings = DEFAULT_PLUGIN_SETTINGS;
 
-            // Act
+            // Act - getPreviousWeek uses weeks[1] (week41) as new reference
             service.getPreviousWeek(currentWeeks);
 
-            // Assert
+            // Assert - should load with (2, 3) around week41
             expect(dateManager.getPreviousWeeks)
                 .toHaveBeenCalledWith(
-                    currentWeeks[0],
+                    week41,
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
-                    4
+                    2
                 );
             expect(dateManager.getNextWeeks)
                 .toHaveBeenCalledWith(
-                    currentWeeks[0],
+                    week41,
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
-                    1
+                    3
                 );
         });
 
@@ -208,97 +206,64 @@ describe('DefaultCalendarService', () => {
             service.initialize(settings);
             service.getPreviousWeek(currentWeeks);
 
-            // Assert
+            // Assert - should load with (2, 3) around week41
             expect(dateManager.getPreviousWeeks)
                 .toHaveBeenCalledWith(
-                    currentWeeks[0],
+                    week41,
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
-                    4
+                    2
                 );
             expect(dateManager.getNextWeeks)
                 .toHaveBeenCalledWith(
-                    currentWeeks[0],
+                    week41,
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
-                    1
+                    3
                 );
         });
 
         it('should return the weeks sorted based on the week number', async () => {
             // Arrange
-            const firstWeek = <Week> {
-                date: new Date(2023, 9, 2),
-                name: '42',
-                type: PeriodType.Week,
-                weekNumber: 42,
-                year: expectedYear,
-                quarter: expectedQuarter,
-                month: expectedMonth,
-                days: []
-            };
-            const currentWeek = <Week> {
-                date: new Date(2023, 9, 9),
-                name: '43',
-                type: PeriodType.Week,
-                weekNumber: 43,
-                year: expectedYear,
-                quarter: expectedQuarter,
-                month: expectedMonth,
-                days: []
-            };
-            const lastWeek = <Week> {
-                date: new Date(2023, 9, 16),
-                name: '44',
-                type: PeriodType.Week,
-                weekNumber: 44,
-                year: expectedYear,
-                quarter: expectedQuarter,
-                month: expectedMonth,
-                days: []
-            };
+            when(dateManager.getPreviousWeeks).mockReturnValue([week40, week45]); // Unsorted to test sorting
+            when(dateManager.getNextWeeks).mockReturnValue([week42, week43, week44]);
 
-            when(dateManager.getPreviousWeeks).mockReturnValue([lastWeek]);
-            when(dateManager.getNextWeeks).mockReturnValue([firstWeek]);
+            // Act - week41 becomes new reference
+            const result = service.getPreviousWeek(currentWeeks);
 
-            // Act
-            const result = service.getPreviousWeek([currentWeek]);
-
-            // Assert
-            expect(result).toEqual([firstWeek, currentWeek, lastWeek]);
+            // Assert - should return sorted weeks
+            expect(result).toEqual([week40, week41, week42, week43, week44, week45]);
         });
     });
 
     describe('getNextWeek', () => {
-        const currentWeeks = [<Week>{
-            date: new Date(2023, 9, 2),
-            name: '42',
-            type: PeriodType.Week,
-            weekNumber: 42,
-            year: expectedYear,
-            quarter: expectedQuarter,
-            month: expectedMonth,
-            days: []
-        }];
+        // 6 weeks array: indices 0,1,2,3,4,5 where index 2 is the reference week
+        const week40 = <Week>{ date: new Date(2023, 8, 25), name: '40', type: PeriodType.Week, weekNumber: 40, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week41 = <Week>{ date: new Date(2023, 9, 2), name: '41', type: PeriodType.Week, weekNumber: 41, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week42 = <Week>{ date: new Date(2023, 9, 9), name: '42', type: PeriodType.Week, weekNumber: 42, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week43 = <Week>{ date: new Date(2023, 9, 16), name: '43', type: PeriodType.Week, weekNumber: 43, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week44 = <Week>{ date: new Date(2023, 9, 23), name: '44', type: PeriodType.Week, weekNumber: 44, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week45 = <Week>{ date: new Date(2023, 9, 30), name: '45', type: PeriodType.Week, weekNumber: 45, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const currentWeeks = [week40, week41, week42, week43, week44, week45]; // week42 is reference at index 2
 
         it('should use the default settings for the firstDayOfWeek and weekNumberStandard if the initialize method has not been called', async () => {
             // Arrange
             const settings = DEFAULT_PLUGIN_SETTINGS;
 
-            // Act
+            // Act - getNextWeek uses weeks[3] (week43) as new reference
             service.getNextWeek(currentWeeks);
 
-            // Assert
+            // Assert - should load with (2, 3) around week43
             expect(dateManager.getPreviousWeeks)
                 .toHaveBeenCalledWith(
-                    currentWeeks[0],
+                    week43,
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
                     2
                 );
             expect(dateManager.getNextWeeks)
                 .toHaveBeenCalledWith(
-                    currentWeeks[0],
+                    week43,
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
                     3
@@ -318,17 +283,17 @@ describe('DefaultCalendarService', () => {
             service.initialize(settings);
             service.getNextWeek(currentWeeks);
 
-            // Assert
+            // Assert - should load with (2, 3) around week43
             expect(dateManager.getPreviousWeeks)
                 .toHaveBeenCalledWith(
-                    currentWeeks[0],
+                    week43,
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
                     2
                 );
             expect(dateManager.getNextWeeks)
                 .toHaveBeenCalledWith(
-                    currentWeeks[0],
+                    week43,
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
                     3
@@ -337,71 +302,38 @@ describe('DefaultCalendarService', () => {
 
         it('should return the weeks sorted based on the week number', async () => {
             // Arrange
-            const firstWeek = <Week> {
-                date: new Date(2023, 9, 2),
-                name: '42',
-                type: PeriodType.Week,
-                weekNumber: 42,
-                year: expectedYear,
-                quarter: expectedQuarter,
-                month: expectedMonth,
-                days: []
-            };
-            const currentWeek = <Week> {
-                date: new Date(2023, 9, 9),
-                name: '43',
-                type: PeriodType.Week,
-                weekNumber: 43,
-                year: expectedYear,
-                quarter: expectedQuarter,
-                month: expectedMonth,
-                days: []
-            };
-            const lastWeek = <Week> {
-                date: new Date(2023, 9, 16),
-                name: '44',
-                type: PeriodType.Week,
-                weekNumber: 44,
-                year: expectedYear,
-                quarter: expectedQuarter,
-                month: expectedMonth,
-                days: []
-            };
+            when(dateManager.getPreviousWeeks).mockReturnValue([week41, week42]);
+            when(dateManager.getNextWeeks).mockReturnValue([week44, week45, week40]); // Unsorted to test sorting
 
-            when(dateManager.getPreviousWeeks).mockReturnValue([lastWeek]);
-            when(dateManager.getNextWeeks).mockReturnValue([firstWeek]);
+            // Act - week43 becomes new reference
+            const result = service.getNextWeek(currentWeeks);
 
-            // Act
-            const result = service.getNextWeek([currentWeek]);
-
-            // Assert
-            expect(result).toEqual([firstWeek, currentWeek, lastWeek]);
+            // Assert - should return sorted weeks
+            expect(result).toEqual([week40, week41, week42, week43, week44, week45]);
         });
     });
 
     describe('getPreviousMonth', () => {
-        const currentWeeks = [<Week>{
-            date: new Date(2023, 9, 2),
-            name: '42',
-            type: PeriodType.Week,
-            weekNumber: 42,
-            year: expectedYear,
-            quarter: expectedQuarter,
-            month: expectedMonth,
-            days: []
-        }];
+        // 6 weeks array: indices 0,1,2,3,4,5 where index 2 is the reference week
+        const week40 = <Week>{ date: new Date(2023, 8, 25), name: '40', type: PeriodType.Week, weekNumber: 40, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week41 = <Week>{ date: new Date(2023, 9, 2), name: '41', type: PeriodType.Week, weekNumber: 41, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week42 = <Week>{ date: new Date(2023, 9, 9), name: '42', type: PeriodType.Week, weekNumber: 42, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week43 = <Week>{ date: new Date(2023, 9, 16), name: '43', type: PeriodType.Week, weekNumber: 43, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week44 = <Week>{ date: new Date(2023, 9, 23), name: '44', type: PeriodType.Week, weekNumber: 44, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week45 = <Week>{ date: new Date(2023, 9, 30), name: '45', type: PeriodType.Week, weekNumber: 45, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const currentWeeks = [week40, week41, week42, week43, week44, week45]; // week42 is reference at index 2
 
         it('should use the default settings for the firstDayOfWeek and weekNumberStandard if the initialize method has not been called', async () => {
             // Arrange
             const settings = DEFAULT_PLUGIN_SETTINGS;
 
-            // Act
+            // Act - uses reference week at index 2 (week42)
             service.getPreviousMonth(currentWeeks);
 
             // Assert
             expect(dateManager.getPreviousMonth)
                 .toHaveBeenCalledWith(
-                    currentWeeks[0],
+                    week42,
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard
                 );
@@ -423,7 +355,7 @@ describe('DefaultCalendarService', () => {
             // Assert
             expect(dateManager.getPreviousMonth)
                 .toHaveBeenCalledWith(
-                    currentWeeks[0],
+                    week42,
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard
                 );
@@ -473,28 +405,26 @@ describe('DefaultCalendarService', () => {
     });
 
     describe('getNextMonth', () => {
-        const currentWeeks = [<Week>{
-            date: new Date(2023, 9, 2),
-            name: '42',
-            type: PeriodType.Week,
-            weekNumber: 42,
-            year: expectedYear,
-            quarter: expectedQuarter,
-            month: expectedMonth,
-            days: []
-        }];
+        // 6 weeks array: indices 0,1,2,3,4,5 where index 2 is the reference week
+        const week40 = <Week>{ date: new Date(2023, 8, 25), name: '40', type: PeriodType.Week, weekNumber: 40, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week41 = <Week>{ date: new Date(2023, 9, 2), name: '41', type: PeriodType.Week, weekNumber: 41, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week42 = <Week>{ date: new Date(2023, 9, 9), name: '42', type: PeriodType.Week, weekNumber: 42, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week43 = <Week>{ date: new Date(2023, 9, 16), name: '43', type: PeriodType.Week, weekNumber: 43, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week44 = <Week>{ date: new Date(2023, 9, 23), name: '44', type: PeriodType.Week, weekNumber: 44, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const week45 = <Week>{ date: new Date(2023, 9, 30), name: '45', type: PeriodType.Week, weekNumber: 45, year: expectedYear, quarter: expectedQuarter, month: expectedMonth, days: [] };
+        const currentWeeks = [week40, week41, week42, week43, week44, week45]; // week42 is reference at index 2
 
         it('should use the default settings for the firstDayOfWeek and weekNumberStandard if the initialize method has not been called', async () => {
             // Arrange
             const settings = DEFAULT_PLUGIN_SETTINGS;
 
-            // Act
+            // Act - uses reference week at index 2 (week42)
             service.getNextMonth(currentWeeks);
 
             // Assert
             expect(dateManager.getNextMonth)
                 .toHaveBeenCalledWith(
-                    currentWeeks[0],
+                    week42,
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard
                 );
@@ -516,7 +446,7 @@ describe('DefaultCalendarService', () => {
             // Assert
             expect(dateManager.getNextMonth)
                 .toHaveBeenCalledWith(
-                    currentWeeks[0],
+                    week42,
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard
                 );
@@ -566,6 +496,13 @@ describe('DefaultCalendarService', () => {
     });
 
     describe('getMonthForWeeks', () => {
+        const firstDay = <Period> { date: new Date(2022, 9, 5), name: '05', type: PeriodType.Day };
+        const secondDay = <Period> { date: new Date(2023, 9, 12), name: '12', type: PeriodType.Day };
+        const thirdDay = <Period> { date: new Date(2025, 9, 16), name: '16', type: PeriodType.Day };
+        const fourthDay = <Period> { date: new Date(2026, 9, 23), name: '23', type: PeriodType.Day };
+        const fifthDay = <Period> { date: new Date(2027, 9, 28), name: '28', type: PeriodType.Day };
+        const sixthDay = <Period> { date: new Date(2028, 9, 12), name: '12', type: PeriodType.Day };
+
         const firstWeek = <Week> {
             date: new Date(2022, 9, 2),
             name: '42',
@@ -578,7 +515,7 @@ describe('DefaultCalendarService', () => {
                 name: 'February',
                 type: PeriodType.Month
             },
-            days: []
+            days: [firstDay]
         };
         const secondWeek = <Week> {
             date: new Date(2023, 9, 9),
@@ -592,7 +529,7 @@ describe('DefaultCalendarService', () => {
                 name: 'February',
                 type: PeriodType.Month
             },
-            days: []
+            days: [secondDay]
         };
         const thirdWeek = <Week> {
             date: new Date(2025, 9, 9),
@@ -606,7 +543,7 @@ describe('DefaultCalendarService', () => {
                 name: 'February',
                 type: PeriodType.Month
             },
-            days: []
+            days: [thirdDay]
         };
         const fourthWeek = <Week> {
             date: new Date(2026, 9, 9),
@@ -620,7 +557,7 @@ describe('DefaultCalendarService', () => {
                 name: 'February',
                 type: PeriodType.Month
             },
-            days: []
+            days: [fourthDay]
         };
         const fifthWeek = <Week> {
             date: new Date(2027, 9, 9),
@@ -634,7 +571,7 @@ describe('DefaultCalendarService', () => {
                 name: 'February',
                 type: PeriodType.Month
             },
-            days: []
+            days: [fifthDay]
         };
         const sixthWeek = <Week> {
             date: new Date(2028, 9, 9),
@@ -648,32 +585,43 @@ describe('DefaultCalendarService', () => {
                 name: 'February',
                 type: PeriodType.Month
             },
-            days: []
+            days: [sixthDay]
         };
-        it('should return the month based on the middle week for an odd number of weeks', () => {
-            // Arrange
+        it('should return the month based on the middle day of the reference week for an odd number of weeks', () => {
+            // Arrange - reference week is at index 2 (thirdWeek)
             const weeks = [firstWeek, secondWeek, thirdWeek];
+            when(dateManager.getMonth).calledWith(thirdDay).mockReturnValue(thirdWeek.month);
 
             // Act
             const result = service.getMonthForWeeks(weeks);
 
             // Assert
-            expect(result).toEqual(secondWeek.month);
+            expect(dateManager.getMonth).toHaveBeenCalledWith(thirdDay);
+            expect(result).toEqual(thirdWeek.month);
         });
 
-        it('should return the month based on the middle week for an even number of weeks', () => {
-            // Arrange
+        it('should return the month based on the middle day of the reference week for an even number of weeks', () => {
+            // Arrange - reference week is at index 2 (thirdWeek)
             const weeks = [firstWeek, secondWeek, thirdWeek, fourthWeek, fifthWeek, sixthWeek];
+            when(dateManager.getMonth).calledWith(thirdDay).mockReturnValue(thirdWeek.month);
 
             // Act
             const result = service.getMonthForWeeks(weeks);
 
             // Assert
-            expect(result).toEqual(fourthWeek.month);
+            expect(dateManager.getMonth).toHaveBeenCalledWith(thirdDay);
+            expect(result).toEqual(thirdWeek.month);
         });
     });
 
     describe('getQuarterForWeeks', () => {
+        const firstDay = <Period> { date: new Date(2022, 9, 5), name: '05', type: PeriodType.Day };
+        const secondDay = <Period> { date: new Date(2023, 9, 12), name: '12', type: PeriodType.Day };
+        const thirdDay = <Period> { date: new Date(2025, 9, 16), name: '16', type: PeriodType.Day };
+        const fourthDay = <Period> { date: new Date(2026, 9, 23), name: '23', type: PeriodType.Day };
+        const fifthDay = <Period> { date: new Date(2027, 9, 28), name: '28', type: PeriodType.Day };
+        const sixthDay = <Period> { date: new Date(2028, 9, 12), name: '12', type: PeriodType.Day };
+
         const firstWeek = <Week> {
             date: new Date(2022, 9, 2),
             name: '42',
@@ -686,7 +634,7 @@ describe('DefaultCalendarService', () => {
                 type: PeriodType.Quarter
             },
             month: expectedMonth,
-            days: []
+            days: [firstDay]
         };
         const secondWeek = <Week> {
             date: new Date(2023, 9, 9),
@@ -700,7 +648,7 @@ describe('DefaultCalendarService', () => {
                 type: PeriodType.Quarter
             },
             month: expectedMonth,
-            days: []
+            days: [secondDay]
         };
         const thirdWeek = <Week> {
             date: new Date(2025, 9, 9),
@@ -714,7 +662,7 @@ describe('DefaultCalendarService', () => {
                 type: PeriodType.Quarter
             },
             month: expectedMonth,
-            days: []
+            days: [thirdDay]
         };
         const fourthWeek = <Week> {
             date: new Date(2026, 9, 9),
@@ -728,7 +676,7 @@ describe('DefaultCalendarService', () => {
                 type: PeriodType.Quarter
             },
             month: expectedMonth,
-            days: []
+            days: [fourthDay]
         };
         const fifthWeek = <Week> {
             date: new Date(2027, 9, 9),
@@ -742,7 +690,7 @@ describe('DefaultCalendarService', () => {
                 type: PeriodType.Quarter
             },
             month: expectedMonth,
-            days: []
+            days: [fifthDay]
         };
         const sixthWeek = <Week> {
             date: new Date(2028, 9, 9),
@@ -756,32 +704,47 @@ describe('DefaultCalendarService', () => {
                 type: PeriodType.Quarter
             },
             month: expectedMonth,
-            days: []
+            days: [sixthDay]
         };
-        it('should return the quarter based on the middle week for an odd number of weeks', () => {
-            // Arrange
+        it('should return the quarter based on the middle day of the reference week for an odd number of weeks', () => {
+            // Arrange - reference week is at index 2 (thirdWeek)
             const weeks = [firstWeek, secondWeek, thirdWeek];
+            const monthForDay = <Period> { date: new Date(2025, 9), name: 'October', type: PeriodType.Month };
+            when(dateManager.getMonth).calledWith(thirdDay).mockReturnValue(monthForDay);
+            when(dateManager.getQuarter).calledWith(monthForDay).mockReturnValue(thirdWeek.quarter);
 
             // Act
             const result = service.getQuarterForWeeks(weeks);
 
             // Assert
-            expect(result).toEqual(secondWeek.quarter);
+            expect(dateManager.getQuarter).toHaveBeenCalledWith(monthForDay);
+            expect(result).toEqual(thirdWeek.quarter);
         });
 
-        it('should return the quarter based on the middle week for an even number of weeks', () => {
-            // Arrange
+        it('should return the quarter based on the middle day of the reference week for an even number of weeks', () => {
+            // Arrange - reference week is at index 2 (thirdWeek)
             const weeks = [firstWeek, secondWeek, thirdWeek, fourthWeek, fifthWeek, sixthWeek];
+            const monthForDay = <Period> { date: new Date(2025, 9), name: 'October', type: PeriodType.Month };
+            when(dateManager.getMonth).calledWith(thirdDay).mockReturnValue(monthForDay);
+            when(dateManager.getQuarter).calledWith(monthForDay).mockReturnValue(thirdWeek.quarter);
 
             // Act
             const result = service.getQuarterForWeeks(weeks);
 
             // Assert
-            expect(result).toEqual(fourthWeek.quarter);
+            expect(dateManager.getQuarter).toHaveBeenCalledWith(monthForDay);
+            expect(result).toEqual(thirdWeek.quarter);
         });
     });
 
     describe('getYearForWeeks', () => {
+        const firstDay = <Period> { date: new Date(2022, 9, 5), name: '05', type: PeriodType.Day };
+        const secondDay = <Period> { date: new Date(2023, 9, 12), name: '12', type: PeriodType.Day };
+        const thirdDay = <Period> { date: new Date(2025, 9, 16), name: '16', type: PeriodType.Day };
+        const fourthDay = <Period> { date: new Date(2026, 9, 23), name: '23', type: PeriodType.Day };
+        const fifthDay = <Period> { date: new Date(2027, 9, 28), name: '28', type: PeriodType.Day };
+        const sixthDay = <Period> { date: new Date(2028, 9, 12), name: '12', type: PeriodType.Day };
+
         const firstWeek = <Week> {
             date: new Date(2022, 9, 2),
             name: '42',
@@ -794,7 +757,7 @@ describe('DefaultCalendarService', () => {
             },
             quarter: expectedQuarter,
             month: expectedMonth,
-            days: []
+            days: [firstDay]
         };
         const secondWeek = <Week> {
             date: new Date(2023, 9, 9),
@@ -808,7 +771,7 @@ describe('DefaultCalendarService', () => {
             },
             quarter: expectedQuarter,
             month: expectedMonth,
-            days: []
+            days: [secondDay]
         };
         const thirdWeek = <Week> {
             date: new Date(2025, 9, 9),
@@ -822,7 +785,7 @@ describe('DefaultCalendarService', () => {
             },
             quarter: expectedQuarter,
             month: expectedMonth,
-            days: []
+            days: [thirdDay]
         };
         const fourthWeek = <Week> {
             date: new Date(2026, 9, 9),
@@ -836,7 +799,7 @@ describe('DefaultCalendarService', () => {
             },
             quarter: expectedQuarter,
             month: expectedMonth,
-            days: []
+            days: [fourthDay]
         };
         const fifthWeek = <Week> {
             date: new Date(2027, 9, 9),
@@ -850,7 +813,7 @@ describe('DefaultCalendarService', () => {
             },
             quarter: expectedQuarter,
             month: expectedMonth,
-            days: []
+            days: [fifthDay]
         };
         const sixthWeek = <Week> {
             date: new Date(2028, 9, 9),
@@ -864,28 +827,131 @@ describe('DefaultCalendarService', () => {
             },
             quarter: expectedQuarter,
             month: expectedMonth,
-            days: []
+            days: [sixthDay]
         };
-        it('should return the year based on the middle week for an odd number of weeks', () => {
-            // Arrange
+        it('should return the year based on the middle day of the reference week for an odd number of weeks', () => {
+            // Arrange - reference week is at index 2 (thirdWeek)
             const weeks = [firstWeek, secondWeek, thirdWeek];
+            when(dateManager.getYear).calledWith(thirdDay).mockReturnValue(thirdWeek.year);
 
             // Act
             const result = service.getYearForWeeks(weeks);
 
             // Assert
-            expect(result).toEqual(secondWeek.year);
+            expect(dateManager.getYear).toHaveBeenCalledWith(thirdDay);
+            expect(result).toEqual(thirdWeek.year);
         });
 
-        it('should return the year based on the middle week for an even number of weeks', () => {
-            // Arrange
+        it('should return the year based on the middle day of the reference week for an even number of weeks', () => {
+            // Arrange - reference week is at index 2 (thirdWeek)
             const weeks = [firstWeek, secondWeek, thirdWeek, fourthWeek, fifthWeek, sixthWeek];
+            when(dateManager.getYear).calledWith(thirdDay).mockReturnValue(thirdWeek.year);
 
             // Act
             const result = service.getYearForWeeks(weeks);
 
             // Assert
-            expect(result).toEqual(fourthWeek.year);
+            expect(dateManager.getYear).toHaveBeenCalledWith(thirdDay);
+            expect(result).toEqual(thirdWeek.year);
+        });
+    });
+
+    describe('December 29, 2025 edge case', () => {
+        it('should return December 2025 for month when Dec 29 is selected (even though middle day is Jan 1)', () => {
+            // Arrange - December 29, 2025 is a Monday and starts ISO week 1 of 2026
+            const december29 = <Period> { date: new Date(2025, 11, 29), name: '29', type: PeriodType.Day };
+            const december30 = <Period> { date: new Date(2025, 11, 30), name: '30', type: PeriodType.Day };
+            const december31 = <Period> { date: new Date(2025, 11, 31), name: '31', type: PeriodType.Day };
+            const january1 = <Period> { date: new Date(2026, 0, 1), name: '01', type: PeriodType.Day };
+            const january2 = <Period> { date: new Date(2026, 0, 2), name: '02', type: PeriodType.Day };
+            const january3 = <Period> { date: new Date(2026, 0, 3), name: '03', type: PeriodType.Day };
+            const january4 = <Period> { date: new Date(2026, 0, 4), name: '04', type: PeriodType.Day };
+
+            const decemberMonth = <Period> {
+                date: new Date(2025, 11, 1),
+                name: 'December',
+                type: PeriodType.Month
+            };
+
+            const januaryMonth = <Period> {
+                date: new Date(2026, 0, 1),
+                name: 'January',
+                type: PeriodType.Month
+            };
+
+            // Week spanning Dec 29 - Jan 4
+            const week = <Week> {
+                date: new Date(2025, 11, 29),
+                name: '01',
+                type: PeriodType.Week,
+                weekNumber: 1,
+                year: <Period> { date: new Date(2026, 0, 1), name: '2026', type: PeriodType.Year },
+                quarter: expectedQuarter,
+                month: decemberMonth,
+                days: [december29, december30, december31, january1, january2, january3, january4]
+            };
+
+            const weeks = [week];
+
+            // Mock: december29 -> December 2025, january1 -> January 2026
+            when(dateManager.getMonth).calledWith(december29).mockReturnValue(decemberMonth);
+            when(dateManager.getMonth).calledWith(january1).mockReturnValue(januaryMonth);
+
+            // Act - pass selectedPeriod = december29
+            const result = service.getMonthForWeeks(weeks, december29);
+
+            // Assert - should use december29, not the middle day (january1)
+            expect(dateManager.getMonth).toHaveBeenCalledWith(december29);
+            expect(result).toEqual(decemberMonth);
+            expect(result.name).toBe('December');
+        });
+
+        it('should return 2025 for year when Dec 29 is selected (even though middle day is Jan 1)', () => {
+            // Arrange
+            const december29 = <Period> { date: new Date(2025, 11, 29), name: '29', type: PeriodType.Day };
+            const december30 = <Period> { date: new Date(2025, 11, 30), name: '30', type: PeriodType.Day };
+            const december31 = <Period> { date: new Date(2025, 11, 31), name: '31', type: PeriodType.Day };
+            const january1 = <Period> { date: new Date(2026, 0, 1), name: '01', type: PeriodType.Day };
+            const january2 = <Period> { date: new Date(2026, 0, 2), name: '02', type: PeriodType.Day };
+            const january3 = <Period> { date: new Date(2026, 0, 3), name: '03', type: PeriodType.Day };
+            const january4 = <Period> { date: new Date(2026, 0, 4), name: '04', type: PeriodType.Day };
+
+            const year2025 = <Period> {
+                date: new Date(2025, 0, 1),
+                name: '2025',
+                type: PeriodType.Year
+            };
+
+            const year2026 = <Period> {
+                date: new Date(2026, 0, 1),
+                name: '2026',
+                type: PeriodType.Year
+            };
+
+            const week = <Week> {
+                date: new Date(2025, 11, 29),
+                name: '01',
+                type: PeriodType.Week,
+                weekNumber: 1,
+                year: year2026,
+                quarter: expectedQuarter,
+                month: expectedMonth,
+                days: [december29, december30, december31, january1, january2, january3, january4]
+            };
+
+            const weeks = [week];
+
+            // Mock: december29 -> 2025, january1 -> 2026
+            when(dateManager.getYear).calledWith(december29).mockReturnValue(year2025);
+            when(dateManager.getYear).calledWith(january1).mockReturnValue(year2026);
+
+            // Act - pass selectedPeriod = december29
+            const result = service.getYearForWeeks(weeks, december29);
+
+            // Assert - should use december29, not the middle day (january1)
+            expect(dateManager.getYear).toHaveBeenCalledWith(december29);
+            expect(result).toEqual(year2025);
+            expect(result.name).toBe('2025');
         });
     });
 });

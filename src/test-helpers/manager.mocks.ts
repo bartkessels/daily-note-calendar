@@ -22,7 +22,9 @@ export const mockDateManager = {
     getNextWeeks: jest.fn(),
     getNextMonth: jest.fn(),
     getPreviousMonth: jest.fn(),
-    getQuarter: jest.fn()
+    getMonth: jest.fn(),
+    getQuarter: jest.fn(),
+    getYear: jest.fn()
 } as jest.Mocked<DateManager>;
 
 export const mockPeriodicNoteManager = {

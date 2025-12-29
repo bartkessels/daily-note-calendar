@@ -20,6 +20,7 @@ export interface CalendarViewModel {
         navigateToPreviousMonth: () => void
     ): void;
     getCurrentWeek(): Calendar;
+    getWeekForPeriod(period: Period): Calendar;
     getPreviousWeek(calendar: Calendar): Calendar;
     getNextWeek(calendar: Calendar): Calendar;
     getPreviousMonth(calendar: Calendar): Calendar;

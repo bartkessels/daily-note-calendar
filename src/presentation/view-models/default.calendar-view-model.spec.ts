@@ -473,4 +473,68 @@ describe('DefaultCalendarViewModel', () => {
             });
         });
     });
+
+    describe('getWeekForPeriod', () => {
+        it('should show December 2025 when selecting December 29, 2025 (edge case: day in ISO week 1 of 2026)', () => {
+            // Arrange
+            const december29 = <Period> {
+                date: new Date(2025, 11, 29), // December 29, 2025 (month is 0-indexed)
+                name: '29',
+                type: PeriodType.Day
+            };
+            
+            const expectedDecemberMonth = <Period> {
+                date: new Date(2025, 11, 1),
+                name: 'December',
+                type: PeriodType.Month
+            };
+            
+            const expectedQ4 = <Period> {
+                date: new Date(2025, 9, 1),
+                name: 'Q4',
+                type: PeriodType.Quarter
+            };
+            
+            const expected2025Year = <Period> {
+                date: new Date(2025, 0, 1),
+                name: '2025',
+                type: PeriodType.Year
+            };
+
+            // Create a week that spans Dec 29, 2025 - Jan 4, 2026
+            const week = <Week> {
+                date: new Date(2025, 11, 29),
+                name: '01',
+                type: PeriodType.Week,
+                weekNumber: 1,
+                year: <Period> { date: new Date(2026, 0, 1), name: '2026', type: PeriodType.Year }, // ISO week year is 2026
+                quarter: expectedQ4,
+                month: expectedDecemberMonth,
+                days: [
+                    <Period> { date: new Date(2025, 11, 29), name: '29', type: PeriodType.Day }, // Mon Dec 29
+                    <Period> { date: new Date(2025, 11, 30), name: '30', type: PeriodType.Day }, // Tue Dec 30
+                    <Period> { date: new Date(2025, 11, 31), name: '31', type: PeriodType.Day }, // Wed Dec 31
+                    <Period> { date: new Date(2026, 0, 1), name: '01', type: PeriodType.Day },   // Thu Jan 1
+                    <Period> { date: new Date(2026, 0, 2), name: '02', type: PeriodType.Day },   // Fri Jan 2
+                    <Period> { date: new Date(2026, 0, 3), name: '03', type: PeriodType.Day },   // Sat Jan 3
+                    <Period> { date: new Date(2026, 0, 4), name: '04', type: PeriodType.Day }    // Sun Jan 4
+                ]
+            };
+
+            when(calendarService.getWeekForPeriod).calledWith(december29).mockReturnValue([week]);
+            when(calendarService.getMonthForWeeks).calledWith([week]).mockReturnValue(expectedDecemberMonth);
+            when(calendarService.getQuarterForWeeks).calledWith([week]).mockReturnValue(expectedQ4);
+            when(calendarService.getYearForWeeks).calledWith([week]).mockReturnValue(expected2025Year);
+
+            // Act
+            const result = viewModel.getWeekForPeriod(december29);
+
+            // Assert
+            expect(result.month).toEqual(expectedDecemberMonth);
+            expect(result.month.name).toBe('December');
+            expect(result.year).toEqual(expected2025Year);
+            expect(result.year.name).toBe('2025');
+            expect(result.quarter).toEqual(expectedQ4);
+        });
+    });
 });

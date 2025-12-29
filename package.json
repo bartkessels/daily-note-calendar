@@ -1,6 +1,6 @@
 {
 	"name": "daily-note-calendar",
-	"version": "2.6.1",
+	"version": "3.0.5",
 	"description": "Navigate your Obsidian vault using a calendar view.",
 	"main": "main.js",
 	"scripts": {
@@ -36,9 +36,7 @@
 	},
 	"dependencies": {
 		"date-fns": "4.1.0",
-		"lucide-react": "0.540.0",
 		"react": "19.1.1",
-		"react-dom": "19.1.1",
-		"tsyringe": "4.10.0"
+		"react-dom": "19.1.1"
 	}
 }

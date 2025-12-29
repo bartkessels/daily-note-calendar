@@ -1,6 +1,6 @@
 import {DateManager} from 'src/business/contracts/date.manager';
 import {DayOfWeek, Week, WeekNumberStandard} from 'src/domain/models/week';
-import {Period} from 'src/domain/models/period.model';
+import {Period, PeriodType} from 'src/domain/models/period.model';
 import {DateRepositoryFactory} from 'src/infrastructure/contracts/date-repository-factory';
 
 export class RepositoryDateManager implements DateManager {
@@ -65,8 +65,23 @@ export class RepositoryDateManager implements DateManager {
         return this.getWeeksForMonth(nextMonth, startOfWeek, standard);
     }
 
+    public getMonth(day: Period): Period {
+        return this.dateRepositoryFactory.getRepository().getMonthFromDate(day.date);
+    }
+
     public getQuarter(month: Period): Period {
         return this.dateRepositoryFactory.getRepository().getQuarter(month);
+    }
+
+    public getYear(day: Period): Period {
+        const year = day.date.getFullYear();
+        const date = new Date(year, 0);
+        
+        return {
+            name: year.toString(),
+            date: date,
+            type: PeriodType.Year
+        } as Period;
     }
 
     private getWeeksForMonth(

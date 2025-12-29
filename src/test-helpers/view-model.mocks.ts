@@ -13,6 +13,7 @@ export const mockCalendarViewModel = {
     initialize: jest.fn(),
     initializeCallbacks: jest.fn(),
     getCurrentWeek: jest.fn(),
+    getWeekForPeriod: jest.fn(),
     getPreviousWeek: jest.fn(),
     getNextWeek: jest.fn(),
     getPreviousMonth: jest.fn(),

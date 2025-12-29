@@ -16,20 +16,20 @@ String.prototype.appendMarkdownExtension = function(): string {
     const extension = '.md';
 
     if (this.endsWith(extension)) {
-        return this;
+        return String(this);
     }
 
-    return this + extension;
+    return String(this) + extension;
 };
 
 String.prototype.removeMarkdownExtension = function(): string {
     const extension = '.md';
 
     if (!this.endsWith(extension)) {
-        return this;
+        return String(this);
     }
 
-    return this.replace(extension, '');
+    return String(this).replace(extension, '');
 };
 
 Date.prototype.isSameMonth = function(other: Period | null): boolean {

@@ -1,4 +1,5 @@
-import {PluginSettingTab, Setting} from 'obsidian';
+import {App, PluginSettingTab, Setting} from 'obsidian';
+import {FileSuggest} from 'src/presentation/obsidian/file-suggest';
 import {DateParser} from 'src/infrastructure/contracts/date-parser';
 import {PluginSettings} from 'src/domain/settings/plugin.settings';
 
@@ -12,6 +13,10 @@ export abstract class SettingsView {
         private readonly onSettingsChange: () => void
     ) {
         this.today = new Date();
+    }
+
+    protected get app(): App {
+        return this.settingsTab.app;
     }
 
     protected abstract addSettings(): Promise<void>;
@@ -47,6 +52,28 @@ export abstract class SettingsView {
                 .setValue(model.value)
                 .onChange((value) => onChange(value).then(this.onSettingsChange))
             );
+    }
+
+    protected addTextSettingWithFileSuggest(model: SettingUiModel<string>, onChange: (value: string) => Promise<void>): void {
+        new Setting(this.settingsTab.containerEl)
+            .setName(model.name)
+            .setDesc(model.description)
+            .addText(component => {
+                component
+                    .setPlaceholder(model.placeholder)
+                    .setValue(model.value)
+                    .onChange((value) => onChange(value).then(this.onSettingsChange));
+
+                new FileSuggest(
+                    this.app,
+                    component.inputEl,
+                    (file) => {
+                        const pathWithoutExt = file.path.replace(/\.md$/, '');
+                        component.setValue(pathWithoutExt);
+                        onChange(pathWithoutExt).then(this.onSettingsChange);
+                    }
+                );
+            });
     }
 
     protected addDropdownSetting(

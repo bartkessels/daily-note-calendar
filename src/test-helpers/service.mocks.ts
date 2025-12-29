@@ -14,6 +14,7 @@ export const mockPeriodService = {
 export const mockCalendarService = {
     initialize: jest.fn(),
     getCurrentWeek: jest.fn(),
+    getWeekForPeriod: jest.fn(),
     getPreviousWeek: jest.fn(),
     getNextWeek: jest.fn(),
     getPreviousMonth: jest.fn(),

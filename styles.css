@@ -1,6 +1,30 @@
+.workspace-leaf-content[data-type='daily-note-calendar'] .view-content {
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 0;
+}
+
+.dnc {
+    box-sizing: border-box;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.dnc:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
 .dnc table {
     table-layout: fixed;
     width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0;
+}
+
+.dnc ul:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 .dnc th {
@@ -11,6 +35,7 @@
 
 .dnc th.quarter {
     font-weight: var(--font-semibold);
+    border-right: 3px solid var(--background-modifier-border) !important;
 }
 
 .dnc td {
@@ -18,11 +43,20 @@
 }
 
 .dnc th, .dnc td {
-    vertical-align: text-top;
+    vertical-align: middle;
     text-align: center;
     width: 0.45em;
-    height: 0.45em;
+    height: 30px;
     padding: 0.2em;
+    border: 1px solid var(--background-modifier-border-hover);
+}
+
+.dnc td > div {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 
 .dnc td:hover:not(:empty), .dnc th:hover:not(:empty) {
@@ -32,34 +66,39 @@
 
 .dnc .weekNumber {
     text-align: center;
-    font-weight: var(----font-light);
+    font-weight: var(--font-light);
     color: var(--text-faint);
+    border-right: 3px solid var(--background-modifier-border) !important;
 }
 
 .dnc #today {
-    color: var(--text-accent);
+    border: 2px solid var(--interactive-accent);
+    border-radius: var(--radius-s);
+    font-weight: var(--font-semibold);
 }
 
 .dnc .other-month {
     opacity: 45%;
 }
 
-.dnc .has-note:after {
-    content: "";
-    display: block;
-    width: 30%;
-    opacity: 75%;
-    margin: 0 auto;
-    border-bottom: 0.1em solid var(--text-faint);
+.dnc .has-note {
+    position: relative;
 }
 
-.dnc .selected-day:after {
+.dnc .has-note:after {
     content: "";
-    display: block;
-    opacity: 100%;
-    width: 30%;
-    margin: 0 auto;
-    border-bottom: 0.15em solid var(--text-accent);
+    position: absolute;
+    bottom: 0.05em;
+    left: 25%;
+    width: 50%;
+    opacity: 85%;
+    border-bottom: 0.2em solid var(--text-faint);
+}
+
+.dnc .selected-day {
+    background-color: var(--interactive-accent);
+    color: var(--text-on-accent);
+    border-radius: var(--radius-s);
 }
 
 .dnc .header {
@@ -103,11 +142,19 @@
     padding-bottom: 0.4em;
 }
 
+.dnc ul li:last-child {
+    padding-bottom: 0;
+}
+
 .dnc ul li:after {
     content: "";
     display: block;
     border-bottom: 1px solid var(--background-modifier-border);
     padding-top: 0.4em;
+}
+
+.dnc ul li:last-child:after {
+    display: none;
 }
 
 .dnc ul li .note-title {

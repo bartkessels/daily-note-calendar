@@ -11,5 +11,7 @@ export interface DateManager {
     getNextWeeks(currentWeek: Week, startOfWeek: DayOfWeek, standard: WeekNumberStandard, noWeeks: number): Week[];
     getNextMonth(month: Period, startOfWeek: DayOfWeek, standard: WeekNumberStandard): Week[];
     getPreviousMonth(month: Period, startOfWeek: DayOfWeek, standard: WeekNumberStandard): Week[];
+    getMonth(day: Period): Period;
     getQuarter(month: Period): Period;
+    getYear(day: Period): Period;
 }

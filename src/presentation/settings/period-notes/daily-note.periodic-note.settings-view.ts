@@ -34,7 +34,7 @@ export class DailyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsView 
         return <SettingUiModel<string>> {
             name: 'Daily notes folder',
             description: 'The folder where you store your daily notes.',
-            placeholder: `yyyy-'Daily notes'`,
+            placeholder: 'Daily notes',
             value: value
         };
     }

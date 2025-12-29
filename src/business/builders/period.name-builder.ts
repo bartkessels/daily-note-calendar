@@ -37,7 +37,7 @@ export class PeriodNameBuilder implements NameBuilder<Period> {
             throw Error('Could not create the note name: Name template is required!');
         }
 
-        const path = this.dateParser.fromDate(this.period.date, this.pathTemplate ?? '');
+        const path = this.pathTemplate ?? '';
         const name = this.dateParser.fromDate(this.period.date, this.nameTemplate).appendMarkdownExtension();
 
         if (path.length === 0) {
