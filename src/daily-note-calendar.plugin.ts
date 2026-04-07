@@ -42,6 +42,10 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     }
 
     private async initializePlugin(): Promise<void> {
+        await this.propagateSettings();
+    }
+
+    private async propagateSettings(): Promise<void> {
         const today = this.dependencies.dateManagerFactory.getManager().getCurrentDay();
         const settings = await this.dependencies.settingsRepositoryFactory
             .getRepository<PluginSettings>(SettingsType.Plugin)
@@ -53,6 +57,12 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         this.dependencies.monthlyNoteViewModel.updateSettings(settings);
         this.dependencies.quarterlyNoteViewModel.updateSettings(settings);
         this.dependencies.yearlyNoteViewModel.updateSettings(settings);
+    }
+
+    private handleSettingsChange(): void {
+        this.propagateSettings()
+            .then(() => this.dependencies.calendarViewModel.navigateToCurrentWeek?.())
+            .catch(console.error);
     }
 
     private onLayoutReady(): void {
@@ -83,9 +93,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             this,
             this.dependencies.dateParserFactory,
             this.dependencies.settingsRepositoryFactory,
-            () => {
-                // TODO: Handle the settings change
-            }
+            this.handleSettingsChange.bind(this)
         );
         this.addSettingTab(settingsTab);
     }

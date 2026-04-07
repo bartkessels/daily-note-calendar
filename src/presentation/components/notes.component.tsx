@@ -12,17 +12,18 @@ export const NotesComponent = (props: NotesComponentProperties) => {
     const viewModel = useNotesViewModel();
     const [notes, setNotes] = React.useState<Note[]>([]);
 
-    const loadNotes = () => {
-        if (props.period) {
-            viewModel?.loadNotes(props.period).then(setNotes);
-        }
-    }
-
     React.useEffect(() => {
-        loadNotes();
-    }, [viewModel, setNotes, props.period]);
+        const loadNotes = () => {
+            if (props.period) {
+                viewModel?.loadNotes(props.period).then(setNotes);
+            } else {
+                setNotes([]);
+            }
+        };
 
-    viewModel?.initializeCallbacks(loadNotes);
+        viewModel?.initializeCallbacks(loadNotes);
+        loadNotes();
+    }, [viewModel, props.period]);
 
     return (
         <div className="dnc">
