@@ -15,6 +15,7 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
     public navigateToCurrentWeek?: () => void;
     public navigateToNextMonth?: () => void;
     public navigateToPreviousMonth?: () => void;
+    public refreshNoteCounts?: () => void;
 
     constructor(
         private readonly calendarService: CalendarService
@@ -43,6 +44,10 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         this.navigateToCurrentWeek = navigateToCurrentWeek;
         this.navigateToNextMonth = navigateToNextMonth;
         this.navigateToPreviousMonth = navigateToPreviousMonth;
+    }
+
+    public initializeNoteCountRefreshCallback(cb: () => void): void {
+        this.refreshNoteCounts = cb;
     }
 
     public getCurrentWeek(): Calendar {

@@ -65,6 +65,7 @@ describe('GeneralSettingsRepository', () => {
                 generalSettings: {
                     displayNotesCreatedOnDate: false,
                     displayNoteIndicator: true,
+                    displayCreatedNoteCountIndicator: false,
                     useModifierKeyToCreateNote: false,
                     firstDayOfWeek: DayOfWeek.Monday,
                     weekNumberStandard: WeekNumberStandard.ISO

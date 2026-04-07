@@ -4,6 +4,7 @@ import {DayOfWeek, WeekNumberStandard} from 'src/domain/models/week';
 export interface GeneralSettings extends Settings {
     displayNotesCreatedOnDate: boolean;
     displayNoteIndicator: boolean;
+    displayCreatedNoteCountIndicator: boolean;
     useModifierKeyToCreateNote: boolean;
     firstDayOfWeek: DayOfWeek;
     weekNumberStandard: WeekNumberStandard;
@@ -12,6 +13,7 @@ export interface GeneralSettings extends Settings {
 export const DEFAULT_GENERAL_SETTINGS: GeneralSettings = {
     displayNotesCreatedOnDate: false,
     displayNoteIndicator: true,
+    displayCreatedNoteCountIndicator: false,
     useModifierKeyToCreateNote: false,
     firstDayOfWeek: DayOfWeek.Monday,
     weekNumberStandard: WeekNumberStandard.ISO

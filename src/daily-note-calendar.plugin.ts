@@ -58,9 +58,18 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     private onLayoutReady(): void {
         this.registerPlugin();
 
-        this.app.vault.on('create', () => this.dependencies.notesViewModel.updateNotes?.call(this));
-        this.app.vault.on('delete', () => this.dependencies.notesViewModel.updateNotes?.call(this));
-        this.app.vault.on('rename', () => this.dependencies.notesViewModel.updateNotes?.call(this));
+        this.app.vault.on('create', () => {
+            this.dependencies.notesViewModel.updateNotes?.call(this);
+            this.dependencies.calendarViewModel.refreshNoteCounts?.call(this);
+        });
+        this.app.vault.on('delete', () => {
+            this.dependencies.notesViewModel.updateNotes?.call(this);
+            this.dependencies.calendarViewModel.refreshNoteCounts?.call(this);
+        });
+        this.app.vault.on('rename', () => {
+            this.dependencies.notesViewModel.updateNotes?.call(this);
+            this.dependencies.calendarViewModel.refreshNoteCounts?.call(this);
+        });
     }
 
     private registerPlugin(): void {

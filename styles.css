@@ -15,6 +15,7 @@
 
 .dnc td {
     opacity: 90%;
+    position: relative;
 }
 
 .dnc th, .dnc td {
@@ -38,6 +39,8 @@
 
 .dnc #today {
     color: var(--text-accent);
+    border: 0.1em solid var(--text-accent);
+    border-radius: 10%;
 }
 
 .dnc .other-month {
@@ -47,19 +50,34 @@
 .dnc .has-note:after {
     content: "";
     display: block;
-    width: 30%;
+    width: 0.3em;
+    height: 0.3em;
+    border-radius: 50%;
+    background-color: var(--text-faint);
     opacity: 75%;
-    margin: 0 auto;
-    border-bottom: 0.1em solid var(--text-faint);
+    margin: 0.1em auto 0;
 }
 
-.dnc .selected-day:after {
-    content: "";
-    display: block;
-    opacity: 100%;
-    width: 30%;
-    margin: 0 auto;
-    border-bottom: 0.15em solid var(--text-accent);
+.dnc .selected-day {
+    background-color: var(--background-modifier-active-hover);
+    border-radius: 10%;
+    color: var(--text-accent);
+}
+
+.dnc .note-count {
+    position: absolute;
+    top: 0.1em;
+    right: 0.1em;
+    display: inline-block;
+    font-size: var(--font-ui-smaller, 0.55em);
+    font-weight: var(--font-medium);
+    line-height: 1;
+    min-width: 1em;
+    padding: 0.1em 0.2em;
+    border-radius: 0.3em;
+    background-color: var(--background-modifier-border);
+    color: var(--text-muted);
+    text-align: center;
 }
 
 .dnc .header {

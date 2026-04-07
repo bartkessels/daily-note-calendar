@@ -1,4 +1,4 @@
-import {mockPeriodService} from 'src/test-helpers/service.mocks';
+import {mockPeriodService, mockNoteService} from 'src/test-helpers/service.mocks';
 import {DayPeriodNoteViewModel} from 'src/presentation/view-models/day.period-note-view-model';
 import {DEFAULT_PLUGIN_SETTINGS, PluginSettings} from 'src/domain/settings/plugin.settings';
 import {Period, PeriodType} from 'src/domain/models/period.model';
@@ -20,7 +20,7 @@ describe('DayPeriodNoteViewModel', () => {
     let viewModel: DayPeriodNoteViewModel;
 
     beforeEach(() => {
-        viewModel = new DayPeriodNoteViewModel(periodService, messageAdapter);
+        viewModel = new DayPeriodNoteViewModel(periodService, messageAdapter, mockNoteService);
     });
 
     afterEach(() => {
@@ -318,6 +318,47 @@ describe('DayPeriodNoteViewModel', () => {
 
             // Assert
             expect(messageAdapter.show).toHaveBeenCalledWith(errorMessage);
+        });
+    });
+
+    describe('getNoteCount', () => {
+        it('returns 0 and does not call noteService when displayCreatedNoteCountIndicator is false', async () => {
+            // Arrange
+            const settings = <PluginSettings>{
+                ...DEFAULT_PLUGIN_SETTINGS,
+                generalSettings: <GeneralSettings>{
+                    ...DEFAULT_GENERAL_SETTINGS,
+                    displayCreatedNoteCountIndicator: false
+                }
+            };
+
+            // Act
+            viewModel.updateSettings(settings);
+            const result = await viewModel.getNoteCount(period);
+
+            // Assert
+            expect(result).toEqual(0);
+            expect(mockNoteService.getNotesForPeriod).not.toHaveBeenCalled();
+        });
+
+        it('returns the note count from noteService when displayCreatedNoteCountIndicator is true', async () => {
+            // Arrange
+            const settings = <PluginSettings>{
+                ...DEFAULT_PLUGIN_SETTINGS,
+                generalSettings: <GeneralSettings>{
+                    ...DEFAULT_GENERAL_SETTINGS,
+                    displayCreatedNoteCountIndicator: true
+                }
+            };
+            when(mockNoteService.getNotesForPeriod).calledWith(period).mockResolvedValue([{}, {}, {}] as any);
+
+            // Act
+            viewModel.updateSettings(settings);
+            const result = await viewModel.getNoteCount(period);
+
+            // Assert
+            expect(result).toEqual(3);
+            expect(mockNoteService.getNotesForPeriod).toHaveBeenCalledWith(period);
         });
     });
 

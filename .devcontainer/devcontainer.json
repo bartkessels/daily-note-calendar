@@ -1,0 +1,4 @@
+{
+	"name": "Obsidian Plugin",
+	"image": "mcr.microsoft.com/devcontainers/typescript-node:4-24-trixie"
+}
