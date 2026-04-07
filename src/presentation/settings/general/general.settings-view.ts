@@ -29,6 +29,10 @@ export class GeneralSettingsView extends SettingsView {
             settings.displayNoteIndicator = value;
             await settingsRepository.store(settings);
         });
+        this.addBooleanSetting(this.getDisplayCreatedNoteCountIndicatorSetting(settings.displayCreatedNoteCountIndicator), async value => {
+            settings.displayCreatedNoteCountIndicator = value;
+            await settingsRepository.store(settings);
+        });
         this.addStartDayOfWeekSetting(settings.firstDayOfWeek, async value => {
             settings.firstDayOfWeek = value;
             await settingsRepository.store(settings);
@@ -56,6 +60,15 @@ export class GeneralSettingsView extends SettingsView {
         return <SettingUiModel<boolean>>{
             name: 'Display an indicator on each date that has a note',
             description: 'Display an indicator below the date or week number if the date has a note.',
+            placeholder: '',
+            value: value
+        };
+    }
+
+    private getDisplayCreatedNoteCountIndicatorSetting(value: boolean): SettingUiModel<boolean> {
+        return <SettingUiModel<boolean>>{
+            name: 'Display a count of notes created on each date',
+            description: 'Show a numeric badge on each calendar day counting the notes created on that date. Requires "Display notes created on selected date" to also be enabled.',
             placeholder: '',
             value: value
         };

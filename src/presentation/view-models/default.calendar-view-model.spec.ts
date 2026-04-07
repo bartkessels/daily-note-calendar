@@ -92,6 +92,31 @@ describe('DefaultCalendarViewModel', () => {
         });
     });
 
+    describe('initializeNoteCountRefreshCallback', () => {
+        it('should store the provided callback as refreshNoteCounts', () => {
+            // Arrange
+            const cb = jest.fn();
+
+            // Act
+            viewModel.initializeNoteCountRefreshCallback(cb);
+
+            // Assert
+            expect(viewModel.refreshNoteCounts).toBe(cb);
+        });
+
+        it('should invoke the callback when refreshNoteCounts is called', () => {
+            // Arrange
+            const cb = jest.fn();
+            viewModel.initializeNoteCountRefreshCallback(cb);
+
+            // Act
+            viewModel.refreshNoteCounts!();
+
+            // Assert
+            expect(cb).toHaveBeenCalledTimes(1);
+        });
+    });
+
     describe('getCurrentWeek', () => {
         const currentWeek = [
             <Week>{

@@ -1,11 +1,12 @@
 import {createContext, useContext} from 'react';
 import {CalendarViewModel} from 'src/presentation/contracts/calendar.view-model';
 import {PeriodNoteViewModel} from 'src/presentation/contracts/period.view-model';
+import {DayNoteViewModel} from 'src/presentation/contracts/day.view-model';
 import { NotesViewModel } from 'src/presentation/contracts/notes.view-model';
 
 export interface ViewModelsContext {
     calendarViewModel: CalendarViewModel;
-    dailyNoteViewModel: PeriodNoteViewModel;
+    dailyNoteViewModel: DayNoteViewModel;
     weeklyNoteViewModel: PeriodNoteViewModel;
     monthlyNoteViewModel: PeriodNoteViewModel;
     quarterlyNoteViewModel: PeriodNoteViewModel;
@@ -18,7 +19,7 @@ export const ViewModelsContext = createContext<ViewModelsContext | null>(null);
 export const useCalendarViewModel = (): CalendarViewModel | null =>
     useContext(ViewModelsContext)?.calendarViewModel ?? null;
 
-export const useDailyNoteViewModel = (): PeriodNoteViewModel | null =>
+export const useDailyNoteViewModel = (): DayNoteViewModel | null =>
     useContext(ViewModelsContext)?.dailyNoteViewModel ?? null;
 
 export const useWeeklyNoteViewModel = (): PeriodNoteViewModel | null =>

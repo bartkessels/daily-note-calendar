@@ -42,6 +42,10 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     }
 
     private async initializePlugin(): Promise<void> {
+        await this.propagateSettings();
+    }
+
+    private async propagateSettings(): Promise<void> {
         const today = this.dependencies.dateManagerFactory.getManager().getCurrentDay();
         const settings = await this.dependencies.settingsRepositoryFactory
             .getRepository<PluginSettings>(SettingsType.Plugin)
@@ -55,12 +59,27 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         this.dependencies.yearlyNoteViewModel.updateSettings(settings);
     }
 
+    private handleSettingsChange(): void {
+        this.propagateSettings()
+            .then(() => this.dependencies.calendarViewModel.navigateToCurrentWeek?.())
+            .catch(console.error);
+    }
+
     private onLayoutReady(): void {
         this.registerPlugin();
 
-        this.app.vault.on('create', () => this.dependencies.notesViewModel.updateNotes?.call(this));
-        this.app.vault.on('delete', () => this.dependencies.notesViewModel.updateNotes?.call(this));
-        this.app.vault.on('rename', () => this.dependencies.notesViewModel.updateNotes?.call(this));
+        this.app.vault.on('create', () => {
+            this.dependencies.notesViewModel.updateNotes?.call(this);
+            this.dependencies.calendarViewModel.refreshNoteCounts?.call(this);
+        });
+        this.app.vault.on('delete', () => {
+            this.dependencies.notesViewModel.updateNotes?.call(this);
+            this.dependencies.calendarViewModel.refreshNoteCounts?.call(this);
+        });
+        this.app.vault.on('rename', () => {
+            this.dependencies.notesViewModel.updateNotes?.call(this);
+            this.dependencies.calendarViewModel.refreshNoteCounts?.call(this);
+        });
     }
 
     private registerPlugin(): void {
@@ -74,9 +93,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             this,
             this.dependencies.dateParserFactory,
             this.dependencies.settingsRepositoryFactory,
-            () => {
-                // TODO: Handle the settings change
-            }
+            this.handleSettingsChange.bind(this)
         );
         this.addSettingTab(settingsTab);
     }

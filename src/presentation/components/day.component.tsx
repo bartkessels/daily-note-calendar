@@ -9,16 +9,21 @@ interface DailyNoteProperties {
     today: Period | null;
     selectedPeriod: Period | null;
     isSameMonth: boolean;
+    noteCountToken: number;
     onSelect: (period: Period) => void;
 }
 
 export const DailyNoteComponent = (props: DailyNoteProperties): ReactElement => {
     const viewModel = useDailyNoteViewModel();
     const [hasPeriodicNote, setHasPeriodicNote] = React.useState<boolean>(false);
+    const [noteCount, setNoteCount] = React.useState<number>(0);
     const isSelected = arePeriodsEqual(props.day, props.selectedPeriod);
     const isToday = arePeriodsEqual(props.day, props.today);
 
-    viewModel?.hasPeriodicNote(props.day).then(setHasPeriodicNote.bind(this));
+    React.useEffect(() => {
+        viewModel?.hasPeriodicNote(props.day).then(setHasPeriodicNote);
+        viewModel?.getNoteCount(props.day).then(setNoteCount);
+    }, [props.day, viewModel, props.noteCountToken]);
 
     return (
         <PeriodComponent
@@ -27,9 +32,9 @@ export const DailyNoteComponent = (props: DailyNoteProperties): ReactElement => 
             isSelected={isSelected}
             isToday={isToday}
             hasPeriodNote={hasPeriodicNote}
+            noteCount={noteCount}
             onClick={(key) => {
                 props.onSelect(props.day);
-
                 if (!isSelectModifierKey(key)) {
                     viewModel?.openNote(key, props.day);
                 }

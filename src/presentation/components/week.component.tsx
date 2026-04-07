@@ -11,6 +11,7 @@ interface WeeklyNoteProperties {
     today: Period | null;
     selectedPeriod: Period | null;
     currentMonth: Period | null;
+    noteCountToken: number;
     onSelect: (period: Period) => void;
 }
 
@@ -52,6 +53,7 @@ export const WeeklyNoteComponent = (props: WeeklyNoteProperties): ReactElement =
                         selectedPeriod={props.selectedPeriod}
                         today={props.today}
                         isSameMonth={day.date.isSameMonth(props.currentMonth)}
+                        noteCountToken={props.noteCountToken}
                         onSelect={() => props.onSelect(day)} />
                 </td>
             ))}

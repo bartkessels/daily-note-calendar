@@ -9,6 +9,7 @@ interface PeriodComponentProperties {
     isSelected: boolean;
     isToday: boolean;
     hasPeriodNote: boolean;
+    noteCount?: number;
     onClick: (key: ModifierKey) => void;
     onOpenInHorizontalSplitViewClick: (key: ModifierKey) => void;
     onOpenInVerticalSplitViewClick: (key: ModifierKey) => void;
@@ -59,6 +60,17 @@ export const PeriodComponent = (props: PeriodComponentProperties): ReactElement 
             onClick={(e: React.MouseEvent) => {
                 props.onClick(modifierKey(e));
                 e.preventDefault();
-            }}>{props.name}</div>
+            }}>
+            {props.name}
+            {(props.noteCount ?? 0) > 0 && (
+                <span
+                    className="note-count"
+                    aria-label={`${props.noteCount} notes`}
+                    title={`${props.noteCount} notes`}
+                >
+                    {props.noteCount}
+                </span>
+            )}
+        </div>
     );
 };

@@ -77,7 +77,7 @@ export function getDependencies(plugin: Plugin): Dependencies {
     const messageAdapter = new ObsidianMessageAdapter();
 
     const calendarViewModel = new DefaultCalendarViewModel(calendarService);
-    const dailyNoteViewModel = new DayPeriodNoteViewModel(periodService, messageAdapter);
+    const dailyNoteViewModel = new DayPeriodNoteViewModel(periodService, messageAdapter, noteService);
     const weeklyNoteViewModel = new WeekPeriodNoteViewModel(periodService, messageAdapter);
     const monthlyNoteViewModel = new MonthPeriodNoteViewModel(periodService, messageAdapter);
     const quarterlyNoteViewModel = new QuarterPeriodNoteViewModel(periodService, messageAdapter);

@@ -10,6 +10,9 @@ export interface CalendarViewModel {
     navigateToNextMonth?: () => void;
     navigateToPreviousMonth?: () => void;
 
+    refreshNoteCounts?: () => void;
+    initializeNoteCountRefreshCallback(cb: () => void): void;
+
     initialize(settings: PluginSettings, today: Period): void;
     initializeCallbacks(
         setSelectedPeriod: (period: Period) => void,
