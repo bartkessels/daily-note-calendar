@@ -13,29 +13,29 @@ import {DisplayNotesSettingsRepository} from 'src/infrastructure/repositories/di
 
 export class DefaultSettingsRepositoryFactory implements SettingsRepositoryFactory {
     constructor(
-        private readonly adapter: SettingsAdapter
+        private readonly adapter: SettingsAdapter,
     ) {
 
     }
 
     public getRepository<T extends Settings>(key: SettingsType): SettingsRepository<T> {
         switch (key) {
-            case SettingsType.Plugin:
-                return new PluginSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
-            case SettingsType.DisplayNotes:
-                return new DisplayNotesSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
-            case SettingsType.General:
-                return new GeneralSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
-            case SettingsType.DailyNote:
-                return new DailyNoteSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
-            case SettingsType.WeeklyNote:
-                return new WeeklyNoteSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
-            case SettingsType.MonthlyNote:
-                return new MonthlyNoteSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
-            case SettingsType.QuarterlyNote:
-                return new QuarterlyNoteSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
-            case SettingsType.YearlyNote:
-                return new YearlyNoteSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
+        case SettingsType.Plugin:
+            return new PluginSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
+        case SettingsType.DisplayNotes:
+            return new DisplayNotesSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
+        case SettingsType.General:
+            return new GeneralSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
+        case SettingsType.DailyNote:
+            return new DailyNoteSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
+        case SettingsType.WeeklyNote:
+            return new WeeklyNoteSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
+        case SettingsType.MonthlyNote:
+            return new MonthlyNoteSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
+        case SettingsType.QuarterlyNote:
+            return new QuarterlyNoteSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
+        case SettingsType.YearlyNote:
+            return new YearlyNoteSettingsRepository(this.adapter) as unknown as SettingsRepository<T>;
         }
     }
 }

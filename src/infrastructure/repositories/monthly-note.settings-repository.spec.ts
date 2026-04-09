@@ -23,25 +23,25 @@ describe('MonthlyNoteSettingsRepository', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 weeklyNotes: {
                     ...DEFAULT_WEEKLY_NOTE_SETTINGS,
-                    folder: 'changed/setting'
+                    folder: 'changed/setting',
                 },
                 monthlyNotes: {
                     nameTemplate: 'yyyy-MM',
                     folder: 'Monthly notes',
-                    templateFile: 'Templates/Monthly note'
-                }
-            }
+                    templateFile: 'Templates/Monthly note',
+                },
+            };
             const updatedSettings = <PluginSettings> {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 weeklyNotes: {
                     ...DEFAULT_WEEKLY_NOTE_SETTINGS,
-                    folder: 'changed/setting'
+                    folder: 'changed/setting',
                 },
                 monthlyNotes: {
                     nameTemplate: 'yyyy - MMMM',
                     folder: '01 journaling/monthly notes',
-                    templateFile: '00 templates/monthly note.md'
-                }
+                    templateFile: '00 templates/monthly note.md',
+                },
             };
 
             when(settingsAdapter.getSettings).mockResolvedValue(oldSettings);
@@ -62,8 +62,8 @@ describe('MonthlyNoteSettingsRepository', () => {
                 monthlyNotes: {
                     nameTemplate: 'yyyy-MM',
                     folder: 'Monthly notes',
-                    templateFile: 'Templates/Monthly note'
-                }
+                    templateFile: 'Templates/Monthly note',
+                },
             };
 
             when(settingsAdapter.getSettings).mockResolvedValue(settings);
@@ -81,7 +81,7 @@ describe('MonthlyNoteSettingsRepository', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 monthlyNotes: {
                     nameTemplate: 'yyyy-MM',
-                }
+                },
             };
 
             when(settingsAdapter.getSettings).mockResolvedValue(settings);

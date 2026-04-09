@@ -12,7 +12,7 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
         private readonly nameBuilderFactory: NameBuilderFactory,
         private readonly variableParserFactory: VariableParserFactory,
         private readonly fileRepositoryFactory: FileRepositoryFactory,
-        private readonly noteRepositoryFactory: NoteRepositoryFactory
+        private readonly noteRepositoryFactory: NoteRepositoryFactory,
     ) {
 
     }

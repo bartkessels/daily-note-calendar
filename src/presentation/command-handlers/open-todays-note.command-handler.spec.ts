@@ -8,13 +8,20 @@ import {ModifierKey} from 'src/domain/models/modifier-key';
 
 describe('OpenTodaysNoteCommandHandler', () => {
     let commandHandler: OpenTodaysNoteCommandHandler;
-    const dateManager = mockDateManager;
-    const calendarViewModel = mockCalendarViewModel;
-    const viewModel = mockPeriodNoteViewModel;
+    let dateManager: typeof mockDateManager;
+    let calendarViewModel: typeof mockCalendarViewModel;
+    let viewModel: typeof mockPeriodNoteViewModel;
 
     beforeEach(() => {
+        dateManager = mockDateManager;
+        calendarViewModel = mockCalendarViewModel;
+        viewModel = mockPeriodNoteViewModel;
         const dateManagerFactory = mockDateManagerFactory(dateManager);
         commandHandler = new OpenTodaysNoteCommandHandler(dateManagerFactory, viewModel, calendarViewModel);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     describe('execute', () => {
@@ -23,7 +30,7 @@ describe('OpenTodaysNoteCommandHandler', () => {
             const expectedPeriod = <Period> {
                 name: '03',
                 date: new Date(2023, 9, 3),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             };
 
             when(dateManager.getCurrentDay).mockReturnValue(expectedPeriod);

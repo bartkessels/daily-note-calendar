@@ -22,7 +22,7 @@ export class PeriodNameBuilder implements NameBuilder<Period> {
 
     public withName(template: string): NameBuilder<Period> {
         this.nameTemplate = template;
-        return this
+        return this;
     }
 
     public withValue(value: Period): NameBuilder<Period> {

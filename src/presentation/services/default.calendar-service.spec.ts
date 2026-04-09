@@ -12,17 +12,17 @@ describe('DefaultCalendarService', () => {
     const expectedMonth = <Period> {
         date: new Date(2023, 9),
         name: 'October',
-        type: PeriodType.Month
+        type: PeriodType.Month,
     };
     const expectedQuarter = <Period> {
         date: new Date(2023, 6),
         name: 'Q3',
-        type: PeriodType.Quarter
+        type: PeriodType.Quarter,
     };
     const expectedYear = <Period> {
         date: new Date(2023, 0),
         name: '2023',
-        type: PeriodType.Year
+        type: PeriodType.Year,
     };
 
     let service: DefaultCalendarService;
@@ -38,6 +38,10 @@ describe('DefaultCalendarService', () => {
         when(dateManager.getNextMonth).mockReturnValue([]);
     });
 
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     describe('getCurrentWeek', () => {
         const currentWeek = <Week> {
             date: new Date(2023, 9, 2),
@@ -47,7 +51,7 @@ describe('DefaultCalendarService', () => {
             year: expectedYear,
             quarter: expectedQuarter,
             month: expectedMonth,
-            days: []
+            days: [],
         };
 
         it('should use the default settings for the firstDayOfWeek and weekNumberStandard if the initialize method has not been called', async () => {
@@ -66,8 +70,8 @@ describe('DefaultCalendarService', () => {
             const settings = <PluginSettings> { ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings> { ...DEFAULT_GENERAL_SETTINGS,
                     firstDayOfWeek: DayOfWeek.Sunday,
-                    weekNumberStandard: WeekNumberStandard.US
-                }
+                    weekNumberStandard: WeekNumberStandard.US,
+                },
             };
 
             // Act
@@ -92,7 +96,7 @@ describe('DefaultCalendarService', () => {
                 currentWeek,
                 settings.generalSettings.firstDayOfWeek,
                 settings.generalSettings.weekNumberStandard,
-                2
+                2,
             );
         });
         
@@ -110,7 +114,7 @@ describe('DefaultCalendarService', () => {
                 currentWeek,
                 settings.generalSettings.firstDayOfWeek,
                 settings.generalSettings.weekNumberStandard,
-                3
+                3,
             );
         });
         
@@ -124,7 +128,7 @@ describe('DefaultCalendarService', () => {
                 year: expectedYear,
                 quarter: expectedQuarter,
                 month: expectedMonth,
-                days: []
+                days: [],
             };
             const currentWeek = <Week> {
                 date: new Date(2023, 9, 9),
@@ -134,7 +138,7 @@ describe('DefaultCalendarService', () => {
                 year: expectedYear,
                 quarter: expectedQuarter,
                 month: expectedMonth,
-                days: []
+                days: [],
             };
             const lastWeek = <Week> {
                 date: new Date(2023, 9, 16),
@@ -144,7 +148,7 @@ describe('DefaultCalendarService', () => {
                 year: expectedYear,
                 quarter: expectedQuarter,
                 month: expectedMonth,
-                days: []
+                days: [],
             };
 
             when(dateManager.getCurrentWeek).mockReturnValue(lastWeek);
@@ -168,7 +172,7 @@ describe('DefaultCalendarService', () => {
             year: expectedYear,
             quarter: expectedQuarter,
             month: expectedMonth,
-            days: []
+            days: [],
         }];
 
         it('should use the default settings for the firstDayOfWeek and weekNumberStandard if the initialize method has not been called', async () => {
@@ -184,14 +188,14 @@ describe('DefaultCalendarService', () => {
                     currentWeeks[0],
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
-                    4
+                    4,
                 );
             expect(dateManager.getNextWeeks)
                 .toHaveBeenCalledWith(
                     currentWeeks[0],
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
-                    1
+                    1,
                 );
         });
 
@@ -200,8 +204,8 @@ describe('DefaultCalendarService', () => {
             const settings = <PluginSettings> { ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings> { ...DEFAULT_GENERAL_SETTINGS,
                     firstDayOfWeek: DayOfWeek.Sunday,
-                    weekNumberStandard: WeekNumberStandard.US
-                }
+                    weekNumberStandard: WeekNumberStandard.US,
+                },
             };
 
             // Act
@@ -214,14 +218,14 @@ describe('DefaultCalendarService', () => {
                     currentWeeks[0],
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
-                    4
+                    4,
                 );
             expect(dateManager.getNextWeeks)
                 .toHaveBeenCalledWith(
                     currentWeeks[0],
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
-                    1
+                    1,
                 );
         });
 
@@ -235,7 +239,7 @@ describe('DefaultCalendarService', () => {
                 year: expectedYear,
                 quarter: expectedQuarter,
                 month: expectedMonth,
-                days: []
+                days: [],
             };
             const currentWeek = <Week> {
                 date: new Date(2023, 9, 9),
@@ -245,7 +249,7 @@ describe('DefaultCalendarService', () => {
                 year: expectedYear,
                 quarter: expectedQuarter,
                 month: expectedMonth,
-                days: []
+                days: [],
             };
             const lastWeek = <Week> {
                 date: new Date(2023, 9, 16),
@@ -255,7 +259,7 @@ describe('DefaultCalendarService', () => {
                 year: expectedYear,
                 quarter: expectedQuarter,
                 month: expectedMonth,
-                days: []
+                days: [],
             };
 
             when(dateManager.getPreviousWeeks).mockReturnValue([lastWeek]);
@@ -278,7 +282,7 @@ describe('DefaultCalendarService', () => {
             year: expectedYear,
             quarter: expectedQuarter,
             month: expectedMonth,
-            days: []
+            days: [],
         }];
 
         it('should use the default settings for the firstDayOfWeek and weekNumberStandard if the initialize method has not been called', async () => {
@@ -294,14 +298,14 @@ describe('DefaultCalendarService', () => {
                     currentWeeks[0],
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
-                    2
+                    2,
                 );
             expect(dateManager.getNextWeeks)
                 .toHaveBeenCalledWith(
                     currentWeeks[0],
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
-                    3
+                    3,
                 );
         });
 
@@ -310,8 +314,8 @@ describe('DefaultCalendarService', () => {
             const settings = <PluginSettings> { ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings> { ...DEFAULT_GENERAL_SETTINGS,
                     firstDayOfWeek: DayOfWeek.Sunday,
-                    weekNumberStandard: WeekNumberStandard.US
-                }
+                    weekNumberStandard: WeekNumberStandard.US,
+                },
             };
 
             // Act
@@ -324,14 +328,14 @@ describe('DefaultCalendarService', () => {
                     currentWeeks[0],
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
-                    2
+                    2,
                 );
             expect(dateManager.getNextWeeks)
                 .toHaveBeenCalledWith(
                     currentWeeks[0],
                     settings.generalSettings.firstDayOfWeek,
                     settings.generalSettings.weekNumberStandard,
-                    3
+                    3,
                 );
         });
 
@@ -345,7 +349,7 @@ describe('DefaultCalendarService', () => {
                 year: expectedYear,
                 quarter: expectedQuarter,
                 month: expectedMonth,
-                days: []
+                days: [],
             };
             const currentWeek = <Week> {
                 date: new Date(2023, 9, 9),
@@ -355,7 +359,7 @@ describe('DefaultCalendarService', () => {
                 year: expectedYear,
                 quarter: expectedQuarter,
                 month: expectedMonth,
-                days: []
+                days: [],
             };
             const lastWeek = <Week> {
                 date: new Date(2023, 9, 16),
@@ -365,7 +369,7 @@ describe('DefaultCalendarService', () => {
                 year: expectedYear,
                 quarter: expectedQuarter,
                 month: expectedMonth,
-                days: []
+                days: [],
             };
 
             when(dateManager.getPreviousWeeks).mockReturnValue([lastWeek]);
@@ -388,7 +392,7 @@ describe('DefaultCalendarService', () => {
             year: expectedYear,
             quarter: expectedQuarter,
             month: expectedMonth,
-            days: []
+            days: [],
         }];
 
         it('should use the default settings for the firstDayOfWeek and weekNumberStandard if the initialize method has not been called', async () => {
@@ -403,7 +407,7 @@ describe('DefaultCalendarService', () => {
                 .toHaveBeenCalledWith(
                     currentWeeks[0],
                     settings.generalSettings.firstDayOfWeek,
-                    settings.generalSettings.weekNumberStandard
+                    settings.generalSettings.weekNumberStandard,
                 );
         });
 
@@ -412,8 +416,8 @@ describe('DefaultCalendarService', () => {
             const settings = <PluginSettings> { ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings> { ...DEFAULT_GENERAL_SETTINGS,
                     firstDayOfWeek: DayOfWeek.Sunday,
-                    weekNumberStandard: WeekNumberStandard.US
-                }
+                    weekNumberStandard: WeekNumberStandard.US,
+                },
             };
 
             // Act
@@ -425,7 +429,7 @@ describe('DefaultCalendarService', () => {
                 .toHaveBeenCalledWith(
                     currentWeeks[0],
                     settings.generalSettings.firstDayOfWeek,
-                    settings.generalSettings.weekNumberStandard
+                    settings.generalSettings.weekNumberStandard,
                 );
         });
 
@@ -439,7 +443,7 @@ describe('DefaultCalendarService', () => {
                 year: expectedYear,
                 quarter: expectedQuarter,
                 month: expectedMonth,
-                days: []
+                days: [],
             };
             const currentWeek = <Week> {
                 date: new Date(2023, 9, 9),
@@ -449,7 +453,7 @@ describe('DefaultCalendarService', () => {
                 year: expectedYear,
                 quarter: expectedQuarter,
                 month: expectedMonth,
-                days: []
+                days: [],
             };
             const lastWeek = <Week> {
                 date: new Date(2023, 9, 16),
@@ -459,7 +463,7 @@ describe('DefaultCalendarService', () => {
                 year: expectedYear,
                 quarter: expectedQuarter,
                 month: expectedMonth,
-                days: []
+                days: [],
             };
 
             when(dateManager.getPreviousMonth).mockReturnValue([lastWeek, firstWeek, currentWeek]);
@@ -481,7 +485,7 @@ describe('DefaultCalendarService', () => {
             year: expectedYear,
             quarter: expectedQuarter,
             month: expectedMonth,
-            days: []
+            days: [],
         }];
 
         it('should use the default settings for the firstDayOfWeek and weekNumberStandard if the initialize method has not been called', async () => {
@@ -496,7 +500,7 @@ describe('DefaultCalendarService', () => {
                 .toHaveBeenCalledWith(
                     currentWeeks[0],
                     settings.generalSettings.firstDayOfWeek,
-                    settings.generalSettings.weekNumberStandard
+                    settings.generalSettings.weekNumberStandard,
                 );
         });
 
@@ -505,8 +509,8 @@ describe('DefaultCalendarService', () => {
             const settings = <PluginSettings> { ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings> { ...DEFAULT_GENERAL_SETTINGS,
                     firstDayOfWeek: DayOfWeek.Sunday,
-                    weekNumberStandard: WeekNumberStandard.US
-                }
+                    weekNumberStandard: WeekNumberStandard.US,
+                },
             };
 
             // Act
@@ -518,7 +522,7 @@ describe('DefaultCalendarService', () => {
                 .toHaveBeenCalledWith(
                     currentWeeks[0],
                     settings.generalSettings.firstDayOfWeek,
-                    settings.generalSettings.weekNumberStandard
+                    settings.generalSettings.weekNumberStandard,
                 );
         });
 
@@ -532,7 +536,7 @@ describe('DefaultCalendarService', () => {
                 year: expectedYear,
                 quarter: expectedQuarter,
                 month: expectedMonth,
-                days: []
+                days: [],
             };
             const currentWeek = <Week> {
                 date: new Date(2023, 9, 9),
@@ -542,7 +546,7 @@ describe('DefaultCalendarService', () => {
                 year: expectedYear,
                 quarter: expectedQuarter,
                 month: expectedMonth,
-                days: []
+                days: [],
             };
             const lastWeek = <Week> {
                 date: new Date(2023, 9, 16),
@@ -552,7 +556,7 @@ describe('DefaultCalendarService', () => {
                 year: expectedYear,
                 quarter: expectedQuarter,
                 month: expectedMonth,
-                days: []
+                days: [],
             };
 
             when(dateManager.getNextMonth).mockReturnValue([lastWeek, firstWeek, currentWeek]);
@@ -576,9 +580,9 @@ describe('DefaultCalendarService', () => {
             month: <Period> {
                 date: new Date(2022, 1),
                 name: 'February',
-                type: PeriodType.Month
+                type: PeriodType.Month,
             },
-            days: []
+            days: [],
         };
         const secondWeek = <Week> {
             date: new Date(2023, 9, 9),
@@ -590,9 +594,9 @@ describe('DefaultCalendarService', () => {
             month: <Period> {
                 date: new Date(2023, 2),
                 name: 'February',
-                type: PeriodType.Month
+                type: PeriodType.Month,
             },
-            days: []
+            days: [],
         };
         const thirdWeek = <Week> {
             date: new Date(2025, 9, 9),
@@ -604,9 +608,9 @@ describe('DefaultCalendarService', () => {
             month: <Period> {
                 date: new Date(2025, 2),
                 name: 'February',
-                type: PeriodType.Month
+                type: PeriodType.Month,
             },
-            days: []
+            days: [],
         };
         const fourthWeek = <Week> {
             date: new Date(2026, 9, 9),
@@ -618,9 +622,9 @@ describe('DefaultCalendarService', () => {
             month: <Period> {
                 date: new Date(2026, 2),
                 name: 'February',
-                type: PeriodType.Month
+                type: PeriodType.Month,
             },
-            days: []
+            days: [],
         };
         const fifthWeek = <Week> {
             date: new Date(2027, 9, 9),
@@ -632,9 +636,9 @@ describe('DefaultCalendarService', () => {
             month: <Period> {
                 date: new Date(2027, 2),
                 name: 'February',
-                type: PeriodType.Month
+                type: PeriodType.Month,
             },
-            days: []
+            days: [],
         };
         const sixthWeek = <Week> {
             date: new Date(2028, 9, 9),
@@ -646,9 +650,9 @@ describe('DefaultCalendarService', () => {
             month: <Period> {
                 date: new Date(2028, 2),
                 name: 'February',
-                type: PeriodType.Month
+                type: PeriodType.Month,
             },
-            days: []
+            days: [],
         };
         it('should return the month based on the middle week for an odd number of weeks', () => {
             // Arrange
@@ -683,10 +687,10 @@ describe('DefaultCalendarService', () => {
             quarter: <Period> {
                 date: new Date(2022, 1),
                 name: 'Q1',
-                type: PeriodType.Quarter
+                type: PeriodType.Quarter,
             },
             month: expectedMonth,
-            days: []
+            days: [],
         };
         const secondWeek = <Week> {
             date: new Date(2023, 9, 9),
@@ -697,10 +701,10 @@ describe('DefaultCalendarService', () => {
             quarter: <Period> {
                 date: new Date(2023, 1),
                 name: 'Q1',
-                type: PeriodType.Quarter
+                type: PeriodType.Quarter,
             },
             month: expectedMonth,
-            days: []
+            days: [],
         };
         const thirdWeek = <Week> {
             date: new Date(2025, 9, 9),
@@ -711,10 +715,10 @@ describe('DefaultCalendarService', () => {
             quarter: <Period> {
                 date: new Date(2025, 1),
                 name: 'Q1',
-                type: PeriodType.Quarter
+                type: PeriodType.Quarter,
             },
             month: expectedMonth,
-            days: []
+            days: [],
         };
         const fourthWeek = <Week> {
             date: new Date(2026, 9, 9),
@@ -725,10 +729,10 @@ describe('DefaultCalendarService', () => {
             quarter: <Period> {
                 date: new Date(2026, 1),
                 name: 'Q1',
-                type: PeriodType.Quarter
+                type: PeriodType.Quarter,
             },
             month: expectedMonth,
-            days: []
+            days: [],
         };
         const fifthWeek = <Week> {
             date: new Date(2027, 9, 9),
@@ -739,10 +743,10 @@ describe('DefaultCalendarService', () => {
             quarter: <Period> {
                 date: new Date(2027, 1),
                 name: 'Q1',
-                type: PeriodType.Quarter
+                type: PeriodType.Quarter,
             },
             month: expectedMonth,
-            days: []
+            days: [],
         };
         const sixthWeek = <Week> {
             date: new Date(2028, 9, 9),
@@ -753,10 +757,10 @@ describe('DefaultCalendarService', () => {
             quarter: <Period> {
                 date: new Date(2028, 1),
                 name: 'Q1',
-                type: PeriodType.Quarter
+                type: PeriodType.Quarter,
             },
             month: expectedMonth,
-            days: []
+            days: [],
         };
         it('should return the quarter based on the middle week for an odd number of weeks', () => {
             // Arrange
@@ -790,11 +794,11 @@ describe('DefaultCalendarService', () => {
             year: <Period> {
                 date: new Date(2022, 0),
                 name: '2022',
-                type: PeriodType.Year
+                type: PeriodType.Year,
             },
             quarter: expectedQuarter,
             month: expectedMonth,
-            days: []
+            days: [],
         };
         const secondWeek = <Week> {
             date: new Date(2023, 9, 9),
@@ -804,11 +808,11 @@ describe('DefaultCalendarService', () => {
             year: <Period> {
                 date: new Date(2023, 0),
                 name: '2023',
-                type: PeriodType.Year
+                type: PeriodType.Year,
             },
             quarter: expectedQuarter,
             month: expectedMonth,
-            days: []
+            days: [],
         };
         const thirdWeek = <Week> {
             date: new Date(2025, 9, 9),
@@ -818,11 +822,11 @@ describe('DefaultCalendarService', () => {
             year: <Period> {
                 date: new Date(2025, 0),
                 name: '2025',
-                type: PeriodType.Year
+                type: PeriodType.Year,
             },
             quarter: expectedQuarter,
             month: expectedMonth,
-            days: []
+            days: [],
         };
         const fourthWeek = <Week> {
             date: new Date(2026, 9, 9),
@@ -832,11 +836,11 @@ describe('DefaultCalendarService', () => {
             year: <Period> {
                 date: new Date(2026, 0),
                 name: '2026',
-                type: PeriodType.Year
+                type: PeriodType.Year,
             },
             quarter: expectedQuarter,
             month: expectedMonth,
-            days: []
+            days: [],
         };
         const fifthWeek = <Week> {
             date: new Date(2027, 9, 9),
@@ -846,11 +850,11 @@ describe('DefaultCalendarService', () => {
             year: <Period> {
                 date: new Date(2027, 0),
                 name: '2027',
-                type: PeriodType.Year
+                type: PeriodType.Year,
             },
             quarter: expectedQuarter,
             month: expectedMonth,
-            days: []
+            days: [],
         };
         const sixthWeek = <Week> {
             date: new Date(2028, 9, 9),
@@ -860,11 +864,11 @@ describe('DefaultCalendarService', () => {
             year: <Period> {
                 date: new Date(2028, 0),
                 name: '2028',
-                type: PeriodType.Year
+                type: PeriodType.Year,
             },
             quarter: expectedQuarter,
             month: expectedMonth,
-            days: []
+            days: [],
         };
         it('should return the year based on the middle week for an odd number of weeks', () => {
             // Arrange

@@ -9,7 +9,7 @@ export const mockNoteManager = {
     openNote: jest.fn(),
     openNoteInHorizontalSplitView: jest.fn(),
     openNoteInVerticalSplitView: jest.fn(),
-    deleteNote: jest.fn()
+    deleteNote: jest.fn(),
 } as jest.Mocked<NoteManager>;
 
 export const mockDateManager = {
@@ -22,7 +22,7 @@ export const mockDateManager = {
     getNextWeeks: jest.fn(),
     getNextMonth: jest.fn(),
     getPreviousMonth: jest.fn(),
-    getQuarter: jest.fn()
+    getQuarter: jest.fn(),
 } as jest.Mocked<DateManager>;
 
 export const mockPeriodicNoteManager = {
@@ -31,5 +31,5 @@ export const mockPeriodicNoteManager = {
     openNote: jest.fn(),
     openNoteInHorizontalSplitView: jest.fn(),
     openNoteInVerticalSplitView: jest.fn(),
-    deleteNote: jest.fn()
+    deleteNote: jest.fn(),
 } as jest.Mocked<PeriodicNoteManager>;

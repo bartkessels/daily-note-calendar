@@ -9,7 +9,7 @@ export class DefaultPeriodService implements PeriodService {
     private settings: PluginSettings = DEFAULT_PLUGIN_SETTINGS;
 
     constructor(
-        private readonly periodicNoteManager: PeriodicNoteManager
+        private readonly periodicNoteManager: PeriodicNoteManager,
     ) {
 
     }
@@ -20,19 +20,19 @@ export class DefaultPeriodService implements PeriodService {
 
     public async openNoteInCurrentTab(key: ModifierKey, period: Period, settings: PeriodNoteSettings): Promise<void> {
         await this.openNote(key, period, settings, async (settings, period) =>
-            this.periodicNoteManager.openNote(settings, period)
+            this.periodicNoteManager.openNote(settings, period),
         );
     }
 
     public async openNoteInHorizontalSplitView(key: ModifierKey, period: Period, settings: PeriodNoteSettings): Promise<void> {
         await this.openNote(key, period, settings, async (settings, period) =>
-            this.periodicNoteManager.openNoteInHorizontalSplitView(settings, period)
+            this.periodicNoteManager.openNoteInHorizontalSplitView(settings, period),
         );
     }
 
     public async openNoteInVerticalSplitView(key: ModifierKey, period: Period, settings: PeriodNoteSettings): Promise<void> {
         await this.openNote(key, period, settings, async (settings, period) =>
-            this.periodicNoteManager.openNoteInVerticalSplitView(settings, period)
+            this.periodicNoteManager.openNoteInVerticalSplitView(settings, period),
         );
     }
 
@@ -48,7 +48,7 @@ export class DefaultPeriodService implements PeriodService {
         key: ModifierKey,
         period: Period,
         settings: PeriodNoteSettings,
-        openAction: (settings: PeriodNoteSettings, period: Period) => Promise<void>
+        openAction: (settings: PeriodNoteSettings, period: Period) => Promise<void>,
     ): Promise<void> {
         const requireModifierKeyForCreatingNote = this.settings.generalSettings.useModifierKeyToCreateNote;
         const isModifierKeyPressed = requireModifierKeyForCreatingNote && isCreateFileModifierKey(key);

@@ -4,7 +4,7 @@ import {AdapterNoteRepository} from 'src/infrastructure/repositories/adapter.not
 import {
     mockDateParserFactory,
     mockDateRepositoryFactory,
-    mockSettingsRepositoryFactory
+    mockSettingsRepositoryFactory,
 } from 'src/test-helpers/factory.mocks';
 
 describe('DefaultNoteRepositoryFactory', () => {
@@ -19,8 +19,14 @@ describe('DefaultNoteRepositoryFactory', () => {
         factory = new DefaultNoteRepositoryFactory(noteAdapter, dateRepositoryFactory, dateParserFactory, settingsRepositoryFactory);
     });
 
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     describe('getRepository', () => {
         it('should return a note repository', () => {
+            // Arrange
+            
             // Act
             const result = factory.getRepository();
 

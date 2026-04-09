@@ -6,15 +6,20 @@ import {mockPeriod} from 'src/test-helpers/model.mocks';
 
 describe('PeriodNameBuilder', () => {
     let nameBuilder: PeriodNameBuilder;
-    let dateParser = mockDateParser;
+    let dateParser: typeof mockDateParser;
 
     const nameTemplate = 'yyyy-MM-dd';
     const period = mockPeriod;
 
     beforeEach(() => {
+        dateParser = mockDateParser;
         const dateParserFactory = mockDateParserFactory(dateParser);
 
         nameBuilder = new PeriodNameBuilder(dateParserFactory);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     describe('build', () => {

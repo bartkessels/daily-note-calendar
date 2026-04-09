@@ -18,9 +18,9 @@ describe('Period', () => {
             // Arrange
             const periodA = undefined;
             const periodB = <Period> {
-                date: new Date(),
+                date: new Date(2023, 9, 2),
                 name: '',
-                type: PeriodType.Day
+                type: PeriodType.Day,
             };
 
             // Act
@@ -33,9 +33,9 @@ describe('Period', () => {
         it('should return false if periodB is undefined', () => {
             // Arrange
             const periodA = <Period> {
-                date: new Date(),
+                date: new Date(2023, 9, 2),
                 name: '',
-                type: PeriodType.Day
+                type: PeriodType.Day,
             };
             const periodB = undefined;
 
@@ -51,12 +51,12 @@ describe('Period', () => {
             const periodA = <Period> {
                 date: new Date(2023, 9, 2),
                 name: '',
-                type: PeriodType.Day
+                type: PeriodType.Day,
             };
             const periodB = <Period> {
                 date: new Date(2023, 9, 3),
                 name: '',
-                type: PeriodType.Day
+                type: PeriodType.Day,
             };
 
             // Act
@@ -71,12 +71,12 @@ describe('Period', () => {
             const periodA = <Period> {
                 date: new Date(2023, 9, 2),
                 name: '',
-                type: PeriodType.Day
+                type: PeriodType.Day,
             };
             const periodB = <Period> {
                 date: new Date(2023, 9, 2),
                 name: '',
-                type: PeriodType.Week
+                type: PeriodType.Week,
             };
 
             // Act
@@ -91,12 +91,12 @@ describe('Period', () => {
             const periodA = <Period> {
                 date: new Date(2023, 9, 2),
                 name: '',
-                type: PeriodType.Day
+                type: PeriodType.Day,
             };
             const periodB = <Period> {
                 date: new Date(2023, 9, 2),
                 name: '',
-                type: PeriodType.Day
+                type: PeriodType.Day,
             };
 
             // Act

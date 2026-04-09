@@ -12,7 +12,7 @@ export class NavigateToPreviousWeekCommand implements Command {
         this.commandHandler = commandHandlerFactory.getHandler(CommandHandlerType.NavigateToPreviousWeek);
     }
 
-    public callback: (() => any) = (): void => {
+    public callback: (() => void) = (): void => {
         this.commandHandler.execute().catch();
     };
 }

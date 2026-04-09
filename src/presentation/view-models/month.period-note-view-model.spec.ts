@@ -14,7 +14,7 @@ describe('MonthPeriodNoteViewModel', () => {
     const period = <Period> {
         date: new Date(2023, 9),
         name: 'October',
-        type: PeriodType.Month
+        type: PeriodType.Month,
     };
 
     let viewModel: MonthPeriodNoteViewModel;
@@ -60,8 +60,8 @@ describe('MonthPeriodNoteViewModel', () => {
                 monthlyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/month',
                     nameTemplate: 'Month',
-                    templateFile: 'templates/month'
-                }
+                    templateFile: 'templates/month',
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.monthlyNotes).mockResolvedValue(true);
 
@@ -80,8 +80,8 @@ describe('MonthPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: false
-                }
+                    displayNoteIndicator: false,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.monthlyNotes).mockResolvedValue(true);
 
@@ -98,8 +98,8 @@ describe('MonthPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: false
-                }
+                    displayNoteIndicator: false,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.monthlyNotes).mockResolvedValue(false);
 
@@ -116,8 +116,8 @@ describe('MonthPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: true
-                }
+                    displayNoteIndicator: true,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.monthlyNotes).mockResolvedValue(false);
 
@@ -134,8 +134,8 @@ describe('MonthPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: true
-                }
+                    displayNoteIndicator: true,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.monthlyNotes).mockResolvedValue(true);
 
@@ -168,8 +168,8 @@ describe('MonthPeriodNoteViewModel', () => {
                 monthlyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/month',
                     nameTemplate: 'Month',
-                    templateFile: 'templates/month'
-                }
+                    templateFile: 'templates/month',
+                },
             };
             const modifierKey = ModifierKey.Meta;
 
@@ -234,8 +234,8 @@ describe('MonthPeriodNoteViewModel', () => {
                 monthlyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/month',
                     nameTemplate: 'Month',
-                    templateFile: 'templates/month'
-                }
+                    templateFile: 'templates/month',
+                },
             };
             const modifierKey = ModifierKey.Meta;
 
@@ -285,8 +285,8 @@ describe('MonthPeriodNoteViewModel', () => {
                 monthlyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/month',
                     nameTemplate: 'Month',
-                    templateFile: 'templates/month'
-                }
+                    templateFile: 'templates/month',
+                },
             };
             const modifierKey = ModifierKey.None;
 
@@ -334,8 +334,8 @@ describe('MonthPeriodNoteViewModel', () => {
                 monthlyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/month',
                     nameTemplate: 'Month',
-                    templateFile: 'templates/month'
-                }
+                    templateFile: 'templates/month',
+                },
             };
 
             // Act
@@ -345,5 +345,5 @@ describe('MonthPeriodNoteViewModel', () => {
             // Assert
             expect(periodService.deleteNote).toHaveBeenCalledWith(period, settings.monthlyNotes);
         });
-    })
+    });
 });

@@ -27,7 +27,7 @@ export class CalendarView extends ItemView {
         private readonly monthlyNoteViewModel: MonthPeriodNoteViewModel,
         private readonly quarterlyNoteViewModel: QuarterPeriodNoteViewModel,
         private readonly yearlyNoteViewModel: YearPeriodNoteViewModel,
-        private readonly notesViewModel: NotesViewModel
+        private readonly notesViewModel: NotesViewModel,
     ) {
         super(leaf);
     }
@@ -52,7 +52,7 @@ export class CalendarView extends ItemView {
             monthlyNoteViewModel: this.monthlyNoteViewModel,
             quarterlyNoteViewModel: this.quarterlyNoteViewModel,
             yearlyNoteViewModel: this.yearlyNoteViewModel,
-            notesViewModel: this.notesViewModel
+            notesViewModel: this.notesViewModel,
         } as ViewModelsContext;
 
         createRoot((this.containerEl.children[1])).render(
@@ -62,7 +62,7 @@ export class CalendarView extends ItemView {
                         <CalendarComponent/>
                     </ViewModelsContext>
                 </ContextMenuAdapterContext.Provider>
-            </StrictMode>
+            </StrictMode>,
         );
     }
 }

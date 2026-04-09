@@ -8,7 +8,7 @@ export const mockPeriodService = {
     openNoteInHorizontalSplitView: jest.fn(),
     openNoteInVerticalSplitView: jest.fn(),
     deleteNote: jest.fn(),
-    hasPeriodicNote: jest.fn()
+    hasPeriodicNote: jest.fn(),
 } as jest.Mocked<PeriodService>;
 
 export const mockCalendarService = {
@@ -20,7 +20,7 @@ export const mockCalendarService = {
     getNextMonth: jest.fn(),
     getMonthForWeeks: jest.fn(),
     getQuarterForWeeks: jest.fn(),
-    getYearForWeeks: jest.fn()
+    getYearForWeeks: jest.fn(),
 } as jest.Mocked<CalendarService>;
 
 export const mockNoteService = {
@@ -28,5 +28,5 @@ export const mockNoteService = {
     openNote: jest.fn(),
     openNoteInHorizontalSplitView: jest.fn(),
     openNoteInVerticalSplitView: jest.fn(),
-    deleteNote: jest.fn()
+    deleteNote: jest.fn(),
 } as jest.Mocked<NoteService>;

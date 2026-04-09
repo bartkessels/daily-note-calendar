@@ -29,6 +29,8 @@ describe('PluginSettingsRepository', () => {
 
     describe('get', () => {
         it('should call the adapter to get the settings', async () => {
+            // Arrange
+            
             // Act
             await repository.get();
 

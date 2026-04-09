@@ -20,7 +20,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     private readonly dependencies: Dependencies = getDependencies(this);
 
     override async onload(): Promise<void> {
-        const calendarView = (leaf: WorkspaceLeaf) => new CalendarView(
+        const calendarView = (leaf: WorkspaceLeaf): CalendarView => new CalendarView(
             leaf,
             this.dependencies.contextMenuAdapter,
             this.dependencies.calendarViewModel,
@@ -29,7 +29,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             this.dependencies.monthlyNoteViewModel,
             this.dependencies.quarterlyNoteViewModel,
             this.dependencies.yearlyNoteViewModel,
-            this.dependencies.notesViewModel
+            this.dependencies.notesViewModel,
         );
 
         await this.initializePlugin();
@@ -62,6 +62,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     private handleSettingsChange(): void {
         this.propagateSettings()
             .then(() => this.dependencies.calendarViewModel.navigateToCurrentWeek?.())
+            // eslint-disable-next-line no-console -- intentional diagnostic logging for settings change errors
             .catch(console.error);
     }
 
@@ -93,7 +94,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             this,
             this.dependencies.dateParserFactory,
             this.dependencies.settingsRepositoryFactory,
-            this.handleSettingsChange.bind(this)
+            this.handleSettingsChange.bind(this),
         );
         this.addSettingTab(settingsTab);
     }

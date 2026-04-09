@@ -3,7 +3,7 @@ import {FileAdapter} from 'src/infrastructure/adapters/file.adapter';
 
 export class AdapterFileRepository implements FileRepository {
     constructor(
-        private readonly adapter: FileAdapter
+        private readonly adapter: FileAdapter,
     ) {
 
     }

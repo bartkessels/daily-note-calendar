@@ -31,7 +31,7 @@ describe('DateFnsDateRepository', () => {
             expect(result).toEqual({
                 name: '02',
                 date: date,
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
         });
 
@@ -46,7 +46,7 @@ describe('DateFnsDateRepository', () => {
             expect(result).toEqual({
                 name: '10',
                 date: date,
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
         });
     });
@@ -67,7 +67,7 @@ describe('DateFnsDateRepository', () => {
             expect(result).toEqual({
                 name: '02',
                 date: expectedDate,
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
         });
 
@@ -103,20 +103,20 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 quarter: {
                     name: 'Q4',
                     date: new Date(2023, 9),
-                    type: PeriodType.Quarter
+                    type: PeriodType.Quarter,
                 },
                 month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             });
         });
 
@@ -136,20 +136,20 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 quarter: {
                     name: 'Q4',
                     date: new Date(2023, 9),
-                    type: PeriodType.Quarter
+                    type: PeriodType.Quarter,
                 },
                 month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             });
         });
 
@@ -169,20 +169,20 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 quarter: {
                     name: 'Q4',
                     date: new Date(2023, 9),
-                    type: PeriodType.Quarter
+                    type: PeriodType.Quarter,
                 },
                 month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             });
         });
 
@@ -202,20 +202,20 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 quarter: {
                     name: 'Q4',
                     date: new Date(2023, 9),
-                    type: PeriodType.Quarter
+                    type: PeriodType.Quarter,
                 },
                 month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             });
         });
 
@@ -232,37 +232,37 @@ describe('DateFnsDateRepository', () => {
             expect(result.days[0]).toEqual({
                 name: '01',
                 date: new Date(2023, 9, 1),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[1]).toEqual({
                 name: '02',
                 date: new Date(2023, 9, 2),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[2]).toEqual({
                 name: '03',
                 date: new Date(2023, 9, 3),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[3]).toEqual({
                 name: '04',
                 date: new Date(2023, 9, 4),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[4]).toEqual({
                 name: '05',
                 date: new Date(2023, 9, 5),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[5]).toEqual({
                 name: '06',
                 date: new Date(2023, 9, 6),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[6]).toEqual({
                 name: '07',
                 date: new Date(2023, 9, 7),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
         });
 
@@ -279,37 +279,37 @@ describe('DateFnsDateRepository', () => {
             expect(result.days[0]).toEqual({
                 name: '01',
                 date: new Date(2023, 9, 1),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[1]).toEqual({
                 name: '02',
                 date: new Date(2023, 9, 2),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[2]).toEqual({
                 name: '03',
                 date: new Date(2023, 9, 3),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[3]).toEqual({
                 name: '04',
                 date: new Date(2023, 9, 4),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[4]).toEqual({
                 name: '05',
                 date: new Date(2023, 9, 5),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[5]).toEqual({
                 name: '06',
                 date: new Date(2023, 9, 6),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[6]).toEqual({
                 name: '07',
                 date: new Date(2023, 9, 7),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
         });
 
@@ -326,37 +326,37 @@ describe('DateFnsDateRepository', () => {
             expect(result.days[0]).toEqual({
                 name: '02',
                 date: new Date(2023, 9, 2),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[1]).toEqual({
                 name: '03',
                 date: new Date(2023, 9, 3),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[2]).toEqual({
                 name: '04',
                 date: new Date(2023, 9, 4),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[3]).toEqual({
                 name: '05',
                 date: new Date(2023, 9, 5),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[4]).toEqual({
                 name: '06',
                 date: new Date(2023, 9, 6),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[5]).toEqual({
                 name: '07',
                 date: new Date(2023, 9, 7),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[6]).toEqual({
                 name: '08',
                 date: new Date(2023, 9, 8),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
         });
 
@@ -373,37 +373,37 @@ describe('DateFnsDateRepository', () => {
             expect(result.days[0]).toEqual({
                 name: '02',
                 date: new Date(2023, 9, 2),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[1]).toEqual({
                 name: '03',
                 date: new Date(2023, 9, 3),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[2]).toEqual({
                 name: '04',
                 date: new Date(2023, 9, 4),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[3]).toEqual({
                 name: '05',
                 date: new Date(2023, 9, 5),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[4]).toEqual({
                 name: '06',
                 date: new Date(2023, 9, 6),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[5]).toEqual({
                 name: '07',
                 date: new Date(2023, 9, 7),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
             expect(result.days[6]).toEqual({
                 name: '08',
                 date: new Date(2023, 9, 8),
-                type: PeriodType.Day
+                type: PeriodType.Day,
             });
         });
     });
@@ -418,15 +418,15 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             };
 
             // Act
@@ -440,20 +440,20 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 quarter: {
                     name: 'Q4',
                     date: new Date(2023, 9),
-                    type: PeriodType.Quarter
+                    type: PeriodType.Quarter,
                 },
                 month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             });
         });
 
@@ -466,15 +466,15 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             };
 
             // Act
@@ -488,20 +488,20 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 quarter: {
                     name: 'Q4',
                     date: new Date(2023, 9),
-                    type: PeriodType.Quarter
+                    type: PeriodType.Quarter,
                 },
                 month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             });
         });
 
@@ -514,15 +514,15 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             };
 
             // Act
@@ -536,20 +536,20 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 quarter: {
                     name: 'Q4',
                     date: new Date(2023, 9),
-                    type: PeriodType.Quarter
+                    type: PeriodType.Quarter,
                 },
                 month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             });
         });
 
@@ -562,15 +562,15 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             };
 
             // Act
@@ -584,20 +584,20 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 quarter: {
                     name: 'Q4',
                     date: new Date(2023, 9),
-                    type: PeriodType.Quarter
+                    type: PeriodType.Quarter,
                 },
                 month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             });
         });
 
@@ -610,15 +610,15 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 month: <Period>{
                     name: 'December',
                     date: new Date(2023, 11),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             };
 
             // Act
@@ -632,20 +632,20 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2024',
                     date: new Date(2024, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 quarter: {
                     name: 'Q1',
                     date: new Date(2023, 12),
-                    type: PeriodType.Quarter
+                    type: PeriodType.Quarter,
                 },
                 month: <Period>{
                     name: 'January',
                     date: new Date(2024, 0),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             });
         });
 
@@ -658,15 +658,15 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 month: <Period>{
                     name: 'December',
                     date: new Date(2023, 11),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             };
 
             // Act
@@ -680,20 +680,20 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2024',
                     date: new Date(2024, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 quarter: {
                     name: 'Q1',
                     date: new Date(2023, 12),
-                    type: PeriodType.Quarter
+                    type: PeriodType.Quarter,
                 },
                 month: <Period>{
                     name: 'January',
                     date: new Date(2024, 0),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             });
         });
 
@@ -706,15 +706,15 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 month: <Period>{
                     name: 'December',
                     date: new Date(2023, 11),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             };
 
             // Act
@@ -728,20 +728,20 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2024',
                     date: new Date(2024, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 quarter: {
                     name: 'Q1',
                     date: new Date(2023, 12),
-                    type: PeriodType.Quarter
+                    type: PeriodType.Quarter,
                 },
                 month: <Period>{
                     name: 'January',
                     date: new Date(2024, 0),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             });
         });
 
@@ -754,15 +754,15 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 month: <Period>{
                     name: 'December',
                     date: new Date(2023, 11),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             };
 
             // Act
@@ -776,20 +776,20 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2024',
                     date: new Date(2024, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 quarter: {
                     name: 'Q1',
                     date: new Date(2023, 12),
-                    type: PeriodType.Quarter
+                    type: PeriodType.Quarter,
                 },
                 month: <Period>{
                     name: 'January',
                     date: new Date(2024, 0),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             });
         });
     });
@@ -804,15 +804,15 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             };
 
             // Act
@@ -826,20 +826,20 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 quarter: <Period>{
                     name: 'Q3',
                     date: new Date(2023, 6),
-                    type: PeriodType.Quarter
+                    type: PeriodType.Quarter,
                 },
                 month: <Period>{
                     name: 'September',
                     date: new Date(2023, 8),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             });
         });
 
@@ -852,15 +852,15 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             };
 
             // Act
@@ -874,20 +874,20 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 quarter: <Period>{
                     name: 'Q3',
                     date: new Date(2023, 6),
-                    type: PeriodType.Quarter
+                    type: PeriodType.Quarter,
                 },
                 month: <Period>{
                     name: 'September',
                     date: new Date(2023, 8),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             });
         });
 
@@ -900,15 +900,15 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             };
 
             // Act
@@ -922,20 +922,20 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 quarter: <Period>{
                     name: 'Q3',
                     date: new Date(2023, 6),
-                    type: PeriodType.Quarter
+                    type: PeriodType.Quarter,
                 },
                 month: <Period>{
                     name: 'September',
                     date: new Date(2023, 8),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             });
         });
 
@@ -948,15 +948,15 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 month: <Period>{
                     name: 'October',
                     date: new Date(2023, 9),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             };
 
             // Act
@@ -970,20 +970,20 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 quarter: <Period>{
                     name: 'Q3',
                     date: new Date(2023, 6),
-                    type: PeriodType.Quarter
+                    type: PeriodType.Quarter,
                 },
                 month: <Period>{
                     name: 'September',
                     date: new Date(2023, 8),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             });
         });
 
@@ -996,15 +996,15 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2043',
                     date: new Date(2024, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 month: <Period>{
                     name: 'January',
                     date: new Date(2024, 0),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             };
 
             // Act
@@ -1018,20 +1018,20 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 quarter: <Period>{
                     name: 'Q4',
                     date: new Date(2023, 9),
-                    type: PeriodType.Quarter
+                    type: PeriodType.Quarter,
                 },
                 month: <Period>{
                     name: 'December',
                     date: new Date(2023, 11),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             });
         });
 
@@ -1044,15 +1044,15 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2043',
                     date: new Date(2024, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 month: <Period>{
                     name: 'January',
                     date: new Date(2024, 0),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             };
 
             // Act
@@ -1066,20 +1066,20 @@ describe('DateFnsDateRepository', () => {
                 year: <Period>{
                     name: '2023',
                     date: new Date(2023, 0),
-                    type: PeriodType.Year
+                    type: PeriodType.Year,
                 },
                 quarter: <Period>{
                     name: 'Q4',
                     date: new Date(2023, 9),
-                    type: PeriodType.Quarter
+                    type: PeriodType.Quarter,
                 },
                 month: <Period>{
                     name: 'December',
                     date: new Date(2023, 11),
-                    type: PeriodType.Month
+                    type: PeriodType.Month,
                 },
                 days: expect.any(Array),
-                type: PeriodType.Week
+                type: PeriodType.Week,
             });
         });
     });
@@ -1096,7 +1096,7 @@ describe('DateFnsDateRepository', () => {
             expect(result).toEqual({
                 name: 'October',
                 date: new Date(2023, 9),
-                type: PeriodType.Month
+                type: PeriodType.Month,
             });
         });
     });
@@ -1107,7 +1107,7 @@ describe('DateFnsDateRepository', () => {
             const month = <Period>{
                 name: 'October',
                 date: new Date(2023, 9),
-                type: PeriodType.Month
+                type: PeriodType.Month,
             };
 
             // Act
@@ -1117,7 +1117,7 @@ describe('DateFnsDateRepository', () => {
             expect(result).toEqual(<Period>{
                 name: 'November',
                 date: new Date(2023, 10),
-                type: PeriodType.Month
+                type: PeriodType.Month,
             });
         });
 
@@ -1126,7 +1126,7 @@ describe('DateFnsDateRepository', () => {
             const month = <Period>{
                 name: 'December',
                 date: new Date(2023, 11),
-                type: PeriodType.Month
+                type: PeriodType.Month,
             };
 
             // Act
@@ -1136,7 +1136,7 @@ describe('DateFnsDateRepository', () => {
             expect(result).toEqual(<Period>{
                 name: 'January',
                 date: new Date(2024, 0),
-                type: PeriodType.Month
+                type: PeriodType.Month,
             });
         });
     });
@@ -1147,7 +1147,7 @@ describe('DateFnsDateRepository', () => {
             const month = <Period>{
                 name: 'October',
                 date: new Date(2023, 9),
-                type: PeriodType.Month
+                type: PeriodType.Month,
             };
 
             // Act
@@ -1157,7 +1157,7 @@ describe('DateFnsDateRepository', () => {
             expect(result).toEqual(<Period>{
                 name: 'September',
                 date: new Date(2023, 8),
-                type: PeriodType.Month
+                type: PeriodType.Month,
             });
         });
 
@@ -1166,7 +1166,7 @@ describe('DateFnsDateRepository', () => {
             const month = <Period>{
                 name: 'January',
                 date: new Date(2024, 0),
-                type: PeriodType.Month
+                type: PeriodType.Month,
             };
 
             // Act
@@ -1176,14 +1176,8 @@ describe('DateFnsDateRepository', () => {
             expect(result).toEqual(<Period>{
                 name: 'December',
                 date: new Date(2023, 11),
-                type: PeriodType.Month
+                type: PeriodType.Month,
             });
-        });
-    });
-
-    describe('getWeeksForMonth', () => {
-        it('should return all weeks for the month', () => {
-
         });
     });
 
@@ -1193,7 +1187,7 @@ describe('DateFnsDateRepository', () => {
             const month = <Period>{
                 name: 'November',
                 date: new Date(2023, 10),
-                type: PeriodType.Month
+                type: PeriodType.Month,
             };
 
             // Act
@@ -1203,7 +1197,7 @@ describe('DateFnsDateRepository', () => {
             expect(result).toEqual(<Period>{
                 name: 'Q4',
                 date: new Date(2023, 9),
-                type: PeriodType.Quarter
+                type: PeriodType.Quarter,
             });
         });
     });

@@ -24,4 +24,4 @@ export const YearlyNoteComponent = (props: YearlyNoteProperties): ReactElement =
             onOpenInVerticalSplitViewClick={(key) => viewModel?.openNoteInVerticalSplitView(key, props.year)}
             onDelete={() => viewModel?.deleteNote(props.year)} />
     );
-}
+};

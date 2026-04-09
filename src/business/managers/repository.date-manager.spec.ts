@@ -8,28 +8,33 @@ import {mockDateRepositoryFactory} from 'src/test-helpers/factory.mocks';
 
 describe('RepositoryDateManager', () => {
     let manager: RepositoryDateManager;
-
-    const dateRepository = mockDateRepository;
-    const today = new Date(2023, 9, 2);
-    const year = <Period> {
-        date: new Date(2023),
-        name: '2023',
-        type: PeriodType.Year
-    };
-    const quarter = <Period>{
-        date: new Date(2023, 6),
-        name: 'Q3',
-        type: PeriodType.Quarter
-    };
-    const month = <Period>{
-        date: new Date(2023, 9),
-        name: 'October',
-        type: PeriodType.Month
-    };
+    let dateRepository: typeof mockDateRepository;
+    let today: Date;
+    let year: Period;
+    let quarter: Period;
+    let month: Period;
 
     beforeEach(() => {
+        dateRepository = mockDateRepository;
+        today = new Date(2023, 9, 2);
+        year = <Period> {
+            date: new Date(2023),
+            name: '2023',
+            type: PeriodType.Year,
+        };
+        quarter = <Period>{
+            date: new Date(2023, 6),
+            name: 'Q3',
+            type: PeriodType.Quarter,
+        };
+        month = <Period>{
+            date: new Date(2023, 9),
+            name: 'October',
+            type: PeriodType.Month,
+        };
+
         jest.useFakeTimers();
-        jest.setSystemTime(today);
+        jest.setSystemTime(today.getTime());
 
         const dateRepositoryFactory = mockDateRepositoryFactory(dateRepository);
 
@@ -47,7 +52,7 @@ describe('RepositoryDateManager', () => {
             const expected = <Period>{
                 date: today,
                 name: '2',
-                type: PeriodType.Day
+                type: PeriodType.Day,
             };
             when(dateRepository.getDayFromDate).calledWith(today).mockReturnValue(expected);
 
@@ -66,7 +71,7 @@ describe('RepositoryDateManager', () => {
             const expected = <Period>{
                 date: tomorrow,
                 name: '3',
-                type: PeriodType.Day
+                type: PeriodType.Day,
             };
             when(dateRepository.getDayFromDate).calledWith(tomorrow).mockReturnValue(expected);
 
@@ -85,7 +90,7 @@ describe('RepositoryDateManager', () => {
             const expected = <Period>{
                 date: yesterday,
                 name: '1',
-                type: PeriodType.Day
+                type: PeriodType.Day,
             };
             when(dateRepository.getDayFromDate).calledWith(yesterday).mockReturnValue(expected);
 
@@ -108,7 +113,7 @@ describe('RepositoryDateManager', () => {
                 date: today,
                 name: '40',
                 type: PeriodType.Week,
-                days: []
+                days: [],
             };
             when(dateRepository.getWeekFromDate).calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, today).mockReturnValue(expected);
 
@@ -126,7 +131,7 @@ describe('RepositoryDateManager', () => {
             const period = <Period>{
                 date: new Date(2023, 9, 2),
                 name: '2',
-                type: PeriodType.Day
+                type: PeriodType.Day,
             };
             const expected = <Week>{
                 weekNumber: 40,
@@ -136,7 +141,7 @@ describe('RepositoryDateManager', () => {
                 date: period.date,
                 name: '40',
                 type: PeriodType.Week,
-                days: []
+                days: [],
             };
             when(dateRepository.getWeekFromDate).calledWith(DayOfWeek.Monday, WeekNumberStandard.ISO, period.date).mockReturnValue(expected);
 
@@ -157,7 +162,7 @@ describe('RepositoryDateManager', () => {
             date: new Date(2023, 9, 2),
             name: '40',
             type: PeriodType.Week,
-            days: []
+            days: [],
         };
         const previousWeeks = [
             <Week>{
@@ -168,7 +173,7 @@ describe('RepositoryDateManager', () => {
                 date: new Date(2023, 8, 18),
                 name: '38',
                 type: PeriodType.Week,
-                days: []
+                days: [],
             },
             <Week>{
                 weekNumber: 39,
@@ -178,8 +183,8 @@ describe('RepositoryDateManager', () => {
                 date: new Date(2023, 8, 25),
                 name: '39',
                 type: PeriodType.Week,
-                days: []
-            }
+                days: [],
+            },
         ];
 
         it('should return the previous weeks from the repository', () => {
@@ -220,7 +225,7 @@ describe('RepositoryDateManager', () => {
             date: new Date(2023, 9, 2),
             name: '40',
             type: PeriodType.Week,
-            days: []
+            days: [],
         };
         const nextWeeks = [
             <Week>{
@@ -231,7 +236,7 @@ describe('RepositoryDateManager', () => {
                 date: new Date(2023, 9, 9),
                 name: '41',
                 type: PeriodType.Week,
-                days: []
+                days: [],
             },
             <Week>{
                 weekNumber: 42,
@@ -241,8 +246,8 @@ describe('RepositoryDateManager', () => {
                 date: new Date(2023, 9, 16),
                 name: '42',
                 type: PeriodType.Week,
-                days: []
-            }
+                days: [],
+            },
         ];
 
         it('should return the next weeks from the repository', () => {
@@ -276,7 +281,7 @@ describe('RepositoryDateManager', () => {
         const previousMonth = <Period>{
             date: new Date(2023, 8),
             name: 'September',
-            type: PeriodType.Month
+            type: PeriodType.Month,
         };
         const weeksOfPreviousMonth: Week[] = [
             {
@@ -287,7 +292,7 @@ describe('RepositoryDateManager', () => {
                 quarter: quarter,
                 month: previousMonth,
                 days: [],
-                type: PeriodType.Week
+                type: PeriodType.Week,
             },
             {
                 date: new Date(2023, 8, 4),
@@ -297,7 +302,7 @@ describe('RepositoryDateManager', () => {
                 quarter: quarter,
                 month: previousMonth,
                 days: [],
-                type: PeriodType.Week
+                type: PeriodType.Week,
             },
             {
                 date: new Date(2023, 8, 11),
@@ -307,7 +312,7 @@ describe('RepositoryDateManager', () => {
                 quarter: quarter,
                 month: previousMonth,
                 days: [],
-                type: PeriodType.Week
+                type: PeriodType.Week,
             },
             {
                 date: new Date(2023, 8, 18),
@@ -317,7 +322,7 @@ describe('RepositoryDateManager', () => {
                 quarter: quarter,
                 month: previousMonth,
                 days: [],
-                type: PeriodType.Week
+                type: PeriodType.Week,
             },
             {
                 date: new Date(2023, 8, 25),
@@ -327,7 +332,7 @@ describe('RepositoryDateManager', () => {
                 quarter: quarter,
                 month: previousMonth,
                 days: [],
-                type: PeriodType.Week
+                type: PeriodType.Week,
             },
             {
                 date: new Date(2023, 9, 2),
@@ -337,8 +342,8 @@ describe('RepositoryDateManager', () => {
                 quarter: quarter,
                 month: previousMonth,
                 days: [],
-                type: PeriodType.Week
-            }
+                type: PeriodType.Week,
+            },
         ];
 
         it('should return call the getPreviousMonth with the given month on the repository and should call the correct getWeeksOfMonth method', () => {
@@ -393,8 +398,8 @@ describe('RepositoryDateManager', () => {
 
             // Assert
             const weekFromDateCalls = dateRepository.getWeekFromDate.mock.calls;
-            expect(weekFromDateCalls.some(call => call[2].getFullYear() === previousMonth.date.getFullYear())).toBeTruthy();
-            expect(weekFromDateCalls.some(call => call[2].getMonth() === previousMonth.date.getMonth())).toBeTruthy();
+            expect(weekFromDateCalls.some((call: [DayOfWeek, WeekNumberStandard, Date]) => call[2].getFullYear() === previousMonth.date.getFullYear())).toBeTruthy();
+            expect(weekFromDateCalls.some((call: [DayOfWeek, WeekNumberStandard, Date]) => call[2].getMonth() === previousMonth.date.getMonth())).toBeTruthy();
             expect(dateRepository.getPreviousMonth).toHaveBeenCalledWith(month);
             expect(result).toEqual(weeksOfPreviousMonth);
         });
@@ -404,7 +409,7 @@ describe('RepositoryDateManager', () => {
         const nextMonth = <Period>{
             date: new Date(2023, 10),
             name: 'November',
-            type: PeriodType.Month
+            type: PeriodType.Month,
         };
         const weeksOfNextMonth: Week[] = [
             {
@@ -415,7 +420,7 @@ describe('RepositoryDateManager', () => {
                 quarter: quarter,
                 month: month,
                 days: [],
-                type: PeriodType.Week
+                type: PeriodType.Week,
             },
             {
                 date: new Date(2023, 10,4),
@@ -425,7 +430,7 @@ describe('RepositoryDateManager', () => {
                 quarter: quarter,
                 month: nextMonth,
                 days: [],
-                type: PeriodType.Week
+                type: PeriodType.Week,
             },
             {
                 date: new Date(2023, 10, 13),
@@ -435,7 +440,7 @@ describe('RepositoryDateManager', () => {
                 quarter: quarter,
                 month: nextMonth,
                 days: [],
-                type: PeriodType.Week
+                type: PeriodType.Week,
             },
             {
                 date: new Date(2023, 10, 20),
@@ -445,7 +450,7 @@ describe('RepositoryDateManager', () => {
                 quarter: quarter,
                 month: nextMonth,
                 days: [],
-                type: PeriodType.Week
+                type: PeriodType.Week,
             },
             {
                 date: new Date(2023, 10, 27),
@@ -455,7 +460,7 @@ describe('RepositoryDateManager', () => {
                 quarter: quarter,
                 month: nextMonth,
                 days: [],
-                type: PeriodType.Week
+                type: PeriodType.Week,
             },
             {
                 date: new Date(2023, 11, 4),
@@ -465,8 +470,8 @@ describe('RepositoryDateManager', () => {
                 quarter: quarter,
                 month: nextMonth,
                 days: [],
-                type: PeriodType.Week
-            }
+                type: PeriodType.Week,
+            },
         ];
 
         it('should return call the getNextMonth with the given month on the repository and should call the correct getWeeksOfMonth method', () => {
@@ -492,8 +497,8 @@ describe('RepositoryDateManager', () => {
 
             // Assert
             const weekFromDateCalls = dateRepository.getWeekFromDate.mock.calls;
-            expect(weekFromDateCalls.some(call => call[2].getFullYear() === nextMonth.date.getFullYear())).toBeTruthy();
-            expect(weekFromDateCalls.some(call => call[2].getMonth() === nextMonth.date.getMonth())).toBeTruthy();
+            expect(weekFromDateCalls.some((call: [DayOfWeek, WeekNumberStandard, Date]) => call[2].getFullYear() === nextMonth.date.getFullYear())).toBeTruthy();
+            expect(weekFromDateCalls.some((call: [DayOfWeek, WeekNumberStandard, Date]) => call[2].getMonth() === nextMonth.date.getMonth())).toBeTruthy();
             expect(dateRepository.getNextMonth).toHaveBeenCalledWith(month);
             expect(result).toEqual(weeksOfNextMonth);
         });
@@ -521,8 +526,8 @@ describe('RepositoryDateManager', () => {
 
             // Assert
             const weekFromDateCalls = dateRepository.getWeekFromDate.mock.calls;
-            expect(weekFromDateCalls.some(call => call[2].getFullYear() === nextMonth.date.getFullYear())).toBeTruthy();
-            expect(weekFromDateCalls.some(call => call[2].getMonth() === nextMonth.date.getMonth())).toBeTruthy();
+            expect(weekFromDateCalls.some((call: [DayOfWeek, WeekNumberStandard, Date]) => call[2].getFullYear() === nextMonth.date.getFullYear())).toBeTruthy();
+            expect(weekFromDateCalls.some((call: [DayOfWeek, WeekNumberStandard, Date]) => call[2].getMonth() === nextMonth.date.getMonth())).toBeTruthy();
             expect(dateRepository.getNextMonth).toHaveBeenCalledWith(month);
             expect(result).toEqual(weeksOfNextMonth);
         });
@@ -534,12 +539,12 @@ describe('RepositoryDateManager', () => {
             const month = <Period>{
                 date: new Date(2023, 9),
                 name: 'October',
-                type: PeriodType.Month
+                type: PeriodType.Month,
             };
             const expected = <Period>{
                 date: new Date(2023, 6),
                 name: 'Q3',
-                type: PeriodType.Quarter
+                type: PeriodType.Quarter,
             };
             when(dateRepository.getQuarter).calledWith(month).mockReturnValue(expected);
 

@@ -3,7 +3,7 @@ import {FileAdapter} from 'src/infrastructure/adapters/file.adapter';
 
 export class ObsidianFileAdapter implements FileAdapter {
     constructor(
-        private readonly plugin: Plugin
+        private readonly plugin: Plugin,
     ) {
 
     }
@@ -63,7 +63,7 @@ export class ObsidianFileAdapter implements FileAdapter {
         const file = this.plugin.app.vault.getAbstractFileByPath(normalizedPath);
 
         if (file instanceof TFile) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Obsidian internal API not publicly typed
             (<any>this.plugin.app).fileManager.promptForFileDeletion(file);
         }
     }

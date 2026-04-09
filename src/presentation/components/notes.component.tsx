@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {ReactElement} from 'react';
 import {NoteComponent} from 'src/presentation/components/note.component';
 import {Period} from 'src/domain/models/period.model';
 import {Note} from 'src/domain/models/note.model';
@@ -8,12 +8,12 @@ export interface NotesComponentProperties {
     period: Period | null;
 }
 
-export const NotesComponent = (props: NotesComponentProperties) => {
+export const NotesComponent = (props: NotesComponentProperties): ReactElement => {
     const viewModel = useNotesViewModel();
     const [notes, setNotes] = React.useState<Note[]>([]);
 
     React.useEffect(() => {
-        const loadNotes = () => {
+        const loadNotes = (): void => {
             if (props.period) {
                 viewModel?.loadNotes(props.period).then(setNotes);
             } else {
@@ -35,7 +35,7 @@ export const NotesComponent = (props: NotesComponentProperties) => {
                         onOpenInHorizontalSplitView={(note) => viewModel?.openNoteInHorizontalSplitView(note)}
                         onOpenInVerticalSplitView={(note) => viewModel?.openNoteInVerticalSplitView(note)}
                         onClick={(note) => viewModel?.openNote(note)}
-                        onDelete={(note) => viewModel?.deleteNote(note)} />
+                        onDelete={(note) => viewModel?.deleteNote(note)} />,
                 )}
             </ul>
         </div>

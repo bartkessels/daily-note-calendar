@@ -18,7 +18,11 @@ jobs:
         with:
           node-version: latest
 
-      - name: Build and test plugin
-        run: |
-          npm install
-          npm run test
+      - name: Install dependencies
+        run: npm install
+      - name: Run linter
+        run: npm run lint
+      - name: Run unit tests
+        run: npm run test
+      - name: Run mutation tests
+        run: npm run mutation

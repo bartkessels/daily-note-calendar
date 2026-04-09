@@ -10,8 +10,9 @@ export class DefaultVariableFactory implements VariableFactory {
         .set('title', VariableType.Title);
 
     public getVariable(value: string): Variable {
-        const regex = /{{([a-z]+)([+-][0-9].)?:?(.*)?}}/;
-        const [_, name, calculusValue, template] = regex.exec(value) || [];
+        const regex = /{{([a-z]+)([+-][0-9]+[a-z])?:?(.*)?}}/;
+        // Stryker disable next-line ArrayDeclaration: Equivalent mutant - destructuring pattern skips first element, making [] and ["..."] behaviorally identical
+        const [, name, calculusValue, template] = regex.exec(value) || [];
         const type = this.types.get(name.toLowerCase());
         let calculus: Calculus | null = null;
 
@@ -28,15 +29,17 @@ export class DefaultVariableFactory implements VariableFactory {
         return {
             template: template ?? null,
             calculus: calculus ?? null,
-            type: type
+            type: type,
         };
     }
 
     private getCalculusFromRegex(string: string): Calculus | null {
         const regex= /([+-])([0-9]+)([a-z])/;
-        const [_, operator, value, unit] = regex.exec(string) || [];
+        // Stryker disable next-line ArrayDeclaration: Equivalent mutant - destructuring pattern skips first element
+        const [, operator, value, unit] = regex.exec(string) || [];
         const parsedValue = parseInt(value);
 
+        // Stryker disable next-line all: Equivalent mutants - when regex fails, all parts are undefined making logical operator rearrangements equivalent
         if (!operator || !value || !unit || isNaN(parsedValue)) {
             return null;
         }
@@ -49,7 +52,7 @@ export class DefaultVariableFactory implements VariableFactory {
         return {
             unit: unit,
             operator: calculusOperator,
-            value: parsedValue
+            value: parsedValue,
         };
     }
 }

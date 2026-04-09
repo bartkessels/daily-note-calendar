@@ -11,8 +11,14 @@ describe('DefaultDateRepositoryFactory', () => {
         factory = new DefaultDateRepositoryFactory(dateParserFactory);
     });
 
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     describe('getParser', () => {
         it('should return a date parser', () => {
+            // Arrange
+            
             // Act
             const result = factory.getRepository();
 

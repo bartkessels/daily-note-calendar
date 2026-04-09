@@ -11,19 +11,19 @@ export const mockFileAdapter = {
     openInCurrentTab: jest.fn(),
     openInHorizontalSplitView: jest.fn(),
     openInVerticalSplitView: jest.fn(),
-    delete: jest.fn()
+    delete: jest.fn(),
 } as jest.Mocked<FileAdapter>;
 
 export const mockMessageAdapter = {
-    show: jest.fn()
+    show: jest.fn(),
 } as jest.Mocked<MessageAdapter>;
 
 export const mockNoteAdapter = {
     getActiveNote: jest.fn(),
-    getNotes: jest.fn()
+    getNotes: jest.fn(),
 } as jest.Mocked<NoteAdapter>;
 
 export const mockSettingsAdapter = {
     getSettings: jest.fn(),
-    storeSettings: jest.fn()
+    storeSettings: jest.fn(),
 } as jest.Mocked<SettingsAdapter>;

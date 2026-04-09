@@ -90,6 +90,42 @@ describe('AdapterFileRepository', () => {
             // Assert
             expect(fileAdapter.createFile).toHaveBeenCalledWith(filePath, null);
         });
+
+        it('should extract folder correctly from nested path', async () => {
+            // Arrange
+            const filePath = 'folder/subfolder/file.md';
+            const content = 'content';
+
+            // Act
+            await repository.create(filePath, content);
+
+            // Assert
+            expect(fileAdapter.createFolder).toHaveBeenCalledWith('folder/subfolder');
+        });
+
+        it('should extract empty string for single-level path', async () => {
+            // Arrange
+            const filePath = 'file.md';
+            const content = 'content';
+
+            // Act
+            await repository.create(filePath, content);
+
+            // Assert
+            expect(fileAdapter.createFolder).toHaveBeenCalledWith('');
+        });
+
+        it('should use forward slash as path separator', async () => {
+            // Arrange
+            const filePath = 'a/b/c/file.md';
+            const content = 'content';
+
+            // Act
+            await repository.create(filePath, content);
+
+            // Assert
+            expect(fileAdapter.createFolder).toHaveBeenCalledWith('a/b/c');
+        });
     });
 
     describe('readContents', () => {

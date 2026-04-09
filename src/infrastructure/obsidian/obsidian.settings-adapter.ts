@@ -4,7 +4,7 @@ import {Plugin} from 'obsidian';
 
 export class ObsidianSettingsAdapter implements SettingsAdapter {
     constructor(
-        private readonly plugin: Plugin
+        private readonly plugin: Plugin,
     ) {
 
     }

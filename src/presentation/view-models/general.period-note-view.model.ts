@@ -13,7 +13,7 @@ export abstract class GeneralPeriodNoteViewModel implements PeriodNoteViewModel 
     protected constructor(
         initialSettings: PeriodNoteSettings,
         private readonly periodService: PeriodService,
-        private readonly messageAdapter: MessageAdapter
+        private readonly messageAdapter: MessageAdapter,
     ) {
         this.settings = initialSettings;
     }
@@ -59,11 +59,11 @@ export abstract class GeneralPeriodNoteViewModel implements PeriodNoteViewModel 
     private async tryOpenNote(
         key: ModifierKey,
         period: Period,
-        action: (key: ModifierKey, period: Period) => Promise<void>
+        action: (key: ModifierKey, period: Period) => Promise<void>,
     ): Promise<void> {
         try {
             await action(key, period);
-        } catch (error: any) {
+        } catch (error: unknown) {
             if (error instanceof Error) {
                 this.messageAdapter.show(error.message);
             } else {

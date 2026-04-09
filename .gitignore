@@ -5,3 +5,5 @@ coverage/
 
 data.json
 main.js
+.stryker-tmp/
+reports/

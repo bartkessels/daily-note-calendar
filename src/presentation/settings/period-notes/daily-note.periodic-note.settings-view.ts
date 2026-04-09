@@ -7,14 +7,14 @@ import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factor
 import {DailyNoteSettingsRepository} from 'src/infrastructure/repositories/daily-note.settings-repository';
 
 export class DailyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsView {
-    override title = "Daily notes";
-    override description = "Daily notes are created or opened by clicking on any date in the calendar.";
+    override title = 'Daily notes';
+    override description = 'Daily notes are created or opened by clicking on any date in the calendar.';
 
     constructor(
         settingsTab: PluginSettingTab,
         onSettingsChange: () => void,
         dateParserFactory: DateParserFactory,
-        settingsRepositoryFactory: SettingsRepositoryFactory
+        settingsRepositoryFactory: SettingsRepositoryFactory,
     ) {
         const settingsRepository = settingsRepositoryFactory.getRepository<PeriodNoteSettings>(SettingsType.DailyNote) as DailyNoteSettingsRepository;
 
@@ -26,7 +26,7 @@ export class DailyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsView 
             name: 'Daily note name template',
             description: 'The template used to create the daily note name.',
             placeholder: 'yyyy-MM-dd - eeee',
-            value: value
+            value: value,
         };
     }
 
@@ -34,8 +34,8 @@ export class DailyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsView 
         return <SettingUiModel<string>> {
             name: 'Daily notes folder',
             description: 'The folder where you store your daily notes.',
-            placeholder: `yyyy-'Daily notes'`,
-            value: value
+            placeholder: 'yyyy-\'Daily notes\'',
+            value: value,
         };
     }
 
@@ -44,7 +44,7 @@ export class DailyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsView 
             name: 'Daily note template',
             description: 'The template used to create the daily note.',
             placeholder: 'Templates/daily-note',
-            value: value
+            value: value,
         };
     }
 }

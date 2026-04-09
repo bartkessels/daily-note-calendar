@@ -16,7 +16,7 @@ export const NoteComponent = (props: NoteComponentProperties): ReactElement => {
     const contextMenuCallbacks: ContextMenuCallbacks = {
         openInHorizontalSplitView: () => props.onOpenInHorizontalSplitView(props.note),
         openInVerticalSplitView: () => props.onOpenInVerticalSplitView(props.note),
-        onDelete: () => props.onDelete(props.note)
+        onDelete: () => props.onDelete(props.note),
     };
 
     return (

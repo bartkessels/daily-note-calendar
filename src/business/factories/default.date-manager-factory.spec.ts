@@ -12,6 +12,8 @@ describe('DefaultDateManagerFactory', () => {
 
     describe('getManager', () => {
         it('should return a new RepositoryDateManager', () => {
+            // Arrange
+            
             // Act
             const result = factory.getManager();
 

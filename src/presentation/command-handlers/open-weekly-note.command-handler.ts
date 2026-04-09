@@ -11,7 +11,7 @@ export class OpenWeeklyNoteCommandHandler implements CommandHandler {
         private readonly dateManagerFactory: DateManagerFactory,
         private readonly settingsRepositoryFactory: SettingsRepositoryFactory,
         private readonly viewModel: PeriodNoteViewModel,
-        private readonly calendarViewModel: CalendarViewModel
+        private readonly calendarViewModel: CalendarViewModel,
     ) {
 
     }
@@ -25,7 +25,7 @@ export class OpenWeeklyNoteCommandHandler implements CommandHandler {
         const week = this.dateManagerFactory.getManager()
             .getWeek(today, settings.firstDayOfWeek, settings.weekNumberStandard);
 
-        this.calendarViewModel.setSelectedPeriod?.call(this, week);
+        this.calendarViewModel.setSelectedPeriod(week);
         await this.viewModel.openNote(ModifierKey.None, week);
     }
 }

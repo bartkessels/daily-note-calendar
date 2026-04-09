@@ -23,7 +23,7 @@ export class ObsidianContextMenuAdapter implements ContextMenuAdapter {
         menu.addItem(menuItem => menuItem
             .setIcon('rows-2')
             .setTitle('Open in horizontal split view')
-            .onClick(callback)
+            .onClick(callback),
         );
 
         return this;
@@ -33,7 +33,7 @@ export class ObsidianContextMenuAdapter implements ContextMenuAdapter {
         menu.addItem(menuItem => menuItem
             .setIcon('columns-2')
             .setTitle('Open in vertical split view')
-            .onClick(callback)
+            .onClick(callback),
         );
 
         return this;
@@ -43,7 +43,7 @@ export class ObsidianContextMenuAdapter implements ContextMenuAdapter {
         menu.addItem(menuItem => menuItem
             .setIcon('trash')
             .setTitle('Delete')
-            .onClick(deleteCallback)
+            .onClick(deleteCallback),
         );
 
         return this;

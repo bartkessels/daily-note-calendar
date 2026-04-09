@@ -8,7 +8,7 @@ export class DisplayInCalendarCommandHandler implements CommandHandler {
     constructor(
         private readonly noteManagerFactory: NoteManagerFactory,
         private readonly settingssRepositoryFactory: SettingsRepositoryFactory,
-        private readonly viewModel: CalendarViewModel
+        private readonly viewModel: CalendarViewModel,
     ) {
 
     }
@@ -24,9 +24,9 @@ export class DisplayInCalendarCommandHandler implements CommandHandler {
         }
 
         if (settings.useCreatedOnDateFromProperties && activeNote.createdOnProperty) {
-            this.viewModel.setSelectedPeriod?.call(this, activeNote.createdOnProperty);
+            this.viewModel.setSelectedPeriod(activeNote.createdOnProperty);
         } else if (!settings.useCreatedOnDateFromProperties) {
-            this.viewModel.setSelectedPeriod?.call(this, activeNote.createdOn);
+            this.viewModel.setSelectedPeriod(activeNote.createdOn);
         }
     }
 }

@@ -6,14 +6,14 @@ import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contra
 import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
 
 export class MonthlyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsView {
-    override title = "Monthly notes";
-    override description = "Monthly notes are created or opened by clicking on any month name in the calendar.";
+    override title = 'Monthly notes';
+    override description = 'Monthly notes are created or opened by clicking on any month name in the calendar.';
 
     constructor(
         settingsTab: PluginSettingTab,
         onSettingsChange: () => void,
         dateParserFactory: DateParserFactory,
-        settingsRepositoryFactory: SettingsRepositoryFactory
+        settingsRepositoryFactory: SettingsRepositoryFactory,
     ) {
         const settingsRepository = settingsRepositoryFactory.getRepository<PeriodNoteSettings>(SettingsType.MonthlyNote);
 
@@ -25,7 +25,7 @@ export class MonthlyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsVie
             name: 'Monthly note name template',
             description: 'The template used to create the monthly note name.',
             placeholder: 'yyyy - MM',
-            value: value
+            value: value,
         };
     }
 
@@ -34,7 +34,7 @@ export class MonthlyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsVie
             name: 'Monthly notes folder',
             description: 'The folder where you store your monthly notes.',
             placeholder: 'Monthly notes',
-            value: value
+            value: value,
         };
     }
 
@@ -43,7 +43,7 @@ export class MonthlyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsVie
             name: 'Monthly note template',
             description: 'The template used to create the monthly note.',
             placeholder: 'Templates/monthly-note',
-            value: value
+            value: value,
         };
     }
 }

@@ -5,7 +5,7 @@ import {DEFAULT_WEEKLY_NOTE_SETTINGS, PeriodNoteSettings} from 'src/domain/setti
 
 export class WeeklyNoteSettingsRepository implements SettingsRepository<PeriodNoteSettings> {
     constructor(
-        private readonly adapter: SettingsAdapter
+        private readonly adapter: SettingsAdapter,
     ) {
 
     }

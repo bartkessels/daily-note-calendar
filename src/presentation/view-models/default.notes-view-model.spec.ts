@@ -9,21 +9,21 @@ describe('NotesViewModel', () => {
     const period = <Period> {
         date: new Date(2023, 9, 2),
         name: '02',
-        type: PeriodType.Day
+        type: PeriodType.Day,
     };
     const note = <Note> {
         createdOn: period,
         createdOnProperty: null,
         name: 'My own note',
         path: 'path/to/note',
-        properties: new Map()
+        properties: new Map(),
     };
 
     let viewModel: DefaultNotesViewModel;
 
     beforeEach(() => {
         viewModel = new DefaultNotesViewModel(noteService);
-    })
+    });
 
     afterEach(() => {
         jest.clearAllMocks();
@@ -59,6 +59,8 @@ describe('NotesViewModel', () => {
 
     describe('openNoteInHorizontalSplitView', () => {
         it('should call the noteService', async () => {
+            // Arrange
+            
             // Act
             await viewModel.openNoteInHorizontalSplitView(note);
 
@@ -69,6 +71,8 @@ describe('NotesViewModel', () => {
 
     describe('openNoteInVerticalSplitView', () => {
         it('should call the noteService', async () => {
+            // Arrange
+            
             // Act
             await viewModel.openNoteInVerticalSplitView(note);
 
@@ -79,6 +83,8 @@ describe('NotesViewModel', () => {
 
     describe('openNote', () => {
         it('should call the noteService', async () => {
+            // Arrange
+            
             // Act
             await viewModel.openNote(note);
 
@@ -89,6 +95,8 @@ describe('NotesViewModel', () => {
 
     describe('deleteNote', () => {
         it('should call the noteService', async () => {
+            // Arrange
+            
             // Act
             await viewModel.deleteNote(note);
 

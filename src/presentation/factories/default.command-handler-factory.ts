@@ -5,22 +5,22 @@ import {DateManagerFactory} from 'src/business/contracts/date-manager-factory';
 import {DisplayInCalendarCommandHandler} from 'src/presentation/command-handlers/display-in-calendar.command-handler';
 import {NoteManagerFactory} from 'src/business/contracts/note-manager-factory';
 import {
-    NavigateToCurrentWeekCommandHandler
+    NavigateToCurrentWeekCommandHandler,
 } from 'src/presentation/command-handlers/navigate-to-current-week.command-handler';
 import {
-    NavigateToPreviousWeekCommandHandler
+    NavigateToPreviousWeekCommandHandler,
 } from 'src/presentation/command-handlers/navigate-to-previous-week.command-handler';
 import {
-    NavigateToNextWeekCommandHandler
+    NavigateToNextWeekCommandHandler,
 } from 'src/presentation/command-handlers/navigate-to-next-week.command-handler';
 import {OpenYesterdaysNoteCommandHandler} from 'src/presentation/command-handlers/open-yesterdays-note.command-handler';
 import {OpenTomorrowsNoteCommandHandler} from 'src/presentation/command-handlers/open-tomorrows-note.command-handler';
 import {OpenWeeklyNoteCommandHandler} from 'src/presentation/command-handlers/open-weekly-note.command-handler';
 import {
-    NavigateToPreviousMonthCommandHandler
+    NavigateToPreviousMonthCommandHandler,
 } from 'src/presentation/command-handlers/navigate-to-previous-month.command-handler';
 import {
-    NavigateToNextMonthCommandHandler
+    NavigateToNextMonthCommandHandler,
 } from 'src/presentation/command-handlers/navigate-to-next-month.command-handler';
 import {CalendarViewModel} from 'src/presentation/contracts/calendar.view-model';
 import {PeriodNoteViewModel} from 'src/presentation/contracts/period.view-model';
@@ -33,33 +33,33 @@ export class DefaultCommandHandlerFactory implements CommandHandlerFactory {
         private readonly dateManagerFactory: DateManagerFactory,
         private readonly calendarViewModel: CalendarViewModel,
         private readonly weekNoteViewModel: PeriodNoteViewModel,
-        private readonly dayNoteViewModel: PeriodNoteViewModel
+        private readonly dayNoteViewModel: PeriodNoteViewModel,
     ) {
 
     }
 
     public getHandler(type: CommandHandlerType): CommandHandler {
         switch (type) {
-            case CommandHandlerType.DisplayInCalendar:
-                return new DisplayInCalendarCommandHandler(this.noteManagerFactory, this.settingsRepositoryFactory, this.calendarViewModel);
-            case CommandHandlerType.NavigateToCurrentWeek:
-                return new NavigateToCurrentWeekCommandHandler(this.calendarViewModel);
-            case CommandHandlerType.NavigateToPreviousWeek:
-                return new NavigateToPreviousWeekCommandHandler(this.calendarViewModel);
-            case CommandHandlerType.NavigateToNextWeek:
-                return new NavigateToNextWeekCommandHandler(this.calendarViewModel);
-            case CommandHandlerType.NavigateToPreviousMonth:
-                return new NavigateToPreviousMonthCommandHandler(this.calendarViewModel);
-            case CommandHandlerType.NavigateToNextMonth:
-                return new NavigateToNextMonthCommandHandler(this.calendarViewModel);
-            case CommandHandlerType.OpenYesterdaysNote:
-                return new OpenYesterdaysNoteCommandHandler(this.dateManagerFactory, this.dayNoteViewModel, this.calendarViewModel);
-            case CommandHandlerType.OpenTodaysNote:
-                return new OpenTodaysNoteCommandHandler(this.dateManagerFactory, this.dayNoteViewModel, this.calendarViewModel);
-            case CommandHandlerType.OpenTomorrowsNote:
-                return new OpenTomorrowsNoteCommandHandler(this.dateManagerFactory, this.dayNoteViewModel, this.calendarViewModel);
-            case CommandHandlerType.OpenWeeklyNote:
-                return new OpenWeeklyNoteCommandHandler(this.dateManagerFactory, this.settingsRepositoryFactory, this.weekNoteViewModel, this.calendarViewModel);
+        case CommandHandlerType.DisplayInCalendar:
+            return new DisplayInCalendarCommandHandler(this.noteManagerFactory, this.settingsRepositoryFactory, this.calendarViewModel);
+        case CommandHandlerType.NavigateToCurrentWeek:
+            return new NavigateToCurrentWeekCommandHandler(this.calendarViewModel);
+        case CommandHandlerType.NavigateToPreviousWeek:
+            return new NavigateToPreviousWeekCommandHandler(this.calendarViewModel);
+        case CommandHandlerType.NavigateToNextWeek:
+            return new NavigateToNextWeekCommandHandler(this.calendarViewModel);
+        case CommandHandlerType.NavigateToPreviousMonth:
+            return new NavigateToPreviousMonthCommandHandler(this.calendarViewModel);
+        case CommandHandlerType.NavigateToNextMonth:
+            return new NavigateToNextMonthCommandHandler(this.calendarViewModel);
+        case CommandHandlerType.OpenYesterdaysNote:
+            return new OpenYesterdaysNoteCommandHandler(this.dateManagerFactory, this.dayNoteViewModel, this.calendarViewModel);
+        case CommandHandlerType.OpenTodaysNote:
+            return new OpenTodaysNoteCommandHandler(this.dateManagerFactory, this.dayNoteViewModel, this.calendarViewModel);
+        case CommandHandlerType.OpenTomorrowsNote:
+            return new OpenTomorrowsNoteCommandHandler(this.dateManagerFactory, this.dayNoteViewModel, this.calendarViewModel);
+        case CommandHandlerType.OpenWeeklyNote:
+            return new OpenWeeklyNoteCommandHandler(this.dateManagerFactory, this.settingsRepositoryFactory, this.weekNoteViewModel, this.calendarViewModel);
         }
     }
 }

@@ -14,7 +14,7 @@ describe('DayPeriodNoteViewModel', () => {
     const period = <Period>{
         date: new Date(2023, 9),
         name: 'October',
-        type: PeriodType.Day
+        type: PeriodType.Day,
     };
 
     let viewModel: DayPeriodNoteViewModel;
@@ -61,8 +61,8 @@ describe('DayPeriodNoteViewModel', () => {
                 dailyNotes: <PeriodNoteSettings>{
                     folder: 'path/to/day',
                     nameTemplate: 'Day',
-                    templateFile: 'templates/day'
-                }
+                    templateFile: 'templates/day',
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.dailyNotes).mockResolvedValue(true);
 
@@ -81,8 +81,8 @@ describe('DayPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: false
-                }
+                    displayNoteIndicator: false,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.dailyNotes).mockResolvedValue(true);
 
@@ -99,8 +99,8 @@ describe('DayPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: false
-                }
+                    displayNoteIndicator: false,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.dailyNotes).mockResolvedValue(false);
 
@@ -117,8 +117,8 @@ describe('DayPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: true
-                }
+                    displayNoteIndicator: true,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.dailyNotes).mockResolvedValue(false);
 
@@ -135,8 +135,8 @@ describe('DayPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: true
-                }
+                    displayNoteIndicator: true,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.dailyNotes).mockResolvedValue(true);
 
@@ -170,8 +170,8 @@ describe('DayPeriodNoteViewModel', () => {
                 dailyNotes: <PeriodNoteSettings>{
                     folder: 'path/to/day',
                     nameTemplate: 'Day',
-                    templateFile: 'templates/day'
-                }
+                    templateFile: 'templates/day',
+                },
             };
             const modifierKey = ModifierKey.Meta;
 
@@ -237,8 +237,8 @@ describe('DayPeriodNoteViewModel', () => {
                 dailyNotes: <PeriodNoteSettings>{
                     folder: 'path/to/day',
                     nameTemplate: 'Day',
-                    templateFile: 'templates/day'
-                }
+                    templateFile: 'templates/day',
+                },
             };
             const modifierKey = ModifierKey.Meta;
 
@@ -289,8 +289,8 @@ describe('DayPeriodNoteViewModel', () => {
                 dailyNotes: <PeriodNoteSettings>{
                     folder: 'path/to/day',
                     nameTemplate: 'Day',
-                    templateFile: 'templates/day'
-                }
+                    templateFile: 'templates/day',
+                },
             };
             const modifierKey = ModifierKey.None;
 
@@ -328,8 +328,8 @@ describe('DayPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayCreatedNoteCountIndicator: false
-                }
+                    displayCreatedNoteCountIndicator: false,
+                },
             };
 
             // Act
@@ -347,8 +347,8 @@ describe('DayPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayCreatedNoteCountIndicator: true
-                }
+                    displayCreatedNoteCountIndicator: true,
+                },
             };
             when(mockNoteService.getNotesForPeriod).calledWith(period).mockResolvedValue([{}, {}, {}] as any);
 
@@ -380,8 +380,8 @@ describe('DayPeriodNoteViewModel', () => {
                 dailyNotes: <PeriodNoteSettings>{
                     folder: 'path/to/day',
                     nameTemplate: 'Day',
-                    templateFile: 'templates/day'
-                }
+                    templateFile: 'templates/day',
+                },
             };
 
             // Act
@@ -391,5 +391,5 @@ describe('DayPeriodNoteViewModel', () => {
             // Assert
             expect(periodService.deleteNote).toHaveBeenCalledWith(period, settings.dailyNotes);
         });
-    })
+    });
 });

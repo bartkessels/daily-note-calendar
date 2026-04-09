@@ -1,19 +1,19 @@
 import {SettingsView, SettingUiModel} from 'src/presentation/settings/settings-view';
-import {PluginSettingTab, Setting} from 'obsidian';
+import {PluginSettingTab} from 'obsidian';
 import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contracts/settings-repository-factory';
 import {DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
 import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
 import { SortNotes } from 'src/domain/models/note.model';
 
 export class DisplayNotesSettingsView extends SettingsView {
-    override title = "Notes settings";
-    override description = "Settings for the notes that are displayed below the calendar.";
+    override title = 'Notes settings';
+    override description = 'Settings for the notes that are displayed below the calendar.';
 
     constructor(
         settingsTab: PluginSettingTab,
         onSettingsChange: () => void,
         private readonly dateParserFactory: DateParserFactory,
-        private readonly settingsRepositoryFactory: SettingsRepositoryFactory
+        private readonly settingsRepositoryFactory: SettingsRepositoryFactory,
     ) {
         super(settingsTab, onSettingsChange);
     }
@@ -52,7 +52,7 @@ export class DisplayNotesSettingsView extends SettingsView {
             name: 'Display date template',
             description: 'The template to use when displaying the date of the note.',
             placeholder: 'HH:mm',
-            value: value
+            value: value,
         };
     }
 
@@ -61,7 +61,7 @@ export class DisplayNotesSettingsView extends SettingsView {
             name: 'Use property for the created date of a note',
             description: 'Use the property to determine the created date of the note.',
             placeholder: '',
-            value: value
+            value: value,
         };
     }
 
@@ -70,7 +70,7 @@ export class DisplayNotesSettingsView extends SettingsView {
             name: 'Property name for created date',
             description: 'The property to use to determine the created date of the note. This is only applicable if the "Use property for created date" setting is enabled.',
             placeholder: '',
-            value: value
+            value: value,
         };
     }
 
@@ -79,7 +79,7 @@ export class DisplayNotesSettingsView extends SettingsView {
             name: 'Created date format',
             description: 'The format to use when parsing the created date from the property.',
             placeholder: 'yyyy/MM/dd HH:mm',
-            value: value
+            value: value,
         };
     }
 
@@ -99,7 +99,7 @@ export class DisplayNotesSettingsView extends SettingsView {
                 } else {
                     return await onValueChange(SortNotes.Descending);
                 }
-            }
+            },
         );
     }
 }

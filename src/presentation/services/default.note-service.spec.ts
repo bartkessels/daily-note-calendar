@@ -9,14 +9,14 @@ describe('defaultNoteService', () => {
     const period = <Period> {
         date: new Date(2023, 9, 2),
         name: '02',
-        type: PeriodType.Day
+        type: PeriodType.Day,
     };
     const note: Note = {
         createdOn: period,
         createdOnProperty: null,
         name: 'My note',
         path: 'path/to/note',
-        properties: new Map()
+        properties: new Map(),
     };
 
     let service: DefaultNoteService;
@@ -27,8 +27,14 @@ describe('defaultNoteService', () => {
         service = new DefaultNoteService(noteManagerFactory);
     });
 
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     describe('getNotesForPeriod', () => {
         it('should call the manager', async () => {
+            // Arrange
+            
             // Act
             await service.getNotesForPeriod(period);
 
@@ -39,6 +45,8 @@ describe('defaultNoteService', () => {
 
     describe('openNote', () => {
         it('should call the manager', async () => {
+            // Arrange
+            
             // Act
             await service.openNote(note);
 
@@ -49,6 +57,8 @@ describe('defaultNoteService', () => {
 
     describe('openNoteInHorizontalSplitView', () => {
         it('should call the manager', async () => {
+            // Arrange
+            
             // Act
             await service.openNoteInHorizontalSplitView(note);
 
@@ -59,6 +69,8 @@ describe('defaultNoteService', () => {
 
     describe('openNoteInVerticalSplitView', () => {
         it('should call the manager', async () => {
+            // Arrange
+            
             // Act
             await service.openNoteInVerticalSplitView(note);
 
@@ -69,6 +81,8 @@ describe('defaultNoteService', () => {
 
     describe('deleteNote', () => {
         it('should call the manager', async () => {
+            // Arrange
+            
             // Act
             await service.deleteNote(note);
 

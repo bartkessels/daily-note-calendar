@@ -12,7 +12,7 @@ describe('DefaultPeriodService', () => {
     const period = <Period> {
         date: new Date(2023, 9, 2),
         name: '02',
-        type: PeriodType.Day
+        type: PeriodType.Day,
     };
 
     let service: DefaultPeriodService;
@@ -32,8 +32,8 @@ describe('DefaultPeriodService', () => {
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
             const generalSettings = <PluginSettings> {
                 generalSettings: <GeneralSettings>{
-                    useModifierKeyToCreateNote: true
-                }
+                    useModifierKeyToCreateNote: true,
+                },
             };
 
             // Act
@@ -51,8 +51,8 @@ describe('DefaultPeriodService', () => {
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
             const generalSettings = <PluginSettings> {
                 generalSettings: <GeneralSettings>{
-                    useModifierKeyToCreateNote: true
-                }
+                    useModifierKeyToCreateNote: true,
+                },
             };
             when(periodicNoteManager.doesNoteExist).calledWith(settings, period).mockReturnValue(true);
 
@@ -71,8 +71,8 @@ describe('DefaultPeriodService', () => {
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
             const generalSettings = <PluginSettings> {
                 generalSettings: <GeneralSettings>{
-                    useModifierKeyToCreateNote: true
-                }
+                    useModifierKeyToCreateNote: true,
+                },
             };
             when(periodicNoteManager.doesNoteExist).calledWith(settings, period).mockReturnValue(false);
 
@@ -91,8 +91,8 @@ describe('DefaultPeriodService', () => {
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
             const generalSettings = <PluginSettings> {
                 generalSettings: <GeneralSettings>{
-                    useModifierKeyToCreateNote: false
-                }
+                    useModifierKeyToCreateNote: false,
+                },
             };
             when(periodicNoteManager.doesNoteExist).calledWith(settings, period).mockReturnValue(true);
 
@@ -111,8 +111,8 @@ describe('DefaultPeriodService', () => {
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
             const generalSettings = <PluginSettings> {
                 generalSettings: <GeneralSettings>{
-                    useModifierKeyToCreateNote: false
-                }
+                    useModifierKeyToCreateNote: false,
+                },
             };
             when(periodicNoteManager.doesNoteExist).calledWith(settings, period).mockReturnValue(false);
 
@@ -137,8 +137,8 @@ describe('DefaultPeriodService', () => {
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
             const generalSettings = <PluginSettings> {
                 generalSettings: <GeneralSettings>{
-                    useModifierKeyToCreateNote: true
-                }
+                    useModifierKeyToCreateNote: true,
+                },
             };
 
             // Act
@@ -156,8 +156,8 @@ describe('DefaultPeriodService', () => {
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
             const generalSettings = <PluginSettings> {
                 generalSettings: <GeneralSettings>{
-                    useModifierKeyToCreateNote: true
-                }
+                    useModifierKeyToCreateNote: true,
+                },
             };
             when(periodicNoteManager.doesNoteExist).calledWith(settings, period).mockReturnValue(true);
 
@@ -176,8 +176,8 @@ describe('DefaultPeriodService', () => {
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
             const generalSettings = <PluginSettings> {
                 generalSettings: <GeneralSettings>{
-                    useModifierKeyToCreateNote: true
-                }
+                    useModifierKeyToCreateNote: true,
+                },
             };
             when(periodicNoteManager.doesNoteExist).calledWith(settings, period).mockReturnValue(false);
 
@@ -196,8 +196,8 @@ describe('DefaultPeriodService', () => {
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
             const generalSettings = <PluginSettings> {
                 generalSettings: <GeneralSettings>{
-                    useModifierKeyToCreateNote: false
-                }
+                    useModifierKeyToCreateNote: false,
+                },
             };
             when(periodicNoteManager.doesNoteExist).calledWith(settings, period).mockReturnValue(true);
 
@@ -216,8 +216,8 @@ describe('DefaultPeriodService', () => {
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
             const generalSettings = <PluginSettings> {
                 generalSettings: <GeneralSettings>{
-                    useModifierKeyToCreateNote: false
-                }
+                    useModifierKeyToCreateNote: false,
+                },
             };
             when(periodicNoteManager.doesNoteExist).calledWith(settings, period).mockReturnValue(false);
 
@@ -242,8 +242,8 @@ describe('DefaultPeriodService', () => {
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
             const generalSettings = <PluginSettings> {
                 generalSettings: <GeneralSettings>{
-                    useModifierKeyToCreateNote: true
-                }
+                    useModifierKeyToCreateNote: true,
+                },
             };
 
             // Act
@@ -261,8 +261,8 @@ describe('DefaultPeriodService', () => {
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
             const generalSettings = <PluginSettings> {
                 generalSettings: <GeneralSettings>{
-                    useModifierKeyToCreateNote: true
-                }
+                    useModifierKeyToCreateNote: true,
+                },
             };
             when(periodicNoteManager.doesNoteExist).calledWith(settings, period).mockReturnValue(true);
 
@@ -281,8 +281,8 @@ describe('DefaultPeriodService', () => {
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
             const generalSettings = <PluginSettings> {
                 generalSettings: <GeneralSettings>{
-                    useModifierKeyToCreateNote: true
-                }
+                    useModifierKeyToCreateNote: true,
+                },
             };
             when(periodicNoteManager.doesNoteExist).calledWith(settings, period).mockReturnValue(false);
 
@@ -301,8 +301,8 @@ describe('DefaultPeriodService', () => {
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
             const generalSettings = <PluginSettings> {
                 generalSettings: <GeneralSettings>{
-                    useModifierKeyToCreateNote: false
-                }
+                    useModifierKeyToCreateNote: false,
+                },
             };
             when(periodicNoteManager.doesNoteExist).calledWith(settings, period).mockReturnValue(true);
 
@@ -321,8 +321,8 @@ describe('DefaultPeriodService', () => {
             const settings = DEFAULT_DAILY_NOTE_SETTINGS;
             const generalSettings = <PluginSettings> {
                 generalSettings: <GeneralSettings>{
-                    useModifierKeyToCreateNote: false
-                }
+                    useModifierKeyToCreateNote: false,
+                },
             };
             when(periodicNoteManager.doesNoteExist).calledWith(settings, period).mockReturnValue(false);
 

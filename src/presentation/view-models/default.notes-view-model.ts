@@ -7,7 +7,7 @@ export class DefaultNotesViewModel implements NotesViewModel {
     public updateNotes?: () => void;
 
     constructor(
-        private readonly noteService: NoteService
+        private readonly noteService: NoteService,
     ) {
 
     }

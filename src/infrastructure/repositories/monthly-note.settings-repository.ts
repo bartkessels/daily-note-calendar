@@ -5,7 +5,7 @@ import {DEFAULT_MONTHLY_NOTE_SETTINGS, PeriodNoteSettings} from 'src/domain/sett
 
 export class MonthlyNoteSettingsRepository implements SettingsRepository<PeriodNoteSettings> {
     constructor(
-        private readonly adapter: SettingsAdapter
+        private readonly adapter: SettingsAdapter,
     ) {
 
     }

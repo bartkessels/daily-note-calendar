@@ -16,12 +16,14 @@ describe('DefaultNoteManagerFactory', () => {
         factory = new DefaultNoteManagerFactory(
             fileRepositoryFactory,
             noteRepositoryFactory,
-            settingsRepositoryFactory
+            settingsRepositoryFactory,
         );
     });
 
     describe('getManager', () => {
         it('should return a new RepositoryNoteManager', () => {
+            // Arrange
+            
             // Act
             const result = factory.getManager();
 

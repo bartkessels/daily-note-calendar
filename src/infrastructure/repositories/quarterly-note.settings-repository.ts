@@ -5,7 +5,7 @@ import {DEFAULT_QUARTERLY_NOTE_SETTINGS, PeriodNoteSettings} from 'src/domain/se
 
 export class QuarterlyNoteSettingsRepository implements SettingsRepository<PeriodNoteSettings> {
     constructor(
-        private readonly adapter: SettingsAdapter
+        private readonly adapter: SettingsAdapter,
     ) {
 
     }

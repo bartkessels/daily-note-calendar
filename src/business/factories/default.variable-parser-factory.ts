@@ -10,19 +10,19 @@ import {VariableParser} from 'src/business/contracts/variable-parser';
 export class DefaultVariableParserFactory implements VariableParserFactory {
     constructor(
         private readonly variableFactory: VariableFactory,
-        private readonly dateParserFactory: DateParserFactory
+        private readonly dateParserFactory: DateParserFactory,
     ) {
 
     }
 
     public getVariableParser<T>(type: VariableType): VariableParser<T> {
         switch (type) {
-            case VariableType.Title:
-                return new ActiveFileVariableParser() as VariableParser<T>;
-            case VariableType.Date:
-                return new PeriodVariableParser(this.variableFactory, this.dateParserFactory) as VariableParser<T>;
-            case VariableType.Today:
-                return new TodayVariableParser(this.variableFactory, this.dateParserFactory) as VariableParser<T>;
+        case VariableType.Title:
+            return new ActiveFileVariableParser() as VariableParser<T>;
+        case VariableType.Date:
+            return new PeriodVariableParser(this.variableFactory, this.dateParserFactory) as VariableParser<T>;
+        case VariableType.Today:
+            return new TodayVariableParser(this.variableFactory, this.dateParserFactory) as VariableParser<T>;
         }
     }
 }

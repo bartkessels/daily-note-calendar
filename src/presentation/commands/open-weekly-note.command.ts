@@ -12,7 +12,7 @@ export class OpenWeeklyNoteCommand implements Command {
         this.commandHandler = commandHandlerFactory.getHandler(CommandHandlerType.OpenWeeklyNote);
     }
 
-    public callback: (() => any) = (): void => {
+    public callback: (() => void) = (): void => {
         this.commandHandler.execute().catch();
-    }
+    };
 }

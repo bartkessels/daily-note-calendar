@@ -12,22 +12,22 @@ describe('DefaultCalendarViewModel', () => {
     const today = <Period>{
         date: new Date(2023, 9, 2),
         name: '02',
-        type: PeriodType.Day
+        type: PeriodType.Day,
     };
     const expectedMonth = <Period> {
         date: new Date(2023, 9),
         name: 'October',
-        type: PeriodType.Month
+        type: PeriodType.Month,
     };
     const expectedQuarter = <Period> {
         date: new Date(2023, 6),
         name: 'Q3',
-        type: PeriodType.Quarter
+        type: PeriodType.Quarter,
     };
     const expectedYear = <Period> {
         date: new Date(2023, 0),
         name: '2023',
-        type: PeriodType.Year
+        type: PeriodType.Year,
     };
     const weekDays = new Map<DayOfWeek, string[]>([
         [DayOfWeek.Monday, ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']],
@@ -36,7 +36,7 @@ describe('DefaultCalendarViewModel', () => {
         [DayOfWeek.Thursday, ['Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed']],
         [DayOfWeek.Friday, ['Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu']],
         [DayOfWeek.Saturday, ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri']],
-        [DayOfWeek.Sunday, ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']]
+        [DayOfWeek.Sunday, ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']],
     ]);
 
     let viewModel: DefaultCalendarViewModel;
@@ -79,7 +79,7 @@ describe('DefaultCalendarViewModel', () => {
                 expectedNavigateToPreviousWeek,
                 expectedNavigateToCurrentWeek,
                 expectedNavigateToNextMonth,
-                expectedNavigateToPreviousMonth
+                expectedNavigateToPreviousMonth,
             );
 
             // Assert
@@ -124,7 +124,7 @@ describe('DefaultCalendarViewModel', () => {
                 name: '40',
                 type: PeriodType.Week,
                 weekNumber: 40,
-            }
+            },
         ];
 
         beforeEach(() => {
@@ -182,6 +182,110 @@ describe('DefaultCalendarViewModel', () => {
                 expect(result.today).toEqual(today);
             });
         });
+
+        it('should calculate correct startIndex for Monday as first day of week', () => {
+            // Arrange
+            const settings = <PluginSettings>{ ...DEFAULT_PLUGIN_SETTINGS, generalSettings: { ...DEFAULT_GENERAL_SETTINGS, firstDayOfWeek: DayOfWeek.Monday }};
+
+            // Act
+            viewModel.initialize(settings, today);
+            const result = viewModel.getCurrentWeek();
+
+            // Assert
+            // Monday (1) should give startIndex = (1 - 1 + 7) % 7 = 0
+            expect(result.weekDays[0]).toBe('Mon');
+            expect(result.weekDays[6]).toBe('Sun');
+        });
+
+        it('should calculate correct startIndex for Sunday as first day of week', () => {
+            // Arrange
+            const settings = <PluginSettings>{ ...DEFAULT_PLUGIN_SETTINGS, generalSettings: { ...DEFAULT_GENERAL_SETTINGS, firstDayOfWeek: DayOfWeek.Sunday }};
+
+            // Act
+            viewModel.initialize(settings, today);
+            const result = viewModel.getCurrentWeek();
+
+            // Assert
+            // Sunday (7) should give startIndex = (7 - 1 + 7) % 7 = 6
+            expect(result.weekDays[0]).toBe('Sun');
+            expect(result.weekDays[6]).toBe('Sat');
+        });
+
+        it('should calculate correct startIndex for Tuesday as first day of week', () => {
+            // Arrange
+            const settings = <PluginSettings>{ ...DEFAULT_PLUGIN_SETTINGS, generalSettings: { ...DEFAULT_GENERAL_SETTINGS, firstDayOfWeek: DayOfWeek.Tuesday }};
+
+            // Act
+            viewModel.initialize(settings, today);
+            const result = viewModel.getCurrentWeek();
+
+            // Assert
+            // Tuesday (2) with correct arithmetic: (2 - 1 + 7) % 7 = 8 % 7 = 1
+            // With mutant: (2 - 1 - 7) % 7 = -6 % 7 = -6 (in JavaScript, % preserves sign)
+            // This would cause array slicing to behave incorrectly
+            expect(result.weekDays[0]).toBe('Tue');
+            expect(result.weekDays).toEqual(['Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon']);
+        });
+
+        it('should calculate correct startIndex for Wednesday as first day of week', () => {
+            // Arrange
+            const settings = <PluginSettings>{ ...DEFAULT_PLUGIN_SETTINGS, generalSettings: { ...DEFAULT_GENERAL_SETTINGS, firstDayOfWeek: DayOfWeek.Wednesday }};
+
+            // Act
+            viewModel.initialize(settings, today);
+            const result = viewModel.getCurrentWeek();
+
+            // Assert
+            // Wednesday (3) with correct arithmetic: (3 - 1 + 7) % 7 = 9 % 7 = 2
+            // With mutant: (3 - 1 - 7) % 7 = -5 % 7 = -5
+            expect(result.weekDays[0]).toBe('Wed');
+            expect(result.weekDays).toEqual(['Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue']);
+        });
+
+        it('should calculate correct startIndex for Thursday as first day of week', () => {
+            // Arrange
+            const settings = <PluginSettings>{ ...DEFAULT_PLUGIN_SETTINGS, generalSettings: { ...DEFAULT_GENERAL_SETTINGS, firstDayOfWeek: DayOfWeek.Thursday }};
+
+            // Act
+            viewModel.initialize(settings, today);
+            const result = viewModel.getCurrentWeek();
+
+            // Assert
+            // Thursday (4) with correct arithmetic: (4 - 1 + 7) % 7 = 10 % 7 = 3
+            // With mutant: (4 - 1 - 7) % 7 = -4 % 7 = -4
+            expect(result.weekDays[0]).toBe('Thu');
+            expect(result.weekDays).toEqual(['Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed']);
+        });
+
+        it('should calculate correct startIndex for Friday as first day of week', () => {
+            // Arrange
+            const settings = <PluginSettings>{ ...DEFAULT_PLUGIN_SETTINGS, generalSettings: { ...DEFAULT_GENERAL_SETTINGS, firstDayOfWeek: DayOfWeek.Friday }};
+
+            // Act
+            viewModel.initialize(settings, today);
+            const result = viewModel.getCurrentWeek();
+
+            // Assert
+            // Friday (5) with correct arithmetic: (5 - 1 + 7) % 7 = 11 % 7 = 4
+            // With mutant: (5 - 1 - 7) % 7 = -3 % 7 = -3
+            expect(result.weekDays[0]).toBe('Fri');
+            expect(result.weekDays).toEqual(['Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu']);
+        });
+
+        it('should calculate correct startIndex for Saturday as first day of week', () => {
+            // Arrange
+            const settings = <PluginSettings>{ ...DEFAULT_PLUGIN_SETTINGS, generalSettings: { ...DEFAULT_GENERAL_SETTINGS, firstDayOfWeek: DayOfWeek.Saturday }};
+
+            // Act
+            viewModel.initialize(settings, today);
+            const result = viewModel.getCurrentWeek();
+
+            // Assert
+            // Saturday (6) with correct arithmetic: (6 - 1 + 7) % 7 = 12 % 7 = 5
+            // With mutant: (6 - 1 - 7) % 7 = -2 % 7 = -2
+            expect(result.weekDays[0]).toBe('Sat');
+            expect(result.weekDays).toEqual(['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri']);
+        });
     });
 
     describe('getPreviousWeek', () => {
@@ -196,10 +300,10 @@ describe('DefaultCalendarViewModel', () => {
                     name: '40',
                     type: PeriodType.Week,
                     weekNumber: 40,
-                }
+                },
             ],
-            today: null
-        }
+            today: null,
+        };
 
         const previousWeek = [
             <Week>{
@@ -207,7 +311,7 @@ describe('DefaultCalendarViewModel', () => {
                 name: '40',
                 type: PeriodType.Week,
                 weekNumber: 40,
-            }
+            },
         ];
 
         beforeEach(() => {
@@ -279,10 +383,10 @@ describe('DefaultCalendarViewModel', () => {
                     name: '40',
                     type: PeriodType.Week,
                     weekNumber: 40,
-                }
+                },
             ],
-            today: null
-        }
+            today: null,
+        };
 
         const nextWeek = [
             <Week>{
@@ -290,7 +394,7 @@ describe('DefaultCalendarViewModel', () => {
                 name: '40',
                 type: PeriodType.Week,
                 weekNumber: 40,
-            }
+            },
         ];
 
         beforeEach(() => {
@@ -362,10 +466,10 @@ describe('DefaultCalendarViewModel', () => {
                     name: '40',
                     type: PeriodType.Week,
                     weekNumber: 40,
-                }
+                },
             ],
-            today: null
-        }
+            today: null,
+        };
 
         const previousMonth = [
             <Week>{
@@ -373,7 +477,7 @@ describe('DefaultCalendarViewModel', () => {
                 name: '40',
                 type: PeriodType.Week,
                 weekNumber: 40,
-            }
+            },
         ];
 
         beforeEach(() => {
@@ -445,10 +549,10 @@ describe('DefaultCalendarViewModel', () => {
                     name: '40',
                     type: PeriodType.Week,
                     weekNumber: 40,
-                }
+                },
             ],
-            today: null
-        }
+            today: null,
+        };
 
         const nextMonth = [
             <Week>{
@@ -456,7 +560,7 @@ describe('DefaultCalendarViewModel', () => {
                 name: '40',
                 type: PeriodType.Week,
                 weekNumber: 40,
-            }
+            },
         ];
 
         beforeEach(() => {

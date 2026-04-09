@@ -18,7 +18,7 @@ describe('DailyNoteComponent', () => {
         monthlyNoteViewModel: {...mockPeriodNoteViewModel},
         quarterlyNoteViewModel: {...mockPeriodNoteViewModel},
         yearlyNoteViewModel: {...mockPeriodNoteViewModel},
-        notesViewModel: mockNotesViewModel
+        notesViewModel: mockNotesViewModel,
     };
 
     const wrapper = ({children}: {children: ReactNode}) => (
@@ -47,7 +47,7 @@ describe('DailyNoteComponent', () => {
                 noteCountToken={0}
                 onSelect={onSelect}
             />,
-            {wrapper}
+            {wrapper},
         );
 
         // Assert — badge should not be present when count is 0
@@ -70,7 +70,7 @@ describe('DailyNoteComponent', () => {
                     noteCountToken={0}
                     onSelect={onSelect}
                 />,
-                {wrapper}
+                {wrapper},
             );
         });
 
@@ -98,7 +98,7 @@ describe('DailyNoteComponent', () => {
                     noteCountToken={0}
                     onSelect={onSelect}
                 />,
-                {wrapper}
+                {wrapper},
             );
             rerender = result.rerender;
         });
@@ -119,7 +119,7 @@ describe('DailyNoteComponent', () => {
                         noteCountToken={0}
                         onSelect={onSelect}
                     />
-                </ViewModelsContext.Provider>
+                </ViewModelsContext.Provider>,
             );
         });
 
@@ -144,7 +144,7 @@ describe('DailyNoteComponent', () => {
                     noteCountToken={0}
                     onSelect={onSelect}
                 />,
-                {wrapper}
+                {wrapper},
             );
             container = result.container;
         });
@@ -172,7 +172,7 @@ describe('DailyNoteComponent', () => {
                     noteCountToken={0}
                     onSelect={onSelect}
                 />,
-                {wrapper}
+                {wrapper},
             );
             rerender = result.rerender;
         });
@@ -193,7 +193,7 @@ describe('DailyNoteComponent', () => {
                         noteCountToken={1}
                         onSelect={onSelect}
                     />
-                </ViewModelsContext.Provider>
+                </ViewModelsContext.Provider>,
             );
         });
 

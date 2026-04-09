@@ -5,7 +5,7 @@ import {AdapterFileRepository} from 'src/infrastructure/repositories/adapter.fil
 
 export class DefaultFileRepositoryFactory implements FileRepositoryFactory {
     constructor(
-        private readonly adapter: FileAdapter
+        private readonly adapter: FileAdapter,
     ) {
 
     }

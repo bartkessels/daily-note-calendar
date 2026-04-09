@@ -6,13 +6,18 @@ import {TodayVariableParser} from 'src/business/parsers/today.variable-parser';
 
 describe('TodayVariableParser', () => {
     let parser: TodayVariableParser;
-
-    const variableFactory = mockVariableFactory();
-    const dateParser = mockDateParser;
+    let variableFactory: ReturnType<typeof mockVariableFactory>;
+    let dateParser: typeof mockDateParser;
 
     beforeEach(() => {
+        variableFactory = mockVariableFactory();
+        dateParser = mockDateParser;
         const dateParserFactory = mockDateParserFactory(dateParser);
         parser = new TodayVariableParser(variableFactory, dateParserFactory);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     describe('parseVariables', () => {
@@ -22,7 +27,7 @@ describe('TodayVariableParser', () => {
                 name: 'today',
                 type: VariableType.Today,
                 template: 'yyyy-MM-dd',
-                calculus: null
+                calculus: null,
             };
             const date = new Date('2024-12-31');
             const content = `Today's date is {{today:${variable.template}}}.`;
@@ -34,7 +39,7 @@ describe('TodayVariableParser', () => {
             const result = parser.parseVariables(content, date);
 
             // Assert
-            expect(result).toBe(`Today's date is 2024-12-31.`);
+            expect(result).toBe('Today\'s date is 2024-12-31.');
         });
 
         it('should get the calculated date if calculus is present', () => {
@@ -46,8 +51,8 @@ describe('TodayVariableParser', () => {
                 calculus: {
                     operator: '+',
                     value: 1,
-                    unit: 'd'
-                }
+                    unit: 'd',
+                },
             };
             const date = new Date('2024-12-31');
             const content = `Today's date is {{today:${variable.template}}}.`;
@@ -59,7 +64,7 @@ describe('TodayVariableParser', () => {
             const result = parser.parseVariables(content, date);
 
             // Assert
-            expect(result).toBe(`Today's date is 2025-01-01.`);
+            expect(result).toBe('Today\'s date is 2025-01-01.');
         });
     });
 });

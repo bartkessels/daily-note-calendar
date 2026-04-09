@@ -24,4 +24,4 @@ export const MonthlyNoteComponent = (props: MonthlyNoteProperties): ReactElement
             onOpenInVerticalSplitViewClick={(key) => viewModel?.openNoteInVerticalSplitView(key, props.month)}
             onDelete={() => viewModel?.deleteNote(props.month)} />
     );
-}
+};
