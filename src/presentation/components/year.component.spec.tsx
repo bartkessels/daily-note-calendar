@@ -64,9 +64,7 @@ describe('YearlyNoteComponent', () => {
     it('renders PeriodComponent with correct name prop', async () => {
         mockYearlyViewModel.hasPeriodicNote.mockResolvedValue(false);
 
-        const {container} = await act(async () => {
-            return render(<YearlyNoteComponent year={year} />, {wrapper});
-        });
+        const {container} = render(<YearlyNoteComponent year={year} />, {wrapper});
 
         expect(container.textContent).toContain(year.name);
     });
@@ -74,9 +72,7 @@ describe('YearlyNoteComponent', () => {
     it('checks if periodic note exists and renders properly when note does not exist', async () => {
         mockYearlyViewModel.hasPeriodicNote.mockResolvedValue(false);
 
-        const {container} = await act(async () => {
-            return render(<YearlyNoteComponent year={year} />, {wrapper});
-        });
+        const {container} = render(<YearlyNoteComponent year={year} />, {wrapper});
 
         expect(mockYearlyViewModel.hasPeriodicNote).toHaveBeenCalledWith(year);
         expect(container.textContent).toContain(year.name);
@@ -85,11 +81,10 @@ describe('YearlyNoteComponent', () => {
     it('checks if periodic note exists and renders properly when note exists', async () => {
         mockYearlyViewModel.hasPeriodicNote.mockResolvedValue(true);
 
-        const {container} = await act(async () => {
-            const result = render(<YearlyNoteComponent year={year} />, {wrapper});
+        const {container} = render(<YearlyNoteComponent year={year} />, {wrapper});
+        await act(async () => {
             // Allow state update
             await new Promise(resolve => setTimeout(resolve, 10));
-            return result;
         });
 
         expect(mockYearlyViewModel.hasPeriodicNote).toHaveBeenCalledWith(year);

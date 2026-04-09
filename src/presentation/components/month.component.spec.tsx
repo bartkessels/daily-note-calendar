@@ -54,9 +54,7 @@ describe('MonthlyNoteComponent', () => {
     it('checks if periodic note exists on render', async () => {
         mockMonthlyViewModel.hasPeriodicNote.mockResolvedValue(false);
 
-        await act(async () => {
-            render(<MonthlyNoteComponent month={month} />, {wrapper});
-        });
+        render(<MonthlyNoteComponent month={month} />, {wrapper});
 
         expect(mockMonthlyViewModel.hasPeriodicNote).toHaveBeenCalledWith(month);
     });
@@ -64,9 +62,7 @@ describe('MonthlyNoteComponent', () => {
     it('renders PeriodComponent with correct name prop', async () => {
         mockMonthlyViewModel.hasPeriodicNote.mockResolvedValue(false);
 
-        const {container} = await act(async () => {
-            return render(<MonthlyNoteComponent month={month} />, {wrapper});
-        });
+        const {container} = render(<MonthlyNoteComponent month={month} />, {wrapper});
 
         expect(container.textContent).toContain(month.name);
     });
@@ -74,9 +70,7 @@ describe('MonthlyNoteComponent', () => {
     it('checks if periodic note exists and renders properly when note does not exist', async () => {
         mockMonthlyViewModel.hasPeriodicNote.mockResolvedValue(false);
 
-        const {container} = await act(async () => {
-            return render(<MonthlyNoteComponent month={month} />, {wrapper});
-        });
+        const {container} = render(<MonthlyNoteComponent month={month} />, {wrapper});
 
         expect(mockMonthlyViewModel.hasPeriodicNote).toHaveBeenCalledWith(month);
         expect(container.textContent).toContain(month.name);
@@ -85,11 +79,10 @@ describe('MonthlyNoteComponent', () => {
     it('checks if periodic note exists and renders properly when note exists', async () => {
         mockMonthlyViewModel.hasPeriodicNote.mockResolvedValue(true);
 
-        const {container} = await act(async () => {
-            const result = render(<MonthlyNoteComponent month={month} />, {wrapper});
+        const {container} = render(<MonthlyNoteComponent month={month} />, {wrapper});
+        await act(async () => {
             // Allow state update
             await new Promise(resolve => setTimeout(resolve, 10));
-            return result;
         });
 
         expect(mockMonthlyViewModel.hasPeriodicNote).toHaveBeenCalledWith(month);

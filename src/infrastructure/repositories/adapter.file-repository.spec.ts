@@ -103,7 +103,7 @@ describe('AdapterFileRepository', () => {
             expect(fileAdapter.createFolder).toHaveBeenCalledWith('folder/subfolder');
         });
 
-        it('should extract empty string for single-level path', async () => {
+        it('should not call createFolder for single-level path', async () => {
             // Arrange
             const filePath = 'file.md';
             const content = 'content';
@@ -112,7 +112,8 @@ describe('AdapterFileRepository', () => {
             await repository.create(filePath, content);
 
             // Assert
-            expect(fileAdapter.createFolder).toHaveBeenCalledWith('');
+            expect(fileAdapter.createFolder).not.toHaveBeenCalled();
+            expect(fileAdapter.createFile).toHaveBeenCalledWith(filePath, content);
         });
 
         it('should use forward slash as path separator', async () => {

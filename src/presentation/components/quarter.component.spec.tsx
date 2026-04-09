@@ -54,9 +54,7 @@ describe('QuarterlyNoteComponent', () => {
     it('checks if periodic note exists on render', async () => {
         mockQuarterlyViewModel.hasPeriodicNote.mockResolvedValue(false);
 
-        await act(async () => {
-            render(<QuarterlyNoteComponent quarter={quarter} />, {wrapper});
-        });
+        render(<QuarterlyNoteComponent quarter={quarter} />, {wrapper});
 
         expect(mockQuarterlyViewModel.hasPeriodicNote).toHaveBeenCalledWith(quarter);
     });
@@ -64,9 +62,7 @@ describe('QuarterlyNoteComponent', () => {
     it('renders PeriodComponent with correct name prop', async () => {
         mockQuarterlyViewModel.hasPeriodicNote.mockResolvedValue(false);
 
-        const {container} = await act(async () => {
-            return render(<QuarterlyNoteComponent quarter={quarter} />, {wrapper});
-        });
+        const {container} = render(<QuarterlyNoteComponent quarter={quarter} />, {wrapper});
 
         expect(container.textContent).toContain(quarter.name);
     });
@@ -74,9 +70,7 @@ describe('QuarterlyNoteComponent', () => {
     it('checks if periodic note exists and renders properly when note does not exist', async () => {
         mockQuarterlyViewModel.hasPeriodicNote.mockResolvedValue(false);
 
-        const {container} = await act(async () => {
-            return render(<QuarterlyNoteComponent quarter={quarter} />, {wrapper});
-        });
+        const {container} = render(<QuarterlyNoteComponent quarter={quarter} />, {wrapper});
 
         expect(mockQuarterlyViewModel.hasPeriodicNote).toHaveBeenCalledWith(quarter);
         expect(container.textContent).toContain(quarter.name);
@@ -85,11 +79,10 @@ describe('QuarterlyNoteComponent', () => {
     it('checks if periodic note exists and renders properly when note exists', async () => {
         mockQuarterlyViewModel.hasPeriodicNote.mockResolvedValue(true);
 
-        const {container} = await act(async () => {
-            const result = render(<QuarterlyNoteComponent quarter={quarter} />, {wrapper});
+        const {container} = render(<QuarterlyNoteComponent quarter={quarter} />, {wrapper});
+        await act(async () => {
             // Allow state update
             await new Promise(resolve => setTimeout(resolve, 10));
-            return result;
         });
 
         expect(mockQuarterlyViewModel.hasPeriodicNote).toHaveBeenCalledWith(quarter);

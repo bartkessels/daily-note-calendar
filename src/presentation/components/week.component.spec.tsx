@@ -87,24 +87,22 @@ describe('WeeklyNoteComponent', () => {
     it('checks if periodic note exists on render', async () => {
         mockWeeklyViewModel.hasPeriodicNote.mockResolvedValue(false);
 
-        await act(async () => {
-            render(
-                <table>
-                    <tbody>
-                        <WeeklyNoteComponent
-                            week={week}
-                            days={days}
-                            today={today}
-                            selectedPeriod={null}
-                            currentMonth={week.month}
-                            noteCountToken={0}
-                            onSelect={onSelect}
-                        />
-                    </tbody>
-                </table>,
-                {wrapper},
-            );
-        });
+        render(
+            <table>
+                <tbody>
+                    <WeeklyNoteComponent
+                        week={week}
+                        days={days}
+                        today={today}
+                        selectedPeriod={null}
+                        currentMonth={week.month}
+                        noteCountToken={0}
+                        onSelect={onSelect}
+                    />
+                </tbody>
+            </table>,
+            {wrapper},
+        );
 
         expect(mockWeeklyViewModel.hasPeriodicNote).toHaveBeenCalledWith(week);
     });
@@ -112,24 +110,22 @@ describe('WeeklyNoteComponent', () => {
     it('renders week name in PeriodComponent', async () => {
         mockWeeklyViewModel.hasPeriodicNote.mockResolvedValue(false);
 
-        const {container} = await act(async () => {
-            return render(
-                <table>
-                    <tbody>
-                        <WeeklyNoteComponent
-                            week={week}
-                            days={days}
-                            today={today}
-                            selectedPeriod={null}
-                            currentMonth={week.month}
-                            noteCountToken={0}
-                            onSelect={onSelect}
-                        />
-                    </tbody>
-                </table>,
-                {wrapper},
-            );
-        });
+        const {container} = render(
+            <table>
+                <tbody>
+                    <WeeklyNoteComponent
+                        week={week}
+                        days={days}
+                        today={today}
+                        selectedPeriod={null}
+                        currentMonth={week.month}
+                        noteCountToken={0}
+                        onSelect={onSelect}
+                    />
+                </tbody>
+            </table>,
+            {wrapper},
+        );
 
         expect(container.textContent).toContain(week.name);
     });
@@ -137,24 +133,22 @@ describe('WeeklyNoteComponent', () => {
     it('renders all day components', async () => {
         mockWeeklyViewModel.hasPeriodicNote.mockResolvedValue(false);
 
-        const {container} = await act(async () => {
-            return render(
-                <table>
-                    <tbody>
-                        <WeeklyNoteComponent
-                            week={week}
-                            days={days}
-                            today={today}
-                            selectedPeriod={null}
-                            currentMonth={week.month}
-                            noteCountToken={0}
-                            onSelect={onSelect}
-                        />
-                    </tbody>
-                </table>,
-                {wrapper},
-            );
-        });
+        const {container} = render(
+            <table>
+                <tbody>
+                    <WeeklyNoteComponent
+                        week={week}
+                        days={days}
+                        today={today}
+                        selectedPeriod={null}
+                        currentMonth={week.month}
+                        noteCountToken={0}
+                        onSelect={onSelect}
+                    />
+                </tbody>
+            </table>,
+            {wrapper},
+        );
 
         // Should render 7 days + 1 week cell = 8 cells total
         const cells = container.querySelectorAll('td');
@@ -164,24 +158,22 @@ describe('WeeklyNoteComponent', () => {
     it('marks week as selected when selectedPeriod matches week', async () => {
         mockWeeklyViewModel.hasPeriodicNote.mockResolvedValue(false);
 
-        const {container} = await act(async () => {
-            return render(
-                <table>
-                    <tbody>
-                        <WeeklyNoteComponent
-                            week={week}
-                            days={days}
-                            today={today}
-                            selectedPeriod={week}
-                            currentMonth={week.month}
-                            noteCountToken={0}
-                            onSelect={onSelect}
-                        />
-                    </tbody>
-                </table>,
-                {wrapper},
-            );
-        });
+        const {container} = render(
+            <table>
+                <tbody>
+                    <WeeklyNoteComponent
+                        week={week}
+                        days={days}
+                        today={today}
+                        selectedPeriod={week}
+                        currentMonth={week.month}
+                        noteCountToken={0}
+                        onSelect={onSelect}
+                    />
+                </tbody>
+            </table>,
+            {wrapper},
+        );
 
         const weekCell = container.querySelector('.weekNumber');
         expect(weekCell).toBeTruthy();

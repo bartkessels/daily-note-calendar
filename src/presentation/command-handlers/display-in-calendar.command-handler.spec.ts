@@ -82,7 +82,7 @@ describe('DisplayInCalendarCommandHandler', () => {
             expect(viewModel.setSelectedPeriod).toHaveBeenCalledWith(activeNote.createdOnProperty);
         });
 
-        it('should select the period based on the createdOn if useCreatedOnDateFromProperties is true but there is no createdOnProperty', async () => {
+        it('should not select any period if useCreatedOnDateFromProperties is true but there is no createdOnProperty', async () => {
             // Arrange
             const settings = <DisplayNotesSettings> {
                 ...DEFAULT_DISPLAY_NOTES_SETTINGS,

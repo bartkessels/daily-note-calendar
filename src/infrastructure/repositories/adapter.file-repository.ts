@@ -15,7 +15,9 @@ export class AdapterFileRepository implements FileRepository {
     public async create(path: string, content: string | null): Promise<string> {
         const folder = path.split('/').slice(0, -1).join('/');
 
-        await this.adapter.createFolder(folder);
+        if (folder) {
+            await this.adapter.createFolder(folder);
+        }
         return await this.adapter.createFile(path, content);
     }
 

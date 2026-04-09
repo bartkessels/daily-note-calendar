@@ -26,16 +26,17 @@ Run this checklist before every release or after changes to adapters, plugin lif
 - [ ] Plugin can be enabled/disabled without errors
 
 ### 1.2 View Registration
-- [ ] "Open calendar view" command appears in command palette
-- [ ] Calendar view opens when command is executed
+- [ ] Calendar view automatically opens on plugin load
+- [ ] Calendar view appears in right sidebar
 - [ ] Calendar view can be closed without errors
-- [ ] Calendar view can be reopened after closing
-- [ ] Multiple calendar views can be opened simultaneously (if supported)
+- [ ] Calendar view can be reopened by toggling plugin or restarting Obsidian
 
 ### 1.3 Command Registration
 Verify all commands appear in command palette (Ctrl+P / Cmd+P):
-- [ ] "Open calendar view"
 - [ ] "Open today's note"
+- [ ] "Open yesterday's note"
+- [ ] "Open tomorrow's note"
+- [ ] "Open weekly note"
 - [ ] "Navigate to current week"
 - [ ] "Navigate to next week"
 - [ ] "Navigate to previous week"
@@ -109,12 +110,7 @@ Verify all commands appear in command palette (Ctrl+P / Cmd+P):
 - [ ] Verify note opens in vertical split
 - [ ] Verify original pane content is preserved
 
-### 3.7 File Opening - Right Pane
-- [ ] Right-click on day → "Open in right pane"
-- [ ] Verify note opens in right sidebar
-- [ ] Verify left pane is unchanged
-
-### 3.8 File Deletion
+### 3.7 File Deletion
 - [ ] Right-click on a day with a note → "Delete note"
 - [ ] Verify Obsidian deletion prompt appears
 - [ ] Confirm deletion

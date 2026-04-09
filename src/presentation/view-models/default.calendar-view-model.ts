@@ -9,13 +9,13 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
     private settings: PluginSettings = DEFAULT_PLUGIN_SETTINGS;
     private today: Period | null = null;
 
-    public setSelectedPeriod!: (period: Period) => void;
-    public navigateToNextWeek!: () => void;
-    public navigateToPreviousWeek!: () => void;
-    public navigateToCurrentWeek!: () => void;
-    public navigateToNextMonth!: () => void;
-    public navigateToPreviousMonth!: () => void;
-    public refreshNoteCounts!: () => void;
+    public setSelectedPeriod: (period: Period) => void = () => {};
+    public navigateToNextWeek: () => void = () => {};
+    public navigateToPreviousWeek: () => void = () => {};
+    public navigateToCurrentWeek: () => void = () => {};
+    public navigateToNextMonth: () => void = () => {};
+    public navigateToPreviousMonth: () => void = () => {};
+    public refreshNoteCounts: () => void = () => {};
 
     constructor(
         private readonly calendarService: CalendarService,

@@ -117,33 +117,25 @@ describe('CalendarComponent', () => {
     });
 
     it('renders month name in header', async () => {
-        const {container} = await act(async () => {
-            return render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
-        });
+        const {container} = render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
 
         expect(container.textContent).toContain('October');
     });
 
     it('renders year in header', async () => {
-        const {container} = await act(async () => {
-            return render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
-        });
+        const {container} = render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
 
         expect(container.textContent).toContain('2023');
     });
 
     it('renders quarter in table header', async () => {
-        const {container} = await act(async () => {
-            return render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
-        });
+        const {container} = render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
 
         expect(container.textContent).toContain('Q4');
     });
 
     it('renders week day headers', async () => {
-        const {container} = await act(async () => {
-            return render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
-        });
+        const {container} = render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
 
         mockCalendar.weekDays.forEach(day => {
             expect(container.textContent).toContain(day);
@@ -151,9 +143,7 @@ describe('CalendarComponent', () => {
     });
 
     it('renders navigation buttons', async () => {
-        const {container} = await act(async () => {
-            return render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
-        });
+        const {container} = render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
 
         const buttons = container.querySelector('.buttons');
         expect(buttons).toBeTruthy();
@@ -164,9 +154,7 @@ describe('CalendarComponent', () => {
     it('loads previous week when left chevron clicked', async () => {
         mockCalendarViewModel.getPreviousWeek.mockReturnValue(mockCalendar);
 
-        const {container} = await act(async () => {
-            return render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
-        });
+        const {container} = render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
 
         const buttons = container.querySelectorAll('.buttons svg');
         const previousWeekButton = buttons[1]; // ChevronLeft
@@ -181,9 +169,7 @@ describe('CalendarComponent', () => {
     it('loads next week when right chevron clicked', async () => {
         mockCalendarViewModel.getNextWeek.mockReturnValue(mockCalendar);
 
-        const {container} = await act(async () => {
-            return render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
-        });
+        const {container} = render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
 
         const buttons = container.querySelectorAll('.buttons svg');
         const nextWeekButton = buttons[3]; // ChevronRight
@@ -198,9 +184,7 @@ describe('CalendarComponent', () => {
     it('loads current week when calendar heart clicked', async () => {
         mockCalendarViewModel.getCurrentWeek.mockReturnValue(mockCalendar);
 
-        const {container} = await act(async () => {
-            return render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
-        });
+        const {container} = render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
 
         const buttons = container.querySelectorAll('.buttons svg');
         const currentWeekButton = buttons[2]; // CalendarHeart
@@ -216,9 +200,7 @@ describe('CalendarComponent', () => {
     it('loads previous month when double left chevron clicked', async () => {
         mockCalendarViewModel.getPreviousMonth.mockReturnValue(mockCalendar);
 
-        const {container} = await act(async () => {
-            return render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
-        });
+        const {container} = render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
 
         const buttons = container.querySelectorAll('.buttons svg');
         const previousMonthButton = buttons[0]; // ChevronsLeft
@@ -233,9 +215,7 @@ describe('CalendarComponent', () => {
     it('loads next month when double right chevron clicked', async () => {
         mockCalendarViewModel.getNextMonth.mockReturnValue(mockCalendar);
 
-        const {container} = await act(async () => {
-            return render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
-        });
+        const {container} = render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
 
         const buttons = container.querySelectorAll('.buttons svg');
         const nextMonthButton = buttons[4]; // ChevronsRight
@@ -248,9 +228,7 @@ describe('CalendarComponent', () => {
     });
 
     it('renders NotesComponent', async () => {
-        const {container} = await act(async () => {
-            return render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
-        });
+        const {container} = render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
 
         // NotesComponent should be rendered
         expect(container.querySelector('.dnc')).toBeTruthy();
@@ -280,9 +258,7 @@ describe('CalendarComponent', () => {
             weeks: [week, week2],
         };
 
-        const {container} = await act(async () => {
-            return render(<CalendarComponent initialCalendar={multiWeekCalendar} />, {wrapper});
-        });
+        const {container} = render(<CalendarComponent initialCalendar={multiWeekCalendar} />, {wrapper});
 
         // Verify calendar renders with multiple weeks by checking the table structure
         const tbody = container.querySelector('tbody');
@@ -302,9 +278,7 @@ describe('CalendarComponent', () => {
     });
 
     it('updates calendar when viewModel changes', async () => {
-        const {rerender} = await act(async () => {
-            return render(<CalendarComponent />, {wrapper});
-        });
+        const {rerender} = render(<CalendarComponent />, {wrapper});
 
         const newMockViewModel = {...mockCalendarViewModel};
         const newCalendar: Calendar = {
