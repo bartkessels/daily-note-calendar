@@ -11,8 +11,13 @@ export class DefaultVariableFactory implements VariableFactory {
 
     public getVariable(value: string): Variable {
         const regex = /{{([a-z]+)([+-][0-9]+[a-z])?:?(.*)?}}/;
-        // Stryker disable next-line ArrayDeclaration: Equivalent mutant - destructuring pattern skips first element, making [] and ["..."] behaviorally identical
-        const [, name, calculusValue, template] = regex.exec(value) || [];
+        const match = regex.exec(value);
+
+        if (!match) {
+            throw Error(`Could not extract any variable from '${value}'`);
+        }
+        
+        const [, name, calculusValue, template] = match;
         const type = this.types.get(name.toLowerCase());
         let calculus: Calculus | null = null;
 
@@ -35,15 +40,14 @@ export class DefaultVariableFactory implements VariableFactory {
 
     private getCalculusFromRegex(string: string): Calculus | null {
         const regex= /([+-])([0-9]+)([a-z])/;
-        // Stryker disable next-line ArrayDeclaration: Equivalent mutant - destructuring pattern skips first element
-        const [, operator, value, unit] = regex.exec(string) || [];
-        const parsedValue = parseInt(value);
+        const match = regex.exec(string);
 
-        // Stryker disable next-line all: Equivalent mutants - when regex fails, all parts are undefined making logical operator rearrangements equivalent
-        if (!operator || !value || !unit || isNaN(parsedValue)) {
+        if (!match) {
             return null;
         }
 
+        const [, operator, value, unit] = match;
+        const parsedValue = parseInt(value);
         let calculusOperator = CalculusOperator.Add;
         if (operator === CalculusOperator.Subtract.valueOf()) {
             calculusOperator = CalculusOperator.Subtract;

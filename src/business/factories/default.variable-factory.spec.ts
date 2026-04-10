@@ -43,15 +43,12 @@ describe('DefaultVariableFactory', () => {
                 expect(() => factory.getVariable(value)).toThrow();
             });
 
-            it('should throw TypeError when regex fails and name is undefined', () => {
+            it('should throw an error when no value is given', () => {
                 // Arrange
                 const value = '';
 
                 // Act & Assert
-                // This test verifies the fallback array [] is used correctly when regex.exec returns null
-                // The destructuring [, name, calculusValue, template] = [] results in name = undefined
-                // Then name.toLowerCase() throws TypeError
-                expect(() => factory.getVariable(value)).toThrow(TypeError);
+                expect(() => factory.getVariable(value)).toThrow('Could not extract any variable from \'\'');
             });
 
             it('should throw error mentioning undefined when regex completely fails', () => {
@@ -59,9 +56,7 @@ describe('DefaultVariableFactory', () => {
                 const value = 'completely invalid format';
 
                 // Act & Assert
-                // Verifies that when regex.exec(value) returns null, the fallback array is used
-                // and accessing undefined.toLowerCase() causes a TypeError about undefined
-                expect(() => factory.getVariable(value)).toThrow(/undefined/);
+                expect(() => factory.getVariable(value)).toThrow(`Could not extract any variable from '${value}'`);
             });
         });
 

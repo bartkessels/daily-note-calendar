@@ -46,8 +46,8 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         this.navigateToPreviousMonth = navigateToPreviousMonth;
     }
 
-    public initializeNoteCountRefreshCallback(cb: () => void): void {
-        this.refreshNoteCounts = cb;
+    public initializeNoteCountRefreshCallback(refreshNoteCounts: () => void): void {
+        this.refreshNoteCounts = refreshNoteCounts;
     }
 
     public getCurrentWeek(): Calendar {
@@ -92,9 +92,7 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
     }
 
     private buildWeekDays(firstDayOfWeek: DayOfWeek): string[] {
-        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        // Stryker disable next-line ArithmeticOperator: Equivalent mutant - JavaScript negative modulo and slice() create mathematical equivalence
-        const startIndex = (firstDayOfWeek - 1 + 7) % 7;
-        return [...days.slice(startIndex), ...days.slice(0, startIndex)];
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        return [...days.slice(firstDayOfWeek), ...days.slice(0, firstDayOfWeek)];
     }
 }

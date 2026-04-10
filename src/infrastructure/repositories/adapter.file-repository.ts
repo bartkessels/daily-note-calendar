@@ -18,6 +18,7 @@ export class AdapterFileRepository implements FileRepository {
         if (folder) {
             await this.adapter.createFolder(folder);
         }
+
         return await this.adapter.createFile(path, content);
     }
 

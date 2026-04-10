@@ -192,7 +192,7 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getCurrentWeek();
 
             // Assert
-            // Monday (1) should give startIndex = (1 - 1 + 7) % 7 = 0
+            // Monday (1) directly indexes position 1 in the Sunday-first days array
             expect(result.weekDays[0]).toBe('Mon');
             expect(result.weekDays[6]).toBe('Sun');
         });
@@ -206,7 +206,7 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getCurrentWeek();
 
             // Assert
-            // Sunday (7) should give startIndex = (7 - 1 + 7) % 7 = 6
+            // Sunday (0) directly indexes position 0 in the Sunday-first days array
             expect(result.weekDays[0]).toBe('Sun');
             expect(result.weekDays[6]).toBe('Sat');
         });
@@ -220,9 +220,7 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getCurrentWeek();
 
             // Assert
-            // Tuesday (2) with correct arithmetic: (2 - 1 + 7) % 7 = 8 % 7 = 1
-            // With mutant: (2 - 1 - 7) % 7 = -6 % 7 = -6 (in JavaScript, % preserves sign)
-            // This would cause array slicing to behave incorrectly
+            // Tuesday (2) directly indexes position 2 in the Sunday-first days array
             expect(result.weekDays[0]).toBe('Tue');
             expect(result.weekDays).toEqual(['Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon']);
         });
