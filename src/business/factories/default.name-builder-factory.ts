@@ -5,15 +5,15 @@ import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factor
 
 export class DefaultNameBuilderFactory implements NameBuilderFactory {
     constructor(
-        private readonly dateParserFactory: DateParserFactory
+        private readonly dateParserFactory: DateParserFactory,
     ) {
 
     }
 
     public getNameBuilder<T>(type: NameBuilderType): NameBuilder<T> {
         switch (type) {
-            case NameBuilderType.PeriodicNote:
-                return new PeriodNameBuilder(this.dateParserFactory) as NameBuilder<T>;
+        case NameBuilderType.PeriodicNote:
+            return new PeriodNameBuilder(this.dateParserFactory) as NameBuilder<T>;
         }
     }
 }

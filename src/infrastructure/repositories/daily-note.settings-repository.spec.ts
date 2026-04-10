@@ -23,25 +23,25 @@ describe('DailyNoteSettingsRepository', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 weeklyNotes: {
                     ...DEFAULT_WEEKLY_NOTE_SETTINGS,
-                    folder: 'changed/setting'
+                    folder: 'changed/setting',
                 },
                 dailyNotes: {
                     nameTemplate: 'yyyy-MM-dd',
                     folder: 'Daily notes',
-                    templateFile: 'Templates/Daily note'
-                }
-            }
+                    templateFile: 'Templates/Daily note',
+                },
+            };
             const updatedSettings = <PluginSettings> {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 weeklyNotes: {
                     ...DEFAULT_WEEKLY_NOTE_SETTINGS,
-                    folder: 'changed/setting'
+                    folder: 'changed/setting',
                 },
                 dailyNotes: {
                     nameTemplate: 'yyyyMMdd - EEEE',
                     folder: '01 journaling/daily notes',
-                    templateFile: '00 templates/daily note.md'
-                }
+                    templateFile: '00 templates/daily note.md',
+                },
             };
 
             when(settingsAdapter.getSettings).mockResolvedValue(oldSettings);
@@ -62,8 +62,8 @@ describe('DailyNoteSettingsRepository', () => {
                 dailyNotes: {
                     nameTemplate: 'yyyy-MM-dd',
                     folder: 'Daily notes',
-                    templateFile: 'Templates/Daily note'
-                }
+                    templateFile: 'Templates/Daily note',
+                },
             };
 
             when(settingsAdapter.getSettings).mockResolvedValue(settings);
@@ -80,8 +80,8 @@ describe('DailyNoteSettingsRepository', () => {
             const settings = <PluginSettings> {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 dailyNotes: {
-                    nameTemplate: 'yyyy-MM-dd'
-                }
+                    nameTemplate: 'yyyy-MM-dd',
+                },
             };
 
             when(settingsAdapter.getSettings).mockResolvedValue(settings);
@@ -92,7 +92,7 @@ describe('DailyNoteSettingsRepository', () => {
             // Assert
             expect(result).toEqual({
                 ...DEFAULT_PLUGIN_SETTINGS.dailyNotes,
-                nameTemplate: 'yyyy-MM-dd'
+                nameTemplate: 'yyyy-MM-dd',
             });
         });
     });

@@ -10,7 +10,7 @@ import {
     startOfQuarter,
     startOfWeek,
     subMonths,
-    subWeeks
+    subWeeks,
 } from 'date-fns';
 import {Period, PeriodType} from 'src/domain/models/period.model';
 import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
@@ -21,20 +21,20 @@ export class DateFnsDateRepository implements DateRepository {
     private readonly yearFormat = 'numeric';
 
     constructor(
-        private readonly dateParserFactory: DateParserFactory
+        private readonly dateParserFactory: DateParserFactory,
     ) {
 
     }
 
     public getDayFromDate(date: Date): Period {
         const formatter = new Intl.DateTimeFormat(undefined, {
-            day: this.dayFormat
+            day: this.dayFormat,
         });
 
         return <Period>{
             name: formatter.format(date),
             date: date,
-            type: PeriodType.Day
+            type: PeriodType.Day,
         };
     }
 
@@ -69,7 +69,7 @@ export class DateFnsDateRepository implements DateRepository {
             quarter: quarter,
             month: month,
             days: days,
-            type: PeriodType.Week
+            type: PeriodType.Week,
         };
     }
 
@@ -106,13 +106,13 @@ export class DateFnsDateRepository implements DateRepository {
         return <Period>{
             name: `Q${quarter}`,
             date: firstDateOfQuarter,
-            type: PeriodType.Quarter
+            type: PeriodType.Quarter,
         };
     }
 
     private getYear(year: number): Period {
         const formatter = new Intl.DateTimeFormat(undefined, {
-            year: this.yearFormat
+            year: this.yearFormat,
         });
 
         const date = new Date(year, 0);
@@ -120,13 +120,13 @@ export class DateFnsDateRepository implements DateRepository {
         return <Period>{
             name: formatter.format(date),
             date: date,
-            type: PeriodType.Year
+            type: PeriodType.Year,
         };
     }
 
     private getMonth(year: number, monthIndex: number): Period {
         const formatter = new Intl.DateTimeFormat(undefined, {
-            month: this.monthFormat
+            month: this.monthFormat,
         });
 
         const date = new Date(year, monthIndex);
@@ -134,7 +134,7 @@ export class DateFnsDateRepository implements DateRepository {
         return <Period>{
             name: formatter.format(date),
             date: date,
-            type: PeriodType.Month
+            type: PeriodType.Month,
         };
     }
 

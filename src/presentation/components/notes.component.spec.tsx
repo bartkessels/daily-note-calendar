@@ -18,7 +18,7 @@ describe('NotesComponent', () => {
         monthlyNoteViewModel: {...mockPeriodNoteViewModel},
         quarterlyNoteViewModel: {...mockPeriodNoteViewModel},
         yearlyNoteViewModel: {...mockPeriodNoteViewModel},
-        notesViewModel: mockNotesViewModel
+        notesViewModel: mockNotesViewModel,
     };
 
     const wrapper = ({children}: {children: ReactNode}) => (
@@ -67,7 +67,7 @@ describe('NotesComponent', () => {
             rerender!(
                 <ViewModelsContext.Provider value={mockContext}>
                     <NotesComponent period={null} />
-                </ViewModelsContext.Provider>
+                </ViewModelsContext.Provider>,
             );
         });
 
@@ -90,7 +90,7 @@ describe('NotesComponent', () => {
         const updatedNote: Note = {
             ...mockNoteWithCreatedOnProperty,
             name: 'New vault note',
-            path: 'notes/new-vault-note.md'
+            path: 'notes/new-vault-note.md',
         };
 
         mockNotesViewModel.loadNotes.mockResolvedValue([]);
@@ -121,7 +121,7 @@ describe('NotesComponent', () => {
         const updatedPeriod: Period = {
             date: new Date(2023, 9, 10),
             name: '10',
-            type: PeriodType.Day
+            type: PeriodType.Day,
         };
 
         let rerender: (ui: React.ReactElement) => void;
@@ -139,7 +139,7 @@ describe('NotesComponent', () => {
             rerender!(
                 <ViewModelsContext.Provider value={mockContext}>
                     <NotesComponent period={updatedPeriod} />
-                </ViewModelsContext.Provider>
+                </ViewModelsContext.Provider>,
             );
         });
 

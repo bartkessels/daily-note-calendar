@@ -3,12 +3,12 @@ import {CalendarViewModel} from 'src/presentation/contracts/calendar.view-model'
 
 export class NavigateToNextWeekCommandHandler implements CommandHandler {
     constructor(
-        private readonly viewModel: CalendarViewModel
+        private readonly viewModel: CalendarViewModel,
     ) {
 
     }
 
     public async execute(): Promise<void> {
-        this.viewModel.navigateToNextWeek?.call(this);
+        this.viewModel.navigateToNextWeek();
     }
 }

@@ -24,27 +24,27 @@ describe('GeneralSettingsRepository', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 weeklyNotes: {
                     ...DEFAULT_WEEKLY_NOTE_SETTINGS,
-                    folder: 'changed/setting'
+                    folder: 'changed/setting',
                 },
                 generalSettings: {
                     displayNotesCreatedOnDate: false,
                     displayNoteIndicator: true,
                     useModifierKeyToCreateNote: false,
-                    firstDayOfWeek: DayOfWeek.Monday
-                }
-            }
+                    firstDayOfWeek: DayOfWeek.Monday,
+                },
+            };
             const updatedSettings = <PluginSettings>{
                 ...DEFAULT_PLUGIN_SETTINGS,
                 weeklyNotes: {
                     ...DEFAULT_WEEKLY_NOTE_SETTINGS,
-                    folder: 'changed/setting'
+                    folder: 'changed/setting',
                 },
                 generalSettings: {
                     displayNotesCreatedOnDate: true,
                     displayNoteIndicator: false,
                     useModifierKeyToCreateNote: true,
-                    firstDayOfWeek: DayOfWeek.Sunday
-                }
+                    firstDayOfWeek: DayOfWeek.Sunday,
+                },
             };
 
             when(settingsAdapter.getSettings).mockResolvedValue(oldSettings);
@@ -68,8 +68,8 @@ describe('GeneralSettingsRepository', () => {
                     displayCreatedNoteCountIndicator: false,
                     useModifierKeyToCreateNote: false,
                     firstDayOfWeek: DayOfWeek.Monday,
-                    weekNumberStandard: WeekNumberStandard.ISO
-                }
+                    weekNumberStandard: WeekNumberStandard.ISO,
+                },
             };
 
             when(settingsAdapter.getSettings).mockResolvedValue(settings);
@@ -87,7 +87,7 @@ describe('GeneralSettingsRepository', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: {
                     displayNotesCreatedOnDate: true,
-                }
+                },
             };
 
             when(settingsAdapter.getSettings).mockResolvedValue(settings);

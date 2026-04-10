@@ -6,14 +6,14 @@ import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contra
 import {PeriodicNoteSettingsView} from 'src/presentation/settings/period-notes/periodic-note.settings-view';
 
 export class WeeklyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsView {
-    override title = "Weekly notes";
-    override description = "Weekly notes are created or opened by clicking on the week number in the calendar.";
+    override title = 'Weekly notes';
+    override description = 'Weekly notes are created or opened by clicking on the week number in the calendar.';
 
     constructor(
         settingsTab: PluginSettingTab,
         onSettingsChange: () => void,
         dateParserFactory: DateParserFactory,
-        settingsRepositoryFactory: SettingsRepositoryFactory
+        settingsRepositoryFactory: SettingsRepositoryFactory,
     ) {
         const settingsRepository = settingsRepositoryFactory.getRepository<PeriodNoteSettings>(SettingsType.WeeklyNote);
 
@@ -25,7 +25,7 @@ export class WeeklyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsView
             name: 'Weekly note name template',
             description: 'The template used to create the weekly note name.',
             placeholder: 'yyyy - ww',
-            value: value
+            value: value,
         };
     }
 
@@ -34,7 +34,7 @@ export class WeeklyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsView
             name: 'Weekly notes folder',
             description: 'The folder where you store your weekly notes.',
             placeholder: 'Weekly notes',
-            value: value
+            value: value,
         };
     }
 
@@ -43,7 +43,7 @@ export class WeeklyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsView
             name: 'Weekly note template',
             description: 'The template used to create the weekly note.',
             placeholder: 'Templates/weekly-note',
-            value: value
+            value: value,
         };
     }
 }

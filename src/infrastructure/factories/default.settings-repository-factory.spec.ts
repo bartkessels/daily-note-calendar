@@ -17,6 +17,10 @@ describe('DefaultSettingsRepositoryFactory', () => {
         factory = new DefaultSettingsRepositoryFactory(mockSettingsAdapter);
     });
 
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     describe('getRepository', () => {
         it('should return the plugin settings repository', () => {
             // Arrange

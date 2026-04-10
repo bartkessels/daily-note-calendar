@@ -6,13 +6,13 @@ export class OpenTodaysNoteCommand implements Command {
     private readonly commandHandler: CommandHandler;
 
     public id: string = 'dnc-open-todays-note';
-    public name: string = `Open Today's note`;
+    public name: string = 'Open Today\'s note';
 
     constructor(commandHandlerFactory: CommandHandlerFactory) {
         this.commandHandler = commandHandlerFactory.getHandler(CommandHandlerType.OpenTodaysNote);
     }
 
-    public callback: (() => any) = (): void => {
+    public callback: (() => void) = (): void => {
         this.commandHandler.execute().catch();
-    }
+    };
 }

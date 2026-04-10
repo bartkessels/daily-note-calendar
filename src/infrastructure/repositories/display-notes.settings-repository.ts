@@ -5,7 +5,7 @@ import {DEFAULT_PLUGIN_SETTINGS} from 'src/domain/settings/plugin.settings';
 
 export class DisplayNotesSettingsRepository implements SettingsRepository<DisplayNotesSettings> {
     constructor(
-        private readonly adapter: SettingsAdapter
+        private readonly adapter: SettingsAdapter,
     ) {
 
     }

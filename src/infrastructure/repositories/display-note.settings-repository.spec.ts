@@ -24,27 +24,27 @@ describe('DisplayNotesSettingsRepository', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 weeklyNotes: {
                     ...DEFAULT_WEEKLY_NOTE_SETTINGS,
-                    folder: 'changed/setting'
+                    folder: 'changed/setting',
                 },
                 notesSettings: {
                     displayDateTemplate: 'yyyy-MM-dd',
                     useCreatedOnDateFromProperties: false,
                     createdOnDatePropertyName: 'createdOn',
-                    createdOnPropertyFormat: 'yyyyMMdd'
-                }
-            }
+                    createdOnPropertyFormat: 'yyyyMMdd',
+                },
+            };
             const updatedSettings = <PluginSettings>{
                 ...DEFAULT_PLUGIN_SETTINGS,
                 weeklyNotes: {
                     ...DEFAULT_WEEKLY_NOTE_SETTINGS,
-                    folder: 'changed/setting'
+                    folder: 'changed/setting',
                 },
                 notesSettings: {
                     displayDateTemplate: 'yyyyMMdd',
                     useCreatedOnDateFromProperties: true,
                     createdOnDatePropertyName: 'created',
-                    createdOnPropertyFormat: 'yyyy-MM-dd'
-                }
+                    createdOnPropertyFormat: 'yyyy-MM-dd',
+                },
             };
 
             when(settingsAdapter.getSettings).mockResolvedValue(oldSettings);
@@ -67,8 +67,8 @@ describe('DisplayNotesSettingsRepository', () => {
                     useCreatedOnDateFromProperties: false,
                     createdOnDatePropertyName: 'createdOn',
                     createdOnPropertyFormat: 'yyyyMMdd',
-                    sortNotes: SortNotes.Ascending
-                }
+                    sortNotes: SortNotes.Ascending,
+                },
             };
 
             when(settingsAdapter.getSettings).mockResolvedValue(settings);
@@ -86,7 +86,7 @@ describe('DisplayNotesSettingsRepository', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 notesSettings: {
                     createdOnDatePropertyName: 'created',
-                }
+                },
             };
 
             when(settingsAdapter.getSettings).mockResolvedValue(settings);

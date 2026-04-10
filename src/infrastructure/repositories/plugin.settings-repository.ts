@@ -4,7 +4,7 @@ import {SettingsAdapter} from 'src/infrastructure/adapters/settings.adapter';
 
 export class PluginSettingsRepository implements SettingsRepository<PluginSettings> {
     constructor(
-        private readonly adapter: SettingsAdapter
+        private readonly adapter: SettingsAdapter,
     ) {
 
     }

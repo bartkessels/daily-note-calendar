@@ -16,5 +16,5 @@ export const DEFAULT_GENERAL_SETTINGS: GeneralSettings = {
     displayCreatedNoteCountIndicator: false,
     useModifierKeyToCreateNote: false,
     firstDayOfWeek: DayOfWeek.Monday,
-    weekNumberStandard: WeekNumberStandard.ISO
-}
+    weekNumberStandard: WeekNumberStandard.ISO,
+};

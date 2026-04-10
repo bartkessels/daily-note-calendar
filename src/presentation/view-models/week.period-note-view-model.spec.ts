@@ -16,7 +16,7 @@ describe('WeekPeriodNoteViewModel', () => {
         date: new Date(2023, 9, 2),
         weekNumber: 40,
         name: '40',
-        type: PeriodType.Week
+        type: PeriodType.Week,
     };
 
     let viewModel: WeekPeriodNoteViewModel;
@@ -62,8 +62,8 @@ describe('WeekPeriodNoteViewModel', () => {
                 weeklyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/week',
                     nameTemplate: 'Week',
-                    templateFile: 'templates/week'
-                }
+                    templateFile: 'templates/week',
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.weeklyNotes).mockResolvedValue(true);
 
@@ -82,8 +82,8 @@ describe('WeekPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: false
-                }
+                    displayNoteIndicator: false,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.weeklyNotes).mockResolvedValue(true);
 
@@ -100,8 +100,8 @@ describe('WeekPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: false
-                }
+                    displayNoteIndicator: false,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.weeklyNotes).mockResolvedValue(false);
 
@@ -118,8 +118,8 @@ describe('WeekPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: true
-                }
+                    displayNoteIndicator: true,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.weeklyNotes).mockResolvedValue(false);
 
@@ -136,8 +136,8 @@ describe('WeekPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: true
-                }
+                    displayNoteIndicator: true,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.weeklyNotes).mockResolvedValue(true);
 
@@ -170,8 +170,8 @@ describe('WeekPeriodNoteViewModel', () => {
                 weeklyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/week',
                     nameTemplate: 'Week',
-                    templateFile: 'templates/week'
-                }
+                    templateFile: 'templates/week',
+                },
             };
             const modifierKey = ModifierKey.Meta;
 
@@ -236,8 +236,8 @@ describe('WeekPeriodNoteViewModel', () => {
                 weeklyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/week',
                     nameTemplate: 'Week',
-                    templateFile: 'templates/week'
-                }
+                    templateFile: 'templates/week',
+                },
             };
             const modifierKey = ModifierKey.Meta;
 
@@ -287,8 +287,8 @@ describe('WeekPeriodNoteViewModel', () => {
                 weeklyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/week',
                     nameTemplate: 'Week',
-                    templateFile: 'templates/week'
-                }
+                    templateFile: 'templates/week',
+                },
             };
             const modifierKey = ModifierKey.None;
 
@@ -336,8 +336,8 @@ describe('WeekPeriodNoteViewModel', () => {
                 weeklyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/week',
                     nameTemplate: 'Week',
-                    templateFile: 'templates/week'
-                }
+                    templateFile: 'templates/week',
+                },
             };
 
             // Act
@@ -347,5 +347,5 @@ describe('WeekPeriodNoteViewModel', () => {
             // Assert
             expect(periodService.deleteNote).toHaveBeenCalledWith(period, settings.weeklyNotes);
         });
-    })
+    });
 });

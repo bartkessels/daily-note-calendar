@@ -11,7 +11,7 @@ export class AdapterNoteRepository implements NoteRepository {
         private readonly adapter: NoteAdapter,
         private readonly dateRepositoryFactory: DateRepositoryFactory,
         private readonly dateParserFactory: DateParserFactory,
-        private readonly settingsRepositoryFactory: SettingsRepositoryFactory
+        private readonly settingsRepositoryFactory: SettingsRepositoryFactory,
     ) {
 
     }
@@ -54,8 +54,8 @@ export class AdapterNoteRepository implements NoteRepository {
 
         return <Note> {
             ...updatedNote,
-            displayDate: this.dateParserFactory.getParser().fromDate(createdOnDate, settings.displayDateTemplate)
-        }
+            displayDate: this.dateParserFactory.getParser().fromDate(createdOnDate, settings.displayDateTemplate),
+        };
     }
 
     private setCreatedOnProperty(note: Note, settings: DisplayNotesSettings): Note {
@@ -73,13 +73,13 @@ export class AdapterNoteRepository implements NoteRepository {
                 note.createdOn.date.getHours(),
                 note.createdOn.date.getMinutes(),
                 note.createdOn.date.getSeconds(),
-                note.createdOn.date.getMilliseconds()
+                note.createdOn.date.getMilliseconds(),
             );
         }
 
         return <Note> {
             ...note,
-            createdOnProperty: createdOnPeriod
+            createdOnProperty: createdOnPeriod,
         };
     }
 }

@@ -5,7 +5,7 @@ import {DEFAULT_YEARLY_NOTE_SETTINGS, PeriodNoteSettings} from 'src/domain/setti
 
 export class YearlyNoteSettingsRepository implements SettingsRepository<PeriodNoteSettings> {
     constructor(
-        private readonly adapter: SettingsAdapter
+        private readonly adapter: SettingsAdapter,
     ) {
 
     }

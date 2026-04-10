@@ -14,7 +14,7 @@ describe('QuarterPeriodNoteViewModel', () => {
     const period = <Period> {
         date: new Date(2023, 6),
         name: 'Q3',
-        type: PeriodType.Quarter
+        type: PeriodType.Quarter,
     };
 
     let viewModel: QuarterPeriodNoteViewModel;
@@ -60,8 +60,8 @@ describe('QuarterPeriodNoteViewModel', () => {
                 quarterlyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/quarter',
                     nameTemplate: 'Quarter',
-                    templateFile: 'templates/quarter'
-                }
+                    templateFile: 'templates/quarter',
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.quarterlyNotes).mockResolvedValue(true);
 
@@ -80,8 +80,8 @@ describe('QuarterPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: false
-                }
+                    displayNoteIndicator: false,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.quarterlyNotes).mockResolvedValue(true);
 
@@ -98,8 +98,8 @@ describe('QuarterPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: false
-                }
+                    displayNoteIndicator: false,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.quarterlyNotes).mockResolvedValue(false);
 
@@ -116,8 +116,8 @@ describe('QuarterPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: true
-                }
+                    displayNoteIndicator: true,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.quarterlyNotes).mockResolvedValue(false);
 
@@ -134,8 +134,8 @@ describe('QuarterPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: true
-                }
+                    displayNoteIndicator: true,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.quarterlyNotes).mockResolvedValue(true);
 
@@ -168,8 +168,8 @@ describe('QuarterPeriodNoteViewModel', () => {
                 quarterlyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/quarter',
                     nameTemplate: 'Quarter',
-                    templateFile: 'templates/quarter'
-                }
+                    templateFile: 'templates/quarter',
+                },
             };
             const modifierKey = ModifierKey.Meta;
 
@@ -234,8 +234,8 @@ describe('QuarterPeriodNoteViewModel', () => {
                 quarterlyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/quarter',
                     nameTemplate: 'Quarter',
-                    templateFile: 'templates/quarter'
-                }
+                    templateFile: 'templates/quarter',
+                },
             };
             const modifierKey = ModifierKey.Meta;
 
@@ -285,8 +285,8 @@ describe('QuarterPeriodNoteViewModel', () => {
                 quarterlyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/quarter',
                     nameTemplate: 'Quarter',
-                    templateFile: 'templates/quarter'
-                }
+                    templateFile: 'templates/quarter',
+                },
             };
             const modifierKey = ModifierKey.None;
 
@@ -334,8 +334,8 @@ describe('QuarterPeriodNoteViewModel', () => {
                 quarterlyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/quarter',
                     nameTemplate: 'Quarter',
-                    templateFile: 'templates/quarter'
-                }
+                    templateFile: 'templates/quarter',
+                },
             };
 
             // Act
@@ -345,5 +345,5 @@ describe('QuarterPeriodNoteViewModel', () => {
             // Assert
             expect(periodService.deleteNote).toHaveBeenCalledWith(period, settings.quarterlyNotes);
         });
-    })
+    });
 });

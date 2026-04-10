@@ -8,30 +8,37 @@ import {mockPeriodNameBuilder} from 'src/test-helpers/builder.mocks';
 import {
     mockDateVariableParser,
     mockPeriodVariableParser,
-    mockStringVariableParser
+    mockStringVariableParser,
 } from 'src/test-helpers/parser.mocks';
 import {mockFileRepository, mockNoteRepository} from 'src/test-helpers/repository.mocks';
 import {
     mockFileRepositoryFactory,
     mockNameBuilderFactory, mockNoteRepositoryFactory,
-    mockVariableParserFactory
+    mockVariableParserFactory,
 } from 'src/test-helpers/factory.mocks';
 import {mockDailyNoteSettings, mockPeriod} from 'src/test-helpers/model.mocks';
 
 describe('DefaultPeriodicNoteManager', () => {
     let manager: DefaultPeriodicNoteManager;
+    let nameBuilder: typeof mockPeriodNameBuilder;
+    let periodVariableParser: typeof mockPeriodVariableParser;
+    let todayVariableParser: typeof mockDateVariableParser;
+    let titleVariableParser: typeof mockStringVariableParser;
+    let fileRepository: typeof mockFileRepository;
+    let noteRepository: typeof mockNoteRepository;
 
-    const nameBuilder = mockPeriodNameBuilder;
-    const periodVariableParser = mockPeriodVariableParser;
-    const todayVariableParser = mockDateVariableParser;
-    const titleVariableParser = mockStringVariableParser;
-    const fileRepository = mockFileRepository;
-    const noteRepository = mockNoteRepository;
     const period = mockPeriod;
     const dailyNoteSettings = mockDailyNoteSettings;
     const completeFilePath = `${dailyNoteSettings.folder}/2023-10-02.md`;
 
     beforeEach(() => {
+        nameBuilder = mockPeriodNameBuilder;
+        periodVariableParser = mockPeriodVariableParser;
+        todayVariableParser = mockDateVariableParser;
+        titleVariableParser = mockStringVariableParser;
+        fileRepository = mockFileRepository;
+        noteRepository = mockNoteRepository;
+
         const nameBuilderFactory = mockNameBuilderFactory(nameBuilder);
         const variableParserFactory = mockVariableParserFactory();
         const fileRepositoryFactory = mockFileRepositoryFactory(fileRepository);
@@ -41,7 +48,7 @@ describe('DefaultPeriodicNoteManager', () => {
             nameBuilderFactory,
             variableParserFactory,
             fileRepositoryFactory,
-            noteRepositoryFactory
+            noteRepositoryFactory,
         );
 
         when(nameBuilder.build).mockReturnValue('daily-notes/2023-10-02.md');
@@ -112,7 +119,7 @@ describe('DefaultPeriodicNoteManager', () => {
                 createdOn: period,
                 name: 'My own note',
                 path: 'notes/my-own-note.md',
-                properties: new Map<string, string>()
+                properties: new Map<string, string>(),
             };
 
             when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(false);
@@ -128,7 +135,7 @@ describe('DefaultPeriodicNoteManager', () => {
 
             // Act
             jest.useFakeTimers();
-            jest.setSystemTime(today);
+            jest.setSystemTime(today.getTime());
             await manager.createNote(dailyNoteSettings, period);
 
             // Assert

@@ -6,7 +6,7 @@ import {
     DEFAULT_MONTHLY_NOTE_SETTINGS, DEFAULT_QUARTERLY_NOTE_SETTINGS,
     DEFAULT_WEEKLY_NOTE_SETTINGS,
     DEFAULT_YEARLY_NOTE_SETTINGS,
-    PeriodNoteSettings
+    PeriodNoteSettings,
 } from 'src/domain/settings/period-note.settings';
 
 export interface PluginSettings extends Settings {
@@ -26,5 +26,5 @@ export const DEFAULT_PLUGIN_SETTINGS: PluginSettings = {
     weeklyNotes: DEFAULT_WEEKLY_NOTE_SETTINGS,
     monthlyNotes: DEFAULT_MONTHLY_NOTE_SETTINGS,
     quarterlyNotes: DEFAULT_QUARTERLY_NOTE_SETTINGS,
-    yearlyNotes: DEFAULT_YEARLY_NOTE_SETTINGS
-}
+    yearlyNotes: DEFAULT_YEARLY_NOTE_SETTINGS,
+};

@@ -7,7 +7,7 @@ export class RepositoryDateManager implements DateManager {
     private readonly today: Date;
 
     constructor(
-        private readonly dateRepositoryFactory: DateRepositoryFactory
+        private readonly dateRepositoryFactory: DateRepositoryFactory,
     ) {
         this.today = new Date();
     }
@@ -45,13 +45,13 @@ export class RepositoryDateManager implements DateManager {
 
     public getPreviousWeeks(currentWeek: Week, startOfWeek: DayOfWeek, standard: WeekNumberStandard, noWeeks: number): Week[] {
         return this.getWeeks(currentWeek, noWeeks, (week) =>
-            this.dateRepositoryFactory.getRepository().getPreviousWeek(startOfWeek, standard, week)
+            this.dateRepositoryFactory.getRepository().getPreviousWeek(startOfWeek, standard, week),
         );
     }
 
     public getNextWeeks(currentWeek: Week, startOfWeek: DayOfWeek, standard: WeekNumberStandard, noWeeks: number): Week[] {
         return this.getWeeks(currentWeek, noWeeks, (week) =>
-            this.dateRepositoryFactory.getRepository().getNextWeek(startOfWeek, standard, week)
+            this.dateRepositoryFactory.getRepository().getNextWeek(startOfWeek, standard, week),
         );
     }
 

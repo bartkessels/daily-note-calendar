@@ -1,4 +1,4 @@
-import { Note } from "src/domain/models/note.model";
+import { Note } from 'src/domain/models/note.model';
 import {Period} from 'src/domain/models/period.model';
 
 export interface NoteService {

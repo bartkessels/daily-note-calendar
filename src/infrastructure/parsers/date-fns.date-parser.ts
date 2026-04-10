@@ -13,7 +13,7 @@ export class DateFnsDateParser implements DateParser {
     public fromDate(date: Date, template: string): string {
         try {
             return format(date, template);
-        } catch(e) {
+        } catch {
             return template;
         }
     }
@@ -33,7 +33,7 @@ export class DateFnsDateParser implements DateParser {
             }
 
             return parsedDate;
-        } catch (e) {
+        } catch {
             return null;
         }
     }

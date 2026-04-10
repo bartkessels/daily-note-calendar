@@ -13,7 +13,7 @@ describe('PeriodComponent', () => {
         onClick: jest.fn(),
         onOpenInHorizontalSplitViewClick: jest.fn(),
         onOpenInVerticalSplitViewClick: jest.fn(),
-        onDelete: jest.fn()
+        onDelete: jest.fn(),
     };
 
     const wrapper = ({children}: {children: React.ReactNode}) => (
@@ -34,7 +34,7 @@ describe('PeriodComponent', () => {
     it('does not render a note-count badge when noteCount is 0', () => {
         const {container} = render(
             <PeriodComponent {...defaultProps} noteCount={0} />,
-            {wrapper}
+            {wrapper},
         );
         expect(container.querySelector('.note-count')).toBeNull();
     });
@@ -42,7 +42,7 @@ describe('PeriodComponent', () => {
     it('does not render a note-count badge when noteCount is not provided', () => {
         const {container} = render(
             <PeriodComponent {...defaultProps} />,
-            {wrapper}
+            {wrapper},
         );
         expect(container.querySelector('.note-count')).toBeNull();
     });
@@ -50,7 +50,7 @@ describe('PeriodComponent', () => {
     it('renders a note-count badge when noteCount is greater than 0', () => {
         const {container} = render(
             <PeriodComponent {...defaultProps} noteCount={3} />,
-            {wrapper}
+            {wrapper},
         );
         const badge = container.querySelector('.note-count');
         expect(badge).not.toBeNull();
@@ -62,7 +62,7 @@ describe('PeriodComponent', () => {
     it('applies selected-day class when isSelected is true', () => {
         const {container} = render(
             <PeriodComponent {...defaultProps} isSelected={true} />,
-            {wrapper}
+            {wrapper},
         );
         expect(container.firstElementChild?.classList.contains('selected-day')).toBe(true);
     });
@@ -70,7 +70,7 @@ describe('PeriodComponent', () => {
     it('applies has-note class when hasPeriodNote is true', () => {
         const {container} = render(
             <PeriodComponent {...defaultProps} hasPeriodNote={true} />,
-            {wrapper}
+            {wrapper},
         );
         expect(container.firstElementChild?.classList.contains('has-note')).toBe(true);
     });
@@ -78,7 +78,7 @@ describe('PeriodComponent', () => {
     it('sets id to "today" when isToday is true', () => {
         const {container} = render(
             <PeriodComponent {...defaultProps} isToday={true} />,
-            {wrapper}
+            {wrapper},
         );
         expect(container.firstElementChild?.id).toBe('today');
     });

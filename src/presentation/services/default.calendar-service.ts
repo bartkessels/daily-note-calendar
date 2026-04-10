@@ -10,7 +10,7 @@ export class DefaultCalendarService implements CalendarService {
     private settings: PluginSettings = DEFAULT_PLUGIN_SETTINGS;
 
     constructor(
-        private readonly dateManagerFactory: DateManagerFactory
+        private readonly dateManagerFactory: DateManagerFactory,
     ) {
         this.dateManager = this.dateManagerFactory.getManager();
     }

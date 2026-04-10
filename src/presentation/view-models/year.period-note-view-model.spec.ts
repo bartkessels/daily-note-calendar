@@ -14,7 +14,7 @@ describe('YearPeriodNoteViewModel', () => {
     const period = <Period> {
         date: new Date(2023, 0),
         name: '2023',
-        type: PeriodType.Year
+        type: PeriodType.Year,
     };
 
     let viewModel: YearPeriodNoteViewModel;
@@ -60,8 +60,8 @@ describe('YearPeriodNoteViewModel', () => {
                 yearlyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/year',
                     nameTemplate: 'Year',
-                    templateFile: 'templates/year'
-                }
+                    templateFile: 'templates/year',
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.yearlyNotes).mockResolvedValue(true);
 
@@ -80,8 +80,8 @@ describe('YearPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: false
-                }
+                    displayNoteIndicator: false,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.yearlyNotes).mockResolvedValue(true);
 
@@ -98,8 +98,8 @@ describe('YearPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: false
-                }
+                    displayNoteIndicator: false,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.yearlyNotes).mockResolvedValue(false);
 
@@ -116,8 +116,8 @@ describe('YearPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: true
-                }
+                    displayNoteIndicator: true,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.yearlyNotes).mockResolvedValue(false);
 
@@ -134,8 +134,8 @@ describe('YearPeriodNoteViewModel', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 generalSettings: <GeneralSettings>{
                     ...DEFAULT_GENERAL_SETTINGS,
-                    displayNoteIndicator: true
-                }
+                    displayNoteIndicator: true,
+                },
             };
             when(periodService.hasPeriodicNote).calledWith(period, settings.yearlyNotes).mockResolvedValue(true);
 
@@ -168,8 +168,8 @@ describe('YearPeriodNoteViewModel', () => {
                 yearlyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/year',
                     nameTemplate: 'Year',
-                    templateFile: 'templates/year'
-                }
+                    templateFile: 'templates/year',
+                },
             };
             const modifierKey = ModifierKey.Meta;
 
@@ -234,8 +234,8 @@ describe('YearPeriodNoteViewModel', () => {
                 yearlyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/year',
                     nameTemplate: 'Year',
-                    templateFile: 'templates/year'
-                }
+                    templateFile: 'templates/year',
+                },
             };
             const modifierKey = ModifierKey.Meta;
 
@@ -285,8 +285,8 @@ describe('YearPeriodNoteViewModel', () => {
                 yearlyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/year',
                     nameTemplate: 'Year',
-                    templateFile: 'templates/year'
-                }
+                    templateFile: 'templates/year',
+                },
             };
             const modifierKey = ModifierKey.None;
 
@@ -334,8 +334,8 @@ describe('YearPeriodNoteViewModel', () => {
                 yearlyNotes: <PeriodNoteSettings> {
                     folder: 'path/to/year',
                     nameTemplate: 'Year',
-                    templateFile: 'templates/year'
-                }
+                    templateFile: 'templates/year',
+                },
             };
 
             // Act
@@ -345,5 +345,5 @@ describe('YearPeriodNoteViewModel', () => {
             // Assert
             expect(periodService.deleteNote).toHaveBeenCalledWith(period, settings.yearlyNotes);
         });
-    })
+    });
 });

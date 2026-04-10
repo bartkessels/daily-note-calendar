@@ -24,4 +24,4 @@ export const QuarterlyNoteComponent = (props: QuarterlyNoteProperties): ReactEle
             onOpenInVerticalSplitViewClick={(key) => viewModel?.openNoteInVerticalSplitView(key, props.quarter)}
             onDelete={() => viewModel?.deleteNote(props.quarter)} />
     );
-}
+};

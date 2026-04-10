@@ -6,7 +6,7 @@ import {DateRepositoryFactory} from 'src/infrastructure/contracts/date-repositor
 export class ObsidianNoteAdapter implements NoteAdapter {
     constructor(
         private readonly plugin: Plugin,
-        private readonly dateRepositoryFactory: DateRepositoryFactory
+        private readonly dateRepositoryFactory: DateRepositoryFactory,
     ) {
 
     }
@@ -23,7 +23,7 @@ export class ObsidianNoteAdapter implements NoteAdapter {
 
     public async getNotes(): Promise<Note[]> {
         return await Promise.all(this.plugin.app.vault.getMarkdownFiles().map((file: TFile) =>
-            this.asNote(file)
+            this.asNote(file),
         ));
     }
 
@@ -35,7 +35,7 @@ export class ObsidianNoteAdapter implements NoteAdapter {
             path: file.path,
             name: file.name.removeMarkdownExtension(),
             createdOn: createdOn,
-            properties: frontMatter
+            properties: frontMatter,
         };
     }
 
@@ -48,6 +48,7 @@ export class ObsidianNoteAdapter implements NoteAdapter {
                 frontMatter = new Map<string, string>(Object.entries(frontMatterCache));
             }
         } catch (e) {
+            // eslint-disable-next-line no-console -- diagnostic logging for front matter parse errors
             console.error(`Error processing front matter for file: ${file.path}. Error: ${e}`);
         }
 

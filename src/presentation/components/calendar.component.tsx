@@ -28,11 +28,11 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
         return (<></>);
     }
 
-    const loadNextWeek = () => setCalendar(viewModel?.getNextWeek(calendar) ?? null);
-    const loadPreviousWeek = () => setCalendar(viewModel?.getPreviousWeek(calendar) ?? null);
-    const loadCurrentWeek = () => setCalendar(viewModel?.getCurrentWeek() ?? null);
-    const loadNextMonth = () => setCalendar(viewModel?.getNextMonth(calendar) ?? null);
-    const loadPreviousMonth = () => setCalendar(viewModel?.getPreviousMonth(calendar) ?? null);
+    const loadNextWeek = (): void => setCalendar(viewModel?.getNextWeek(calendar) ?? null);
+    const loadPreviousWeek = (): void => setCalendar(viewModel?.getPreviousWeek(calendar) ?? null);
+    const loadCurrentWeek = (): void => setCalendar(viewModel?.getCurrentWeek() ?? null);
+    const loadNextMonth = (): void => setCalendar(viewModel?.getNextMonth(calendar) ?? null);
+    const loadPreviousMonth = (): void => setCalendar(viewModel?.getPreviousMonth(calendar) ?? null);
 
     viewModel?.initializeCallbacks(
         setSelectedPeriod,
@@ -40,7 +40,7 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
         loadPreviousWeek,
         loadCurrentWeek,
         loadNextMonth,
-        loadPreviousMonth
+        loadPreviousMonth,
     );
     viewModel?.initializeNoteCountRefreshCallback(() => setNoteCountToken(t => t + 1));
 
@@ -82,31 +82,31 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
 
             <table>
                 <thead>
-                <tr>
-                    <th className="quarter">
-                        <QuarterlyNoteComponent quarter={calendar.quarter} />
-                    </th>
+                    <tr>
+                        <th className="quarter">
+                            <QuarterlyNoteComponent quarter={calendar.quarter} />
+                        </th>
 
-                    {calendar.weekDays.map((day, index) => <th key={index}>{day}</th>)}
-                </tr>
+                        {calendar.weekDays.map((day, index) => <th key={index}>{day}</th>)}
+                    </tr>
                 </thead>
                 <tbody>
 
-                {calendar.weeks.map((week, weekIndex) =>
-                    <WeeklyNoteComponent
-                        key={weekIndex}
-                        week={week}
-                        days={week.days}
-                        selectedPeriod={selectedPeriod}
-                        today={calendar.today}
-                        currentMonth={calendar.month}
-                        noteCountToken={noteCountToken}
-                        onSelect={setSelectedPeriod} />
-                )}
+                    {calendar.weeks.map((week, weekIndex) =>
+                        <WeeklyNoteComponent
+                            key={weekIndex}
+                            week={week}
+                            days={week.days}
+                            selectedPeriod={selectedPeriod}
+                            today={calendar.today}
+                            currentMonth={calendar.month}
+                            noteCountToken={noteCountToken}
+                            onSelect={setSelectedPeriod} />,
+                    )}
                 </tbody>
             </table>
 
             <NotesComponent period={selectedPeriod}/>
         </div>
     );
-}
+};

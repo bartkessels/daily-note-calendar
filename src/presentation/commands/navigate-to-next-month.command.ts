@@ -12,7 +12,7 @@ export class NavigateToNextMonthCommand implements Command {
         this.commandHandler = commandHandlerFactory.getHandler(CommandHandlerType.NavigateToNextMonth);
     }
 
-    public callback: (() => any) = (): void => {
+    public callback: (() => void) = (): void => {
         this.commandHandler.execute().catch();
     };
 }

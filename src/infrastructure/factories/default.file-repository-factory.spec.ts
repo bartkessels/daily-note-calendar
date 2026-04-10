@@ -9,8 +9,14 @@ describe('DefaultFileRepositoryFactory', () => {
         factory = new DefaultFileRepositoryFactory(mockFileAdapter);
     });
 
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     describe('getRepository', () => {
         it('should return a file repository', () => {
+            // Arrange
+            
             // Act
             const result = factory.getRepository();
 

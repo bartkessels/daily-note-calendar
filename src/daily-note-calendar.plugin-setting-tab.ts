@@ -3,19 +3,19 @@ import {SettingsView} from 'src/presentation/settings/settings-view';
 import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factory';
 import {SettingsRepositoryFactory} from 'src/infrastructure/contracts/settings-repository-factory';
 import {
-    DailyNotePeriodicNoteSettingsView
+    DailyNotePeriodicNoteSettingsView,
 } from 'src/presentation/settings/period-notes/daily-note.periodic-note.settings-view';
 import {
-    WeeklyNotePeriodicNoteSettingsView
+    WeeklyNotePeriodicNoteSettingsView,
 } from 'src/presentation/settings/period-notes/weekly-note.periodic-note.settings-view';
 import {
-    MonthlyNotePeriodicNoteSettingsView
+    MonthlyNotePeriodicNoteSettingsView,
 } from 'src/presentation/settings/period-notes/monthly-note.periodic-note.settings-view';
 import {
-    QuarterlyNotePeriodicNoteSettingsView
+    QuarterlyNotePeriodicNoteSettingsView,
 } from 'src/presentation/settings/period-notes/quarterly-note.periodic-note.settings-view';
 import {
-    YearlyNotePeriodicNoteSettingsView
+    YearlyNotePeriodicNoteSettingsView,
 } from 'src/presentation/settings/period-notes/yearly-note.periodic-note.settings-view';
 import {DisplayNotesSettingsView} from 'src/presentation/settings/display-notes/display-notes.settings-view';
 import {GeneralSettingsView} from 'src/presentation/settings/general/general.settings-view';
@@ -27,7 +27,7 @@ export class DailyNoteCalendarPluginSettingTab extends PluginSettingTab {
         plugin: Plugin,
         dateParserFactory: DateParserFactory,
         settingsRepositoryFactory: SettingsRepositoryFactory,
-        onSettingsChange: () => void
+        onSettingsChange: () => void,
     ) {
         super(plugin.app, plugin);
 

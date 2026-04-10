@@ -7,7 +7,7 @@ import {mockDateRepository, mockDisplayNoteSettingsRepository} from 'src/test-he
 import {
     mockDateParserFactory,
     mockDateRepositoryFactory,
-    mockSettingsRepositoryFactory
+    mockSettingsRepositoryFactory,
 } from 'src/test-helpers/factory.mocks';
 import {DEFAULT_DISPLAY_NOTES_SETTINGS, DisplayNotesSettings} from 'src/domain/settings/display-notes.settings';
 import {when} from 'jest-when';
@@ -27,7 +27,7 @@ describe('AdapterNoteRepository', () => {
 
         repository = new AdapterNoteRepository(noteAdapter, dateRepositoryFactory, dateParserFactory, settingsRepositoryFactory);
         when(settingsRepository.get).mockResolvedValue(DEFAULT_DISPLAY_NOTES_SETTINGS);
-        when(dateParser.fromDate).mockReturnValue("");
+        when(dateParser.fromDate).mockReturnValue('');
     });
 
     afterEach(() => {
@@ -38,7 +38,7 @@ describe('AdapterNoteRepository', () => {
         it('should return the active note when the adapter returns it', async () => {
             // Arrange
             const note = mockNoteWithCreatedOnProperty;
-            const expectedNote = <Note>{ ...note, displayDate: "" };
+            const expectedNote = <Note>{ ...note, displayDate: '' };
             noteAdapter.getActiveNote.mockResolvedValue(note);
 
             // Act
@@ -61,11 +61,11 @@ describe('AdapterNoteRepository', () => {
 
         it('should set the createdOnProperty when the properties contain a valid date property', async () => {
             // Arrange
-            const expectedDisplayDate = '02-10-2023'
+            const expectedDisplayDate = '02-10-2023';
             const settings = <DisplayNotesSettings>{
                 ...DEFAULT_DISPLAY_NOTES_SETTINGS,
                 createdOnDatePropertyName: 'created_on',
-                createdOnPropertyFormat: 'dd-MM-yyyy'
+                createdOnPropertyFormat: 'dd-MM-yyyy',
             };
 
             const properties = new Map<string, string>();
@@ -75,11 +75,11 @@ describe('AdapterNoteRepository', () => {
                 createdOn: <Period>{
                     date: new Date(2023, 9, 3, 23, 59, 59, 100),
                     name: '03',
-                    type: PeriodType.Day
+                    type: PeriodType.Day,
                 },
                 name: 'My note with a property',
                 path: 'path/to/note.md',
-                properties: properties
+                properties: properties,
             };
 
             when(settingsRepository.get).mockResolvedValue(settings);
@@ -92,7 +92,7 @@ describe('AdapterNoteRepository', () => {
                 .mockReturnValue(<Period>{
                     date: new Date(2023, 9, 2),
                     name: '02',
-                    type: PeriodType.Day
+                    type: PeriodType.Day,
                 });
 
             // Act
@@ -109,11 +109,11 @@ describe('AdapterNoteRepository', () => {
 
         it('should not set the createdOnProperty when the properties do not contain a valid date property', async () => {
             // Arrange
-            const expectedDisplayDate = '03-10-2023'
+            const expectedDisplayDate = '03-10-2023';
             const settings = <DisplayNotesSettings>{
                 ...DEFAULT_DISPLAY_NOTES_SETTINGS,
                 createdOnDatePropertyName: 'created_on',
-                createdOnPropertyFormat: 'dd-MM-yyyy'
+                createdOnPropertyFormat: 'dd-MM-yyyy',
             };
 
             const properties = new Map<string, string>();
@@ -123,11 +123,11 @@ describe('AdapterNoteRepository', () => {
                 createdOn: <Period>{
                     date: new Date(2023, 9, 3),
                     name: '03',
-                    type: PeriodType.Day
+                    type: PeriodType.Day,
                 },
                 name: 'My note with a property',
                 path: 'path/to/note.md',
-                properties: properties
+                properties: properties,
             };
 
             when(settingsRepository.get).mockResolvedValue(settings);
@@ -150,11 +150,11 @@ describe('AdapterNoteRepository', () => {
 
         it('should get the time from the actual creation time of the note when the createdOnProperty is set without a time', async () => {
             // Arrange
-            const expectedDisplayDate = '02-10-2023 15:15'
+            const expectedDisplayDate = '02-10-2023 15:15';
             const settings = <DisplayNotesSettings>{
                 ...DEFAULT_DISPLAY_NOTES_SETTINGS,
                 createdOnDatePropertyName: 'created_on',
-                createdOnPropertyFormat: 'dd-MM-yyyy'
+                createdOnPropertyFormat: 'dd-MM-yyyy',
             };
 
             const properties = new Map<string, string>();
@@ -164,11 +164,11 @@ describe('AdapterNoteRepository', () => {
                 createdOn: <Period>{
                     date: new Date(2023, 9, 3, 23, 59, 59, 100),
                     name: '03',
-                    type: PeriodType.Day
+                    type: PeriodType.Day,
                 },
                 name: 'My note with a property',
                 path: 'path/to/note.md',
-                properties: properties
+                properties: properties,
             };
 
             when(settingsRepository.get).mockResolvedValue(settings);
@@ -181,7 +181,7 @@ describe('AdapterNoteRepository', () => {
                 .mockReturnValue(<Period>{
                     date: new Date(2023, 9, 2),
                     name: '02',
-                    type: PeriodType.Day
+                    type: PeriodType.Day,
                 });
 
             // Act
@@ -198,11 +198,11 @@ describe('AdapterNoteRepository', () => {
 
         it('should get the time from the property of the note when the createdOnProperty is set with a time', async () => {
             // Arrange
-            const expectedDisplayDate = '02-10-2023 15:15'
+            const expectedDisplayDate = '02-10-2023 15:15';
             const settings = <DisplayNotesSettings>{
                 ...DEFAULT_DISPLAY_NOTES_SETTINGS,
                 createdOnDatePropertyName: 'created_on',
-                createdOnPropertyFormat: 'dd-MM-yyyy HH:mm'
+                createdOnPropertyFormat: 'dd-MM-yyyy HH:mm',
             };
 
             const properties = new Map<string, string>();
@@ -212,11 +212,11 @@ describe('AdapterNoteRepository', () => {
                 createdOn: <Period>{
                     date: new Date(2023, 9, 3, 23, 59, 59, 100),
                     name: '03',
-                    type: PeriodType.Day
+                    type: PeriodType.Day,
                 },
                 name: 'My note with a property',
                 path: 'path/to/note.md',
-                properties: properties
+                properties: properties,
             };
 
             when(settingsRepository.get).mockResolvedValue(settings);
@@ -229,7 +229,7 @@ describe('AdapterNoteRepository', () => {
                 .mockReturnValue(<Period>{
                     date: new Date(2023, 9, 2, 15, 15),
                     name: '02',
-                    type: PeriodType.Day
+                    type: PeriodType.Day,
                 });
 
             // Act
@@ -243,6 +243,141 @@ describe('AdapterNoteRepository', () => {
             expect(result?.createdOnProperty?.type).toEqual(PeriodType.Day);
             expect(result?.displayDate).toEqual(expectedDisplayDate);
         });
+
+        it('should use createdOnProperty date for displayDate when useCreatedOnDateFromProperties is enabled', async () => {
+            // Arrange
+            const expectedDisplayDate = '02-10-2023';
+            const settings = <DisplayNotesSettings>{
+                ...DEFAULT_DISPLAY_NOTES_SETTINGS,
+                useCreatedOnDateFromProperties: true,
+                createdOnDatePropertyName: 'created_on',
+                createdOnPropertyFormat: 'dd-MM-yyyy',
+            };
+
+            const properties = new Map<string, string>();
+            properties.set(settings.createdOnDatePropertyName, '02-10-2023');
+
+            const note = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 3, 23, 59, 59, 100),
+                    name: '03',
+                    type: PeriodType.Day,
+                },
+                name: 'My note with a property',
+                path: 'path/to/note.md',
+                properties: properties,
+            };
+
+            when(settingsRepository.get).mockResolvedValue(settings);
+            when(noteAdapter.getActiveNote).mockResolvedValue(note);
+            when(dateRepository.getDayFromDateString)
+                .calledWith('02-10-2023', settings.createdOnPropertyFormat)
+                .mockReturnValue(<Period>{
+                    date: new Date(2023, 9, 2),
+                    name: '02',
+                    type: PeriodType.Day,
+                });
+            when(dateParser.fromDate)
+                .calledWith(new Date(2023, 9, 2, 23, 59, 59, 100), settings.displayDateTemplate)
+                .mockReturnValue(expectedDisplayDate);
+
+            // Act
+            const result = await repository.getActiveNote();
+
+            // Assert
+            expect(result).not.toBeNull();
+            expect(result?.createdOnProperty).not.toBeNull();
+            expect(result?.displayDate).toEqual(expectedDisplayDate);
+            expect(dateParser.fromDate).toHaveBeenCalledWith(new Date(2023, 9, 2, 23, 59, 59, 100), settings.displayDateTemplate);
+        });
+
+        it('should not copy time from note when parsed property date has hours=0 but minutes≠0', async () => {
+            // Arrange
+            const settings = <DisplayNotesSettings>{
+                ...DEFAULT_DISPLAY_NOTES_SETTINGS,
+                createdOnDatePropertyName: 'created_on',
+                createdOnPropertyFormat: 'dd-MM-yyyy HH:mm',
+            };
+
+            const properties = new Map<string, string>();
+            properties.set(settings.createdOnDatePropertyName, '02-10-2023 00:30');
+
+            const note = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 3, 23, 59, 59, 100),
+                    name: '03',
+                    type: PeriodType.Day,
+                },
+                name: 'My note with a property',
+                path: 'path/to/note.md',
+                properties: properties,
+            };
+
+            when(settingsRepository.get).mockResolvedValue(settings);
+            when(noteAdapter.getActiveNote).mockResolvedValue(note);
+            when(dateRepository.getDayFromDateString)
+                .calledWith('02-10-2023 00:30', settings.createdOnPropertyFormat)
+                .mockReturnValue(<Period>{
+                    date: new Date(2023, 9, 2, 0, 30),
+                    name: '02',
+                    type: PeriodType.Day,
+                });
+            when(dateParser.fromDate).mockReturnValue('');
+
+            // Act
+            const result = await repository.getActiveNote();
+
+            // Assert
+            expect(result).not.toBeNull();
+            expect(result?.createdOnProperty).not.toBeNull();
+            expect(result?.createdOnProperty?.date).toEqual(new Date(2023, 9, 2, 0, 30, 0, 0));
+            expect(result?.createdOnProperty?.date.getHours()).toBe(0);
+            expect(result?.createdOnProperty?.date.getMinutes()).toBe(30);
+        });
+
+        it('should not copy time from note when parsed property date has hours≠0 but minutes=0', async () => {
+            // Arrange
+            const settings = <DisplayNotesSettings>{
+                ...DEFAULT_DISPLAY_NOTES_SETTINGS,
+                createdOnDatePropertyName: 'created_on',
+                createdOnPropertyFormat: 'dd-MM-yyyy HH:mm',
+            };
+
+            const properties = new Map<string, string>();
+            properties.set(settings.createdOnDatePropertyName, '02-10-2023 14:00');
+
+            const note = <Note>{
+                createdOn: <Period>{
+                    date: new Date(2023, 9, 3, 23, 59, 59, 100),
+                    name: '03',
+                    type: PeriodType.Day,
+                },
+                name: 'My note with a property',
+                path: 'path/to/note.md',
+                properties: properties,
+            };
+
+            when(settingsRepository.get).mockResolvedValue(settings);
+            when(noteAdapter.getActiveNote).mockResolvedValue(note);
+            when(dateRepository.getDayFromDateString)
+                .calledWith('02-10-2023 14:00', settings.createdOnPropertyFormat)
+                .mockReturnValue(<Period>{
+                    date: new Date(2023, 9, 2, 14, 0),
+                    name: '02',
+                    type: PeriodType.Day,
+                });
+            when(dateParser.fromDate).mockReturnValue('');
+
+            // Act
+            const result = await repository.getActiveNote();
+
+            // Assert
+            expect(result).not.toBeNull();
+            expect(result?.createdOnProperty).not.toBeNull();
+            expect(result?.createdOnProperty?.date).toEqual(new Date(2023, 9, 2, 14, 0, 0, 0));
+            expect(result?.createdOnProperty?.date.getHours()).toBe(14);
+            expect(result?.createdOnProperty?.date.getMinutes()).toBe(0);
+        });
     });
 
     describe('getNotes', () => {
@@ -250,40 +385,40 @@ describe('AdapterNoteRepository', () => {
             createdOn: <Period>{
                 date: new Date(2023, 9, 2),
                 name: '2',
-                type: PeriodType.Day
+                type: PeriodType.Day,
             },
             displayDate: '02-10-2023',
             name: 'First note',
             path: 'path/to/first-note.md',
-            properties: new Map<string, string>()
+            properties: new Map<string, string>(),
         };
         const secondNote = <Note>{
             createdOn: <Period>{
                 date: new Date(2023, 9, 3),
                 name: '3',
-                type: PeriodType.Day
+                type: PeriodType.Day,
             },
             displayDate: '03-10-2023',
             name: 'Second note',
             path: 'path/to/second-note.md',
-            properties: new Map<string, string>()
+            properties: new Map<string, string>(),
         };
         const thirdNote = <Note>{
             createdOn: <Period>{
                 date: new Date(2023, 9, 3),
                 name: '3',
-                type: PeriodType.Day
+                type: PeriodType.Day,
             },
             displayDate: '03-10-2023',
             name: 'Third note',
             path: 'path/to/third-note.md',
-            properties: new Map<string, string>()
+            properties: new Map<string, string>(),
         };
 
         beforeEach(() => {
-            when(dateParser.fromDate).calledWith(firstNote.createdOn.date, expect.any(String)).mockReturnValue(firstNote.displayDate!!);
-            when(dateParser.fromDate).calledWith(secondNote.createdOn.date, expect.any(String)).mockReturnValue(secondNote.displayDate!!);
-            when(dateParser.fromDate).calledWith(thirdNote.createdOn.date, expect.any(String)).mockReturnValue(thirdNote.displayDate!!);
+            when(dateParser.fromDate).calledWith(firstNote.createdOn.date, expect.any(String)).mockReturnValue(firstNote.displayDate!);
+            when(dateParser.fromDate).calledWith(secondNote.createdOn.date, expect.any(String)).mockReturnValue(secondNote.displayDate!);
+            when(dateParser.fromDate).calledWith(thirdNote.createdOn.date, expect.any(String)).mockReturnValue(thirdNote.displayDate!);
         });
 
         it('should return the notes that match the filter', async () => {
@@ -336,11 +471,11 @@ describe('AdapterNoteRepository', () => {
 
         it('should set the createdOnProperty when the properties contain a valid date property', async () => {
             // Arrange
-            const expectedDisplayDate = '02-10-2023'
+            const expectedDisplayDate = '02-10-2023';
             const settings = <DisplayNotesSettings>{
                 ...DEFAULT_DISPLAY_NOTES_SETTINGS,
                 createdOnDatePropertyName: 'created_on',
-                createdOnPropertyFormat: 'dd-MM-yyyy'
+                createdOnPropertyFormat: 'dd-MM-yyyy',
             };
 
             const properties = new Map<string, string>();
@@ -350,12 +485,12 @@ describe('AdapterNoteRepository', () => {
                 createdOn: <Period>{
                     date: new Date(2023, 9, 3, 23, 59, 59, 100),
                     name: '03',
-                    type: PeriodType.Day
+                    type: PeriodType.Day,
                 },
                 displayDate: '',
                 name: 'My note with a property',
                 path: 'path/to/note.md',
-                properties: properties
+                properties: properties,
             };
 
             when(noteAdapter.getNotes).mockResolvedValue([note]);
@@ -368,7 +503,7 @@ describe('AdapterNoteRepository', () => {
                 .mockReturnValue(<Period>{
                     date: new Date(2023, 9, 2),
                     name: '02',
-                    type: PeriodType.Day
+                    type: PeriodType.Day,
                 });
 
             // Act
@@ -385,11 +520,11 @@ describe('AdapterNoteRepository', () => {
 
         it('should not set the createdOnProperty when the properties do not contain a valid date property', async () => {
             // Arrange
-            const expectedDisplayDate = '03-10-2023'
+            const expectedDisplayDate = '03-10-2023';
             const settings = <DisplayNotesSettings>{
                 ...DEFAULT_DISPLAY_NOTES_SETTINGS,
                 createdOnDatePropertyName: 'created_on',
-                createdOnPropertyFormat: 'dd-MM-yyyy'
+                createdOnPropertyFormat: 'dd-MM-yyyy',
             };
 
             const properties = new Map<string, string>();
@@ -399,11 +534,11 @@ describe('AdapterNoteRepository', () => {
                 createdOn: <Period>{
                     date: new Date(2023, 9, 3),
                     name: '03',
-                    type: PeriodType.Day
+                    type: PeriodType.Day,
                 },
                 name: 'My note with a property',
                 path: 'path/to/note.md',
-                properties: properties
+                properties: properties,
             };
 
             when(noteAdapter.getNotes).mockResolvedValue([note]);

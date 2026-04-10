@@ -10,6 +10,7 @@ export const mockCalendarViewModel = {
     navigateToCurrentWeek: jest.fn(),
     navigateToNextMonth: jest.fn(),
     navigateToPreviousMonth: jest.fn(),
+    refreshNoteCounts: jest.fn(),
 
     initialize: jest.fn(),
     initializeCallbacks: jest.fn(),
@@ -18,7 +19,7 @@ export const mockCalendarViewModel = {
     getPreviousWeek: jest.fn(),
     getNextWeek: jest.fn(),
     getPreviousMonth: jest.fn(),
-    getNextMonth: jest.fn()
+    getNextMonth: jest.fn(),
 } as jest.Mocked<CalendarViewModel>;
 
 export const mockPeriodNoteViewModel = {
@@ -27,7 +28,7 @@ export const mockPeriodNoteViewModel = {
     openNote: jest.fn(),
     openNoteInHorizontalSplitView: jest.fn(),
     openNoteInVerticalSplitView: jest.fn(),
-    deleteNote: jest.fn()
+    deleteNote: jest.fn(),
 } as jest.Mocked<PeriodNoteViewModel>;
 
 export const mockDayNoteViewModel = {
@@ -37,7 +38,7 @@ export const mockDayNoteViewModel = {
     openNoteInHorizontalSplitView: jest.fn(),
     openNoteInVerticalSplitView: jest.fn(),
     deleteNote: jest.fn(),
-    getNoteCount: jest.fn()
+    getNoteCount: jest.fn(),
 } as jest.Mocked<DayNoteViewModel>;
 
 export const mockNotesViewModel = {
@@ -48,5 +49,5 @@ export const mockNotesViewModel = {
     openNote: jest.fn(),
     openNoteInHorizontalSplitView: jest.fn(),
     openNoteInVerticalSplitView: jest.fn(),
-    deleteNote: jest.fn()
+    deleteNote: jest.fn(),
 } as jest.Mocked<NotesViewModel>;

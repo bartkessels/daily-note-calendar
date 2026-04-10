@@ -3,14 +3,14 @@ import {Period} from 'src/domain/models/period.model';
 import {PluginSettings} from 'src/domain/settings/plugin.settings';
 
 export interface CalendarViewModel {
-    setSelectedPeriod?: (period: Period) => void;
-    navigateToNextWeek?: () => void;
-    navigateToPreviousWeek?: () => void;
-    navigateToCurrentWeek?: () => void;
-    navigateToNextMonth?: () => void;
-    navigateToPreviousMonth?: () => void;
+    setSelectedPeriod: (period: Period) => void;
+    navigateToNextWeek: () => void;
+    navigateToPreviousWeek: () => void;
+    navigateToCurrentWeek: () => void;
+    navigateToNextMonth: () => void;
+    navigateToPreviousMonth: () => void;
 
-    refreshNoteCounts?: () => void;
+    refreshNoteCounts: () => void;
     initializeNoteCountRefreshCallback(cb: () => void): void;
 
     initialize(settings: PluginSettings, today: Period): void;

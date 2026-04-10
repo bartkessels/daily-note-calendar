@@ -1,6 +1,5 @@
 import {PluginSettingTab, Setting} from 'obsidian';
 import {DateParser} from 'src/infrastructure/contracts/date-parser';
-import {PluginSettings} from 'src/domain/settings/plugin.settings';
 
 export abstract class SettingsView {
     private readonly today: Date;
@@ -9,7 +8,7 @@ export abstract class SettingsView {
 
     protected constructor(
         protected readonly settingsTab: PluginSettingTab,
-        private readonly onSettingsChange: () => void
+        private readonly onSettingsChange: () => void,
     ) {
         this.today = new Date();
     }
@@ -34,7 +33,7 @@ export abstract class SettingsView {
             .setDesc(model.description)
             .addToggle(component => component
                 .setValue(model.value)
-                .onChange((value) => onChange(value).then(this.onSettingsChange))
+                .onChange((value) => onChange(value).then(this.onSettingsChange)),
             );
     }
 
@@ -45,7 +44,7 @@ export abstract class SettingsView {
             .addText(component => component
                 .setPlaceholder(model.placeholder)
                 .setValue(model.value)
-                .onChange((value) => onChange(value).then(this.onSettingsChange))
+                .onChange((value) => onChange(value).then(this.onSettingsChange)),
             );
     }
 
@@ -54,7 +53,7 @@ export abstract class SettingsView {
         description: string,
         options: Map<string, string>,
         activeOption: string,
-        onChange: (value: string) => Promise<void>
+        onChange: (value: string) => Promise<void>,
     ): void {
         new Setting(this.settingsTab.containerEl)
             .setName(name)
@@ -62,7 +61,7 @@ export abstract class SettingsView {
             .addDropdown(component => component
                 .addOptions(Object.fromEntries(options))
                 .setValue(activeOption)
-                .onChange((value) => onChange(value).then(this.onSettingsChange))
+                .onChange((value) => onChange(value).then(this.onSettingsChange)),
             );
     }
 
@@ -86,7 +85,7 @@ export abstract class SettingsView {
                 .onChange(async (value: string) => {
                     exampleElement.setText(dateParser.fromDate(this.today, value));
                     onChange(value).then(this.onSettingsChange);
-                })
+                }),
             );
     }
 }

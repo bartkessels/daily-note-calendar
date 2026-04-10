@@ -23,25 +23,25 @@ describe('YearlyNoteSettingsRepository', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 weeklyNotes: {
                     ...DEFAULT_WEEKLY_NOTE_SETTINGS,
-                    folder: 'changed/setting'
+                    folder: 'changed/setting',
                 },
                 yearlyNotes: {
                     nameTemplate: 'yyyy',
                     folder: 'Yearly notes',
-                    templateFile: 'Templates/Yearly note'
-                }
-            }
+                    templateFile: 'Templates/Yearly note',
+                },
+            };
             const updatedSettings = <PluginSettings> {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 weeklyNotes: {
                     ...DEFAULT_WEEKLY_NOTE_SETTINGS,
-                    folder: 'changed/setting'
+                    folder: 'changed/setting',
                 },
                 yearlyNotes: {
                     nameTemplate: 'yyyy - qqq',
                     folder: '01 journaling/yearly notes',
-                    templateFile: '00 templates/yearly note.md'
-                }
+                    templateFile: '00 templates/yearly note.md',
+                },
             };
 
             when(settingsAdapter.getSettings).mockResolvedValue(oldSettings);
@@ -62,8 +62,8 @@ describe('YearlyNoteSettingsRepository', () => {
                 yearlyNotes: {
                     nameTemplate: 'yyyy',
                     folder: 'Yearly notes',
-                    templateFile: 'Templates/Yearly note'
-                }
+                    templateFile: 'Templates/Yearly note',
+                },
             };
 
             when(settingsAdapter.getSettings).mockResolvedValue(settings);
@@ -81,7 +81,7 @@ describe('YearlyNoteSettingsRepository', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 yearlyNotes: {
                     nameTemplate: 'yyyy',
-                }
+                },
             };
 
             when(settingsAdapter.getSettings).mockResolvedValue(settings);

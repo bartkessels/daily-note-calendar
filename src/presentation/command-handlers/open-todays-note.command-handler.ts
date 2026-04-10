@@ -8,14 +8,14 @@ export class OpenTodaysNoteCommandHandler implements CommandHandler {
     constructor(
         private readonly dateManagerFactory: DateManagerFactory,
         private readonly viewModel: PeriodNoteViewModel,
-        private readonly calendarViewModel: CalendarViewModel
+        private readonly calendarViewModel: CalendarViewModel,
     ) {
 
     }
 
     public async execute(): Promise<void> {
         const today = this.dateManagerFactory.getManager().getCurrentDay();
-        this.calendarViewModel.setSelectedPeriod?.call(this, today);
+        this.calendarViewModel.setSelectedPeriod(today);
         await this.viewModel.openNote(ModifierKey.None, today);
     }
 }

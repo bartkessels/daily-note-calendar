@@ -12,7 +12,7 @@ export class DisplayInCalendarCommand implements Command {
         this.commandHandler = commandHandlerFactory.getHandler(CommandHandlerType.DisplayInCalendar);
     }
 
-    public callback: (() => any) = (): void => {
+    public callback: (() => void) = (): void => {
         this.commandHandler.execute().catch();
-    }
+    };
 }

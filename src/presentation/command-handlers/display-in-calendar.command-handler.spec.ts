@@ -9,38 +9,66 @@ import {Period, PeriodType} from 'src/domain/models/period.model';
 
 describe('DisplayInCalendarCommandHandler', () => {
     let commandHandler: DisplayInCalendarCommandHandler;
-    const noteManager = mockNoteManager;
-    const settingsRepository = mockDisplayNoteSettingsRepository;
-    const viewModel = mockCalendarViewModel;
-    const activeNote = <Note> {
-        createdOn: <Period> {
-            name: '03',
-            date: new Date(2023, 9, 3),
-            type: PeriodType.Day
-        },
-        createdOnProperty: <Period> {
-            name: '02',
-            date: new Date(2023, 9, 2),
-            type: PeriodType.Day
-        },
-        name: 'My Note',
-        path: 'path/to/note',
-        properties: new Map<string, string>()
-    };
+    let noteManager: typeof mockNoteManager;
+    let settingsRepository: typeof mockDisplayNoteSettingsRepository;
+    let viewModel: typeof mockCalendarViewModel;
+    let activeNote: Note;
 
     beforeEach(() => {
+        noteManager = mockNoteManager;
+        settingsRepository = mockDisplayNoteSettingsRepository;
+        viewModel = mockCalendarViewModel;
+        activeNote = <Note> {
+            createdOn: <Period> {
+                name: '03',
+                date: new Date(2023, 9, 3),
+                type: PeriodType.Day,
+            },
+            createdOnProperty: <Period> {
+                name: '02',
+                date: new Date(2023, 9, 2),
+                type: PeriodType.Day,
+            },
+            name: 'My Note',
+            path: 'path/to/note',
+            properties: new Map<string, string>(),
+        };
+
+
         const noteManagerFactory = mockNoteManagerFactory(noteManager);
         const settingsRepositoryFactory = mockSettingsRepositoryFactory<DisplayNotesSettings>(settingsRepository);
 
         commandHandler = new DisplayInCalendarCommandHandler(noteManagerFactory, settingsRepositoryFactory, viewModel);
     });
 
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     describe('execute', () => {
+        it('should not call setSelectedPeriod when there is no active note', async () => {
+            // Arrange
+            const settings = <DisplayNotesSettings> {
+                ...DEFAULT_DISPLAY_NOTES_SETTINGS,
+                useCreatedOnDateFromProperties: true,
+            };
+
+            settingsRepository.get.mockResolvedValue(settings);
+            noteManager.getActiveNote.mockResolvedValue(null);
+
+            // Act
+            await commandHandler.execute();
+
+            // Assert
+            expect(noteManager.getActiveNote).toHaveBeenCalled();
+            expect(viewModel.setSelectedPeriod).not.toHaveBeenCalled();
+        });
+
         it('should select the period based on the createdOnProperty if useCreatedOnDateFromProperties is true', async () => {
             // Arrange
             const settings = <DisplayNotesSettings> {
                 ...DEFAULT_DISPLAY_NOTES_SETTINGS,
-                useCreatedOnDateFromProperties: true
+                useCreatedOnDateFromProperties: true,
             };
 
             settingsRepository.get.mockResolvedValue(settings);
@@ -54,13 +82,13 @@ describe('DisplayInCalendarCommandHandler', () => {
             expect(viewModel.setSelectedPeriod).toHaveBeenCalledWith(activeNote.createdOnProperty);
         });
 
-        it('should select the period based on the createdOn if useCreatedOnDateFromProperties is true but there is no createdOnProperty', async () => {
+        it('should not select any period if useCreatedOnDateFromProperties is true but there is no createdOnProperty', async () => {
             // Arrange
             const settings = <DisplayNotesSettings> {
                 ...DEFAULT_DISPLAY_NOTES_SETTINGS,
-                useCreatedOnDateFromProperties: false
+                useCreatedOnDateFromProperties: true,
             };
-            const activeNoteWithoutCreatedOnProperty = <Note>{ ...activeNote, createdOnProperty: null }
+            const activeNoteWithoutCreatedOnProperty = <Note>{ ...activeNote, createdOnProperty: null };
 
             settingsRepository.get.mockResolvedValue(settings);
             noteManager.getActiveNote.mockResolvedValue(activeNoteWithoutCreatedOnProperty);
@@ -70,14 +98,14 @@ describe('DisplayInCalendarCommandHandler', () => {
 
             // Assert
             expect(noteManager.getActiveNote).toHaveBeenCalled();
-            expect(viewModel.setSelectedPeriod).toHaveBeenCalledWith(activeNote.createdOn);
+            expect(viewModel.setSelectedPeriod).not.toHaveBeenCalled();
         });
 
         it('should select the period based on the createdOn if useCreatedOnDateFromProperties is false', async () => {
             // Arrange
             const settings = <DisplayNotesSettings> {
                 ...DEFAULT_DISPLAY_NOTES_SETTINGS,
-                useCreatedOnDateFromProperties: false
+                useCreatedOnDateFromProperties: false,
             };
 
             settingsRepository.get.mockResolvedValue(settings);

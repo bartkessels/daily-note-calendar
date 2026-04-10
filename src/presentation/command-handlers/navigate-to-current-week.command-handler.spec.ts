@@ -1,18 +1,25 @@
 import {
-    NavigateToCurrentWeekCommandHandler
+    NavigateToCurrentWeekCommandHandler,
 } from 'src/presentation/command-handlers/navigate-to-current-week.command-handler';
 import {mockCalendarViewModel} from 'src/test-helpers/view-model.mocks';
 
 describe('NavigateToCurrentWeekCommandHandler', () => {
     let commandHandler: NavigateToCurrentWeekCommandHandler;
-    const viewModel = mockCalendarViewModel;
+    let viewModel: typeof mockCalendarViewModel;
 
     beforeEach(() => {
+        viewModel = mockCalendarViewModel;
         commandHandler = new NavigateToCurrentWeekCommandHandler(viewModel);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     describe('execute', () => {
         it('should call the loadCurrentWeek method on the view model', () => {
+            // Arrange
+            
             // Act
             commandHandler.execute();
 

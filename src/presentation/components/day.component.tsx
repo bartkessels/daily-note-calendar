@@ -49,4 +49,4 @@ export const DailyNoteComponent = (props: DailyNoteProperties): ReactElement => 
             }}
             onDelete={() => viewModel?.deleteNote(props.day)}/>
     );
-}
+};

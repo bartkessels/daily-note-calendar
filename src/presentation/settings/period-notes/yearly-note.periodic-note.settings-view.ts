@@ -6,14 +6,14 @@ import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contra
 import {PeriodicNoteSettingsView} from 'src/presentation/settings/period-notes/periodic-note.settings-view';
 
 export class YearlyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsView {
-    override title = "Yearly notes";
-    override description = "Yearly notes are created or opened by clicking on the week number in the calendar.";
+    override title = 'Yearly notes';
+    override description = 'Yearly notes are created or opened by clicking on the week number in the calendar.';
 
     constructor(
         settingsTab: PluginSettingTab,
         onSettingsChange: () => void,
         dateParserFactory: DateParserFactory,
-        settingsRepositoryFactory: SettingsRepositoryFactory
+        settingsRepositoryFactory: SettingsRepositoryFactory,
     ) {
         const settingsRepository = settingsRepositoryFactory.getRepository<PeriodNoteSettings>(SettingsType.YearlyNote);
 
@@ -25,7 +25,7 @@ export class YearlyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsView
             name: 'Yearly note name template',
             description: 'The template used to create the yearly note name.',
             placeholder: 'yyyy',
-            value: value
+            value: value,
         };
     }
 
@@ -34,7 +34,7 @@ export class YearlyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsView
             name: 'Yearly notes folder',
             description: 'The folder where you store your yearly notes.',
             placeholder: 'Yearly notes',
-            value: value
+            value: value,
         };
     }
 
@@ -43,7 +43,7 @@ export class YearlyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsView
             name: 'Yearly note template',
             description: 'The template used to create the yearly note.',
             placeholder: 'Templates/yearly-note',
-            value: value
+            value: value,
         };
     }
 }

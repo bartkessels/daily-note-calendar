@@ -8,7 +8,7 @@ export class TodayVariableParser implements VariableParser<Date> {
 
     constructor(
         private readonly variableFactory: VariableFactory,
-        private readonly dateParserFactory: DateParserFactory
+        private readonly dateParserFactory: DateParserFactory,
     ) {
 
     }
@@ -16,7 +16,7 @@ export class TodayVariableParser implements VariableParser<Date> {
     public parseVariables(content: string, value: Date): string {
         const dateParser = this.dateParserFactory.getParser();
 
-        return content.replace(TodayVariableParser.variablePattern, (variableDeclaration: string, _: any): string => {
+        return content.replace(TodayVariableParser.variablePattern, (variableDeclaration: string): string => {
             const variable = this.variableFactory.getVariable(variableDeclaration);
             return dateParser.fromDate(value.calculate(variable.calculus), variable.template!);
         });

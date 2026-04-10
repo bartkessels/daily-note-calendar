@@ -34,7 +34,7 @@ describe('OpenWeeklyNoteCommandHandler', () => {
         const today = <Period>{
             date: new Date(2023, 9, 2),
             name: '02',
-            type: PeriodType.Day
+            type: PeriodType.Day,
         };
 
         const week = <Week> {
@@ -44,20 +44,20 @@ describe('OpenWeeklyNoteCommandHandler', () => {
             year: <Period> {
                 date: new Date(2023, 0),
                 name: '2023',
-                type: PeriodType.Year
+                type: PeriodType.Year,
             },
             quarter: <Period> {
                 date: new Date(2023, 0),
                 name: 'Q1',
-                type: PeriodType.Quarter
+                type: PeriodType.Quarter,
             },
             month: <Period> {
                 date: new Date(2023, 9),
                 name: 'October',
-                type: PeriodType.Month
+                type: PeriodType.Month,
             },
             type: PeriodType.Week,
-            days: []
+            days: [],
         };
 
 

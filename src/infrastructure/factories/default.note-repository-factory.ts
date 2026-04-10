@@ -11,7 +11,7 @@ export class DefaultNoteRepositoryFactory implements NoteRepositoryFactory {
         private readonly adapter: NoteAdapter,
         private readonly dateRepositoryFactory: DateRepositoryFactory,
         private readonly dateParserFactory: DateParserFactory,
-        private readonly settingsRepositoryFactory: SettingsRepositoryFactory
+        private readonly settingsRepositoryFactory: SettingsRepositoryFactory,
     ) {
 
     }
@@ -21,7 +21,7 @@ export class DefaultNoteRepositoryFactory implements NoteRepositoryFactory {
             this.adapter,
             this.dateRepositoryFactory,
             this.dateParserFactory,
-            this.settingsRepositoryFactory
+            this.settingsRepositoryFactory,
         );
     }
 }

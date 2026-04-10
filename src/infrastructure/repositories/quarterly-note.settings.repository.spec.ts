@@ -23,25 +23,25 @@ describe('QuarterlyNoteSettingsRepository', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 weeklyNotes: {
                     ...DEFAULT_WEEKLY_NOTE_SETTINGS,
-                    folder: 'changed/setting'
+                    folder: 'changed/setting',
                 },
                 quarterlyNotes: {
                     nameTemplate: 'yyyy-qqq',
                     folder: 'Quarterly notes',
-                    templateFile: 'Templates/Quarterly note'
-                }
-            }
+                    templateFile: 'Templates/Quarterly note',
+                },
+            };
             const updatedSettings = <PluginSettings>{
                 ...DEFAULT_PLUGIN_SETTINGS,
                 weeklyNotes: {
                     ...DEFAULT_WEEKLY_NOTE_SETTINGS,
-                    folder: 'changed/setting'
+                    folder: 'changed/setting',
                 },
                 quarterlyNotes: {
                     nameTemplate: 'yyyy - qqq',
                     folder: '01 journaling/quarterly notes',
-                    templateFile: '00 templates/quarterly note.md'
-                }
+                    templateFile: '00 templates/quarterly note.md',
+                },
             };
 
             when(settingsAdapter.getSettings).mockResolvedValue(oldSettings);
@@ -62,8 +62,8 @@ describe('QuarterlyNoteSettingsRepository', () => {
                 quarterlyNotes: {
                     nameTemplate: 'yyyy-qqq',
                     folder: 'Quarterly notes',
-                    templateFile: 'Templates/Quarterly note'
-                }
+                    templateFile: 'Templates/Quarterly note',
+                },
             };
 
             when(settingsAdapter.getSettings).mockResolvedValue(settings);
@@ -81,7 +81,7 @@ describe('QuarterlyNoteSettingsRepository', () => {
                 ...DEFAULT_PLUGIN_SETTINGS,
                 quarterlyNotes: {
                     nameTemplate: 'yyyy-qqq',
-                }
+                },
             };
 
             when(settingsAdapter.getSettings).mockResolvedValue(settings);

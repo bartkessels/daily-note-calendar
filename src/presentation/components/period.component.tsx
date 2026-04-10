@@ -18,17 +18,17 @@ interface PeriodComponentProperties {
 
 export const PeriodComponent = (props: PeriodComponentProperties): ReactElement => {
     const contextMenu = getContextMenuAdapter();
-    const contextMenuCallbacks = (key: ModifierKey) => {
+    const contextMenuCallbacks = (key: ModifierKey): ContextMenuCallbacks => {
         return {
             openInHorizontalSplitView: () => props.onOpenInHorizontalSplitViewClick(key),
             openInVerticalSplitView: () => props.onOpenInVerticalSplitViewClick(key),
-            onDelete: () => props.onDelete()
+            onDelete: () => props.onDelete(),
         } as ContextMenuCallbacks;
     };
 
     const modifierKey = (event: React.MouseEvent): ModifierKey => {
         if ((event.metaKey || event.ctrlKey) && event.altKey) {
-            return ModifierKey.MetaAlt
+            return ModifierKey.MetaAlt;
         } else if (event.metaKey) {
             return ModifierKey.Meta;
         } else if (event.altKey) {
@@ -36,9 +36,9 @@ export const PeriodComponent = (props: PeriodComponentProperties): ReactElement 
         } else if (event.shiftKey) {
             return ModifierKey.Shift;
         } else {
-            return ModifierKey.None
+            return ModifierKey.None;
         }
-    }
+    };
 
     const classes: string[] = props.classNames ?? [];
     if (props.isSelected) {

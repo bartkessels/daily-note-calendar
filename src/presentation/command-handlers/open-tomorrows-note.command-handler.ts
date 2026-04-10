@@ -8,14 +8,14 @@ export class OpenTomorrowsNoteCommandHandler implements CommandHandler {
     constructor(
         private readonly dateManagerFactory: DateManagerFactory,
         private readonly viewModel: PeriodNoteViewModel,
-        private readonly calendarViewModel: CalendarViewModel
+        private readonly calendarViewModel: CalendarViewModel,
     ) {
 
     }
 
     public async execute(): Promise<void> {
         const tomorrow = this.dateManagerFactory.getManager().getTomorrow();
-        this.calendarViewModel.setSelectedPeriod?.call(this, tomorrow);
+        this.calendarViewModel.setSelectedPeriod(tomorrow);
         await this.viewModel.openNote(ModifierKey.None, tomorrow);
     }
 }

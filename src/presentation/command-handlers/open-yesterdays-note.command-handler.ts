@@ -8,7 +8,7 @@ export class OpenYesterdaysNoteCommandHandler implements CommandHandler {
     constructor(
         private readonly dateManagerFactory: DateManagerFactory,
         private readonly viewModel: PeriodNoteViewModel,
-        private readonly calendarViewModel: CalendarViewModel
+        private readonly calendarViewModel: CalendarViewModel,
     ) {
 
     }
@@ -16,7 +16,7 @@ export class OpenYesterdaysNoteCommandHandler implements CommandHandler {
     public async execute(): Promise<void> {
         const yesterday = this.dateManagerFactory.getManager().getYesterday();
 
-        this.calendarViewModel.setSelectedPeriod?.call(this, yesterday);
+        this.calendarViewModel.setSelectedPeriod(yesterday);
         await this.viewModel.openNote(ModifierKey.None, yesterday);
     }
 }

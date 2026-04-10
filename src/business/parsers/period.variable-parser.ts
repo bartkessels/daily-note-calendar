@@ -9,7 +9,7 @@ export class PeriodVariableParser implements VariableParser<Period> {
 
     constructor(
         private readonly variableFactory: VariableFactory,
-        private readonly dateParserFactory: DateParserFactory
+        private readonly dateParserFactory: DateParserFactory,
     ) {
 
     }
@@ -17,7 +17,7 @@ export class PeriodVariableParser implements VariableParser<Period> {
     public parseVariables(content: string, value: Period): string {
         const dateParser = this.dateParserFactory.getParser();
 
-        return content.replace(PeriodVariableParser.variablePattern, (variableDeclaration: string, _: any): string => {
+        return content.replace(PeriodVariableParser.variablePattern, (variableDeclaration: string): string => {
             const variable = this.variableFactory.getVariable(variableDeclaration);
             return dateParser.fromDate(value.date.calculate(variable.calculus), variable.template!);
         });

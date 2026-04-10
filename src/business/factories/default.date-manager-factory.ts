@@ -5,7 +5,7 @@ import {DateRepositoryFactory} from 'src/infrastructure/contracts/date-repositor
 
 export class DefaultDateManagerFactory implements DateManagerFactory {
     constructor(
-        private readonly dateRepositoryFactory: DateRepositoryFactory
+        private readonly dateRepositoryFactory: DateRepositoryFactory,
     ) {
 
     }

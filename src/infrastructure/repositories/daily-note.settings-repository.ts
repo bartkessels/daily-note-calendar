@@ -5,7 +5,7 @@ import {DEFAULT_DAILY_NOTE_SETTINGS, PeriodNoteSettings} from 'src/domain/settin
 
 export class DailyNoteSettingsRepository implements SettingsRepository<PeriodNoteSettings> {
     constructor(
-        private readonly adapter: SettingsAdapter
+        private readonly adapter: SettingsAdapter,
     ) {
 
     }

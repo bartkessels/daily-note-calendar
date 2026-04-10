@@ -9,7 +9,7 @@ export class DefaultNoteManagerFactory implements NoteManagerFactory {
     constructor(
         private readonly fileRepositoryFactory: FileRepositoryFactory,
         private readonly noteRepositoryFactory: NoteRepositoryFactory,
-        private readonly settingsRepositoryFactory: SettingsRepositoryFactory
+        private readonly settingsRepositoryFactory: SettingsRepositoryFactory,
     ) {
 
     }
@@ -18,7 +18,7 @@ export class DefaultNoteManagerFactory implements NoteManagerFactory {
         return new RepositoryNoteManager(
             this.fileRepositoryFactory,
             this.noteRepositoryFactory,
-            this.settingsRepositoryFactory
+            this.settingsRepositoryFactory,
         );
     }
 }

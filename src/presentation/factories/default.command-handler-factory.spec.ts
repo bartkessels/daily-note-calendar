@@ -2,25 +2,25 @@ import {DefaultCommandHandlerFactory} from 'src/presentation/factories/default.c
 import {
     mockDateManagerFactory,
     mockNoteManagerFactory,
-    mockSettingsRepositoryFactory
+    mockSettingsRepositoryFactory,
 } from 'src/test-helpers/factory.mocks';
 import {mockCalendarViewModel, mockPeriodNoteViewModel} from 'src/test-helpers/view-model.mocks';
 import {DisplayInCalendarCommandHandler} from 'src/presentation/command-handlers/display-in-calendar.command-handler';
 import {CommandHandlerType} from 'src/presentation/contracts/command-handler-factory';
 import {
-    NavigateToCurrentWeekCommandHandler
+    NavigateToCurrentWeekCommandHandler,
 } from 'src/presentation/command-handlers/navigate-to-current-week.command-handler';
 import {
-    NavigateToPreviousWeekCommandHandler
+    NavigateToPreviousWeekCommandHandler,
 } from 'src/presentation/command-handlers/navigate-to-previous-week.command-handler';
 import {
-    NavigateToNextWeekCommandHandler
+    NavigateToNextWeekCommandHandler,
 } from 'src/presentation/command-handlers/navigate-to-next-week.command-handler';
 import {
-    NavigateToPreviousMonthCommandHandler
+    NavigateToPreviousMonthCommandHandler,
 } from 'src/presentation/command-handlers/navigate-to-previous-month.command-handler';
 import {
-    NavigateToNextMonthCommandHandler
+    NavigateToNextMonthCommandHandler,
 } from 'src/presentation/command-handlers/navigate-to-next-month.command-handler';
 import {OpenYesterdaysNoteCommandHandler} from 'src/presentation/command-handlers/open-yesterdays-note.command-handler';
 import {OpenTomorrowsNoteCommandHandler} from 'src/presentation/command-handlers/open-tomorrows-note.command-handler';
@@ -41,12 +41,18 @@ describe('DefaultCommandHandlerFactory', () => {
             dateManagerFactory,
             mockCalendarViewModel,
             mockPeriodNoteViewModel,
-            mockPeriodNoteViewModel
+            mockPeriodNoteViewModel,
         );
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     describe('getHandler', () => {
         it('should return the display in calendar command handler', () => {
+            // Arrange
+            
             // Act
             const result = factory.getHandler(CommandHandlerType.DisplayInCalendar);
 
@@ -55,6 +61,8 @@ describe('DefaultCommandHandlerFactory', () => {
         });
 
         it('should return the navigate to current week command handler', () => {
+            // Arrange
+            
             // Act
             const result = factory.getHandler(CommandHandlerType.NavigateToCurrentWeek);
 
@@ -63,6 +71,8 @@ describe('DefaultCommandHandlerFactory', () => {
         });
 
         it('should return the navigate to current week command handler', () => {
+            // Arrange
+            
             // Act
             const result = factory.getHandler(CommandHandlerType.NavigateToCurrentWeek);
 
@@ -71,6 +81,8 @@ describe('DefaultCommandHandlerFactory', () => {
         });
 
         it('should return the navigate to current week command handler', () => {
+            // Arrange
+            
             // Act
             const result = factory.getHandler(CommandHandlerType.NavigateToCurrentWeek);
 
@@ -79,6 +91,8 @@ describe('DefaultCommandHandlerFactory', () => {
         });
 
         it('should return the navigate to previous week command handler', () => {
+            // Arrange
+            
             // Act
             const result = factory.getHandler(CommandHandlerType.NavigateToPreviousWeek);
 
@@ -87,6 +101,8 @@ describe('DefaultCommandHandlerFactory', () => {
         });
 
         it('should return the navigate to next week command handler', () => {
+            // Arrange
+            
             // Act
             const result = factory.getHandler(CommandHandlerType.NavigateToNextWeek);
 
@@ -95,6 +111,8 @@ describe('DefaultCommandHandlerFactory', () => {
         });
 
         it('should return the navigate to previous month command handler', () => {
+            // Arrange
+            
             // Act
             const result = factory.getHandler(CommandHandlerType.NavigateToPreviousMonth);
 
@@ -103,6 +121,8 @@ describe('DefaultCommandHandlerFactory', () => {
         });
 
         it('should return the navigate to next month command handler', () => {
+            // Arrange
+            
             // Act
             const result = factory.getHandler(CommandHandlerType.NavigateToNextMonth);
 
@@ -111,6 +131,8 @@ describe('DefaultCommandHandlerFactory', () => {
         });
 
         it('should return the open yesterdays note command handler', () => {
+            // Arrange
+            
             // Act
             const result = factory.getHandler(CommandHandlerType.OpenYesterdaysNote);
 
@@ -119,6 +141,8 @@ describe('DefaultCommandHandlerFactory', () => {
         });
 
         it('should return the open todays note command handler', () => {
+            // Arrange
+            
             // Act
             const result = factory.getHandler(CommandHandlerType.OpenTodaysNote);
 
@@ -127,6 +151,8 @@ describe('DefaultCommandHandlerFactory', () => {
         });
 
         it('should return the open tomorrows note command handler', () => {
+            // Arrange
+            
             // Act
             const result = factory.getHandler(CommandHandlerType.OpenTomorrowsNote);
 
@@ -135,6 +161,8 @@ describe('DefaultCommandHandlerFactory', () => {
         });
 
         it('should return the open weekly note command handler', () => {
+            // Arrange
+            
             // Act
             const result = factory.getHandler(CommandHandlerType.OpenWeeklyNote);
 

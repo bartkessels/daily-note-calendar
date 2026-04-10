@@ -11,7 +11,7 @@ export class RepositoryNoteManager implements NoteManager {
     constructor(
         private readonly fileRepositoryFactory: FileRepositoryFactory,
         private readonly noteRepositoryFactory: NoteRepositoryFactory,
-        private readonly settingsRepositoryFactory: SettingsRepositoryFactory
+        private readonly settingsRepositoryFactory: SettingsRepositoryFactory,
     ) {
 
     }

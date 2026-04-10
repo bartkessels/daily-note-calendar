@@ -14,12 +14,12 @@ export const mockFileRepository = {
     openInCurrentTab: jest.fn(),
     openInHorizontalSplitView: jest.fn(),
     openInVerticalSplitView: jest.fn(),
-    delete: jest.fn()
+    delete: jest.fn(),
 } as jest.Mocked<FileRepository>;
 
 export const mockNoteRepository = {
     getActiveNote: jest.fn(),
-    getNotes: jest.fn()
+    getNotes: jest.fn(),
 } as jest.Mocked<NoteRepository>;
 
 export const mockDateRepository = {
@@ -31,25 +31,25 @@ export const mockDateRepository = {
     getMonthFromDate: jest.fn(),
     getPreviousMonth: jest.fn(),
     getNextMonth: jest.fn(),
-    getQuarter: jest.fn()
+    getQuarter: jest.fn(),
 } as jest.Mocked<DateRepository>;
 
 export const mockPeriodicNoteSettingsRepository = {
     store: jest.fn(),
-    get: jest.fn()
+    get: jest.fn(),
 } as jest.Mocked<SettingsRepository<PeriodNoteSettings>>;
 
 export const mockDisplayNoteSettingsRepository = {
     store: jest.fn(),
-    get: jest.fn()
+    get: jest.fn(),
 } as jest.Mocked<SettingsRepository<DisplayNotesSettings>>;
 
 export const mockGeneralSettingsRepository = {
     store: jest.fn(),
-    get: jest.fn()
+    get: jest.fn(),
 } as jest.Mocked<SettingsRepository<GeneralSettings>>;
 
 export const mockPluginSettingsRepository = {
     store: jest.fn(),
-    get: jest.fn()
+    get: jest.fn(),
 } as jest.Mocked<SettingsRepository<PluginSettings>>;

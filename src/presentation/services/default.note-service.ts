@@ -5,7 +5,7 @@ import { Period } from 'src/domain/models/period.model';
 
 export class DefaultNoteService implements NoteService {
     constructor(
-        private readonly noteManagerFactory: NoteManagerFactory
+        private readonly noteManagerFactory: NoteManagerFactory,
     ) {
 
     }

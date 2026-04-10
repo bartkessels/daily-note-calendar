@@ -5,7 +5,7 @@ import {DateParserFactory} from 'src/infrastructure/contracts/date-parser-factor
 
 export class DefaultDateRepositoryFactory implements DateRepositoryFactory {
     constructor(
-        private readonly dateParserFactory: DateParserFactory
+        private readonly dateParserFactory: DateParserFactory,
     ) {
 
     }

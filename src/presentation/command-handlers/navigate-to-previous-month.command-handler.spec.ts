@@ -1,19 +1,26 @@
 import {mockCalendarViewModel} from 'src/test-helpers/view-model.mocks';
 import {
-    NavigateToPreviousMonthCommandHandler
+    NavigateToPreviousMonthCommandHandler,
 } from 'src/presentation/command-handlers/navigate-to-previous-month.command-handler';
 
 describe('NavigateToPreviousMonthCommandHandler', () => {
     let commandHandler: NavigateToPreviousMonthCommandHandler;
-    const viewModel = mockCalendarViewModel;
+    let viewModel: typeof mockCalendarViewModel;
 
     beforeEach(() => {
+        viewModel = mockCalendarViewModel;
         commandHandler = new NavigateToPreviousMonthCommandHandler(viewModel);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     describe('execute', () => {
         it('should call the loadPrevious method on the view model', () => {
-            // Act
+            // Arrange
+            
+            //Act
             commandHandler.execute();
 
             // Assert

@@ -6,14 +6,14 @@ import {SettingsRepositoryFactory, SettingsType} from 'src/infrastructure/contra
 import {PeriodicNoteSettingsView} from 'src/presentation/settings/period-notes/periodic-note.settings-view';
 
 export class QuarterlyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsView {
-    override title = "Quarterly notes";
-    override description = "Quarterly notes are created or opened by clicking on a quarter in the upper-left corner of the calendar.";
+    override title = 'Quarterly notes';
+    override description = 'Quarterly notes are created or opened by clicking on a quarter in the upper-left corner of the calendar.';
 
     constructor(
         settingsTab: PluginSettingTab,
         onSettingsChange: () => void,
         dateParserFactory: DateParserFactory,
-        settingsRepositoryFactory: SettingsRepositoryFactory
+        settingsRepositoryFactory: SettingsRepositoryFactory,
     ) {
         const settingsRepository = settingsRepositoryFactory.getRepository<PeriodNoteSettings>(SettingsType.QuarterlyNote);
 
@@ -25,7 +25,7 @@ export class QuarterlyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsV
             name: 'Quarterly note name template',
             description: 'The template used to create the quarterly note name.',
             placeholder: 'yyyy - qqq',
-            value: value
+            value: value,
         };
     }
 
@@ -34,7 +34,7 @@ export class QuarterlyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsV
             name: 'Quarterly notes folder',
             description: 'The folder where you store your quarterly notes.',
             placeholder: 'Quarterly notes',
-            value: value
+            value: value,
         };
     }
 
@@ -43,7 +43,7 @@ export class QuarterlyNotePeriodicNoteSettingsView extends PeriodicNoteSettingsV
             name: 'Quarterly note template',
             description: 'The template used to create the quarterly note.',
             placeholder: 'Templates/quarterly-note',
-            value: value
+            value: value,
         };
     }
 }

@@ -9,16 +9,16 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
     private settings: PluginSettings = DEFAULT_PLUGIN_SETTINGS;
     private today: Period | null = null;
 
-    public setSelectedPeriod?: (period: Period) => void;
-    public navigateToNextWeek?: () => void;
-    public navigateToPreviousWeek?: () => void;
-    public navigateToCurrentWeek?: () => void;
-    public navigateToNextMonth?: () => void;
-    public navigateToPreviousMonth?: () => void;
-    public refreshNoteCounts?: () => void;
+    public setSelectedPeriod: (period: Period) => void = () => {};
+    public navigateToNextWeek: () => void = () => {};
+    public navigateToPreviousWeek: () => void = () => {};
+    public navigateToCurrentWeek: () => void = () => {};
+    public navigateToNextMonth: () => void = () => {};
+    public navigateToPreviousMonth: () => void = () => {};
+    public refreshNoteCounts: () => void = () => {};
 
     constructor(
-        private readonly calendarService: CalendarService
+        private readonly calendarService: CalendarService,
     ) {
 
     }
@@ -36,7 +36,7 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         navigateToPreviousWeek: () => void,
         navigateToCurrentWeek: () => void,
         navigateToNextMonth: () => void,
-        navigateToPreviousMonth: () => void
+        navigateToPreviousMonth: () => void,
     ): void {
         this.setSelectedPeriod = setSelectedPeriod;
         this.navigateToNextWeek = navigateToNextWeek;
@@ -46,8 +46,8 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         this.navigateToPreviousMonth = navigateToPreviousMonth;
     }
 
-    public initializeNoteCountRefreshCallback(cb: () => void): void {
-        this.refreshNoteCounts = cb;
+    public initializeNoteCountRefreshCallback(refreshNoteCounts: () => void): void {
+        this.refreshNoteCounts = refreshNoteCounts;
     }
 
     public getCurrentWeek(): Calendar {
@@ -87,13 +87,12 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
             quarter: quarter,
             year: year,
             weeks: weeks,
-            today: this.today
+            today: this.today,
         };
     }
 
     private buildWeekDays(firstDayOfWeek: DayOfWeek): string[] {
-        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        const startIndex = (firstDayOfWeek - 1 + 7) % 7;
-        return [...days.slice(startIndex), ...days.slice(0, startIndex)];
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        return [...days.slice(firstDayOfWeek), ...days.slice(0, firstDayOfWeek)];
     }
 }

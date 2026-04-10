@@ -7,13 +7,18 @@ import {when} from 'jest-when';
 
 describe('PeriodVariableParser', () => {
     let parser: PeriodVariableParser;
-
-    const variableFactory = mockVariableFactory();
-    const dateParser = mockDateParser;
+    let variableFactory: ReturnType<typeof mockVariableFactory>;
+    let dateParser: typeof mockDateParser;
 
     beforeEach(() => {
+        variableFactory = mockVariableFactory();
+        dateParser = mockDateParser;
         const dateParserFactory = mockDateParserFactory(dateParser);
         parser = new PeriodVariableParser(variableFactory, dateParserFactory);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     describe('parseVariables', () => {
@@ -23,12 +28,12 @@ describe('PeriodVariableParser', () => {
                 name: 'date',
                 type: VariableType.Date,
                 template: 'yyyy-MM-dd',
-                calculus: null
+                calculus: null,
             };
             const period = <Period> {
                 date: new Date('2024-12-31'),
                 name: '31',
-                type: PeriodType.Day
+                type: PeriodType.Day,
             };
             const content = `Period's date is {{date:${variable.template}}}.`;
 
@@ -39,7 +44,7 @@ describe('PeriodVariableParser', () => {
             const result = parser.parseVariables(content, period);
 
             // Assert
-            expect(result).toBe(`Period's date is 2024-12-31.`);
+            expect(result).toBe('Period\'s date is 2024-12-31.');
         });
 
         it('should get the calculated date if calculus is present', () => {
@@ -51,13 +56,13 @@ describe('PeriodVariableParser', () => {
                 calculus: {
                     operator: '+',
                     value: 1,
-                    unit: 'd'
-                }
+                    unit: 'd',
+                },
             };
             const period = <Period> {
                 date: new Date('2024-12-31'),
                 name: '31',
-                type: PeriodType.Day
+                type: PeriodType.Day,
             };
             const content = `Period's date is {{date:${variable.template}}}.`;
 
@@ -68,7 +73,7 @@ describe('PeriodVariableParser', () => {
             const result = parser.parseVariables(content, period);
 
             // Assert
-            expect(result).toBe(`Period's date is 2025-01-01.`);
+            expect(result).toBe('Period\'s date is 2025-01-01.');
         });
     });
 });

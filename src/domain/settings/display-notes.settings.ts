@@ -14,5 +14,5 @@ export const DEFAULT_DISPLAY_NOTES_SETTINGS: DisplayNotesSettings = {
     useCreatedOnDateFromProperties: false,
     createdOnDatePropertyName: 'created_on',
     createdOnPropertyFormat: 'yyyy/MM/dd HH:mm',
-    sortNotes: SortNotes.Ascending
-}
+    sortNotes: SortNotes.Ascending,
+};

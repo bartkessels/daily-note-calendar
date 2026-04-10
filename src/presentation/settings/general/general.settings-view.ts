@@ -11,7 +11,7 @@ export class GeneralSettingsView extends SettingsView {
     constructor(
         protected readonly settingsTab: PluginSettingTab,
         onSettingsChange: () => void,
-        private readonly settingsRepositoryFactory: SettingsRepositoryFactory
+        private readonly settingsRepositoryFactory: SettingsRepositoryFactory,
     ) {
         super(settingsTab, onSettingsChange);
     }
@@ -52,7 +52,7 @@ export class GeneralSettingsView extends SettingsView {
             name: 'Display notes created on selected date',
             description: 'When selecting a specific date in the calender, display all the notes created on that date below the calendar.',
             placeholder: '',
-            value: value
+            value: value,
         };
     }
 
@@ -61,7 +61,7 @@ export class GeneralSettingsView extends SettingsView {
             name: 'Display an indicator on each date that has a note',
             description: 'Display an indicator below the date or week number if the date has a note.',
             placeholder: '',
-            value: value
+            value: value,
         };
     }
 
@@ -70,7 +70,7 @@ export class GeneralSettingsView extends SettingsView {
             name: 'Display a count of notes created on each date',
             description: 'Show a numeric badge on each calendar day counting the notes created on that date. Requires "Display notes created on selected date" to also be enabled.',
             placeholder: '',
-            value: value
+            value: value,
         };
     }
 
@@ -89,7 +89,7 @@ export class GeneralSettingsView extends SettingsView {
             'Set the first day of the week for the calendar.',
             options,
             this.dayOfWeekName(value).toLowerCase(),
-            async value => await onValueChange(this.dayOfWeek(value))
+            async value => await onValueChange(this.dayOfWeek(value)),
         );
     }
 
@@ -103,7 +103,7 @@ export class GeneralSettingsView extends SettingsView {
             'Set the week number standard for the calendar.',
             options,
             value.toString(),
-            async value => await onValueChange(this.weekNumberStandard(value))
+            async value => await onValueChange(this.weekNumberStandard(value)),
         );
     }
 
@@ -112,45 +112,45 @@ export class GeneralSettingsView extends SettingsView {
             name: 'Use modifier key to create a note',
             description: 'Use a modifier key to create a note instead of clicking on the date.',
             placeholder: '',
-            value: value
+            value: value,
         };
     }
 
     private dayOfWeekName(dayOfWeek: DayOfWeek): string {
         switch (dayOfWeek) {
-            case DayOfWeek.Monday:
-                return 'Monday';
-            case DayOfWeek.Tuesday:
-                return 'Tuesday';
-            case DayOfWeek.Wednesday:
-                return 'Wednesday';
-            case DayOfWeek.Thursday:
-                return 'Thursday';
-            case DayOfWeek.Friday:
-                return 'Friday';
-            case DayOfWeek.Saturday:
-                return 'Saturday';
-            case DayOfWeek.Sunday:
-                return 'Sunday';
+        case DayOfWeek.Monday:
+            return 'Monday';
+        case DayOfWeek.Tuesday:
+            return 'Tuesday';
+        case DayOfWeek.Wednesday:
+            return 'Wednesday';
+        case DayOfWeek.Thursday:
+            return 'Thursday';
+        case DayOfWeek.Friday:
+            return 'Friday';
+        case DayOfWeek.Saturday:
+            return 'Saturday';
+        case DayOfWeek.Sunday:
+            return 'Sunday';
         }
     }
 
     private dayOfWeek(name: string): DayOfWeek {
         switch (name.toLowerCase()) {
-            case 'monday':
-                return DayOfWeek.Monday;
-            case 'tuesday':
-                return DayOfWeek.Tuesday;
-            case 'wednesday':
-                return DayOfWeek.Wednesday;
-            case 'thursday':
-                return DayOfWeek.Thursday;
-            case 'friday':
-                return DayOfWeek.Friday;
-            case 'saturday':
-                return DayOfWeek.Saturday;
-            default:
-                return DayOfWeek.Sunday;
+        case 'monday':
+            return DayOfWeek.Monday;
+        case 'tuesday':
+            return DayOfWeek.Tuesday;
+        case 'wednesday':
+            return DayOfWeek.Wednesday;
+        case 'thursday':
+            return DayOfWeek.Thursday;
+        case 'friday':
+            return DayOfWeek.Friday;
+        case 'saturday':
+            return DayOfWeek.Saturday;
+        default:
+            return DayOfWeek.Sunday;
         }
     }
 
