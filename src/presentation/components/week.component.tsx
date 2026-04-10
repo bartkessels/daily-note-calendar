@@ -20,7 +20,9 @@ export const WeeklyNoteComponent = (props: WeeklyNoteProperties): ReactElement =
     const [hasPeriodicNote, setHasPeriodicNote] = React.useState<boolean>(false);
     const isSelected = arePeriodsEqual(props.selectedPeriod, props.week);
 
-    viewModel?.hasPeriodicNote(props.week).then(setHasPeriodicNote.bind(this));
+    React.useEffect(() => {
+        viewModel?.hasPeriodicNote(props.week).then(setHasPeriodicNote);
+    }, [props.week, viewModel]);
 
     return (
         <tr>

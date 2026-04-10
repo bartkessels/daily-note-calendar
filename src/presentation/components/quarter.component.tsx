@@ -11,7 +11,9 @@ export const QuarterlyNoteComponent = (props: QuarterlyNoteProperties): ReactEle
     const viewModel = useQuarterlyNoteViewModel();
     const [hasPeriodicNote, setHasPeriodicNote] = React.useState<boolean>(false);
 
-    viewModel?.hasPeriodicNote(props.quarter).then(setHasPeriodicNote.bind(this));
+    React.useEffect(() => {
+        viewModel?.hasPeriodicNote(props.quarter).then(setHasPeriodicNote);
+    }, [props.quarter, viewModel]);
 
     return (
         <PeriodComponent

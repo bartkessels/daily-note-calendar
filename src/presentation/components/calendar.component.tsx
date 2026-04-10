@@ -22,27 +22,65 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
 
     React.useEffect(() => {
         setCalendar(viewModel?.getCurrentWeek() ?? null);
-    }, [viewModel, setCalendar]);
+    }, [viewModel]);
+
+    const loadNextWeek = React.useCallback((): void => setCalendar(calendar => {
+        if (!calendar || !viewModel) {
+            return null;
+        }
+        
+        return viewModel.getNextWeek(calendar);
+    }), [viewModel]);
+
+    const loadPreviousWeek = React.useCallback((): void => setCalendar(calendar => {
+        if (!calendar || !viewModel) {
+            return null;
+        }
+        
+        return viewModel.getPreviousWeek(calendar);
+    }), [viewModel]);
+
+    const loadCurrentWeek = React.useCallback((): void => {
+        if (!viewModel) {
+            return;
+        }
+
+        setCalendar(viewModel.getCurrentWeek());
+    }, [viewModel]);
+
+    const loadNextMonth = React.useCallback((): void => setCalendar(calendar => {
+        if (!calendar || !viewModel) {
+            return null;
+        }
+
+        return viewModel.getNextMonth(calendar);
+    }), [viewModel]);
+
+    const loadPreviousMonth = React.useCallback((): void => setCalendar(calendar => {
+        if (!calendar || !viewModel) {
+            return null;
+        }
+
+        return viewModel.getPreviousMonth(calendar);
+    }), [viewModel]);
+
+    React.useEffect(() => {
+        if (!viewModel) return;
+
+        viewModel.initializeCallbacks(
+            setSelectedPeriod,
+            loadNextWeek,
+            loadPreviousWeek,
+            loadCurrentWeek,
+            loadNextMonth,
+            loadPreviousMonth,
+        );
+        viewModel.initializeNoteCountRefreshCallback(() => setNoteCountToken(t => t + 1));
+    }, [viewModel, loadNextWeek, loadPreviousWeek, loadCurrentWeek, loadNextMonth, loadPreviousMonth]);
 
     if (!calendar) {
         return (<></>);
     }
-
-    const loadNextWeek = (): void => setCalendar(viewModel?.getNextWeek(calendar) ?? null);
-    const loadPreviousWeek = (): void => setCalendar(viewModel?.getPreviousWeek(calendar) ?? null);
-    const loadCurrentWeek = (): void => setCalendar(viewModel?.getCurrentWeek() ?? null);
-    const loadNextMonth = (): void => setCalendar(viewModel?.getNextMonth(calendar) ?? null);
-    const loadPreviousMonth = (): void => setCalendar(viewModel?.getPreviousMonth(calendar) ?? null);
-
-    viewModel?.initializeCallbacks(
-        setSelectedPeriod,
-        loadNextWeek,
-        loadPreviousWeek,
-        loadCurrentWeek,
-        loadNextMonth,
-        loadPreviousMonth,
-    );
-    viewModel?.initializeNoteCountRefreshCallback(() => setNoteCountToken(t => t + 1));
 
     return (
         <div className="dnc">

@@ -11,7 +11,9 @@ export const YearlyNoteComponent = (props: YearlyNoteProperties): ReactElement =
     const viewModel = useYearlyNoteViewModel();
     const [hasPeriodicNote, setHasPeriodicNote] = React.useState<boolean>(false);
 
-    viewModel?.hasPeriodicNote(props.year).then(setHasPeriodicNote.bind(this));
+    React.useEffect(() => {
+        viewModel?.hasPeriodicNote(props.year).then(setHasPeriodicNote);
+    }, [props.year, viewModel]);
 
     return (
         <PeriodComponent
