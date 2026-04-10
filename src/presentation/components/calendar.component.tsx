@@ -24,6 +24,20 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
         setCalendar(viewModel?.getCurrentWeek() ?? null);
     }, [viewModel, setCalendar]);
 
+    React.useEffect(() => {
+        if (!calendar || !viewModel) return;
+
+        viewModel.initializeCallbacks(
+            setSelectedPeriod,
+            loadNextWeek,
+            loadPreviousWeek,
+            loadCurrentWeek,
+            loadNextMonth,
+            loadPreviousMonth,
+        );
+        viewModel.initializeNoteCountRefreshCallback(() => setNoteCountToken(t => t + 1));
+    }, [viewModel, calendar]);
+
     if (!calendar) {
         return (<></>);
     }
@@ -33,16 +47,6 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
     const loadCurrentWeek = (): void => setCalendar(viewModel?.getCurrentWeek() ?? null);
     const loadNextMonth = (): void => setCalendar(viewModel?.getNextMonth(calendar) ?? null);
     const loadPreviousMonth = (): void => setCalendar(viewModel?.getPreviousMonth(calendar) ?? null);
-
-    viewModel?.initializeCallbacks(
-        setSelectedPeriod,
-        loadNextWeek,
-        loadPreviousWeek,
-        loadCurrentWeek,
-        loadNextMonth,
-        loadPreviousMonth,
-    );
-    viewModel?.initializeNoteCountRefreshCallback(() => setNoteCountToken(t => t + 1));
 
     return (
         <div className="dnc">
