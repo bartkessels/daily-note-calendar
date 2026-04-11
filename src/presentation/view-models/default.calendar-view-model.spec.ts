@@ -192,7 +192,7 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getCurrentWeek();
 
             // Assert
-            // Monday (1) directly indexes position 1 in the Sunday-first days array
+            // Monday (1) should give startIndex = (1 - 1 + 7) % 7 = 0
             expect(result.weekDays[0]).toBe('Mon');
             expect(result.weekDays[6]).toBe('Sun');
         });
@@ -206,7 +206,6 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getCurrentWeek();
 
             // Assert
-            // Sunday (0) directly indexes position 0 in the Sunday-first days array
             expect(result.weekDays[0]).toBe('Sun');
             expect(result.weekDays[6]).toBe('Sat');
         });
@@ -220,7 +219,6 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getCurrentWeek();
 
             // Assert
-            // Tuesday (2) directly indexes position 2 in the Sunday-first days array
             expect(result.weekDays[0]).toBe('Tue');
             expect(result.weekDays).toEqual(['Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon']);
         });
@@ -234,8 +232,6 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getCurrentWeek();
 
             // Assert
-            // Wednesday (3) with correct arithmetic: (3 - 1 + 7) % 7 = 9 % 7 = 2
-            // With mutant: (3 - 1 - 7) % 7 = -5 % 7 = -5
             expect(result.weekDays[0]).toBe('Wed');
             expect(result.weekDays).toEqual(['Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue']);
         });
@@ -249,8 +245,6 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getCurrentWeek();
 
             // Assert
-            // Thursday (4) with correct arithmetic: (4 - 1 + 7) % 7 = 10 % 7 = 3
-            // With mutant: (4 - 1 - 7) % 7 = -4 % 7 = -4
             expect(result.weekDays[0]).toBe('Thu');
             expect(result.weekDays).toEqual(['Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed']);
         });
@@ -264,8 +258,6 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getCurrentWeek();
 
             // Assert
-            // Friday (5) with correct arithmetic: (5 - 1 + 7) % 7 = 11 % 7 = 4
-            // With mutant: (5 - 1 - 7) % 7 = -3 % 7 = -3
             expect(result.weekDays[0]).toBe('Fri');
             expect(result.weekDays).toEqual(['Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu']);
         });
@@ -279,8 +271,6 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getCurrentWeek();
 
             // Assert
-            // Saturday (6) with correct arithmetic: (6 - 1 + 7) % 7 = 12 % 7 = 5
-            // With mutant: (6 - 1 - 7) % 7 = -2 % 7 = -2
             expect(result.weekDays[0]).toBe('Sat');
             expect(result.weekDays).toEqual(['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri']);
         });
