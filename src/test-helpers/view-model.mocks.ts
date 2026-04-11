@@ -11,15 +11,19 @@ export const mockCalendarViewModel = {
     navigateToNextMonth: jest.fn(),
     navigateToPreviousMonth: jest.fn(),
     refreshNoteCounts: jest.fn(),
+    refreshCalendar: jest.fn(),
 
     initialize: jest.fn(),
+    updateToday: jest.fn(),
     initializeCallbacks: jest.fn(),
     initializeNoteCountRefreshCallback: jest.fn(),
+    initializeCalendarRefreshCallback: jest.fn(),
     getCurrentWeek: jest.fn(),
     getPreviousWeek: jest.fn(),
     getNextWeek: jest.fn(),
     getPreviousMonth: jest.fn(),
     getNextMonth: jest.fn(),
+    rebuildCalendar: jest.fn(),
 } as jest.Mocked<CalendarViewModel>;
 
 export const mockPeriodNoteViewModel = {
