@@ -16,6 +16,7 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
     public navigateToNextMonth: () => void = () => {};
     public navigateToPreviousMonth: () => void = () => {};
     public refreshNoteCounts: () => void = () => {};
+    public refreshCalendar: () => void = () => {};
 
     constructor(
         private readonly calendarService: CalendarService,
@@ -50,32 +51,40 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
         this.refreshNoteCounts = refreshNoteCounts;
     }
 
+    public initializeCalendarRefreshCallback(refreshCalendar: () => void): void {
+        this.refreshCalendar = refreshCalendar;
+    }
+
+    public updateToday(today: Period): void {
+        this.today = today;
+    }
+
     public getCurrentWeek(): Calendar {
         const currentWeek = this.calendarService.getCurrentWeek();
-        return this.buildCalendar(currentWeek);
+        return this.rebuildCalendar(currentWeek);
     }
 
     public getPreviousWeek(calendar: Calendar): Calendar {
         const previousWeek = this.calendarService.getPreviousWeek(calendar.weeks);
-        return this.buildCalendar(previousWeek);
+        return this.rebuildCalendar(previousWeek);
     }
 
     public getNextWeek(calendar: Calendar): Calendar {
         const nextWeek = this.calendarService.getNextWeek(calendar.weeks);
-        return this.buildCalendar(nextWeek);
+        return this.rebuildCalendar(nextWeek);
     }
 
     public getPreviousMonth(calendar: Calendar): Calendar {
         const previousMonth = this.calendarService.getPreviousMonth(calendar.weeks);
-        return this.buildCalendar(previousMonth);
+        return this.rebuildCalendar(previousMonth);
     }
 
     public getNextMonth(calendar: Calendar): Calendar {
         const nextMonth = this.calendarService.getNextMonth(calendar.weeks);
-        return this.buildCalendar(nextMonth);
+        return this.rebuildCalendar(nextMonth);
     }
 
-    private buildCalendar(weeks: Week[]): Calendar {
+    public rebuildCalendar(weeks: Week[]): Calendar {
         const weekDays = this.buildWeekDays(this.settings.generalSettings.firstDayOfWeek);
         const month = this.calendarService.getMonthForWeeks(weeks);
         const quarter = this.calendarService.getQuarterForWeeks(weeks);

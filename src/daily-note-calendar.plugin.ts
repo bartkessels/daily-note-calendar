@@ -37,6 +37,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         this.registerView(CalendarView.VIEW_TYPE, (leaf) => calendarView(leaf));
         this.registerSettings();
         this.registerCommands();
+        this.registerMidnightCheck();
 
         this.app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
     }
@@ -110,5 +111,26 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         this.addCommand(new OpenTodaysNoteCommand(this.dependencies.commandHandlerFactory));
         this.addCommand(new OpenTomorrowsNoteCommand(this.dependencies.commandHandlerFactory));
         this.addCommand(new OpenWeeklyNoteCommand(this.dependencies.commandHandlerFactory));
+    }
+
+    private registerMidnightCheck(): void {
+        let lastDate = new Date().toDateString();
+
+        this.registerInterval(
+            window.setInterval(() => {
+                const currentDate = new Date().toDateString();
+
+                if (currentDate !== lastDate) {
+                    lastDate = currentDate;
+                    this.updateTodayAcrossPlugin();
+                }
+            }, 60 * 1000),
+        );
+    }
+
+    private updateTodayAcrossPlugin(): void {
+        const today = this.dependencies.dateManagerFactory.getManager().getCurrentDay();
+        this.dependencies.calendarViewModel.updateToday(today);
+        this.dependencies.calendarViewModel.refreshCalendar?.();
     }
 }

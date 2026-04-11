@@ -76,6 +76,11 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
             loadPreviousMonth,
         );
         viewModel.initializeNoteCountRefreshCallback(() => setNoteCountToken(t => t + 1));
+        viewModel.initializeCalendarRefreshCallback(() => {
+            if (calendar) {
+                setCalendar(viewModel.rebuildCalendar(calendar.weeks));
+            }
+        });
     }, [viewModel, loadNextWeek, loadPreviousWeek, loadCurrentWeek, loadNextMonth, loadPreviousMonth]);
 
     if (!calendar) {

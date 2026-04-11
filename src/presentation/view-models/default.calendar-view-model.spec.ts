@@ -590,4 +590,123 @@ describe('DefaultCalendarViewModel', () => {
             });
         });
     });
+
+    describe('updateToday', () => {
+        it('should update the today field and use it when building calendars', () => {
+            // Arrange
+            const settings = <PluginSettings>{ ...DEFAULT_PLUGIN_SETTINGS, generalSettings: { ...DEFAULT_GENERAL_SETTINGS, firstDayOfWeek: DayOfWeek.Monday }};
+            const initialToday = <Period>{
+                date: new Date(2023, 8, 1),
+                name: '01',
+                type: PeriodType.Day,
+            };
+            const newToday = <Period>{
+                date: new Date(2023, 9, 2),
+                name: '02',
+                type: PeriodType.Day,
+            };
+            const currentWeek = [
+                <Week>{
+                    date: new Date(2023, 9, 2),
+                    name: '40',
+                    type: PeriodType.Week,
+                    weekNumber: 40,
+                },
+            ];
+
+            when(calendarService.getCurrentWeek).mockReturnValue(currentWeek);
+            when(calendarService.getMonthForWeeks).calledWith(currentWeek).mockReturnValue(expectedMonth);
+            when(calendarService.getQuarterForWeeks).calledWith(currentWeek).mockReturnValue(expectedQuarter);
+            when(calendarService.getYearForWeeks).calledWith(currentWeek).mockReturnValue(expectedYear);
+
+            viewModel.initialize(settings, initialToday);
+
+            // Act
+            viewModel.updateToday(newToday);
+            const result = viewModel.getCurrentWeek();
+
+            // Assert
+            expect(result.today).toEqual(newToday);
+        });
+
+        it('should not trigger navigation when today is updated', () => {
+            // Arrange
+            const settings = <PluginSettings>{ ...DEFAULT_PLUGIN_SETTINGS, generalSettings: { ...DEFAULT_GENERAL_SETTINGS, firstDayOfWeek: DayOfWeek.Monday }};
+            const initialToday = <Period>{
+                date: new Date(2023, 8, 1),
+                name: '01',
+                type: PeriodType.Day,
+            };
+            const newToday = <Period>{
+                date: new Date(2023, 9, 2),
+                name: '02',
+                type: PeriodType.Day,
+            };
+            const navigateToCurrentWeekMock = jest.fn();
+
+            viewModel.initialize(settings, initialToday);
+            viewModel.initializeCallbacks(
+                jest.fn(),
+                jest.fn(),
+                jest.fn(),
+                navigateToCurrentWeekMock,
+                jest.fn(),
+                jest.fn(),
+            );
+
+            // Act
+            viewModel.updateToday(newToday);
+
+            // Assert
+            expect(navigateToCurrentWeekMock).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('initializeCalendarRefreshCallback', () => {
+        it('should store the provided callback and invoke it when refreshCalendar is called', () => {
+            // Arrange
+            const callback = jest.fn();
+            
+            // Act
+            viewModel.initializeCalendarRefreshCallback(callback);
+            viewModel.refreshCalendar();
+            
+            // Assert
+            expect(callback).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('rebuildCalendar', () => {
+        it('should rebuild calendar with provided weeks and current today', () => {
+            // Arrange
+            const settings = <PluginSettings>{ ...DEFAULT_PLUGIN_SETTINGS, generalSettings: { ...DEFAULT_GENERAL_SETTINGS, firstDayOfWeek: DayOfWeek.Monday }};
+            const today = <Period>{
+                date: new Date(2023, 9, 2),
+                name: '02',
+                type: PeriodType.Day,
+            };
+            const weeks = [<Week>{
+                date: new Date(2023, 9, 2),
+                name: '40',
+                type: PeriodType.Week,
+                weekNumber: 40,
+            }];
+
+            when(calendarService.getMonthForWeeks).calledWith(weeks).mockReturnValue(expectedMonth);
+            when(calendarService.getQuarterForWeeks).calledWith(weeks).mockReturnValue(expectedQuarter);
+            when(calendarService.getYearForWeeks).calledWith(weeks).mockReturnValue(expectedYear);
+
+            viewModel.initialize(settings, today);
+
+            // Act
+            const result = viewModel.rebuildCalendar(weeks);
+
+            // Assert
+            expect(result.weeks).toEqual(weeks);
+            expect(result.today).toEqual(today);
+            expect(result.month).toEqual(expectedMonth);
+            expect(result.quarter).toEqual(expectedQuarter);
+            expect(result.year).toEqual(expectedYear);
+        });
+    });
 });
