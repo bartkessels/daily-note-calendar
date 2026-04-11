@@ -622,7 +622,7 @@ describe('DefaultCalendarService', () => {
             expect(result).toEqual(novemberMonth);
         });
 
-        it('should prefer earlier month when day counts are equal', () => {
+        it('should select month from middle week when day counts are equal', () => {
             // Arrange
             const weeks = [
                 <Week> {
@@ -784,7 +784,7 @@ describe('DefaultCalendarService', () => {
             expect(result).toEqual(octoberMonth);
         });
 
-        it('should fall back to day-counting when today is not visible', () => {
+        it('should fall back to the middle week when today is not visible', () => {
             // Arrange
             const today = <Period>{ date: new Date(2026, 11, 15), name: '15', type: PeriodType.Day };
             const weeks = [
@@ -1018,7 +1018,7 @@ describe('DefaultCalendarService', () => {
             expect(result).toEqual(q4Quarter);
         });
 
-        it('should prefer earlier quarter when day counts are equal', () => {
+        it('should select quarter from middle week when day counts are equal', () => {
             // Arrange
             const weeks = [
                 <Week> {
