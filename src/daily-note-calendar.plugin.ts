@@ -114,6 +114,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     }
 
     private registerMidnightCheck(): void {
+        const intervalEveryTenMinutesInMs = 600000;
         let lastDate = new Date().toDateString();
 
         this.registerInterval(
@@ -124,7 +125,7 @@ export default class DailyNoteCalendarPlugin extends Plugin {
                     lastDate = currentDate;
                     this.updateTodayAcrossPlugin();
                 }
-            }, 60 * 1000),
+            }, intervalEveryTenMinutesInMs),
         );
     }
 

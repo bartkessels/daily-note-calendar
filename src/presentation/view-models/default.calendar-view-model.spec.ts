@@ -192,7 +192,6 @@ describe('DefaultCalendarViewModel', () => {
             const result = viewModel.getCurrentWeek();
 
             // Assert
-            // Monday (1) should give startIndex = (1 - 1 + 7) % 7 = 0
             expect(result.weekDays[0]).toBe('Mon');
             expect(result.weekDays[6]).toBe('Sun');
         });
