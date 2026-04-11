@@ -25,6 +25,9 @@ import {
 import {CalendarViewModel} from 'src/presentation/contracts/calendar.view-model';
 import {PeriodNoteViewModel} from 'src/presentation/contracts/period.view-model';
 import {OpenTodaysNoteCommandHandler} from 'src/presentation/command-handlers/open-todays-note.command-handler';
+import { OpenMonthlyNoteCommandHandler } from 'src/presentation/command-handlers/open-monthly-note.command-handler';
+import { OpenYearlyNoteCommandHandler } from 'src/presentation/command-handlers/open-yearly-note.command-handler';
+import { OpenQuarterlyNoteCommandHandler } from 'src/presentation/command-handlers/open-quarterly-note.command-handler';
 
 export class DefaultCommandHandlerFactory implements CommandHandlerFactory {
     constructor(
@@ -32,8 +35,11 @@ export class DefaultCommandHandlerFactory implements CommandHandlerFactory {
         private readonly settingsRepositoryFactory: SettingsRepositoryFactory,
         private readonly dateManagerFactory: DateManagerFactory,
         private readonly calendarViewModel: CalendarViewModel,
-        private readonly weekNoteViewModel: PeriodNoteViewModel,
         private readonly dayNoteViewModel: PeriodNoteViewModel,
+        private readonly weekNoteViewModel: PeriodNoteViewModel,
+        private readonly monthNoteViewModel: PeriodNoteViewModel,
+        private readonly quarterNoteViewModel: PeriodNoteViewModel,
+        private readonly yearNoteViewModel: PeriodNoteViewModel,
     ) {
 
     }
@@ -60,6 +66,12 @@ export class DefaultCommandHandlerFactory implements CommandHandlerFactory {
             return new OpenTomorrowsNoteCommandHandler(this.dateManagerFactory, this.dayNoteViewModel, this.calendarViewModel);
         case CommandHandlerType.OpenWeeklyNote:
             return new OpenWeeklyNoteCommandHandler(this.dateManagerFactory, this.settingsRepositoryFactory, this.weekNoteViewModel, this.calendarViewModel);
+        case CommandHandlerType.OpenMonthlyNote:
+            return new OpenMonthlyNoteCommandHandler(this.dateManagerFactory, this.settingsRepositoryFactory, this.monthNoteViewModel, this.calendarViewModel);
+        case CommandHandlerType.OpenQuarterlyNote:
+            return new OpenQuarterlyNoteCommandHandler(this.dateManagerFactory, this.settingsRepositoryFactory, this.quarterNoteViewModel, this.calendarViewModel);
+        case CommandHandlerType.OpenYearlyNote:
+            return new OpenYearlyNoteCommandHandler(this.dateManagerFactory, this.settingsRepositoryFactory, this.yearNoteViewModel, this.calendarViewModel);
         }
     }
 }

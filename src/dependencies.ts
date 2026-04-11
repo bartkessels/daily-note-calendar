@@ -89,8 +89,11 @@ export function getDependencies(plugin: Plugin): Dependencies {
         settingsRepositoryFactory,
         dateManagerFactory,
         calendarViewModel,
-        weeklyNoteViewModel,
         dailyNoteViewModel,
+        weeklyNoteViewModel,
+        monthlyNoteViewModel,
+        quarterlyNoteViewModel,
+        yearlyNoteViewModel,
     );
     const contextMenuAdapter = new ObsidianContextMenuAdapter();
 

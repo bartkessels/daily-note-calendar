@@ -15,6 +15,9 @@ import {NavigateToPreviousMonthCommand} from 'src/presentation/commands/navigate
 import {DailyNoteCalendarPluginSettingTab} from 'src/daily-note-calendar.plugin-setting-tab';
 import 'src/extensions/extensions';
 import {OpenTodaysNoteCommand} from 'src/presentation/commands/open-todays-note.command';
+import { OpenMonthlyNoteCommand } from './presentation/commands/open-monthly-note.command';
+import { OpenQuarterlyNoteCommand } from './presentation/commands/open-quarterly-note.command';
+import { OpenYearlyNoteCommand } from './presentation/commands/open-yearly-note.command';
 
 export default class DailyNoteCalendarPlugin extends Plugin {
     private readonly dependencies: Dependencies = getDependencies(this);
@@ -111,6 +114,9 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         this.addCommand(new OpenTodaysNoteCommand(this.dependencies.commandHandlerFactory));
         this.addCommand(new OpenTomorrowsNoteCommand(this.dependencies.commandHandlerFactory));
         this.addCommand(new OpenWeeklyNoteCommand(this.dependencies.commandHandlerFactory));
+        this.addCommand(new OpenMonthlyNoteCommand(this.dependencies.commandHandlerFactory));
+        this.addCommand(new OpenQuarterlyNoteCommand(this.dependencies.commandHandlerFactory));
+        this.addCommand(new OpenYearlyNoteCommand(this.dependencies.commandHandlerFactory));
     }
 
     private registerMidnightCheck(): void {
