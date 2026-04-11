@@ -116,6 +116,16 @@ describe('CalendarComponent', () => {
         );
     });
 
+    it('calls initializeCalendarRefreshCallback', async () => {
+        await act(async () => {
+            render(<CalendarComponent />, {wrapper});
+        });
+
+        expect(mockCalendarViewModel.initializeCalendarRefreshCallback).toHaveBeenCalledWith(
+            expect.any(Function),
+        );
+    });
+
     it('renders month name in header', async () => {
         const {container} = render(<CalendarComponent initialCalendar={mockCalendar} />, {wrapper});
 
