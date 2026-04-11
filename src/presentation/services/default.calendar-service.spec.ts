@@ -922,6 +922,47 @@ describe('DefaultCalendarService', () => {
             // Assert
             expect(result).toEqual(novemberMonth);
         });
+
+        it('should fall back to day-counting when today type is not Day', () => {
+            // Arrange
+            const today = <Period>{ date: new Date(2026, 9, 27), name: '44', type: PeriodType.Week };
+            const weeks = [
+                <Week> {
+                    date: new Date(2026, 9, 26),
+                    name: '44',
+                    type: PeriodType.Week,
+                    weekNumber: 44,
+                    year: expectedYear,
+                    quarter: expectedQuarter,
+                    month: octoberMonth,
+                    days: [
+                        <Period>{ date: new Date(2026, 9, 26), name: '26', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 9, 27), name: '27', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 9, 28), name: '28', type: PeriodType.Day },
+                    ],
+                },
+                <Week> {
+                    date: new Date(2026, 10, 2),
+                    name: '45',
+                    type: PeriodType.Week,
+                    weekNumber: 45,
+                    year: expectedYear,
+                    quarter: expectedQuarter,
+                    month: novemberMonth,
+                    days: [
+                        <Period>{ date: new Date(2026, 10, 2), name: '2', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 10, 3), name: '3', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 10, 4), name: '4', type: PeriodType.Day },
+                    ],
+                },
+            ];
+
+            // Act
+            const result = service.getMonthForWeeks(weeks, today);
+
+            // Assert
+            expect(result).toEqual(novemberMonth);
+        });
     });
 
     describe('getQuarterForWeeks', () => {
@@ -1133,6 +1174,132 @@ describe('DefaultCalendarService', () => {
 
             // Assert
             expect(result).toEqual(q4Quarter);
+        });
+
+        it('should fall back to day-counting when today type is not Day', () => {
+            // Arrange
+            const today = <Period>{ date: new Date(2026, 8, 29), name: '40', type: PeriodType.Week };
+            const weeks = [
+                <Week> {
+                    date: new Date(2026, 8, 28),
+                    name: '40',
+                    type: PeriodType.Week,
+                    weekNumber: 40,
+                    year: expectedYear,
+                    quarter: q3Quarter,
+                    month: expectedMonth,
+                    days: [
+                        <Period>{ date: new Date(2026, 8, 28), name: '28', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 8, 29), name: '29', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 8, 30), name: '30', type: PeriodType.Day },
+                    ],
+                },
+                <Week> {
+                    date: new Date(2026, 9, 5),
+                    name: '41',
+                    type: PeriodType.Week,
+                    weekNumber: 41,
+                    year: expectedYear,
+                    quarter: q4Quarter,
+                    month: expectedMonth,
+                    days: [
+                        <Period>{ date: new Date(2026, 9, 5), name: '5', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 9, 6), name: '6', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 9, 7), name: '7', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 9, 8), name: '8', type: PeriodType.Day },
+                    ],
+                },
+            ];
+
+            // Act
+            const result = service.getQuarterForWeeks(weeks, today);
+
+            // Assert
+            expect(result).toEqual(q4Quarter);
+        });
+
+        it('should fall back to day-counting when today is not visible in weeks', () => {
+            // Arrange
+            const today = <Period>{ date: new Date(2026, 11, 15), name: '15', type: PeriodType.Day };
+            const weeks = [
+                <Week> {
+                    date: new Date(2026, 8, 28),
+                    name: '40',
+                    type: PeriodType.Week,
+                    weekNumber: 40,
+                    year: expectedYear,
+                    quarter: q3Quarter,
+                    month: expectedMonth,
+                    days: [
+                        <Period>{ date: new Date(2026, 8, 28), name: '28', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 8, 29), name: '29', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 8, 30), name: '30', type: PeriodType.Day },
+                    ],
+                },
+                <Week> {
+                    date: new Date(2026, 9, 5),
+                    name: '41',
+                    type: PeriodType.Week,
+                    weekNumber: 41,
+                    year: expectedYear,
+                    quarter: q4Quarter,
+                    month: expectedMonth,
+                    days: [
+                        <Period>{ date: new Date(2026, 9, 5), name: '5', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 9, 6), name: '6', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 9, 7), name: '7', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 9, 8), name: '8', type: PeriodType.Day },
+                    ],
+                },
+            ];
+
+            // Act
+            const result = service.getQuarterForWeeks(weeks, today);
+
+            // Assert
+            expect(result).toEqual(q4Quarter);
+        });
+
+        it('should return todays quarter when today is visible in the weeks', () => {
+            // Arrange
+            const today = <Period>{ date: new Date(2026, 8, 29), name: '29', type: PeriodType.Day };
+            const weeks = [
+                <Week> {
+                    date: new Date(2026, 8, 28),
+                    name: '40',
+                    type: PeriodType.Week,
+                    weekNumber: 40,
+                    year: expectedYear,
+                    quarter: q3Quarter,
+                    month: expectedMonth,
+                    days: [
+                        <Period>{ date: new Date(2026, 8, 28), name: '28', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 8, 29), name: '29', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 8, 30), name: '30', type: PeriodType.Day },
+                    ],
+                },
+                <Week> {
+                    date: new Date(2026, 9, 5),
+                    name: '41',
+                    type: PeriodType.Week,
+                    weekNumber: 41,
+                    year: expectedYear,
+                    quarter: q4Quarter,
+                    month: expectedMonth,
+                    days: [
+                        <Period>{ date: new Date(2026, 9, 5), name: '5', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 9, 6), name: '6', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 9, 7), name: '7', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 9, 8), name: '8', type: PeriodType.Day },
+                    ],
+                },
+            ];
+
+            // Act
+            const result = service.getQuarterForWeeks(weeks, today);
+
+            // Assert
+            expect(result).toEqual(q3Quarter);
         });
     });
 
@@ -1354,6 +1521,132 @@ describe('DefaultCalendarService', () => {
 
             // Assert
             expect(result).toEqual(year2026);
+        });
+
+        it('should fall back to day-counting when today type is not Day', () => {
+            // Arrange
+            const today = <Period>{ date: new Date(2025, 11, 29), name: '52', type: PeriodType.Week };
+            const weeks = [
+                <Week> {
+                    date: new Date(2025, 11, 28),
+                    name: '52',
+                    type: PeriodType.Week,
+                    weekNumber: 52,
+                    year: year2025,
+                    quarter: expectedQuarter,
+                    month: expectedMonth,
+                    days: [
+                        <Period>{ date: new Date(2025, 11, 28), name: '28', type: PeriodType.Day },
+                        <Period>{ date: new Date(2025, 11, 29), name: '29', type: PeriodType.Day },
+                        <Period>{ date: new Date(2025, 11, 30), name: '30', type: PeriodType.Day },
+                    ],
+                },
+                <Week> {
+                    date: new Date(2026, 0, 5),
+                    name: '1',
+                    type: PeriodType.Week,
+                    weekNumber: 1,
+                    year: year2026,
+                    quarter: expectedQuarter,
+                    month: expectedMonth,
+                    days: [
+                        <Period>{ date: new Date(2026, 0, 5), name: '5', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 0, 6), name: '6', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 0, 7), name: '7', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 0, 8), name: '8', type: PeriodType.Day },
+                    ],
+                },
+            ];
+
+            // Act
+            const result = service.getYearForWeeks(weeks, today);
+
+            // Assert
+            expect(result).toEqual(year2026);
+        });
+
+        it('should fall back to day-counting when today is not visible in weeks', () => {
+            // Arrange
+            const today = <Period>{ date: new Date(2026, 5, 15), name: '15', type: PeriodType.Day };
+            const weeks = [
+                <Week> {
+                    date: new Date(2025, 11, 28),
+                    name: '52',
+                    type: PeriodType.Week,
+                    weekNumber: 52,
+                    year: year2025,
+                    quarter: expectedQuarter,
+                    month: expectedMonth,
+                    days: [
+                        <Period>{ date: new Date(2025, 11, 28), name: '28', type: PeriodType.Day },
+                        <Period>{ date: new Date(2025, 11, 29), name: '29', type: PeriodType.Day },
+                        <Period>{ date: new Date(2025, 11, 30), name: '30', type: PeriodType.Day },
+                    ],
+                },
+                <Week> {
+                    date: new Date(2026, 0, 5),
+                    name: '1',
+                    type: PeriodType.Week,
+                    weekNumber: 1,
+                    year: year2026,
+                    quarter: expectedQuarter,
+                    month: expectedMonth,
+                    days: [
+                        <Period>{ date: new Date(2026, 0, 5), name: '5', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 0, 6), name: '6', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 0, 7), name: '7', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 0, 8), name: '8', type: PeriodType.Day },
+                    ],
+                },
+            ];
+
+            // Act
+            const result = service.getYearForWeeks(weeks, today);
+
+            // Assert
+            expect(result).toEqual(year2026);
+        });
+
+        it('should return todays year when today is visible in the weeks', () => {
+            // Arrange
+            const today = <Period>{ date: new Date(2025, 11, 29), name: '29', type: PeriodType.Day };
+            const weeks = [
+                <Week> {
+                    date: new Date(2025, 11, 28),
+                    name: '52',
+                    type: PeriodType.Week,
+                    weekNumber: 52,
+                    year: year2025,
+                    quarter: expectedQuarter,
+                    month: expectedMonth,
+                    days: [
+                        <Period>{ date: new Date(2025, 11, 28), name: '28', type: PeriodType.Day },
+                        <Period>{ date: new Date(2025, 11, 29), name: '29', type: PeriodType.Day },
+                        <Period>{ date: new Date(2025, 11, 30), name: '30', type: PeriodType.Day },
+                    ],
+                },
+                <Week> {
+                    date: new Date(2026, 0, 5),
+                    name: '1',
+                    type: PeriodType.Week,
+                    weekNumber: 1,
+                    year: year2026,
+                    quarter: expectedQuarter,
+                    month: expectedMonth,
+                    days: [
+                        <Period>{ date: new Date(2026, 0, 5), name: '5', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 0, 6), name: '6', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 0, 7), name: '7', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 0, 8), name: '8', type: PeriodType.Day },
+                    ],
+                },
+            ];
+
+            // Act
+            const result = service.getYearForWeeks(weeks, today);
+
+            // Assert
+            expect(result).toEqual(year2025);
         });
     });
 });

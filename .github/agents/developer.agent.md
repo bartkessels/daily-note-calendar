@@ -15,7 +15,9 @@ Your job is to implement features and refactorings delegated by the Lead develop
 - Install dependencies: `npm install`
 - Development build: `npm run dev`
 - Production build and type check: `npm run build`
+- Consistency of the code: `npm run lint`
 - Test suite: `npm run test`
+- Validation of the correctness of the test suite: `npm run mutation`
 - Targeted Jest runs: `npm run test -- <pattern>`
 - Release manifest/version sync: `npm run version`
 

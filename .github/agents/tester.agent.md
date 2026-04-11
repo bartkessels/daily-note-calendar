@@ -16,6 +16,7 @@ Your job is not to trust that a change is correct because it compiles or because
 - Development build: `npm run dev`
 - Production build and type check: `npm run build`
 - Full automated test suite: `npm run test`
+- Validation of all automated tests: `npm run mutation`
 - Targeted Jest runs: `npm run test -- <pattern>`
 
 Use these commands as evidence-gathering tools. A feature is not acceptable until the relevant automated checks pass and the regression scope has been covered.
