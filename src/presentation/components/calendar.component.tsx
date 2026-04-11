@@ -81,7 +81,7 @@ export const CalendarComponent = (props: CalendarComponentProperties): ReactElem
                 setCalendar(viewModel.rebuildCalendar(calendar.weeks));
             }
         });
-    }, [viewModel, loadNextWeek, loadPreviousWeek, loadCurrentWeek, loadNextMonth, loadPreviousMonth]);
+    }, [viewModel, calendar, loadNextWeek, loadPreviousWeek, loadCurrentWeek, loadNextMonth, loadPreviousMonth]);
 
     if (!calendar) {
         return (<></>);
