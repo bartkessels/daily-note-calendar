@@ -874,7 +874,7 @@ describe('DefaultCalendarService', () => {
             expect(result).toEqual(novemberMonth);
         });
 
-        it('should handle today spanning multiple weeks correctly', () => {
+        it('should return correct month when today is the first day of a week', () => {
             // Arrange
             const today = <Period>{ date: new Date(2026, 10, 2), name: '2', type: PeriodType.Day };
             const weeks = [
