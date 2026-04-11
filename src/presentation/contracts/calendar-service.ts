@@ -9,7 +9,7 @@ export interface CalendarService {
     getNextWeek(weeks: Week[]): Week[];
     getPreviousMonth(weeks: Week[]): Week[];
     getNextMonth(weeks: Week[]): Week[];
-    getMonthForWeeks(weeks: Week[]): Period;
-    getQuarterForWeeks(weeks: Week[]): Period;
-    getYearForWeeks(weeks: Week[]): Period;
+    getMonthForWeeks(weeks: Week[], today: Period | null): Period;
+    getQuarterForWeeks(weeks: Week[], today: Period | null): Period;
+    getYearForWeeks(weeks: Week[], today: Period | null): Period;
 }

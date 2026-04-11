@@ -129,7 +129,7 @@ describe('DefaultCalendarViewModel', () => {
 
         beforeEach(() => {
             when(calendarService.getCurrentWeek).mockReturnValue(currentWeek);
-            when(calendarService.getMonthForWeeks).calledWith(currentWeek).mockReturnValue(expectedMonth);
+            when(calendarService.getMonthForWeeks).mockReturnValue(expectedMonth);
             when(calendarService.getQuarterForWeeks).calledWith(currentWeek).mockReturnValue(expectedQuarter);
             when(calendarService.getYearForWeeks).calledWith(currentWeek).mockReturnValue(expectedYear);
         });
@@ -303,7 +303,7 @@ describe('DefaultCalendarViewModel', () => {
 
         beforeEach(() => {
             when(calendarService.getPreviousWeek).mockReturnValue(previousWeek);
-            when(calendarService.getMonthForWeeks).calledWith(previousWeek).mockReturnValue(expectedMonth);
+            when(calendarService.getMonthForWeeks).mockReturnValue(expectedMonth);
             when(calendarService.getQuarterForWeeks).calledWith(previousWeek).mockReturnValue(expectedQuarter);
             when(calendarService.getYearForWeeks).calledWith(previousWeek).mockReturnValue(expectedYear);
         });
@@ -386,7 +386,7 @@ describe('DefaultCalendarViewModel', () => {
 
         beforeEach(() => {
             when(calendarService.getNextWeek).mockReturnValue(nextWeek);
-            when(calendarService.getMonthForWeeks).calledWith(nextWeek).mockReturnValue(expectedMonth);
+            when(calendarService.getMonthForWeeks).mockReturnValue(expectedMonth);
             when(calendarService.getQuarterForWeeks).calledWith(nextWeek).mockReturnValue(expectedQuarter);
             when(calendarService.getYearForWeeks).calledWith(nextWeek).mockReturnValue(expectedYear);
         });
@@ -469,7 +469,7 @@ describe('DefaultCalendarViewModel', () => {
 
         beforeEach(() => {
             when(calendarService.getPreviousMonth).mockReturnValue(previousMonth);
-            when(calendarService.getMonthForWeeks).calledWith(previousMonth).mockReturnValue(expectedMonth);
+            when(calendarService.getMonthForWeeks).mockReturnValue(expectedMonth);
             when(calendarService.getQuarterForWeeks).calledWith(previousMonth).mockReturnValue(expectedQuarter);
             when(calendarService.getYearForWeeks).calledWith(previousMonth).mockReturnValue(expectedYear);
         });
@@ -552,7 +552,7 @@ describe('DefaultCalendarViewModel', () => {
 
         beforeEach(() => {
             when(calendarService.getNextMonth).mockReturnValue(nextMonth);
-            when(calendarService.getMonthForWeeks).calledWith(nextMonth).mockReturnValue(expectedMonth);
+            when(calendarService.getMonthForWeeks).mockReturnValue(expectedMonth);
             when(calendarService.getQuarterForWeeks).calledWith(nextMonth).mockReturnValue(expectedQuarter);
             when(calendarService.getYearForWeeks).calledWith(nextMonth).mockReturnValue(expectedYear);
         });
@@ -614,7 +614,7 @@ describe('DefaultCalendarViewModel', () => {
             ];
 
             when(calendarService.getCurrentWeek).mockReturnValue(currentWeek);
-            when(calendarService.getMonthForWeeks).calledWith(currentWeek).mockReturnValue(expectedMonth);
+            when(calendarService.getMonthForWeeks).mockReturnValue(expectedMonth);
             when(calendarService.getQuarterForWeeks).calledWith(currentWeek).mockReturnValue(expectedQuarter);
             when(calendarService.getYearForWeeks).calledWith(currentWeek).mockReturnValue(expectedYear);
 
@@ -691,7 +691,7 @@ describe('DefaultCalendarViewModel', () => {
                 weekNumber: 40,
             }];
 
-            when(calendarService.getMonthForWeeks).calledWith(weeks).mockReturnValue(expectedMonth);
+            when(calendarService.getMonthForWeeks).mockReturnValue(expectedMonth);
             when(calendarService.getQuarterForWeeks).calledWith(weeks).mockReturnValue(expectedQuarter);
             when(calendarService.getYearForWeeks).calledWith(weeks).mockReturnValue(expectedYear);
 

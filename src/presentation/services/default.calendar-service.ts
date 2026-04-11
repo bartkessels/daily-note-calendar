@@ -3,7 +3,7 @@ import {CalendarService} from 'src/presentation/contracts/calendar-service';
 import {DateManager} from 'src/business/contracts/date.manager';
 import {DateManagerFactory} from 'src/business/contracts/date-manager-factory';
 import {Week} from 'src/domain/models/week';
-import {Period} from 'src/domain/models/period.model';
+import {Period, PeriodType} from 'src/domain/models/period.model';
 
 export class DefaultCalendarService implements CalendarService {
     private readonly dateManager: DateManager;
@@ -55,23 +55,55 @@ export class DefaultCalendarService implements CalendarService {
         return this.sortWeeks(nextMonth);
     }
 
-    public getMonthForWeeks(weeks: Week[]): Period {
+    public getMonthForWeeks(weeks: Week[], today: Period | null): Period {
+        if (today && today.type === PeriodType.Day) {
+            const currentWeek = this.getWeekFromDate(weeks, today);
+
+            if (currentWeek) {
+                return currentWeek.month;
+            }
+        }
+
         const middleWeek = this.getMiddleWeek(weeks);
         return middleWeek.month;
     }
 
-    public getQuarterForWeeks(weeks: Week[]): Period {
+    public getQuarterForWeeks(weeks: Week[], today: Period | null): Period {
+        if (today && today.type === PeriodType.Day) {
+            const currentWeek = this.getWeekFromDate(weeks, today);
+
+            if (currentWeek) {
+                return currentWeek.quarter;
+            }
+        }
+
         const middleWeek = this.getMiddleWeek(weeks);
         return middleWeek.quarter;
     }
 
-    public getYearForWeeks(weeks: Week[]): Period {
+    public getYearForWeeks(weeks: Week[], today: Period | null): Period {
+        if (today && today.type === PeriodType.Day) {
+            const currentWeek = this.getWeekFromDate(weeks, today);
+
+            if (currentWeek) {
+                return currentWeek.year;
+            }
+        }
+        
         const middleWeek = this.getMiddleWeek(weeks);
         return middleWeek.year;
     }
 
     private getMiddleWeek(weeks: Week[]): Week {
         return weeks[Math.floor(weeks.length / 2)];
+    }
+
+    private getWeekFromDate(weeks: Week[], date: Period): Week | null {
+        const week = weeks
+            .filter(w => w.days.findIndex(d => d.date.toDateString() === date.date.toDateString()) > 0)
+            .first();
+        
+        return week ?? null;
     }
 
     private loadWeeks(currentWeek: Week, noPreviousWeeks: number, noNextWeeks: number): Week[] {
