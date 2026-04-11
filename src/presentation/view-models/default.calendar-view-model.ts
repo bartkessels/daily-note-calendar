@@ -86,9 +86,9 @@ export class DefaultCalendarViewModel implements CalendarViewModel {
 
     public rebuildCalendar(weeks: Week[]): Calendar {
         const weekDays = this.buildWeekDays(this.settings.generalSettings.firstDayOfWeek);
-        const month = this.calendarService.getMonthForWeeks(weeks);
-        const quarter = this.calendarService.getQuarterForWeeks(weeks);
-        const year = this.calendarService.getYearForWeeks(weeks);
+        const month = this.calendarService.getMonthForWeeks(weeks, this.today);
+        const quarter = this.calendarService.getQuarterForWeeks(weeks, this.today);
+        const year = this.calendarService.getYearForWeeks(weeks, this.today);
 
         return <Calendar> {
             weekDays: weekDays,
