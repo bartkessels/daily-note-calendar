@@ -100,8 +100,7 @@ export class DefaultCalendarService implements CalendarService {
 
     private getWeekFromDate(weeks: Week[], date: Period): Week | null {
         const week = weeks
-            .filter(w => w.days.findIndex(d => d.date.toDateString() === date.date.toDateString()) > 0)
-            .first();
+            .find(w => w.days.findIndex(d => d.date.toDateString() === date.date.toDateString()) >= 0);
         
         return week ?? null;
     }

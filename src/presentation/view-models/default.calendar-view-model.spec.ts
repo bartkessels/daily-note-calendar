@@ -130,8 +130,8 @@ describe('DefaultCalendarViewModel', () => {
         beforeEach(() => {
             when(calendarService.getCurrentWeek).mockReturnValue(currentWeek);
             when(calendarService.getMonthForWeeks).mockReturnValue(expectedMonth);
-            when(calendarService.getQuarterForWeeks).calledWith(currentWeek).mockReturnValue(expectedQuarter);
-            when(calendarService.getYearForWeeks).calledWith(currentWeek).mockReturnValue(expectedYear);
+            when(calendarService.getQuarterForWeeks).mockReturnValue(expectedQuarter);
+            when(calendarService.getYearForWeeks).mockReturnValue(expectedYear);
         });
 
         it('should use the default settings for the startWeekOnMonday and today should be null when the view model is not initialized', async () => {
@@ -304,8 +304,8 @@ describe('DefaultCalendarViewModel', () => {
         beforeEach(() => {
             when(calendarService.getPreviousWeek).mockReturnValue(previousWeek);
             when(calendarService.getMonthForWeeks).mockReturnValue(expectedMonth);
-            when(calendarService.getQuarterForWeeks).calledWith(previousWeek).mockReturnValue(expectedQuarter);
-            when(calendarService.getYearForWeeks).calledWith(previousWeek).mockReturnValue(expectedYear);
+            when(calendarService.getQuarterForWeeks).calledWith(previousWeek, null).mockReturnValue(expectedQuarter);
+            when(calendarService.getYearForWeeks).calledWith(previousWeek, null).mockReturnValue(expectedYear);
         });
 
         it('should use the default settings for the startWeekOnMonday and today should be null when the view model is not initialized', async () => {
@@ -387,8 +387,8 @@ describe('DefaultCalendarViewModel', () => {
         beforeEach(() => {
             when(calendarService.getNextWeek).mockReturnValue(nextWeek);
             when(calendarService.getMonthForWeeks).mockReturnValue(expectedMonth);
-            when(calendarService.getQuarterForWeeks).calledWith(nextWeek).mockReturnValue(expectedQuarter);
-            when(calendarService.getYearForWeeks).calledWith(nextWeek).mockReturnValue(expectedYear);
+            when(calendarService.getQuarterForWeeks).mockReturnValue(expectedQuarter);
+            when(calendarService.getYearForWeeks).mockReturnValue(expectedYear);
         });
 
         it('should use the default settings for the startWeekOnMonday and today should be null when the view model is not initialized', async () => {
@@ -470,8 +470,8 @@ describe('DefaultCalendarViewModel', () => {
         beforeEach(() => {
             when(calendarService.getPreviousMonth).mockReturnValue(previousMonth);
             when(calendarService.getMonthForWeeks).mockReturnValue(expectedMonth);
-            when(calendarService.getQuarterForWeeks).calledWith(previousMonth).mockReturnValue(expectedQuarter);
-            when(calendarService.getYearForWeeks).calledWith(previousMonth).mockReturnValue(expectedYear);
+            when(calendarService.getQuarterForWeeks).mockReturnValue(expectedQuarter);
+            when(calendarService.getYearForWeeks).mockReturnValue(expectedYear);
         });
 
         it('should use the default settings for the startWeekOnMonday and today should be null when the view model is not initialized', async () => {
@@ -553,8 +553,8 @@ describe('DefaultCalendarViewModel', () => {
         beforeEach(() => {
             when(calendarService.getNextMonth).mockReturnValue(nextMonth);
             when(calendarService.getMonthForWeeks).mockReturnValue(expectedMonth);
-            when(calendarService.getQuarterForWeeks).calledWith(nextMonth).mockReturnValue(expectedQuarter);
-            when(calendarService.getYearForWeeks).calledWith(nextMonth).mockReturnValue(expectedYear);
+            when(calendarService.getQuarterForWeeks).mockReturnValue(expectedQuarter);
+            when(calendarService.getYearForWeeks).mockReturnValue(expectedYear);
         });
 
         it('should use the default settings for the first day of the week and today should be null when the view model is not initialized', async () => {
@@ -615,8 +615,8 @@ describe('DefaultCalendarViewModel', () => {
 
             when(calendarService.getCurrentWeek).mockReturnValue(currentWeek);
             when(calendarService.getMonthForWeeks).mockReturnValue(expectedMonth);
-            when(calendarService.getQuarterForWeeks).calledWith(currentWeek).mockReturnValue(expectedQuarter);
-            when(calendarService.getYearForWeeks).calledWith(currentWeek).mockReturnValue(expectedYear);
+            when(calendarService.getQuarterForWeeks).mockReturnValue(expectedQuarter);
+            when(calendarService.getYearForWeeks).mockReturnValue(expectedYear);
 
             viewModel.initialize(settings, initialToday);
 
@@ -692,8 +692,8 @@ describe('DefaultCalendarViewModel', () => {
             }];
 
             when(calendarService.getMonthForWeeks).mockReturnValue(expectedMonth);
-            when(calendarService.getQuarterForWeeks).calledWith(weeks).mockReturnValue(expectedQuarter);
-            when(calendarService.getYearForWeeks).calledWith(weeks).mockReturnValue(expectedYear);
+            when(calendarService.getQuarterForWeeks).mockReturnValue(expectedQuarter);
+            when(calendarService.getYearForWeeks).mockReturnValue(expectedYear);
 
             viewModel.initialize(settings, today);
 

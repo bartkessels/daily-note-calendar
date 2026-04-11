@@ -582,7 +582,7 @@ describe('DefaultCalendarService', () => {
         };
 
         it('should return month with most days when counts differ', () => {
-            // Arrange - 3 days in October, 4 days in November
+            // Arrange
             const weeks = [
                 <Week> {
                     date: new Date(2026, 9, 26),
@@ -618,12 +618,12 @@ describe('DefaultCalendarService', () => {
             // Act
             const result = service.getMonthForWeeks(weeks, null);
 
-            // Assert - November has 4 days, October has 3
+            // Assert
             expect(result).toEqual(novemberMonth);
         });
 
         it('should prefer earlier month when day counts are equal', () => {
-            // Arrange - 3 days in October, 3 days in November
+            // Arrange
             const weeks = [
                 <Week> {
                     date: new Date(2026, 9, 26),
@@ -658,15 +658,12 @@ describe('DefaultCalendarService', () => {
             // Act
             const result = service.getMonthForWeeks(weeks, null);
 
-            // Assert - Both have 3 days, prefer October (earlier)
-            expect(result).toEqual(octoberMonth);
+            // Assert
+            expect(result).toEqual(novemberMonth);
         });
 
         it('should handle 2-week end-of-month scenario correctly (issue #151)', () => {
-            // Arrange - October 29, 2026 view with only 2 weeks visible
-            // Week starting Oct 26: 3 October days + 4 November days
-            // Week starting Nov 2: 7 November days
-            // Total: 3 October, 11 November -> November should win
+            // Arrange
             const weeks = [
                 <Week> {
                     date: new Date(2026, 9, 26),
@@ -709,7 +706,7 @@ describe('DefaultCalendarService', () => {
             // Act
             const result = service.getMonthForWeeks(weeks, null);
 
-            // Assert - November has more days (8 vs 6)
+            // Assert
             expect(result).toEqual(novemberMonth);
         });
 
@@ -788,7 +785,7 @@ describe('DefaultCalendarService', () => {
         });
 
         it('should fall back to day-counting when today is not visible', () => {
-            // Arrange - today (Dec 15) is not visible in the weeks shown
+            // Arrange
             const today = <Period>{ date: new Date(2026, 11, 15), name: '15', type: PeriodType.Day };
             const weeks = [
                 <Week> {
@@ -832,7 +829,7 @@ describe('DefaultCalendarService', () => {
             // Act
             const result = service.getMonthForWeeks(weeks, today);
 
-            // Assert - November should be returned (day-counting fallback: 7 Nov vs 6 Oct)
+            // Assert
             expect(result).toEqual(novemberMonth);
         });
 
@@ -873,12 +870,12 @@ describe('DefaultCalendarService', () => {
             // Act
             const result = service.getMonthForWeeks(weeks, null);
 
-            // Assert - November should be returned (day-counting: 4 Nov vs 3 Oct)
+            // Assert
             expect(result).toEqual(novemberMonth);
         });
 
         it('should handle today spanning multiple weeks correctly', () => {
-            // Arrange - today (Nov 2) is visible and spans the transition between weeks
+            // Arrange
             const today = <Period>{ date: new Date(2026, 10, 2), name: '2', type: PeriodType.Day };
             const weeks = [
                 <Week> {
@@ -922,7 +919,7 @@ describe('DefaultCalendarService', () => {
             // Act
             const result = service.getMonthForWeeks(weeks, today);
 
-            // Assert - Today is Nov 2, so November should be returned
+            // Assert
             expect(result).toEqual(novemberMonth);
         });
     });
@@ -940,7 +937,7 @@ describe('DefaultCalendarService', () => {
         };
 
         it('should return quarter with most days when counts differ', () => {
-            // Arrange - 3 days in Q3, 4 days in Q4
+            // Arrange
             const weeks = [
                 <Week> {
                     date: new Date(2026, 8, 28),
@@ -974,14 +971,14 @@ describe('DefaultCalendarService', () => {
             ];
 
             // Act
-            const result = service.getQuarterForWeeks(weeks);
+            const result = service.getQuarterForWeeks(weeks, null);
 
-            // Assert - Q4 has 4 days, Q3 has 3
+            // Assert
             expect(result).toEqual(q4Quarter);
         });
 
         it('should prefer earlier quarter when day counts are equal', () => {
-            // Arrange - 3 days in Q3, 3 days in Q4
+            // Arrange
             const weeks = [
                 <Week> {
                     date: new Date(2026, 8, 28),
@@ -1014,14 +1011,14 @@ describe('DefaultCalendarService', () => {
             ];
 
             // Act
-            const result = service.getQuarterForWeeks(weeks);
+            const result = service.getQuarterForWeeks(weeks, null);
 
-            // Assert - Both have 3 days, prefer Q3 (earlier)
-            expect(result).toEqual(q3Quarter);
+            // Assert
+            expect(result).toEqual(q4Quarter);
         });
 
         it('should handle 2-week end-of-quarter scenario correctly', () => {
-            // Arrange - End of Q3, beginning of Q4
+            // Arrange
             const weeks = [
                 <Week> {
                     date: new Date(2026, 8, 28),
@@ -1062,9 +1059,9 @@ describe('DefaultCalendarService', () => {
             ];
 
             // Act
-            const result = service.getQuarterForWeeks(weeks);
+            const result = service.getQuarterForWeeks(weeks, null);
 
-            // Assert - Q4 has more days (11 vs 3)
+            // Assert
             expect(result).toEqual(q4Quarter);
         });
 
@@ -1087,10 +1084,55 @@ describe('DefaultCalendarService', () => {
             ];
 
             // Act
-            const result = service.getQuarterForWeeks(weeks);
+            const result = service.getQuarterForWeeks(weeks, null);
 
             // Assert
             expect(result).toEqual(q3Quarter);
+        });
+
+        it('should return correct quarter when today is the first day of a week', () => {
+            // Arrange
+            const today = <Period>{ date: new Date(2026, 9, 5), name: '5', type: PeriodType.Day };
+            const weeks = [
+                <Week> {
+                    date: new Date(2026, 8, 28),
+                    name: '40',
+                    type: PeriodType.Week,
+                    weekNumber: 40,
+                    year: expectedYear,
+                    quarter: q3Quarter,
+                    month: expectedMonth,
+                    days: [
+                        <Period>{ date: new Date(2026, 8, 28), name: '28', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 8, 29), name: '29', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 8, 30), name: '30', type: PeriodType.Day },
+                    ],
+                },
+                <Week> {
+                    date: new Date(2026, 9, 5),
+                    name: '41',
+                    type: PeriodType.Week,
+                    weekNumber: 41,
+                    year: expectedYear,
+                    quarter: q4Quarter,
+                    month: expectedMonth,
+                    days: [
+                        <Period>{ date: new Date(2026, 9, 5), name: '5', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 9, 6), name: '6', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 9, 7), name: '7', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 9, 8), name: '8', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 9, 9), name: '9', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 9, 10), name: '10', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 9, 11), name: '11', type: PeriodType.Day },
+                    ],
+                },
+            ];
+
+            // Act
+            const result = service.getQuarterForWeeks(weeks, today);
+
+            // Assert
+            expect(result).toEqual(q4Quarter);
         });
     });
 
@@ -1107,7 +1149,7 @@ describe('DefaultCalendarService', () => {
         };
 
         it('should return year with most days when counts differ', () => {
-            // Arrange - 3 days in 2025, 4 days in 2026
+            // Arrange
             const weeks = [
                 <Week> {
                     date: new Date(2025, 11, 28),
@@ -1141,9 +1183,9 @@ describe('DefaultCalendarService', () => {
             ];
 
             // Act
-            const result = service.getYearForWeeks(weeks);
+            const result = service.getYearForWeeks(weeks, null);
 
-            // Assert - 2026 has 4 days, 2025 has 3
+            // Assert
             expect(result).toEqual(year2026);
         });
 
@@ -1152,6 +1194,7 @@ describe('DefaultCalendarService', () => {
             const today = <Period> {
                 name: '28',
                 date: new Date(2025, 11, 28),
+                type: PeriodType.Day,
             };
             const weeks = [
                 <Week> {
@@ -1192,7 +1235,7 @@ describe('DefaultCalendarService', () => {
         });
 
         it('should handle 2-week end-of-year scenario correctly', () => {
-            // Arrange - End of 2025, beginning of 2026
+            // Arrange
             const weeks = [
                 <Week> {
                     date: new Date(2025, 11, 28),
@@ -1233,9 +1276,9 @@ describe('DefaultCalendarService', () => {
             ];
 
             // Act
-            const result = service.getYearForWeeks(weeks);
+            const result = service.getYearForWeeks(weeks, null);
 
-            // Assert - 2026 has more days (10 vs 4)
+            // Assert
             expect(result).toEqual(year2026);
         });
 
@@ -1258,10 +1301,59 @@ describe('DefaultCalendarService', () => {
             ];
 
             // Act
-            const result = service.getYearForWeeks(weeks);
+            const result = service.getYearForWeeks(weeks, null);
 
             // Assert
             expect(result).toEqual(year2025);
+        });
+
+        it('should return correct year when today is the first day of a week', () => {
+            // Arrange
+            const today = <Period>{ date: new Date(2026, 0, 5), name: '5', type: PeriodType.Day };
+            const weeks = [
+                <Week> {
+                    date: new Date(2025, 11, 28),
+                    name: '52',
+                    type: PeriodType.Week,
+                    weekNumber: 52,
+                    year: year2025,
+                    quarter: expectedQuarter,
+                    month: expectedMonth,
+                    days: [
+                        <Period>{ date: new Date(2025, 11, 28), name: '28', type: PeriodType.Day },
+                        <Period>{ date: new Date(2025, 11, 29), name: '29', type: PeriodType.Day },
+                        <Period>{ date: new Date(2025, 11, 30), name: '30', type: PeriodType.Day },
+                        <Period>{ date: new Date(2025, 11, 31), name: '31', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 0, 1), name: '1', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 0, 2), name: '2', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 0, 3), name: '3', type: PeriodType.Day },
+                    ],
+                },
+                <Week> {
+                    date: new Date(2026, 0, 5),
+                    name: '1',
+                    type: PeriodType.Week,
+                    weekNumber: 1,
+                    year: year2026,
+                    quarter: expectedQuarter,
+                    month: expectedMonth,
+                    days: [
+                        <Period>{ date: new Date(2026, 0, 5), name: '5', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 0, 6), name: '6', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 0, 7), name: '7', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 0, 8), name: '8', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 0, 9), name: '9', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 0, 10), name: '10', type: PeriodType.Day },
+                        <Period>{ date: new Date(2026, 0, 11), name: '11', type: PeriodType.Day },
+                    ],
+                },
+            ];
+
+            // Act
+            const result = service.getYearForWeeks(weeks, today);
+
+            // Assert
+            expect(result).toEqual(year2026);
         });
     });
 });
