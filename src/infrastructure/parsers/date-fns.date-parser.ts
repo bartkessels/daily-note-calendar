@@ -10,9 +10,9 @@ export class DateFnsDateParser implements DateParser {
      * @param date
      * @param template
      */
-    public fromDate(date: Date, template: string): string {
+    public fromDate(date: Date, template: string, options?: { weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6 }): string {
         try {
-            return format(date, template);
+            return format(date, template, { ...options });
         } catch {
             return template;
         }

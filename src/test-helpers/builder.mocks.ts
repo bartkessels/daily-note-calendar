@@ -5,5 +5,6 @@ export const mockPeriodNameBuilder = {
     withPath: jest.fn((_) => mockPeriodNameBuilder),
     withName: jest.fn((_) => mockPeriodNameBuilder),
     withValue: jest.fn((_) => mockPeriodNameBuilder),
+    withWeekStartsOn: jest.fn((_) => mockPeriodNameBuilder),
     build: jest.fn(),
 } as jest.Mocked<NameBuilder<Period>>;

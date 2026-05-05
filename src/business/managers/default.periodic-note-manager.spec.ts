@@ -17,6 +17,7 @@ import {
     mockVariableParserFactory,
 } from 'src/test-helpers/factory.mocks';
 import {mockDailyNoteSettings, mockPeriod} from 'src/test-helpers/model.mocks';
+import {DayOfWeek} from 'src/domain/models/week';
 
 describe('DefaultPeriodicNoteManager', () => {
     let manager: DefaultPeriodicNoteManager;
@@ -30,6 +31,7 @@ describe('DefaultPeriodicNoteManager', () => {
     const period = mockPeriod;
     const dailyNoteSettings = mockDailyNoteSettings;
     const completeFilePath = `${dailyNoteSettings.folder}/2023-10-02.md`;
+    const firstDayOfWeek = DayOfWeek.Monday;
 
     beforeEach(() => {
         nameBuilder = mockPeriodNameBuilder;
@@ -73,7 +75,7 @@ describe('DefaultPeriodicNoteManager', () => {
             when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(true);
 
             // Act
-            const result = await manager.doesNoteExist(dailyNoteSettings, period);
+            const result = await manager.doesNoteExist(dailyNoteSettings, period, firstDayOfWeek);
 
             // Assert
             expect(result).toBe(true);
@@ -84,10 +86,21 @@ describe('DefaultPeriodicNoteManager', () => {
             when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(false);
 
             // Act
-            const result = await manager.doesNoteExist(dailyNoteSettings, period);
+            const result = await manager.doesNoteExist(dailyNoteSettings, period, firstDayOfWeek);
 
             // Assert
             expect(result).toBe(false);
+        });
+
+        it('should pass firstDayOfWeek to the name builder', async () => {
+            // Arrange
+            when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(true);
+
+            // Act
+            await manager.doesNoteExist(dailyNoteSettings, period, DayOfWeek.Sunday);
+
+            // Assert
+            expect(nameBuilder.withWeekStartsOn).toHaveBeenCalledWith(DayOfWeek.Sunday);
         });
     });
 
@@ -105,7 +118,7 @@ describe('DefaultPeriodicNoteManager', () => {
             when(titleVariableParser.parseVariables).mockReturnValue(template);
 
             // Act
-            await manager.createNote(dailyNoteSettings, period);
+            await manager.createNote(dailyNoteSettings, period, firstDayOfWeek);
 
             // Assert
             expect(fileRepository.create).toHaveBeenCalledWith(completeFilePath, template);
@@ -136,7 +149,7 @@ describe('DefaultPeriodicNoteManager', () => {
             // Act
             jest.useFakeTimers();
             jest.setSystemTime(today.getTime());
-            await manager.createNote(dailyNoteSettings, period);
+            await manager.createNote(dailyNoteSettings, period, firstDayOfWeek);
 
             // Assert
             expect(titleVariableParser.parseVariables).toHaveBeenCalledWith(fileContent, activeNote.name);
@@ -152,7 +165,7 @@ describe('DefaultPeriodicNoteManager', () => {
             when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(true);
 
             // Act
-            await manager.createNote(dailyNoteSettings, period);
+            await manager.createNote(dailyNoteSettings, period, firstDayOfWeek);
 
             // Assert
             expect(fileRepository.create).not.toHaveBeenCalled();
@@ -163,7 +176,7 @@ describe('DefaultPeriodicNoteManager', () => {
             when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(true);
 
             // Act
-            await manager.createNote(dailyNoteSettings, period);
+            await manager.createNote(dailyNoteSettings, period, firstDayOfWeek);
 
             // Assert
             expect(fileRepository.readContents).not.toHaveBeenCalled();
@@ -180,7 +193,7 @@ describe('DefaultPeriodicNoteManager', () => {
             when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(true);
 
             // Act
-            await manager.openNote(dailyNoteSettings, period);
+            await manager.openNote(dailyNoteSettings, period, firstDayOfWeek);
 
             // Assert
             expect(fileRepository.openInCurrentTab).toHaveBeenCalledWith(completeFilePath);
@@ -191,7 +204,7 @@ describe('DefaultPeriodicNoteManager', () => {
             when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(false);
 
             // Act
-            const result = manager.openNote(dailyNoteSettings, period);
+            const result = manager.openNote(dailyNoteSettings, period, firstDayOfWeek);
 
             // Assert
             expect(fileRepository.openInCurrentTab).not.toHaveBeenCalled();
@@ -205,7 +218,7 @@ describe('DefaultPeriodicNoteManager', () => {
             when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(true);
 
             // Act
-            await manager.openNoteInHorizontalSplitView(dailyNoteSettings, period);
+            await manager.openNoteInHorizontalSplitView(dailyNoteSettings, period, firstDayOfWeek);
 
             // Assert
             expect(fileRepository.openInHorizontalSplitView).toHaveBeenCalledWith(completeFilePath);
@@ -216,7 +229,7 @@ describe('DefaultPeriodicNoteManager', () => {
             when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(false);
 
             // Act
-            const result = manager.openNoteInHorizontalSplitView(dailyNoteSettings, period);
+            const result = manager.openNoteInHorizontalSplitView(dailyNoteSettings, period, firstDayOfWeek);
 
             // Assert
             expect(fileRepository.openInHorizontalSplitView).not.toHaveBeenCalled();
@@ -230,7 +243,7 @@ describe('DefaultPeriodicNoteManager', () => {
             when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(true);
 
             // Act
-            await manager.openNoteInVerticalSplitView(dailyNoteSettings, period);
+            await manager.openNoteInVerticalSplitView(dailyNoteSettings, period, firstDayOfWeek);
 
             // Assert
             expect(fileRepository.openInVerticalSplitView).toHaveBeenCalledWith(completeFilePath);
@@ -241,7 +254,7 @@ describe('DefaultPeriodicNoteManager', () => {
             when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(false);
 
             // Act
-            const result = manager.openNoteInVerticalSplitView(dailyNoteSettings, period);
+            const result = manager.openNoteInVerticalSplitView(dailyNoteSettings, period, firstDayOfWeek);
 
             // Assert
             expect(fileRepository.openInVerticalSplitView).not.toHaveBeenCalled();
@@ -255,7 +268,7 @@ describe('DefaultPeriodicNoteManager', () => {
             when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(true);
 
             // Act
-            await manager.deleteNote(dailyNoteSettings, period);
+            await manager.deleteNote(dailyNoteSettings, period, firstDayOfWeek);
 
             // Assert
             expect(fileRepository.delete).toHaveBeenCalledWith(completeFilePath);
@@ -266,7 +279,7 @@ describe('DefaultPeriodicNoteManager', () => {
             when(fileRepository.exists).calledWith(completeFilePath).mockResolvedValue(false);
 
             // Act
-            const result = manager.deleteNote(dailyNoteSettings, period);
+            const result = manager.deleteNote(dailyNoteSettings, period, firstDayOfWeek);
 
             // Assert
             await expect(result).rejects.toThrow('Could not delete the note: File "daily-notes/2023-10-02.md" does not exist');

@@ -4,6 +4,7 @@ import {Period} from 'src/domain/models/period.model';
 import {PeriodNoteSettings} from 'src/domain/settings/period-note.settings';
 import {DEFAULT_PLUGIN_SETTINGS, PluginSettings} from 'src/domain/settings/plugin.settings';
 import {isCreateFileModifierKey, ModifierKey} from 'src/domain/models/modifier-key';
+import {DayOfWeek, WeekNumberStandard} from 'src/domain/models/week';
 
 export class DefaultPeriodService implements PeriodService {
     private settings: PluginSettings = DEFAULT_PLUGIN_SETTINGS;
@@ -20,28 +21,28 @@ export class DefaultPeriodService implements PeriodService {
 
     public async openNoteInCurrentTab(key: ModifierKey, period: Period, settings: PeriodNoteSettings): Promise<void> {
         await this.openNote(key, period, settings, async (settings, period) =>
-            this.periodicNoteManager.openNote(settings, period),
+            this.periodicNoteManager.openNote(settings, period, this.effectiveWeekStartsOn),
         );
     }
 
     public async openNoteInHorizontalSplitView(key: ModifierKey, period: Period, settings: PeriodNoteSettings): Promise<void> {
         await this.openNote(key, period, settings, async (settings, period) =>
-            this.periodicNoteManager.openNoteInHorizontalSplitView(settings, period),
+            this.periodicNoteManager.openNoteInHorizontalSplitView(settings, period, this.effectiveWeekStartsOn),
         );
     }
 
     public async openNoteInVerticalSplitView(key: ModifierKey, period: Period, settings: PeriodNoteSettings): Promise<void> {
         await this.openNote(key, period, settings, async (settings, period) =>
-            this.periodicNoteManager.openNoteInVerticalSplitView(settings, period),
+            this.periodicNoteManager.openNoteInVerticalSplitView(settings, period, this.effectiveWeekStartsOn),
         );
     }
 
     public async deleteNote(period: Period, settings: PeriodNoteSettings): Promise<void> {
-        await this.periodicNoteManager.deleteNote(settings, period);
+        await this.periodicNoteManager.deleteNote(settings, period, this.effectiveWeekStartsOn);
     }
 
     public async hasPeriodicNote(period: Period, settings: PeriodNoteSettings): Promise<boolean> {
-        return await this.periodicNoteManager.doesNoteExist(settings, period);
+        return await this.periodicNoteManager.doesNoteExist(settings, period, this.effectiveWeekStartsOn);
     }
 
     private async openNote(
@@ -55,15 +56,22 @@ export class DefaultPeriodService implements PeriodService {
         const shouldCreateNote = !requireModifierKeyForCreatingNote || isModifierKeyPressed;
 
         if (shouldCreateNote) {
-            await this.periodicNoteManager.createNote(settings, period);
+            await this.periodicNoteManager.createNote(settings, period, this.effectiveWeekStartsOn);
             await openAction(settings, period);
 
             return;
         }
 
-        const doesNoteExists = await this.periodicNoteManager.doesNoteExist(settings, period);
+        const doesNoteExists = await this.periodicNoteManager.doesNoteExist(settings, period, this.effectiveWeekStartsOn);
         if (doesNoteExists) {
             await openAction(settings, period);
         }
+    }
+
+    private get effectiveWeekStartsOn(): DayOfWeek {
+        if (this.settings.generalSettings.weekNumberStandard === WeekNumberStandard.ISO) {
+            return DayOfWeek.Monday;
+        }
+        return this.settings.generalSettings.firstDayOfWeek;
     }
 }

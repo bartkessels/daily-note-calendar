@@ -43,6 +43,34 @@ describe('DateFnsDateParser', () => {
             // Assert
             expect(result).toBe('yyyy-MM-dd');
         });
+
+        it('should produce week 2 for 2024-01-07 when weekStartsOn is Sunday (0)', () => {
+            // Arrange — 2024-01-07 is a Sunday.
+            // Under Sunday-start rules the week containing 2024-01-01 (Monday) starts on
+            // Dec 31 2023 (Sunday) = week 1, so Jan 7 (the next Sunday) = week 2.
+            // Under Monday-start rules Jan 1 is the Monday that opens week 1, and Jan 7
+            // (still inside that Mon–Sun span) = week 1.  The two conventions diverge here.
+            const date = new Date(2024, 0, 7);
+            const template = 'w';
+
+            // Act
+            const result = parser.fromDate(date, template, { weekStartsOn: 0 });
+
+            // Assert
+            expect(result).toBe('2');
+        });
+
+        it('should produce week 1 for 2024-01-07 when weekStartsOn is Monday (1)', () => {
+            // Arrange — same date as above; under Monday-start Jan 7 is still in week 1.
+            const date = new Date(2024, 0, 7);
+            const template = 'w';
+
+            // Act
+            const result = parser.fromDate(date, template, { weekStartsOn: 1 });
+
+            // Assert
+            expect(result).toBe('1');
+        });
     });
 
     describe('fromString', () => {

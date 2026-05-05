@@ -6,6 +6,7 @@ import {VariableType} from 'src/domain/models/variable.model';
 import {NameBuilderFactory, NameBuilderType} from 'src/business/contracts/name-builder-factory';
 import {FileRepositoryFactory} from 'src/infrastructure/contracts/file-repository-factory';
 import {NoteRepositoryFactory} from 'src/infrastructure/contracts/note-repository-factory';
+import {DayOfWeek} from 'src/domain/models/week';
 
 export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
     constructor(
@@ -17,16 +18,16 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
 
     }
 
-    public async doesNoteExist(settings: PeriodNoteSettings, period: Period): Promise<boolean> {
+    public async doesNoteExist(settings: PeriodNoteSettings, period: Period, firstDayOfWeek: DayOfWeek): Promise<boolean> {
         const fileRepository = this.fileRepositoryFactory.getRepository();
-        const filePath = this.getFilePath(period, settings);
+        const filePath = this.getFilePath(period, settings, firstDayOfWeek);
         return await fileRepository.exists(filePath);
     }
 
-    public async createNote(settings: PeriodNoteSettings, period: Period): Promise<void> {
+    public async createNote(settings: PeriodNoteSettings, period: Period, firstDayOfWeek: DayOfWeek): Promise<void> {
         const fileRepository = this.fileRepositoryFactory.getRepository();
-        const filePath = this.getFilePath(period, settings);
-        const fileExists = await this.doesNoteExist(settings, period);
+        const filePath = this.getFilePath(period, settings, firstDayOfWeek);
+        const fileExists = await this.doesNoteExist(settings, period, firstDayOfWeek);
         const templateFileExists = await fileRepository.exists(settings.templateFile);
 
         if (!fileExists && templateFileExists) {
@@ -37,10 +38,10 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
         }
     }
 
-    public async openNote(settings: PeriodNoteSettings, period: Period): Promise<void> {
+    public async openNote(settings: PeriodNoteSettings, period: Period, firstDayOfWeek: DayOfWeek): Promise<void> {
         const fileRepository = this.fileRepositoryFactory.getRepository();
-        const filePath = this.getFilePath(period, settings);
-        const fileExists = await this.doesNoteExist(settings, period);
+        const filePath = this.getFilePath(period, settings, firstDayOfWeek);
+        const fileExists = await this.doesNoteExist(settings, period, firstDayOfWeek);
 
         if (!fileExists) {
             throw new Error(`Could not open the note: File "${filePath}" does not exist`);
@@ -49,10 +50,10 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
         await fileRepository.openInCurrentTab(filePath);
     }
 
-    public async openNoteInHorizontalSplitView(settings: PeriodNoteSettings, period: Period): Promise<void> {
+    public async openNoteInHorizontalSplitView(settings: PeriodNoteSettings, period: Period, firstDayOfWeek: DayOfWeek): Promise<void> {
         const fileRepository = this.fileRepositoryFactory.getRepository();
-        const filePath = this.getFilePath(period, settings);
-        const fileExists = await this.doesNoteExist(settings, period);
+        const filePath = this.getFilePath(period, settings, firstDayOfWeek);
+        const fileExists = await this.doesNoteExist(settings, period, firstDayOfWeek);
 
         if (!fileExists) {
             throw new Error(`Could not open the note: File "${filePath}" does not exist`);
@@ -61,10 +62,10 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
         await fileRepository.openInHorizontalSplitView(filePath);
     }
 
-    public async openNoteInVerticalSplitView(settings: PeriodNoteSettings, period: Period): Promise<void> {
+    public async openNoteInVerticalSplitView(settings: PeriodNoteSettings, period: Period, firstDayOfWeek: DayOfWeek): Promise<void> {
         const fileRepository = this.fileRepositoryFactory.getRepository();
-        const filePath = this.getFilePath(period, settings);
-        const fileExists = await this.doesNoteExist(settings, period);
+        const filePath = this.getFilePath(period, settings, firstDayOfWeek);
+        const fileExists = await this.doesNoteExist(settings, period, firstDayOfWeek);
 
         if (!fileExists) {
             throw new Error(`Could not open the note: File "${filePath}" does not exist`);
@@ -73,10 +74,10 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
         await fileRepository.openInVerticalSplitView(filePath);
     }
 
-    public async deleteNote(settings: PeriodNoteSettings, period: Period): Promise<void> {
+    public async deleteNote(settings: PeriodNoteSettings, period: Period, firstDayOfWeek: DayOfWeek): Promise<void> {
         const fileRepository = this.fileRepositoryFactory.getRepository();
-        const filePath = this.getFilePath(period, settings);
-        const fileExists = await this.doesNoteExist(settings, period);
+        const filePath = this.getFilePath(period, settings, firstDayOfWeek);
+        const fileExists = await this.doesNoteExist(settings, period, firstDayOfWeek);
 
         if (!fileExists) {
             throw new Error(`Could not delete the note: File "${filePath}" does not exist`);
@@ -85,11 +86,12 @@ export class DefaultPeriodicNoteManager implements PeriodicNoteManager {
         await fileRepository.delete(filePath);
     }
 
-    private getFilePath(value: Period, settings: PeriodNoteSettings): string {
+    private getFilePath(value: Period, settings: PeriodNoteSettings, firstDayOfWeek: DayOfWeek): string {
         return this.nameBuilderFactory.getNameBuilder<Period>(NameBuilderType.PeriodicNote)
             .withPath(settings.folder)
             .withName(settings.nameTemplate)
             .withValue(value)
+            .withWeekStartsOn(firstDayOfWeek)
             .build();
     }
 
