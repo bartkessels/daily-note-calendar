@@ -18,6 +18,7 @@ import {OpenTodaysNoteCommand} from 'src/presentation/commands/open-todays-note.
 import { OpenMonthlyNoteCommand } from './presentation/commands/open-monthly-note.command';
 import { OpenQuarterlyNoteCommand } from './presentation/commands/open-quarterly-note.command';
 import { OpenYearlyNoteCommand } from './presentation/commands/open-yearly-note.command';
+import {findCalendarLeafIds} from 'src/presentation/workspace/calendar-leaf-recovery';
 
 export default class DailyNoteCalendarPlugin extends Plugin {
     private readonly dependencies: Dependencies = getDependencies(this);
@@ -41,6 +42,9 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         this.registerSettings();
         this.registerCommands();
         this.registerMidnightCheck();
+        this.addRibbonIcon('calendar', 'Open daily note calendar', () => {
+            void this.openCalendarView();
+        });
 
         this.app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
     }
@@ -88,8 +92,38 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     }
 
     private registerPlugin(): void {
-        if (this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE).length <= 0) {
-            this.app.workspace.getRightLeaf(false)?.setViewState({type: CalendarView.VIEW_TYPE});
+        // Never open a calendar leaf during startup. The saved workspace
+        // layout is restored before a delayed plugin registers its view, and
+        // opening one here creates a new leaf on every restart.
+        const liveLeaves = this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE);
+        liveLeaves.slice(1).forEach((leaf) => leaf.detach());
+    }
+
+    private async openCalendarView(): Promise<void> {
+        const liveLeaves = this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE);
+        if (liveLeaves.length > 0) {
+            await this.app.workspace.revealLeaf(liveLeaves[0]);
+            return;
+        }
+
+        const savedLeafIds = findCalendarLeafIds(
+            this.app.workspace.getLayout(),
+            CalendarView.VIEW_TYPE,
+        );
+        const savedLeaves = savedLeafIds
+            .map((id) => this.app.workspace.getLeafById(id))
+            .filter((leaf): leaf is WorkspaceLeaf => leaf !== null);
+
+        if (savedLeaves.length > 0) {
+            await savedLeaves[0].setViewState({type: CalendarView.VIEW_TYPE});
+            await this.app.workspace.revealLeaf(savedLeaves[0]);
+            return;
+        }
+
+        const leaf = this.app.workspace.getRightLeaf(false);
+        if (leaf) {
+            await leaf.setViewState({type: CalendarView.VIEW_TYPE});
+            await this.app.workspace.revealLeaf(leaf);
         }
     }
 
