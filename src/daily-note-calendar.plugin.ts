@@ -89,20 +89,30 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     }
 
     private registerPlugin(): void {
+        const savedLeafIds = findCalendarLeafIds(
+            this.app.workspace.getLayout(),
+            CalendarView.VIEW_TYPE,
+        );
+
+        if (savedLeafIds.length > 0) {
+            // Do not create another calendar leaf while the saved ones are
+            // still being restored. A delayed onload can make getLeafById
+            // return null until the layout has settled.
+            this.restoreCalendarLeaves(savedLeafIds);
+            window.setTimeout(() => this.restoreCalendarLeaves(savedLeafIds), 500);
+            return;
+        }
+
         const liveLeaves = this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE);
         if (liveLeaves.length > 0) {
             liveLeaves.slice(1).forEach((leaf) => leaf.detach());
             return;
         }
 
-        // The workspace layout can contain leaves for an unregistered view.
-        // When BPM delays this plugin's onload, those leaves are not returned
-        // by getLeavesOfType yet. Reuse one and remove the duplicates instead
-        // of creating a new calendar leaf on every restart.
-        const savedLeafIds = findCalendarLeafIds(
-            this.app.workspace.getLayout(),
-            CalendarView.VIEW_TYPE,
-        );
+        this.app.workspace.getRightLeaf(false)?.setViewState({type: CalendarView.VIEW_TYPE});
+    }
+
+    private restoreCalendarLeaves(savedLeafIds: string[]): void {
         const savedLeaves = savedLeafIds
             .map((id) => this.app.workspace.getLeafById(id))
             .filter((leaf): leaf is WorkspaceLeaf => leaf !== null);
@@ -114,7 +124,10 @@ export default class DailyNoteCalendarPlugin extends Plugin {
             return;
         }
 
-        this.app.workspace.getRightLeaf(false)?.setViewState({type: CalendarView.VIEW_TYPE});
+        // Once the view is registered, Obsidian may resolve the saved leaves
+        // into live leaves. Keep the first one and remove the rest.
+        const liveLeaves = this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE);
+        liveLeaves.slice(1).forEach((leaf) => leaf.detach());
     }
 
     private registerSettings(): void {
