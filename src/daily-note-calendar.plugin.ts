@@ -18,6 +18,7 @@ import {OpenTodaysNoteCommand} from 'src/presentation/commands/open-todays-note.
 import { OpenMonthlyNoteCommand } from './presentation/commands/open-monthly-note.command';
 import { OpenQuarterlyNoteCommand } from './presentation/commands/open-quarterly-note.command';
 import { OpenYearlyNoteCommand } from './presentation/commands/open-yearly-note.command';
+import {findCalendarLeafIds} from 'src/presentation/workspace/calendar-leaf-recovery';
 
 export default class DailyNoteCalendarPlugin extends Plugin {
     private readonly dependencies: Dependencies = getDependencies(this);
@@ -88,9 +89,32 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     }
 
     private registerPlugin(): void {
-        if (this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE).length <= 0) {
-            this.app.workspace.getRightLeaf(false)?.setViewState({type: CalendarView.VIEW_TYPE});
+        const liveLeaves = this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE);
+        if (liveLeaves.length > 0) {
+            liveLeaves.slice(1).forEach((leaf) => leaf.detach());
+            return;
         }
+
+        // The workspace layout can contain leaves for an unregistered view.
+        // When BPM delays this plugin's onload, those leaves are not returned
+        // by getLeavesOfType yet. Reuse one and remove the duplicates instead
+        // of creating a new calendar leaf on every restart.
+        const savedLeafIds = findCalendarLeafIds(
+            this.app.workspace.getLayout(),
+            CalendarView.VIEW_TYPE,
+        );
+        const savedLeaves = savedLeafIds
+            .map((id) => this.app.workspace.getLeafById(id))
+            .filter((leaf): leaf is WorkspaceLeaf => leaf !== null);
+
+        if (savedLeaves.length > 0) {
+            const [leafToKeep, ...duplicates] = savedLeaves;
+            duplicates.forEach((leaf) => leaf.detach());
+            leafToKeep.setViewState({type: CalendarView.VIEW_TYPE});
+            return;
+        }
+
+        this.app.workspace.getRightLeaf(false)?.setViewState({type: CalendarView.VIEW_TYPE});
     }
 
     private registerSettings(): void {
