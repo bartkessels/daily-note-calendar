@@ -42,6 +42,9 @@ export default class DailyNoteCalendarPlugin extends Plugin {
         this.registerSettings();
         this.registerCommands();
         this.registerMidnightCheck();
+        this.addRibbonIcon('calendar', 'Open daily note calendar', () => {
+            void this.openCalendarView();
+        });
 
         this.app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
     }
@@ -89,45 +92,39 @@ export default class DailyNoteCalendarPlugin extends Plugin {
     }
 
     private registerPlugin(): void {
+        // Never open a calendar leaf during startup. The saved workspace
+        // layout is restored before a delayed plugin registers its view, and
+        // opening one here creates a new leaf on every restart.
+        const liveLeaves = this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE);
+        liveLeaves.slice(1).forEach((leaf) => leaf.detach());
+    }
+
+    private async openCalendarView(): Promise<void> {
+        const liveLeaves = this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE);
+        if (liveLeaves.length > 0) {
+            await this.app.workspace.revealLeaf(liveLeaves[0]);
+            return;
+        }
+
         const savedLeafIds = findCalendarLeafIds(
             this.app.workspace.getLayout(),
             CalendarView.VIEW_TYPE,
         );
-
-        if (savedLeafIds.length > 0) {
-            // Do not create another calendar leaf while the saved ones are
-            // still being restored. A delayed onload can make getLeafById
-            // return null until the layout has settled.
-            this.restoreCalendarLeaves(savedLeafIds);
-            window.setTimeout(() => this.restoreCalendarLeaves(savedLeafIds), 500);
-            return;
-        }
-
-        const liveLeaves = this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE);
-        if (liveLeaves.length > 0) {
-            liveLeaves.slice(1).forEach((leaf) => leaf.detach());
-            return;
-        }
-
-        this.app.workspace.getRightLeaf(false)?.setViewState({type: CalendarView.VIEW_TYPE});
-    }
-
-    private restoreCalendarLeaves(savedLeafIds: string[]): void {
         const savedLeaves = savedLeafIds
             .map((id) => this.app.workspace.getLeafById(id))
             .filter((leaf): leaf is WorkspaceLeaf => leaf !== null);
 
         if (savedLeaves.length > 0) {
-            const [leafToKeep, ...duplicates] = savedLeaves;
-            duplicates.forEach((leaf) => leaf.detach());
-            leafToKeep.setViewState({type: CalendarView.VIEW_TYPE});
+            await savedLeaves[0].setViewState({type: CalendarView.VIEW_TYPE});
+            await this.app.workspace.revealLeaf(savedLeaves[0]);
             return;
         }
 
-        // Once the view is registered, Obsidian may resolve the saved leaves
-        // into live leaves. Keep the first one and remove the rest.
-        const liveLeaves = this.app.workspace.getLeavesOfType(CalendarView.VIEW_TYPE);
-        liveLeaves.slice(1).forEach((leaf) => leaf.detach());
+        const leaf = this.app.workspace.getRightLeaf(false);
+        if (leaf) {
+            await leaf.setViewState({type: CalendarView.VIEW_TYPE});
+            await this.app.workspace.revealLeaf(leaf);
+        }
     }
 
     private registerSettings(): void {
